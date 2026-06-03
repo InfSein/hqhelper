@@ -14,7 +14,7 @@ import { useElectronSync } from '@/composables/electron-sync'
 import { useLocale } from './locales'
 import { checkAppUpdates, CopyToClipboard, deepCopy, getAppBackground, sleep } from './tools'
 import EorzeaTime from './tools/eorzea-time'
-import { getItemInfo, type ItemInfo } from './tools/item'
+import { type ItemInfo } from './tools/item'
 import { fixUserConfig , type UserConfigModel } from '@/models/config-user'
 import { fixFuncConfig, type FuncConfigModel, type MacroGenerateMode } from './models/config-func'
 import { fixCloudConfig, type CloudConfigModel } from '@/models/config-cloud'
@@ -285,6 +285,40 @@ onMounted(async () => {
   // 处理全局页面参数
   appMode.value = route.query.mode as typeof appMode.value
   // 处理自动更新
+  await handleAutoUpdate()
+  // 处理彩蛋
+  const now = new Date()
+  const date = now.getDate()
+  const eggId = 20241225
+  if (
+    userConfig.value.last_triggered_egg !== eggId &&
+    (now.getMonth() === 11) && ((date === 24 && now.getHours() >= 18) || date === 25)
+  ) {
+    showFestivalEgg.value = true
+    const newConfig = fixUserConfig(store.userConfig)
+    newConfig.last_triggered_egg = eggId
+    store.setUserConfig(newConfig)
+  }
+  // 处理 UI
+  updateIsMobile()
+  window.addEventListener('resize', updateIsMobile)
+  updateDraggableArea()
+  window.addEventListener('resize', updateDraggableArea)
+  // 加载背景
+  appBg.value = await getAppBackground(userConfig.value.custom_background)
+})
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', updateIsMobile)
+  window.removeEventListener('resize', updateDraggableArea)
+})
+watch(
+  () => route.query.mode,
+  (newMode) => {
+    appMode.value = newMode as typeof appMode.value
+    updateIsMobile()
+  }
+)
+const handleAutoUpdate = async () => {
   if (!userConfig.value.disable_auto_update && appMode.value !== 'overlay' && !window.androidAPI?.checkUpdate) {
     try {
       const checkUpdateResponse = await checkAppUpdates()
@@ -329,39 +363,7 @@ onMounted(async () => {
       console.error('自动更新发生错误', err)
     }
   }
-  // 处理彩蛋
-  const now = new Date()
-  const date = now.getDate()
-  const eggId = 20241225
-  if (
-    userConfig.value.last_triggered_egg !== eggId &&
-    (now.getMonth() === 11) && ((date === 24 && now.getHours() >= 18) || date === 25)
-  ) {
-    showFestivalEgg.value = true
-    const newConfig = fixUserConfig(store.userConfig)
-    newConfig.last_triggered_egg = eggId
-    store.setUserConfig(newConfig)
-  }
-  // 处理 UI
-  updateIsMobile()
-  window.addEventListener('resize', updateIsMobile)
-  updateDraggableArea()
-  window.addEventListener('resize', updateDraggableArea)
-  // 加载背景
-  appBg.value = await getAppBackground(userConfig.value.custom_background)
-})
-onBeforeUnmount(() => {
-  window.removeEventListener('resize', updateIsMobile)
-  window.removeEventListener('resize', updateDraggableArea)
-})
-watch(
-  () => route.query.mode,
-  (newMode) => {
-    appMode.value = newMode as typeof appMode.value
-    updateIsMobile()
-  }
-)
-
+}
 const updateDraggableArea = () => {
   const dragArea = document.getElementById('drag-area')
   const appLayoutHeader = document.getElementById('app-layout-header')
