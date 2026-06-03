@@ -240,6 +240,9 @@ provide('displayCloudSyncModal', displayCloudSyncModal)
 const showModalItemPriceDetail = ref(false)
 const modalItemPriceDetailItems = ref<ItemInfo[]>([])
 const showItemPriceDetail = (items: ItemInfo[]) => {
+  if (showModalItemPriceDetail.value) {
+    alertError('无法重复打开弹窗'); return
+  }
   modalItemPriceDetailItems.value = items
   showModalItemPriceDetail.value = true
 }
@@ -267,7 +270,7 @@ provide('displayFestivalEggModal', () => {
   showFestivalEgg.value = true
 })
 const dialogRef = ref<InstanceType<typeof Dialog> | null>(null)
-const { confirm } = useDialog(t)
+const { alertError, confirm } = useDialog(t)
 
 const appBg = ref('')
 

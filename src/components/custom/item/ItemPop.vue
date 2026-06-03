@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import {
   OpenInNewFilled,
-  RefreshOutlined
+  RefreshOutlined,
+  TableViewFilled,
 } from '@vicons/material'
 import HqSwitcher from '../general/HqSwitcher.vue'
 import ItemSpan from './ItemSpan.vue'
@@ -31,6 +32,7 @@ const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
 const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
 const currentET = inject<Ref<EorzeaTime>>('currentET')!
 // const appMode = inject<Ref<"overlay" | "" | undefined>>('appMode') ?? ref('')
+const showItemPriceDetail = inject<(items: ItemInfo[]) => void>('showItemPriceDetail')!
 
 const {
   uiLanguage, itemLanguage,
@@ -435,6 +437,9 @@ const refreshItemPrice = async () => {
     NAIVE_UI_MESSAGE.error(t('common.message.get_price_failed') + '\n' + errMsg)
   }
   refreshingItemPrice.value = false
+}
+const showPriceDetailModal = () => {
+  showItemPriceDetail([props.itemInfo])
 }
 
 const innerPopTrigger = computed(() => {
@@ -883,6 +888,13 @@ const innerPopTrigger = computed(() => {
               >
                 <n-icon :size="12"><RefreshOutlined /></n-icon>
                 {{ refreshingItemPrice ? t('common.refreshing') : t('common.refresh') }}
+              </a>
+              <a
+                style="padding: 0; margin-left: 3px; display: flex; line-height: 1;"
+                @click="showPriceDetailModal"
+              >
+                <n-icon :size="12"><TableViewFilled /></n-icon>
+                详表
               </a>
             </div>
           </div>

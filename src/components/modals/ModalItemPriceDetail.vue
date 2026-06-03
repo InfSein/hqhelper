@@ -176,7 +176,7 @@ const purchaseHistoryList = computed(() => {
                   {{ getTableShowTypeName(showType) }}
                 </n-button>
               </div>
-              <n-scrollbar :style="{ height: scrollBarHeight }">
+              <n-scrollbar trigger="none" :style="{ height: scrollBarHeight }">
                 <div class="flex-col gap-2">
                   <ItemPriceLogCell
                     v-for="(mi, miIndex) in marketBoardList"
@@ -208,7 +208,7 @@ const purchaseHistoryList = computed(() => {
                   {{ getTableShowTypeName(showType) }}
                 </n-button>
               </div>
-              <n-scrollbar :style="{ height: scrollBarHeight }">
+              <n-scrollbar trigger="none" :style="{ height: scrollBarHeight }">
                 <div class="flex-col gap-2">
                   <ItemPriceLogCell
                     v-for="(ph, phIndex) in purchaseHistoryList"

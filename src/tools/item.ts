@@ -850,7 +850,7 @@ const getItemPrice = async (
 ) => {
   const itemstr = item.toString()
   const url = `https://universalis.app/api/v2/${server}/${itemstr}`
-    + listAll ? '' : '?listings=10'
+    + (listAll ? '' : '?listings=10')
   let response : string
   if (window.electronAPI?.httpGet) {
     response = await window.electronAPI.httpGet(url, 30000)
