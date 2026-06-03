@@ -4,28 +4,24 @@ import {
 } from '@vicons/material'
 import ItemPriceLogCell from '../custom/item/ItemPriceLogCell.vue'
 import ItemSelector from '../custom/item/ItemSelector.vue'
-import ItemSpan from '../custom/item/ItemSpan.vue'
 import { useStore } from '@/store'
-import type { UserConfigModel } from '@/models/config-user'
 import { fixFuncConfig, type FuncConfigModel } from '@/models/config-func'
 import { useDialog } from '@/tools/dialog'
 import { handleGetPriceError } from '@/tools/error'
-import { getItemPriceInfo, ItemPriceApiVersion, type ItemInfo } from '@/tools/item'
-import UseConfig from '@/tools/use-config'
+import { getItemInfo, getItemPriceInfo, ItemPriceApiVersion, type ItemInfo } from '@/tools/item'
+import GroupBox from '../templates/GroupBox.vue'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
 const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
 
 const store = useStore()
 const { alertError } = useDialog(t)
-const NAIVE_UI_MESSAGE = useMessage()
-const {
-  itemLanguage,
-} = UseConfig(userConfig, funcConfig)
 
 const showModal = defineModel<boolean>('show', { required: true })
+
+const tableShowTypes = ['all', 'hq', 'nq'] as const
+type tableShowType = typeof tableShowTypes[number]
 
 interface ModalItemPriceDetailProps {
   items: ItemInfo[]
@@ -36,8 +32,8 @@ const loading = ref(false)
 const selectedItems = ref<ItemInfo[]>([])
 const currItem = ref(0)
 const pageConfig = reactive({
-  marketShowHq: false,
-  purchaseShowHq: false,
+  marketShowType: 'all' as tableShowType,
+  purchaseShowType: 'all' as tableShowType,
   desktopScrollHeight: 600,
   mobileScrollHeight: 600,
 })
@@ -79,7 +75,7 @@ const loadItemPrices = async (forceUpdate = false) => {
 }
 const updateUi = () => {
   pageConfig.desktopScrollHeight = window.innerHeight * 0.6 - 110
-  pageConfig.mobileScrollHeight = window.innerHeight * 0.8 - 200
+  pageConfig.mobileScrollHeight = window.innerHeight * 0.4 - 85
 }
 const scrollBarHeight = computed(() => {
   if (isMobile.value) {
@@ -92,21 +88,19 @@ const scrollBarHeight = computed(() => {
 
 // #region 物品选择
 const itemsForSelect = computed(() => selectedItems.value.map(item => item.id))
-const handleTabAdd = () => {
-  // todo 要做个弹窗
-}
-const handleTabClose = (itemId: number) => {
-  const index = selectedItems.value.findIndex(item => item.id === itemId)
-  if (index !== -1) {
-    selectedItems.value.splice(index, 1)
-    if (currItem.value === itemId) {
-      currItem.value = selectedItems.value[0]?.id ?? 0
-    }
-  }
-}
 // #endregion
 
 // #region 表格
+const getTableShowTypeName = (type: tableShowType) => {
+  if (type === 'all') {
+    return t('item.price.detail_table.show_all')
+  } else if (type === 'hq') {
+    return t('item.price.detail_table.show_hq')
+  } else if (type === 'nq') {
+    return t('item.price.detail_table.show_nq')
+  }
+  return '???'
+}
 const tableEmptyInfo = computed(() => {
   if (!currItem.value) {
     return t('item.price.detail_table.empty.no_item_selected')
@@ -120,8 +114,10 @@ const marketBoardList = computed(() => {
   const itemPriceInfo = funcConfig.value.cache_item_prices[currItem.value]
   if (!itemPriceInfo?.marketListing) return []
   return itemPriceInfo.marketListing.filter(mi => {
-    if (pageConfig.marketShowHq) {
+    if (pageConfig.marketShowType === 'hq') {
       return mi.hq
+    } else if (pageConfig.marketShowType === 'nq') {
+      return !mi.hq
     } else {
       return true
     }
@@ -131,8 +127,10 @@ const purchaseHistoryList = computed(() => {
   const itemPriceInfo = funcConfig.value.cache_item_prices[currItem.value]
   if (!itemPriceInfo?.purchaseHistory) return []
   return itemPriceInfo.purchaseHistory.filter(ph => {
-    if (pageConfig.purchaseShowHq) {
+    if (pageConfig.purchaseShowType === 'hq') {
       return ph.hq
+    } else if (pageConfig.purchaseShowType === 'nq') {
+      return !ph.hq
     } else {
       return true
     }
@@ -151,93 +149,82 @@ const purchaseHistoryList = computed(() => {
   >
     <n-spin :show="loading" :description="t('item.price.detail_table.loading')">
       <div class="wrapper">
-        <div class="actions-wrapper">
-          <template v-if="items.length <= 10">
-            <n-tabs
-              v-model:value="currItem"
-              type="card"
-              addable closable
-              tab-style="min-width: 80px;"
-              @close="handleTabClose"
-              @add="handleTabAdd"
-            >
-              <n-tab v-for="item in items" :key="item.id" :name="item.id">
-                <ItemSpan :item-info="item" hide-pop-icon />
-              </n-tab>
-            </n-tabs>
-          </template>
-          <template v-else>
-            <n-input-group>
-              <ItemSelector
-                v-model:model-value="currItem"
-                dont-clean-after-select
-                options-preset="custom"
-                :options="itemsForSelect"
-              />
-              <n-button type="primary" @click="handleTabAdd">{{ t('common.add') }}</n-button>
-            </n-input-group>
-          </template>
-        </div>
+        <GroupBox title="选择道具">
+          <div class="actions-wrapper">
+            <ItemSelector
+              v-model:model-value="currItem"
+              dont-clean-after-select
+              options-preset="custom"
+              :options="itemsForSelect"
+            />
+          </div>
+        </GroupBox>
         <div class="tables-wrapper">
-          <n-card size="small">
-            <template #header>
-              <div class="tcard-title">
-                <i class="xiv e03e"></i>
-                {{ t('item.price.detail_table.group_marketboard') }}
-                <n-checkbox
-                  v-show="false"
-                  v-model:checked="pageConfig.marketShowHq"
-                  size="small"
-                  :label="t('item.price.show_hq_only')"
-                />
-              </div>
-            </template>
+          <GroupBox :title="' ' + t('item.price.detail_table.group_marketboard')">
             <n-empty v-if="tableEmptyInfo" :description="tableEmptyInfo" />
-            <n-scrollbar v-else :style="{ height: scrollBarHeight }">
-              <div class="flex-col gap-2">
-                <ItemPriceLogCell
-                  v-for="(mi, miIndex) in marketBoardList"
-                  :key="'mi_' + miIndex"
-                  :hq="mi.hq"
-                  :time="mi.lastReviewTime"
-                  :price-per-unit="mi.pricePerUnit"
-                  :quantity="mi.quantity"
-                  :total="mi.total"
-                  :world-name="mi.worldName"
-                />
+            <div v-else class="flex-col gap-2">
+              <div class="flex-vac gap-2" style="margin-left: 0.5em;">
+                <div>显示：</div>
+                <n-button
+                  v-for="showType in tableShowTypes"
+                  :key="showType"
+                  size="tiny"
+                  :disabled="showType === 'hq' && !getItemInfo(currItem).hqable"
+                  :type="pageConfig.marketShowType === showType ? 'primary' : 'default'"
+                  @click="pageConfig.marketShowType = showType"
+                >
+                  {{ getTableShowTypeName(showType) }}
+                </n-button>
               </div>
-            </n-scrollbar>
-          </n-card>
-          <n-card size="small">
-            <template #header>
-              <div class="tcard-title">
-                <i class="xiv timer"></i>
-                {{ t('item.price.detail_table.group_purchasehistory') }}
-                <n-checkbox
-                  v-show="false"
-                  v-model:checked="pageConfig.purchaseShowHq"
-                  size="small"
-                  :label="t('item.price.show_hq_only')"
-                />
-              </div>
-            </template>
+              <n-scrollbar :style="{ height: scrollBarHeight }">
+                <div class="flex-col gap-2">
+                  <ItemPriceLogCell
+                    v-for="(mi, miIndex) in marketBoardList"
+                    :key="'mi_' + miIndex"
+                    :hq="mi.hq"
+                    :time="mi.lastReviewTime"
+                    :price-per-unit="mi.pricePerUnit"
+                    :quantity="mi.quantity"
+                    :total="mi.total"
+                    :world-name="mi.worldName"
+                  />
+                </div>
+              </n-scrollbar>
+            </div>
+          </GroupBox>
+          <GroupBox :title="' ' + t('item.price.detail_table.group_purchasehistory')">
             <n-empty v-if="tableEmptyInfo" :description="tableEmptyInfo" />
-            <n-scrollbar v-else :style="{ height: scrollBarHeight }">
-              <div class="flex-col gap-2">
-                <ItemPriceLogCell
-                  v-for="(ph, phIndex) in purchaseHistoryList"
-                  :key="'ph_' + phIndex"
-                  :hq="ph.hq"
-                  :time="ph.timestamp"
-                  :price-per-unit="ph.pricePerUnit"
-                  :quantity="ph.quantity"
-                  :total="ph.total"
-                  :world-name="ph.worldName"
-                  :buyer-name="ph.buyerName"
-                />
+            <div v-else class="flex-col gap-2">
+              <div class="flex-vac gap-2" style="margin-left: 0.5em;">
+                <div>显示：</div>
+                <n-button
+                  v-for="showType in tableShowTypes"
+                  :key="showType"
+                  size="tiny"
+                  :disabled="showType === 'hq' && !getItemInfo(currItem).hqable"
+                  :type="pageConfig.purchaseShowType === showType ? 'primary' : 'default'"
+                  @click="pageConfig.purchaseShowType = showType"
+                >
+                  {{ getTableShowTypeName(showType) }}
+                </n-button>
               </div>
-            </n-scrollbar>
-          </n-card>
+              <n-scrollbar :style="{ height: scrollBarHeight }">
+                <div class="flex-col gap-2">
+                  <ItemPriceLogCell
+                    v-for="(ph, phIndex) in purchaseHistoryList"
+                    :key="'ph_' + phIndex"
+                    :hq="ph.hq"
+                    :time="ph.timestamp"
+                    :price-per-unit="ph.pricePerUnit"
+                    :quantity="ph.quantity"
+                    :total="ph.total"
+                    :world-name="ph.worldName"
+                    :buyer-name="ph.buyerName"
+                  />
+                </div>
+              </n-scrollbar>
+            </div>
+          </GroupBox>
         </div>
       </div>
     </n-spin>
@@ -249,7 +236,7 @@ const purchaseHistoryList = computed(() => {
   height: 60vh;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 15px;
 
   .actions-wrapper {
     width: 100%;
@@ -260,7 +247,7 @@ const purchaseHistoryList = computed(() => {
     width: 100%;
     flex: 1;
     display: grid;
-    gap: 12px;
+    gap: 15px 8px;
     grid-template-columns: repeat(2, minmax(200px, 1fr));
 
     .tcard-title {

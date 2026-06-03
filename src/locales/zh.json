@@ -1555,7 +1555,10 @@
         "group_purchasehistory": "历史交易",
         "intro": "查看详表",
         "loading": "正在获取物品价格……",
-        "title": "物品价格详表"
+        "title": "物品价格详表",
+        "show_all": "全部",
+        "show_hq": "只看HQ",
+        "show_nq": "只看NQ"
       },
       "no_price": "没有价格。",
       "no_price_reason": "可能原因：未获取过价格/物品未实装或不存在此品质/交易数据不足",
