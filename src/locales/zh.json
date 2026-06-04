@@ -1571,7 +1571,6 @@
       "no_price_received_reason": "可能原因：物品未实装/交易数据不足",
       "no_show_price_type_setted": "还没有设置要显示哪些价格类型。请在偏好设置的“{option}”设置项中进行配置。",
       "refreshing": "正在刷新价格",
-      "show_hq_only": "只看HQ",
       "update_failed": "更新价格失败",
       "update_succeed": "更新价格成功"
     },
