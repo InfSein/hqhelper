@@ -895,7 +895,7 @@ const innerPopTrigger = computed(() => {
                 @click="showPriceDetailModal"
               >
                 <n-icon :size="12"><TableViewFilled /></n-icon>
-                详表
+                {{ t('item.price.detail_table.intro_short') }}
               </a>
             </div>
           </div>

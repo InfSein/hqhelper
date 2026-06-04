@@ -241,7 +241,7 @@ const showModalItemPriceDetail = ref(false)
 const modalItemPriceDetailItems = ref<ItemInfo[]>([])
 const showItemPriceDetail = (items: ItemInfo[]) => {
   if (showModalItemPriceDetail.value) {
-    alertError('无法重复打开弹窗'); return
+    alertError(t('common.message.cannot_open_same_modal')); return
   }
   modalItemPriceDetailItems.value = items
   showModalItemPriceDetail.value = true
