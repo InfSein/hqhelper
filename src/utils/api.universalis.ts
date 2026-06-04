@@ -2,7 +2,7 @@ export const getUniversalisBatch = async <T> (
   api: "" | "history/",
   item : number | number[],
   server : string,
-  listAll = false,
+  params : string[] = [],
 ): Promise<Record<number, T>> => {
   if (typeof item === 'number') {
     return await getSingle(item)
@@ -30,8 +30,8 @@ export const getUniversalisBatch = async <T> (
 
   async function getSingle(item: number) {
     const itemstr = item.toString()
-    const url = `https://universalis.app/api/v2/${api}${server}/${itemstr}`
-      + (listAll ? '?listings=50' : '?listings=10')
+    const paramsStr = params.length ? `?${params.join('&')}` : ''
+    const url = `https://universalis.app/api/v2/${api}${server}/${itemstr}${paramsStr}`
     let response : string
     if (window.electronAPI?.httpGet) {
       response = await window.electronAPI.httpGet(url, 30000)
@@ -44,7 +44,8 @@ export const getUniversalisBatch = async <T> (
   }
   async function getMulti(item: number[]) {
     const itemstr = item.join(',')
-    const url = `https://universalis.app/api/v2/${api}${server}/${itemstr}${listAll ? '' : '?listings=10'}`
+    const paramsStr = params.length ? `?${params.join('&')}` : ''
+    const url = `https://universalis.app/api/v2/${api}${server}/${itemstr}${paramsStr}`
     let response : string
     if (window.electronAPI?.httpGet) {
       response = await window.electronAPI.httpGet(url, 30000)

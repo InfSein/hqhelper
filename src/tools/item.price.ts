@@ -9,7 +9,7 @@ export const getItemPriceInfo = async (
 ) : Promise<Record<number, ItemPriceInfo>> => {
   const result : Record<number, ItemPriceInfo> = {}
   const apiResponse = await getUniversalisBatch<ApiPriceInfo>(
-    '', item, server, listAll
+    '', item, server, listAll ? ['listings=50'] : ['listings=10']
   )
   Object.values(apiResponse).forEach(apiPriceInfo => {
     result[apiPriceInfo.itemID] = parseApiPriceInfo(apiPriceInfo, listAll)
@@ -22,7 +22,7 @@ export const getItemPriceHistory = async (
   server: string,
 ) : Promise<Record<number, ApiPriceHistoryInfo>> => {
   return await getUniversalisBatch<ApiPriceHistoryInfo>(
-    'history/', item, server
+    'history/', item, server, []
   )
 }
 

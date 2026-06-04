@@ -2,6 +2,8 @@
 import {
   TableViewFilled,
 } from '@vicons/material'
+import ChartXy from '../chart/ChartXy.vue'
+import GroupBox from '../templates/GroupBox.vue'
 import ItemPriceLogCell from '../custom/item/ItemPriceLogCell.vue'
 import ItemSelector from '../custom/item/ItemSelector.vue'
 import { useStore } from '@/store'
@@ -9,7 +11,6 @@ import { fixFuncConfig, itemPriceTypes, type FuncConfigModel, type ItemPriceType
 import { useDialog } from '@/tools/dialog'
 import { handleGetPriceError } from '@/tools/error'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
-import GroupBox from '../templates/GroupBox.vue'
 import { ItemPriceApiVersion } from '@/types/item.price.ts'
 import { getItemPriceHistory, getItemPriceInfo } from '@/tools/item.price.ts'
 
@@ -34,8 +35,11 @@ const loading = ref(false)
 const selectedItems = ref<ItemInfo[]>([])
 const currItem = ref(0)
 const pageConfig = reactive({
+  chartShowType: 'all' as logShowType,
   marketShowType: 'all' as logShowType,
   purchaseShowType: 'all' as logShowType,
+  chartWidth: 500,
+  chartHeight: 200,
   desktopScrollHeight: 600,
   mobileScrollHeight: 600,
 })
@@ -84,8 +88,9 @@ const loadItemPrices = async (forceUpdate = false) => {
   }
 }
 const updateUi = () => {
-  pageConfig.desktopScrollHeight = window.innerHeight * 0.6 - 310
-  pageConfig.mobileScrollHeight = window.innerHeight * 0.4 - 85
+  pageConfig.chartWidth = isMobile.value ? window.innerWidth - 64 : 560
+  pageConfig.desktopScrollHeight = window.innerHeight * 0.7 - 375
+  pageConfig.mobileScrollHeight = window.innerHeight * 0.4 - 190
 }
 const scrollBarHeight = computed(() => {
   if (isMobile.value) {
@@ -140,6 +145,22 @@ const itemPriceInfo = computed(() => {
   })
   return prices
 })
+const priceChartDataset = computed(() => {
+  const logs = funcConfig.value.cache_item_price_histories?.[currItem.value]?.entries
+  if (!logs) return []
+  return logs.sort((a, b) => a.timestamp - b.timestamp).filter(ph => {
+    if (pageConfig.chartShowType === 'hq') {
+      return ph.hq
+    } else if (pageConfig.chartShowType === 'nq') {
+      return !ph.hq
+    } else {
+      return true
+    }
+  }).map(entry => ({
+    timestamp: entry.timestamp,
+    value: entry.pricePerUnit
+  })) ?? []
+})
 // #endregion
 
 // #region 价格历史
@@ -177,7 +198,7 @@ const marketBoardList = computed(() => {
 })
 const purchaseHistoryList = computed(() => {
   const itemPriceInfo = funcConfig.value.cache_item_prices[currItem.value]
-  const history = funcConfig.value.cache_item_price_histories[currItem.value].entries || itemPriceInfo?.purchaseHistory
+  const history = funcConfig.value.cache_item_price_histories[currItem.value]?.entries || itemPriceInfo?.purchaseHistory
   if (!history) return []
   return history.filter(ph => {
     if (pageConfig.purchaseShowType === 'hq') {
@@ -195,7 +216,7 @@ const purchaseHistoryList = computed(() => {
 <template>
   <MyModal
     v-model:show="showModal"
-    max-width="800px"
+    max-width="880px"
     :icon="TableViewFilled"
     :title="t('item.price.detail_table.title')"
     @on-load="onLoad"
@@ -213,30 +234,54 @@ const purchaseHistoryList = computed(() => {
           </div>
         </GroupBox>
         <GroupBox :title="' ' + t('item.price.detail_table.group_totaltable')">
-          <div class="pricetable-wrapper">
-            <n-table size="small" class="tiny-table w-full">
-              <thead>
-                <tr>
-                  <th></th>
-                  <th>NQ</th>
-                  <th v-if="currItemInfo.hqable">HQ</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr
-                  v-for="(price, index) in itemPriceInfo"
-                  :key="'price-' + index"
+          <div class="pricesummary-wrapper">
+            <div class="summarytable-container">
+              <n-table size="small" class="tiny-table">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>NQ</th>
+                    <th v-if="currItemInfo.hqable">HQ</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    v-for="(price, index) in itemPriceInfo"
+                    :key="'price-' + index"
+                  >
+                    <td>{{ price.name }}</td>
+                    <td>
+                      <div :style="price.styleNq" :title="price.tipNq">{{ price.priceStrNq }}</div>
+                    </td>
+                    <td v-if="currItemInfo.hqable">
+                      <div :style="price.styleHq" :title="price.tipHq">{{ price.priceStrHq }}</div>
+                    </td>
+                  </tr>
+                </tbody>
+              </n-table>
+            </div>
+            <div v-if="!isMobile" class="flex-col">
+              <div class="flex-vac gap-2" style="align-self: end;">
+                <div>{{ t('item.price.detail_table.table_show_type') }}</div>
+                <n-button
+                  v-for="showType in tableShowTypes"
+                  :key="showType"
+                  size="tiny"
+                  :disabled="showType === 'hq' && !getItemInfo(currItem).hqable"
+                  :type="pageConfig.chartShowType === showType ? 'primary' : 'default'"
+                  @click="pageConfig.chartShowType = showType"
                 >
-                  <td>{{ price.name }}</td>
-                  <td>
-                    <div :style="price.styleNq" :title="price.tipNq">{{ price.priceStrNq }}</div>
-                  </td>
-                  <td v-if="currItemInfo.hqable">
-                    <div :style="price.styleHq" :title="price.tipHq">{{ price.priceStrHq }}</div>
-                  </td>
-                </tr>
-              </tbody>
-            </n-table>
+                  {{ getLogShowTypeName(showType) }}
+                </n-button>
+              </div>
+              <div class="flex-hac flex-1">
+                <ChartXy
+                  :width="pageConfig.chartWidth"
+                  :height="pageConfig.chartHeight"
+                  :dataset="priceChartDataset"
+                />
+              </div>
+            </div>
           </div>
         </GroupBox>
         <div class="pricelogs-wrapper">
@@ -256,6 +301,7 @@ const purchaseHistoryList = computed(() => {
                   {{ getLogShowTypeName(showType) }}
                 </n-button>
               </div>
+              <n-divider style="margin: 0;" />
               <n-scrollbar trigger="none" :style="{ height: scrollBarHeight }">
                 <div class="flex-col gap-2">
                   <ItemPriceLogCell
@@ -265,7 +311,6 @@ const purchaseHistoryList = computed(() => {
                     :time="mi.lastReviewTime"
                     :price-per-unit="mi.pricePerUnit"
                     :quantity="mi.quantity"
-                    :total="mi.total"
                     :world-name="mi.worldName"
                   />
                 </div>
@@ -288,6 +333,7 @@ const purchaseHistoryList = computed(() => {
                   {{ getLogShowTypeName(showType) }}
                 </n-button>
               </div>
+              <n-divider style="margin: 0;" />
               <n-scrollbar trigger="none" :style="{ height: scrollBarHeight }">
                 <div class="flex-col gap-2">
                   <ItemPriceLogCell
@@ -297,7 +343,6 @@ const purchaseHistoryList = computed(() => {
                     :time="ph.timestamp"
                     :price-per-unit="ph.pricePerUnit"
                     :quantity="ph.quantity"
-                    :total="ph.total"
                     :world-name="ph.worldName"
                     :buyer-name="ph.buyerName"
                   />
@@ -313,7 +358,7 @@ const purchaseHistoryList = computed(() => {
 
 <style scoped>
 .wrapper {
-  height: 60vh;
+  height: 70vh;
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -322,6 +367,17 @@ const purchaseHistoryList = computed(() => {
     width: 100%;
     display: flex;
     gap: 4px;
+  }
+  .pricesummary-wrapper {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 8px;
+
+    .summarytable-container {
+      width: 100%;
+      padding-top: 4px;
+    }
   }
   .pricelogs-wrapper {
     width: 100%;
@@ -343,6 +399,9 @@ const purchaseHistoryList = computed(() => {
   .wrapper {
     height: 80vh;
 
+    .pricesummary-wrapper {
+      grid-template-columns: 1fr;
+    }
     .pricelogs-wrapper {
       grid-template-columns: 1fr;
     }

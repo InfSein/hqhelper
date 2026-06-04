@@ -6,7 +6,6 @@ interface ItemPriceLogCellProps {
   time: number
   pricePerUnit: number
   quantity: number
-  total: number
   worldName?: string
   buyerName?: string
 }
