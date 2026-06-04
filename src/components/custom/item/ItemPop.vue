@@ -21,8 +21,9 @@ import type { UserConfigModel } from '@/models/config-user'
 import { fixFuncConfig, type FuncConfigModel, type ItemPriceType } from '@/models/config-func'
 import type EorzeaTime from '@/tools/eorzea-time'
 import { handleGetPriceError } from '@/tools/error'
-import { getItemInfo, getItemPriceInfo, type ItemInfo } from '@/tools/item'
+import { getItemInfo, type ItemInfo } from '@/tools/item'
 import UseConfig from '@/tools/use-config'
+import { getItemPriceInfo } from '@/tools/item.price.ts'
 
 const store = useStore()
 const NAIVE_UI_MESSAGE = useMessage()

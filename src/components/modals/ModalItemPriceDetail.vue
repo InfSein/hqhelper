@@ -5,11 +5,13 @@ import {
 import ItemPriceLogCell from '../custom/item/ItemPriceLogCell.vue'
 import ItemSelector from '../custom/item/ItemSelector.vue'
 import { useStore } from '@/store'
-import { fixFuncConfig, type FuncConfigModel } from '@/models/config-func'
+import { fixFuncConfig, itemPriceTypes, type FuncConfigModel, type ItemPriceType } from '@/models/config-func'
 import { useDialog } from '@/tools/dialog'
 import { handleGetPriceError } from '@/tools/error'
-import { getItemInfo, getItemPriceInfo, ItemPriceApiVersion, type ItemInfo } from '@/tools/item'
+import { getItemInfo, type ItemInfo } from '@/tools/item'
 import GroupBox from '../templates/GroupBox.vue'
+import { ItemPriceApiVersion } from '@/types/item.price.ts'
+import { getItemPriceHistory, getItemPriceInfo } from '@/tools/item.price.ts'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
@@ -21,7 +23,7 @@ const { alertError } = useDialog(t)
 const showModal = defineModel<boolean>('show', { required: true })
 
 const tableShowTypes = ['all', 'hq', 'nq'] as const
-type tableShowType = typeof tableShowTypes[number]
+type logShowType = typeof tableShowTypes[number]
 
 interface ModalItemPriceDetailProps {
   items: ItemInfo[]
@@ -32,8 +34,8 @@ const loading = ref(false)
 const selectedItems = ref<ItemInfo[]>([])
 const currItem = ref(0)
 const pageConfig = reactive({
-  marketShowType: 'all' as tableShowType,
-  purchaseShowType: 'all' as tableShowType,
+  marketShowType: 'all' as logShowType,
+  purchaseShowType: 'all' as logShowType,
   desktopScrollHeight: 600,
   mobileScrollHeight: 600,
 })
@@ -60,10 +62,18 @@ const loadItemPrices = async (forceUpdate = false) => {
       funcConfig.value.universalis_server,
       true,
     )
+    const itemPriceHistory = await getItemPriceHistory(
+      [...new Set(itemsToLoad)],
+      funcConfig.value.universalis_server,
+    )
     const newConfig = funcConfig.value
     Object.keys(itemPrices).forEach(id => {
       const itemID = Number(id)
       newConfig.cache_item_prices[itemID] = itemPrices[itemID]
+    })
+    Object.keys(itemPriceHistory).forEach(id => {
+      const itemID = Number(id)
+      newConfig.cache_item_price_histories[itemID] = itemPriceHistory[itemID]
     })
     await store.setFuncConfig(fixFuncConfig(newConfig, store.userConfig))
   } catch (error: any) {
@@ -74,7 +84,7 @@ const loadItemPrices = async (forceUpdate = false) => {
   }
 }
 const updateUi = () => {
-  pageConfig.desktopScrollHeight = window.innerHeight * 0.6 - 110
+  pageConfig.desktopScrollHeight = window.innerHeight * 0.6 - 310
   pageConfig.mobileScrollHeight = window.innerHeight * 0.4 - 85
 }
 const scrollBarHeight = computed(() => {
@@ -88,10 +98,52 @@ const scrollBarHeight = computed(() => {
 
 // #region 物品选择
 const itemsForSelect = computed(() => selectedItems.value.map(item => item.id))
+const currItemInfo = computed(() => getItemInfo(currItem.value))
 // #endregion
 
-// #region 表格
-const getTableShowTypeName = (type: tableShowType) => {
+// #region 价格总表
+const itemPriceInfo = computed(() => {
+  const priceInfo = funcConfig.value.cache_item_prices[currItem.value]
+  const prices = itemPriceTypes.map(priceType => {
+    const priceNq = Math.floor(priceInfo?.[`${priceType}NQ`] ?? 0)
+    const priceHq = Math.floor(priceInfo?.[`${priceType}HQ`] ?? 0)
+    const tooltipForNoPrice = t('item.price.no_price') + '\n' + t('item.price.no_price_reason')
+    const styleForNoPrice = 'cursor: help; text-decoration: underline dashed gray;'
+    let priceStrNq = priceNq.toLocaleString(), priceStrHq = priceHq.toLocaleString()
+    let tipNq = '', tipHq = '', styleNq = '', styleHq = ''
+    if (!priceNq) {
+      priceStrNq = '???'
+      tipNq = tooltipForNoPrice; styleNq = styleForNoPrice
+    }
+    if (!priceHq) {
+      priceStrHq = '???'
+      tipHq = tooltipForNoPrice; styleHq = styleForNoPrice
+    }
+    return {
+      name: getPriceTypeName(priceType),
+      priceStrNq, priceStrHq,
+      priceNq, tipNq, styleNq,
+      priceHq, tipHq, styleHq
+    }
+    function getPriceTypeName(ptype: ItemPriceType) {
+      switch (ptype) {
+        case 'averagePrice': return t('preference.universalis_price_type.option.average')
+        case 'currentAveragePrice': return t('preference.universalis_price_type.option.curr_average')
+        case 'minPrice': return t('preference.universalis_price_type.option.min')
+        case 'maxPrice': return t('preference.universalis_price_type.option.max')
+        case 'purchasePrice': return t('preference.universalis_price_type.option.purchase_average.title')
+        case 'marketLowestPrice': return t('preference.universalis_price_type.option.market_min.title')
+        case 'marketPrice': return t('preference.universalis_price_type.option.market_average.title')
+        default: return t('common.unknown')
+      }
+    }
+  })
+  return prices
+})
+// #endregion
+
+// #region 价格历史
+const getLogShowTypeName = (type: logShowType) => {
   if (type === 'all') {
     return t('item.price.detail_table.show_all')
   } else if (type === 'hq') {
@@ -101,7 +153,7 @@ const getTableShowTypeName = (type: tableShowType) => {
   }
   return '???'
 }
-const tableEmptyInfo = computed(() => {
+const logEmptyInfo = computed(() => {
   if (!currItem.value) {
     return t('item.price.detail_table.empty.no_item_selected')
   } else if (!funcConfig.value.cache_item_prices[currItem.value]?.listAll) {
@@ -125,8 +177,9 @@ const marketBoardList = computed(() => {
 })
 const purchaseHistoryList = computed(() => {
   const itemPriceInfo = funcConfig.value.cache_item_prices[currItem.value]
-  if (!itemPriceInfo?.purchaseHistory) return []
-  return itemPriceInfo.purchaseHistory.filter(ph => {
+  const history = funcConfig.value.cache_item_price_histories[currItem.value].entries || itemPriceInfo?.purchaseHistory
+  if (!history) return []
+  return history.filter(ph => {
     if (pageConfig.purchaseShowType === 'hq') {
       return ph.hq
     } else if (pageConfig.purchaseShowType === 'nq') {
@@ -149,7 +202,7 @@ const purchaseHistoryList = computed(() => {
   >
     <n-spin :show="loading" :description="t('item.price.detail_table.loading')">
       <div class="wrapper">
-        <GroupBox title="选择道具">
+        <GroupBox :title="' ' + t('item.price.detail_table.group_selectitem')">
           <div class="actions-wrapper">
             <ItemSelector
               v-model:model-value="currItem"
@@ -159,12 +212,39 @@ const purchaseHistoryList = computed(() => {
             />
           </div>
         </GroupBox>
-        <div class="tables-wrapper">
+        <GroupBox :title="' ' + t('item.price.detail_table.group_totaltable')">
+          <div class="pricetable-wrapper">
+            <n-table size="small" class="tiny-table w-full">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>NQ</th>
+                  <th v-if="currItemInfo.hqable">HQ</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="(price, index) in itemPriceInfo"
+                  :key="'price-' + index"
+                >
+                  <td>{{ price.name }}</td>
+                  <td>
+                    <div :style="price.styleNq" :title="price.tipNq">{{ price.priceStrNq }}</div>
+                  </td>
+                  <td v-if="currItemInfo.hqable">
+                    <div :style="price.styleHq" :title="price.tipHq">{{ price.priceStrHq }}</div>
+                  </td>
+                </tr>
+              </tbody>
+            </n-table>
+          </div>
+        </GroupBox>
+        <div class="pricelogs-wrapper">
           <GroupBox :title="' ' + t('item.price.detail_table.group_marketboard')">
-            <n-empty v-if="tableEmptyInfo" :description="tableEmptyInfo" />
+            <n-empty v-if="logEmptyInfo" :description="logEmptyInfo" />
             <div v-else class="flex-col gap-2">
               <div class="flex-vac gap-2" style="margin-left: 0.5em;">
-                <div>显示：</div>
+                <div>{{ t('item.price.detail_table.table_show_type') }}</div>
                 <n-button
                   v-for="showType in tableShowTypes"
                   :key="showType"
@@ -173,7 +253,7 @@ const purchaseHistoryList = computed(() => {
                   :type="pageConfig.marketShowType === showType ? 'primary' : 'default'"
                   @click="pageConfig.marketShowType = showType"
                 >
-                  {{ getTableShowTypeName(showType) }}
+                  {{ getLogShowTypeName(showType) }}
                 </n-button>
               </div>
               <n-scrollbar trigger="none" :style="{ height: scrollBarHeight }">
@@ -193,10 +273,10 @@ const purchaseHistoryList = computed(() => {
             </div>
           </GroupBox>
           <GroupBox :title="' ' + t('item.price.detail_table.group_purchasehistory')">
-            <n-empty v-if="tableEmptyInfo" :description="tableEmptyInfo" />
+            <n-empty v-if="logEmptyInfo" :description="logEmptyInfo" />
             <div v-else class="flex-col gap-2">
               <div class="flex-vac gap-2" style="margin-left: 0.5em;">
-                <div>显示：</div>
+                <div>{{ t('item.price.detail_table.table_show_type') }}</div>
                 <n-button
                   v-for="showType in tableShowTypes"
                   :key="showType"
@@ -205,7 +285,7 @@ const purchaseHistoryList = computed(() => {
                   :type="pageConfig.purchaseShowType === showType ? 'primary' : 'default'"
                   @click="pageConfig.purchaseShowType = showType"
                 >
-                  {{ getTableShowTypeName(showType) }}
+                  {{ getLogShowTypeName(showType) }}
                 </n-button>
               </div>
               <n-scrollbar trigger="none" :style="{ height: scrollBarHeight }">
@@ -243,7 +323,7 @@ const purchaseHistoryList = computed(() => {
     display: flex;
     gap: 4px;
   }
-  .tables-wrapper {
+  .pricelogs-wrapper {
     width: 100%;
     flex: 1;
     display: grid;
@@ -263,7 +343,7 @@ const purchaseHistoryList = computed(() => {
   .wrapper {
     height: 80vh;
 
-    .tables-wrapper {
+    .pricelogs-wrapper {
       grid-template-columns: 1fr;
     }
   }

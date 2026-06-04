@@ -13,6 +13,36 @@ export interface ApiPriceInfo {
   maxPriceNQ: number,
   maxPriceHQ: number
 }
+
+export interface ApiPriceHistoryInfo {
+  // The item ID.
+  itemID: number; // int32
+  // The world ID, if applicable.
+  worldID?: number; // int32
+  // The last upload time for this endpoint, in milliseconds since the UNIX epoch.
+  lastUploadTime: number; // int64
+  // The historical sales.
+  entries?: ApiHistoryInfo[];
+  // The DC name, if applicable.
+  dcName?: string;
+  // The region name, if applicable.
+  regionName?: string;
+  // A map of quantities to sale counts, representing the number of sales of each quantity.
+  stackSizeHistogram?: any;
+  // A map of quantities to NQ sale counts, representing the number of sales of each quantity.
+  stackSizeHistogramNQ?: any;
+  // A map of quantities to HQ sale counts, representing the number of sales of each quantity.
+  stackSizeHistogramHQ?: any;
+  // The average number of sales per day, over the past seven days (or the entirety of the shown sales, whichever comes first).
+  regularSaleVelocity: number;
+  // The average number of NQ sales per day, over the past seven days (or the entirety of the shown sales, whichever comes first).
+  nqSaleVelocity: number;
+  // The average number of HQ sales per day, over the past seven days (or the entirety of the shown sales, whichever comes first).
+  hqSaleVelocity: number;
+  // The world name, if applicable.
+  worldName?: string;
+}
+
 export interface ApiListInfo {
   /**
    * The time that this listing was posted, in seconds since the UNIX epoch.

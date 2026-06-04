@@ -6,7 +6,7 @@ import ItemPriceTable from '../custom/item/ItemPriceTable.vue'
 import TooltipText from '../custom/general/TooltipText.vue'
 import HelpButton from '../custom/general/HelpButton.vue'
 import ModalPreferences from './ModalPreferences.vue'
-import { calCostAndBenefit } from '@/tools/item'
+import useItemPrice from '@/composables/useItemPrice.ts'
 import type { ItemInfo } from '@/tools/item'
 import type { FuncConfigModel } from '@/models/config-func'
 
@@ -16,6 +16,8 @@ const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
 const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
 // const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
 const showItemPriceDetail = inject<(items: ItemInfo[]) => void>('showItemPriceDetail')!
+
+const { calCostAndBenefit } = useItemPrice()
 
 const modalId = 'modal-cost-and-benefits'
 
@@ -28,7 +30,7 @@ interface ModalCostAndBenefitProps {
 const props = defineProps<ModalCostAndBenefitProps>()
 
 const costAndBenefit = computed(() => {
-  return calCostAndBenefit(funcConfig.value, props.costItems, props.benefitItems)
+  return calCostAndBenefit(props.costItems, props.benefitItems)
 })
 const costInfo = computed(() => costAndBenefit.value.costInfo)
 const benefitInfo = computed(() => costAndBenefit.value.benefitInfo)

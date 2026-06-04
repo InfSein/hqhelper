@@ -4,8 +4,9 @@ import {
   XivJobs, XivGearAffixes
 } from '@/assets/data'
 import { attireAffixes, accessoryAffixes, type GearSelections, type AttireAffix, type AccessoryAffix, fixGearSelections } from "@/models/gears"
-import { getItemInfo, type ItemInfo, type ItemPriceInfo } from './item'
+import { getItemInfo, type ItemInfo } from './item'
 import type { StatementData } from './use-fufu-cal'
+import type { ItemPriceInfo } from '@/types/item.price'
 
 export const export2Excel = (
   gearSelections: GearSelections,

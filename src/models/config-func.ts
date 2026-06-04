@@ -1,9 +1,20 @@
-import type { ItemPriceInfo } from "@/tools/item"
+import type { ItemPriceInfo } from "@/types/item.price"
 import type { UserConfigModel } from "./config-user"
 import { deepCopy, assignDefaults } from "@/tools"
+import type { ApiPriceHistoryInfo } from "@/types/api.universalis"
+
+export const itemPriceTypes = [
+  'averagePrice',
+  'currentAveragePrice',
+  'minPrice',
+  'maxPrice',
+  'marketLowestPrice',
+  'marketPrice',
+  'purchasePrice'
+] as const
 
 export type FuncConfigKey = "copy_macro" | "craft_macro" | "craft_statement" | "recomm_process" | "cost_benefit"
-export type ItemPriceType = 'averagePrice' | 'currentAveragePrice' | 'minPrice' | 'maxPrice' | 'marketLowestPrice' | 'marketPrice' | 'purchasePrice'
+export type ItemPriceType = typeof itemPriceTypes[number]
 
 export type MacroGenerateMode = 'singleLine' | 'multiLine'
 export type WorkflowJoinMode = "accumulation" | "cover" | "overwrite"
@@ -88,6 +99,7 @@ export interface FuncConfigModel {
 
   // #region 缓存
   cache_item_prices: Record<number, ItemPriceInfo>
+  cache_item_price_histories: Record<number, ApiPriceHistoryInfo>
   // #endregion
 }
 
@@ -131,6 +143,7 @@ const defaultFuncConfig: FuncConfigModel = {
   workflow_default_join_target: 0,
   // * 缓存
   cache_item_prices: {},
+  cache_item_price_histories: {},
 }
 
 export const fixFuncConfig = (config?: FuncConfigModel, userConfig?: UserConfigModel) => {

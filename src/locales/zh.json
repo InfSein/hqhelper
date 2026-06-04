@@ -1558,7 +1558,10 @@
         "title": "物品价格详表",
         "show_all": "全部",
         "show_hq": "只看HQ",
-        "show_nq": "只看NQ"
+        "show_nq": "只看NQ",
+        "group_selectitem": "选择道具",
+        "table_show_type": "显示：",
+        "group_totaltable": "价格总表"
       },
       "no_price": "没有价格。",
       "no_price_reason": "可能原因：未获取过价格/物品未实装或不存在此品质/交易数据不足",

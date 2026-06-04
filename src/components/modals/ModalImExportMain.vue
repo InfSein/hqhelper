@@ -16,7 +16,8 @@ import { type UserConfigModel } from '@/models/config-user'
 import { fixFuncConfig, type FuncConfigModel } from '@/models/config-func'
 import { useFufuCal } from '@/tools/use-fufu-cal'
 import { export2Excel, importExcel } from '@/tools/excel'
-import type { ItemInfo, ItemPriceInfo } from '@/tools/item'
+import type { ItemInfo } from '@/tools/item'
+import type { ItemPriceInfo } from '@/types/item.price.ts'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
