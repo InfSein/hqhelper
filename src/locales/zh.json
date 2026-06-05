@@ -1153,7 +1153,9 @@
     "warn": "警告",
     "weibo": "微博",
     "will_be_named_with_time_when_empty": "不填则默认以时间命名",
-    "work_state": "工作状态"
+    "work_state": "工作状态",
+    "filter_item": "筛选物品",
+    "item_filter_input_placeholder": "支持按物品名/ID/品级/版本筛选"
   },
   "contact_us": {
     "feedback": {
