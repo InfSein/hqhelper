@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import {
   OpenInNewFilled,
-  RefreshOutlined
+  RefreshOutlined,
+  TableViewFilled,
 } from '@vicons/material'
 import HqSwitcher from '../general/HqSwitcher.vue'
 import ItemSpan from './ItemSpan.vue'
@@ -20,8 +21,9 @@ import type { UserConfigModel } from '@/models/config-user'
 import { fixFuncConfig, type FuncConfigModel, type ItemPriceType } from '@/models/config-func'
 import type EorzeaTime from '@/tools/eorzea-time'
 import { handleGetPriceError } from '@/tools/error'
-import { getItemInfo, getItemPriceInfo, type ItemInfo } from '@/tools/item'
+import { getItemInfo, type ItemInfo } from '@/tools/item'
 import UseConfig from '@/tools/use-config'
+import { getItemPriceInfo } from '@/tools/item.price.ts'
 
 const store = useStore()
 const NAIVE_UI_MESSAGE = useMessage()
@@ -31,6 +33,7 @@ const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
 const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
 const currentET = inject<Ref<EorzeaTime>>('currentET')!
 // const appMode = inject<Ref<"overlay" | "" | undefined>>('appMode') ?? ref('')
+const showItemPriceDetail = inject<(items: ItemInfo[]) => void>('showItemPriceDetail')!
 
 const {
   uiLanguage, itemLanguage,
@@ -435,6 +438,9 @@ const refreshItemPrice = async () => {
     NAIVE_UI_MESSAGE.error(t('common.message.get_price_failed') + '\n' + errMsg)
   }
   refreshingItemPrice.value = false
+}
+const showPriceDetailModal = () => {
+  showItemPriceDetail([props.itemInfo])
 }
 
 const innerPopTrigger = computed(() => {
@@ -883,6 +889,13 @@ const innerPopTrigger = computed(() => {
               >
                 <n-icon :size="12"><RefreshOutlined /></n-icon>
                 {{ refreshingItemPrice ? t('common.refreshing') : t('common.refresh') }}
+              </a>
+              <a
+                style="padding: 0; margin-left: 3px; display: flex; line-height: 1;"
+                @click="showPriceDetailModal"
+              >
+                <n-icon :size="12"><TableViewFilled /></n-icon>
+                {{ t('item.price.detail_table.intro_short') }}
               </a>
             </div>
           </div>

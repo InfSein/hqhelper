@@ -1035,7 +1035,8 @@
       "please_input_item_name": "请输入物品名",
       "please_input_val": "请输入{val}",
       "please_wait_for_a_while": "请稍等片刻。",
-      "sync_succeed": "同步成功"
+      "sync_succeed": "同步成功",
+      "cannot_open_same_modal": "无法重复打开弹窗"
     },
     "mode": "模式",
     "mquoted_view_statement": "[查看报表]",
@@ -1546,6 +1547,24 @@
       "yield_plus": "高产II/丰收II +{0}"
     },
     "price": {
+      "detail_table": {
+        "empty": {
+          "no_data": "暂无数据",
+          "no_item_selected": "请选择物品"
+        },
+        "group_marketboard": "当前价格",
+        "group_purchasehistory": "历史交易",
+        "intro": "查看详表",
+        "loading": "正在获取物品价格……",
+        "title": "物品价格详表",
+        "show_all": "全部",
+        "show_hq": "只看HQ",
+        "show_nq": "只看NQ",
+        "group_selectitem": "选择道具",
+        "table_show_type": "显示：",
+        "group_totaltable": "价格总表",
+        "intro_short": "详表"
+      },
       "no_price": "没有价格。",
       "no_price_reason": "可能原因：未获取过价格/物品未实装或不存在此品质/交易数据不足",
       "no_price_received": "没有获取到价格。",

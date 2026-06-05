@@ -3,8 +3,9 @@ import { useStore } from '@/store'
 import { fixFuncConfig, type FuncConfigModel } from '@/models/config-func'
 import { useDialog } from '@/tools/dialog'
 import { handleGetPriceError } from '@/tools/error'
-import { calCostAndBenefit, getItemPriceInfo } from '@/tools/item'
 import type { StatementData } from '@/tools/use-fufu-cal'
+import useItemPrice from './useItemPrice'
+import { getItemPriceInfo } from '@/tools/item.price'
 
 /**
  * 成本/收益分析
@@ -16,13 +17,13 @@ export function useCostAndBenefit(statementData: ComputedRef<StatementData>) {
   const store = useStore()
   const { alertError } = useDialog(t)
   const NAIVE_UI_MESSAGE = useMessage()
+  const { calCostAndBenefit } = useItemPrice()
 
   const showModal = ref(false)
   const updatingPrice = ref(false)
 
   const costAndBenefit = computed(() => {
     return calCostAndBenefit(
-      funcConfig.value,
       statementData.value.materialsLvBase,
       statementData.value.craftTargets
     )
