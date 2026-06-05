@@ -155,13 +155,13 @@ const handleStaffSelectionUpdate = () => {
         </GroupBox>
       </div>
       <div v-else class="cautions-container">
-        <p class="bold">{{ t('donate_us.desc.desc_1') }}</p>
-        <p class="bold">{{ t('donate_us.desc.desc_2') }}</p>
+        <p class="font-bold">{{ t('donate_us.desc.desc_1') }}</p>
+        <p class="font-bold">{{ t('donate_us.desc.desc_2') }}</p>
         <n-divider style="margin: 1px 5px 3px" />
         <ul>
           <li>{{ t('donate_us.desc.desc_3') }}</li>
           <li>{{ t('donate_us.desc.desc_4') }}</li>
-          <li class="orangered">{{ t('donate_us.desc.desc_5') }}</li>
+          <li class="text-[orangered]">{{ t('donate_us.desc.desc_5') }}</li>
         </ul>
         <n-alert :title="t('donate_us.desc.desc_7')" type="info" style="margin-top: auto; line-height: 1.2;">
           <p>

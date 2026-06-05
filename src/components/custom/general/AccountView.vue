@@ -153,16 +153,16 @@ const handleLogout = async () => {
       <n-divider v-else style="margin: 4px 0" />
       <template v-if="userLoggedIn">
         <div class="user-props">
-          <div class="flex-vac gap-2">
+          <div class="flex items-center gap-0.5">
             <div>
-              <span class="no-select">{{ t('common.uid') }}: </span>
+              <span class="select-none">{{ t('common.uid') }}: </span>
               <span>{{ userId }}</span>
             </div>
             <n-button text @click="handleCopyUserId" style="--n-text-color: gray;">
               <n-icon><ContentCopyRound /></n-icon>
             </n-button>
           </div>
-          <div v-if="userSpecialTitle" class="no-select">
+          <div v-if="userSpecialTitle" class="select-none">
             <i class="xiv diaem-nm"></i>
             {{ userSpecialTitle.desc }}
           </div>

@@ -208,7 +208,7 @@ const handleItemIconClick = async () => {
     <template v-else>
       <XivFARImage
         v-show="!hideIcon"
-        class="no-select"
+        class="select-none"
         :size="imgSize ?? 14"
         :src="itemInfo.iconUrl"
         :title="(hideName && hidePopIcon) ? getItemName() : ''"

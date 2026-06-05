@@ -85,7 +85,7 @@ const getSponsorGenContent = (gen: number) => {
     @on-load="loadSponsors"
   >
     <template #header>
-      <div class="card-title no-select">
+      <div class="card-title select-none">
         <n-icon><ChecklistRtlSharp /></n-icon>
         <span class="title">
           {{ t('common.appfunc.thank_list') }}

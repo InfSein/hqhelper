@@ -159,7 +159,7 @@ const previewColumns = computed((): DataTableColumns<ParsedMacroEntry> => {
       key: 'content',
       width: 60,
       render(row) {
-        return h('div', { class: 'flex-vac gap-2' }, [
+        return h('div', { class: 'flex items-center gap-0.5' }, [
           h('span', null, getActionsSummary(row.craftActions)),
           h(HelpButton, {
             popType: 'popover',
@@ -167,7 +167,7 @@ const previewColumns = computed((): DataTableColumns<ParsedMacroEntry> => {
             size: 18,
           }, {
             default: () => h(NScrollbar, { style: 'max-height: 400px;' }, {
-              default: () => h('div', { class: 'flex-wrap gap-2', style: 'max-width: 250px;' }, 
+              default: () => h('div', { class: 'flex flex-wrap gap-0.5', style: 'max-width: 250px;' }, 
                 row.craftActions.map((actionId, index) => {
                   const action = XivCraftActions[actionId]
                   return h(CraftActionButton, {
@@ -269,7 +269,7 @@ const getActionsSummary = (craftActions: number[]) => {
           {{ t('common.example_pre') }}
           1v5byIh97nMsYho4 MyMacro1 5614/5570/649
         </div>
-        <div class="flex-vac gap-1">
+        <div class="flex items-center gap-px">
           <span>
             {{ t('macro_manage.text.batch_add_macros_req_pre') }}
             {{ t('macro_manage.text.batch_add_macros_req_craft') }}/{{ t('macro_manage.text.batch_add_macros_req_control') }}/{{ t('macro_manage.text.batch_add_macros_req_cp') }}

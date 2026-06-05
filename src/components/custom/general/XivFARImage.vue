@@ -44,7 +44,7 @@ const onImageLoadError = (event: Event) => {
     :src="getUrl()"
     :width="size"
     :height="size"
-    class="no-select"
+    class="select-none"
     @error="onImageLoadError"
   />
 </template>

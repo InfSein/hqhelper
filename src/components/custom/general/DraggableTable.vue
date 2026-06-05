@@ -129,7 +129,7 @@ defineExpose({
               </n-input-group-label>
               <slot :row="row.data" :row-index="rowIndex">
                 <n-input v-if="typeof row.data === 'string'" v-model:value="row.data"/>
-                <div v-else class="red">Default slot unset. Check your code.</div>
+                <div v-else class="color-error">Default slot unset. Check your code.</div>
               </slot>
             </n-input-group>
           </td>

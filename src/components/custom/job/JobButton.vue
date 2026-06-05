@@ -359,7 +359,7 @@ const renderJobContextHeader = () => {
       h(
         'div',
         {
-          class: 'h-full flex-center'
+          class: 'h-full flex items-center justify-center'
         },
         [
           h(
@@ -388,11 +388,11 @@ const renderGearsSelectedHeader = () => {
   return h(
     'div',
     {
-      class: 'no-select',
+      class: 'select-none',
       style: 'padding: 0.2em 1em; min-width: 180px;'
     },
     [
-      h('p', { class: 'bold' }, t('main.select_gear.view_selected')),
+      h('p', { class: 'font-bold' }, t('main.select_gear.view_selected')),
       h(
         'div',
         { style: 'margin-left: 0.2em;' },
@@ -468,11 +468,11 @@ const renderGroupTitle = (title: string) => {
   return () => h(
     'div',
     {
-      class: 'no-select',
+      class: 'select-none',
       style: 'padding: 0.2em 1em;'
     },
     [
-      h('p', { class: 'bold' }, title),
+      h('p', { class: 'font-bold' }, title),
     ]
   )
 }

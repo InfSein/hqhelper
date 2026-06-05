@@ -154,14 +154,14 @@ const isItemGatherableNow = (item: ItemInfo) => {
                 <XivFARImage
                   :size="14"
                   :src="group.icon"
-                  class="no-select"
+                  class="select-none"
                 />
               </span>
               <span>
                 {{ groupIndex + 1 }}. {{ group.title }}
               </span>
               <component v-if="group.subtitle" :is="group.subtitle"></component>
-              <div v-else-if="group.type === 'trade-tomescript'" class="flex-vac flex-wrap gap-2" style="margin-left: 0.5em;">
+              <div v-else-if="group.type === 'trade-tomescript'" class="flex items-center flex-wrap gap-0.5 ml-2">
                 <p v-show="tomeScripts.length">{{ t('statement.table.requires') }}</p>
                 <ItemSpan
                   v-for="item in tomeScripts"
@@ -210,7 +210,7 @@ const isItemGatherableNow = (item: ItemInfo) => {
               >
                 <span style="margin-right: 1px;">(</span>
                 <span>{{ t('recomm_process.text.time_limit_with_val', item.gatherInfo.timeLimitDescription) }}</span>
-                <span v-if="isItemGatherableNow(item)" class="green" style="margin-left: 3px;">{{ t('common.gatherable_now') }}</span>
+                <span v-if="isItemGatherableNow(item)" class="color-success" style="margin-left: 3px;">{{ t('common.gatherable_now') }}</span>
                 <span style="margin-left: 1px;">)</span>
               </div>
               <div
@@ -236,9 +236,9 @@ const isItemGatherableNow = (item: ItemInfo) => {
                 v-if="showItemGatherDetails && item.gatherInfo?.placeID && !completedItems[groupIndex][item.id]"
               >
                 <span v-if="funcConfig.processes_merge_gatherings" style="margin-right: 1px;">(</span>
-                <span v-if="funcConfig.processes_merge_gatherings" class="flex-vac">
+                <span v-if="funcConfig.processes_merge_gatherings" class="flex items-center">
                   <XivFARImage
-                    class="icon no-select"
+                    class="icon select-none"
                     :src="XivJobs[item.gatherInfo.jobId].job_icon_url"
                     :size="12"
                   />
