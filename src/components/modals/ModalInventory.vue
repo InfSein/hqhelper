@@ -36,6 +36,7 @@ const onLoad = () => {
     item.amount = formFuncConfigData.value.inventory_data[id]
     return item
   })
+  itemTableFilter.value = ''
 }
 
 const inventorySettingItems = computed(() : Setting[] => {
@@ -98,6 +99,7 @@ const inventorySettingItems = computed(() : Setting[] => {
   ]
 })
 
+const itemTableFilter = ref('')
 const itemTableRef = useTemplateRef<InstanceType<typeof ItemSelectTable>>('itemTableRef')
 
 const handleItemInputValueUpdate = (value: number) => {
@@ -130,7 +132,7 @@ const handleSave = () => {
     :id="modalId"
     :icon="BackpackFilled"
     :title="t('common.appfunc.ingame_inventory')"
-    max-width="600px"
+    max-width="620px"
     @on-load="onLoad"
   >
     <n-tabs type="segment" animated>
@@ -147,20 +149,29 @@ const handleSave = () => {
       <n-tab-pane name="data" :tab="t('common.data')">
         <div class="pane-container">
           <div class="top-actions">
-            <n-input-group>
-              <n-input-group-label>{{ t('common.add_item') }}</n-input-group-label>
-              <ItemSelector
-                options-preset="materials"
-                :container-id="modalId"
-                @on-item-selected="handleItemInputValueUpdate"
-              />
-            </n-input-group>
+            <CompactForm>
+              <CompactFormItem :label="t('common.add_item')">
+                <ItemSelector
+                  options-preset="materials"
+                  :container-id="modalId"
+                  @on-item-selected="handleItemInputValueUpdate"
+                />
+              </CompactFormItem>
+              <CompactFormItem :label="t('common.filter_item')">
+                <n-input
+                  v-model:value="itemTableFilter"
+                  clearable
+                  :placeholder="t('common.item_filter_input_placeholder')"
+                />
+              </CompactFormItem>
+          </CompactForm>
           </div>
           <div class="content-table">
             <ItemSelectTable
               ref="itemTableRef"
               v-model:items="formFuncConfigData.inventory_data"
               show-item-details
+              :filter-str="itemTableFilter"
               item-span-max-width="260px"
               content-height="285px"
               :container-id="modalId"
@@ -194,7 +205,7 @@ const handleSave = () => {
 <style scoped>
 .pane-container {
   padding: 0 5px;
-  height: 400px;
+  height: 440px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
