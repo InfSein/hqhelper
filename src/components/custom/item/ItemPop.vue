@@ -876,10 +876,10 @@ const innerPopTrigger = computed(() => {
             {{ t('common.price') }}
             <div class="extra flex">
               <div>
-                {{ t('common.last_update_with_val', itemPriceInfo.lastUpdate) }}
-              </div>
-              <div v-if="itemPriceInfo.priceExpired" style="color: var(--color-error);">
-                ({{ t('common.expired') }})
+                <span>{{ t('common.last_update_with_val', '') }}</span>
+                <span :style="{ color: itemPriceInfo.priceExpired ? 'var(--color-error)' : undefined }">
+                  {{ itemPriceInfo.lastUpdate }}
+                </span>
               </div>
               <a
                 :disabled="refreshingItemPrice"
