@@ -1,8 +1,8 @@
 @import './styles/base.css';
 @import './styles/custom.css';
-@import './styles/shared.css';
 @import './styles/font.css';
 @import './styles/scrollbar.css';
+@import './styles/shared.css';
 @import './styles/tailwind.css';
 
 #app {
