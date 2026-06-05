@@ -6,7 +6,7 @@ import ItemPriceTable from '../custom/item/ItemPriceTable.vue'
 import TooltipText from '../custom/general/TooltipText.vue'
 import HelpButton from '../custom/general/HelpButton.vue'
 import ModalPreferences from './ModalPreferences.vue'
-import { calCostAndBenefit } from '@/tools/item'
+import useItemPrice from '@/composables/useItemPrice.ts'
 import type { ItemInfo } from '@/tools/item'
 import type { FuncConfigModel } from '@/models/config-func'
 
@@ -15,6 +15,9 @@ const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
 // const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
 const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
 // const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
+const showItemPriceDetail = inject<(items: ItemInfo[]) => void>('showItemPriceDetail')!
+
+const { calCostAndBenefit } = useItemPrice()
 
 const modalId = 'modal-cost-and-benefits'
 
@@ -27,7 +30,7 @@ interface ModalCostAndBenefitProps {
 const props = defineProps<ModalCostAndBenefitProps>()
 
 const costAndBenefit = computed(() => {
-  return calCostAndBenefit(funcConfig.value, props.costItems, props.benefitItems)
+  return calCostAndBenefit(props.costItems, props.benefitItems)
 })
 const costInfo = computed(() => costAndBenefit.value.costInfo)
 const benefitInfo = computed(() => costAndBenefit.value.benefitInfo)
@@ -42,19 +45,36 @@ const showPreferencesModal = ref(false)
 const handleSettingButtonClick = () => {
   showPreferencesModal.value = true
 }
+
+const handleShowItemPriceDetail = () => {
+  showItemPriceDetail([
+    ...props.costItems,
+    ...props.benefitItems,
+  ])
+}
 </script>
 
 <template>
   <MyModal
     v-model:show="showModal"
     :id="modalId"
-    :icon="AttachMoneyOutlined"
-    :title="t('statistics.group.cost_and_benefit.title')"
     max-width="1200px"
     :height="isMobile ? '700px' : '600px'"
     show-setting
     @on-setting-button-clicked="handleSettingButtonClick"
   >
+    <template #header>
+      <div class="card-title no-select">
+        <n-icon><AttachMoneyOutlined /></n-icon>
+        <span class="title">
+          {{ t('statistics.group.cost_and_benefit.title') }}
+        </span>
+        <div class="card-title-actions">
+          <a href="javascript:void(0);" @click="handleShowItemPriceDetail">[{{ t('item.price.detail_table.intro') }}]</a>
+        </div>
+      </div>
+    </template>
+
     <n-tabs v-if="isMobile" type="segment" animated>
       <n-tab-pane
         name="cost"

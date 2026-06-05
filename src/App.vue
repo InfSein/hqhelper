@@ -14,6 +14,7 @@ import { useElectronSync } from '@/composables/electron-sync'
 import { useLocale } from './locales'
 import { checkAppUpdates, CopyToClipboard, deepCopy, getAppBackground, sleep } from './tools'
 import EorzeaTime from './tools/eorzea-time'
+import { type ItemInfo } from './tools/item'
 import { fixUserConfig , type UserConfigModel } from '@/models/config-user'
 import { fixFuncConfig, type FuncConfigModel, type MacroGenerateMode } from './models/config-func'
 import { fixCloudConfig, type CloudConfigModel } from '@/models/config-cloud'
@@ -27,6 +28,7 @@ const ModalCheckUpdates = defineAsyncComponent(() => import('@/components/modals
 const ModalLogin = defineAsyncComponent(() => import('@/components/modals/ModalLogin.vue'))
 const ModalCloudSync = defineAsyncComponent(() => import('@/components/modals/ModalCloudSync.vue'))
 const ModalFestivalEgg = defineAsyncComponent(() => import('@/components/modals/ModalFestivalEgg.vue'))
+const ModalItemPriceDetail = defineAsyncComponent(() => import('@/components/modals/ModalItemPriceDetail.vue'))
 
 const route = useRoute()
 const store = useStore()
@@ -235,6 +237,17 @@ const displayCloudSyncModal = () => {
 }
 provide('displayCloudSyncModal', displayCloudSyncModal)
 
+const showModalItemPriceDetail = ref(false)
+const modalItemPriceDetailItems = ref<ItemInfo[]>([])
+const showItemPriceDetail = (items: ItemInfo[]) => {
+  if (showModalItemPriceDetail.value) {
+    alertError(t('common.message.cannot_open_same_modal')); return
+  }
+  modalItemPriceDetailItems.value = items
+  showModalItemPriceDetail.value = true
+}
+provide('showItemPriceDetail', showItemPriceDetail)
+
 const appClass = computed(() => {
   const classes = [
     'lang-' + locale.value,
@@ -257,7 +270,7 @@ provide('displayFestivalEggModal', () => {
   showFestivalEgg.value = true
 })
 const dialogRef = ref<InstanceType<typeof Dialog> | null>(null)
-const { confirm } = useDialog(t)
+const { alertError, confirm } = useDialog(t)
 
 const appBg = ref('')
 
@@ -272,6 +285,40 @@ onMounted(async () => {
   // 处理全局页面参数
   appMode.value = route.query.mode as typeof appMode.value
   // 处理自动更新
+  await handleAutoUpdate()
+  // 处理彩蛋
+  const now = new Date()
+  const date = now.getDate()
+  const eggId = 20241225
+  if (
+    userConfig.value.last_triggered_egg !== eggId &&
+    (now.getMonth() === 11) && ((date === 24 && now.getHours() >= 18) || date === 25)
+  ) {
+    showFestivalEgg.value = true
+    const newConfig = fixUserConfig(store.userConfig)
+    newConfig.last_triggered_egg = eggId
+    store.setUserConfig(newConfig)
+  }
+  // 处理 UI
+  updateIsMobile()
+  window.addEventListener('resize', updateIsMobile)
+  updateDraggableArea()
+  window.addEventListener('resize', updateDraggableArea)
+  // 加载背景
+  appBg.value = await getAppBackground(userConfig.value.custom_background)
+})
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', updateIsMobile)
+  window.removeEventListener('resize', updateDraggableArea)
+})
+watch(
+  () => route.query.mode,
+  (newMode) => {
+    appMode.value = newMode as typeof appMode.value
+    updateIsMobile()
+  }
+)
+const handleAutoUpdate = async () => {
   if (!userConfig.value.disable_auto_update && appMode.value !== 'overlay' && !window.androidAPI?.checkUpdate) {
     try {
       const checkUpdateResponse = await checkAppUpdates()
@@ -316,39 +363,7 @@ onMounted(async () => {
       console.error('自动更新发生错误', err)
     }
   }
-  // 处理彩蛋
-  const now = new Date()
-  const date = now.getDate()
-  const eggId = 20241225
-  if (
-    userConfig.value.last_triggered_egg !== eggId &&
-    (now.getMonth() === 11) && ((date === 24 && now.getHours() >= 18) || date === 25)
-  ) {
-    showFestivalEgg.value = true
-    const newConfig = fixUserConfig(store.userConfig)
-    newConfig.last_triggered_egg = eggId
-    store.setUserConfig(newConfig)
-  }
-  // 处理 UI
-  updateIsMobile()
-  window.addEventListener('resize', updateIsMobile)
-  updateDraggableArea()
-  window.addEventListener('resize', updateDraggableArea)
-  // 加载背景
-  appBg.value = await getAppBackground(userConfig.value.custom_background)
-})
-onBeforeUnmount(() => {
-  window.removeEventListener('resize', updateIsMobile)
-  window.removeEventListener('resize', updateDraggableArea)
-})
-watch(
-  () => route.query.mode,
-  (newMode) => {
-    appMode.value = newMode as typeof appMode.value
-    updateIsMobile()
-  }
-)
-
+}
 const updateDraggableArea = () => {
   const dragArea = document.getElementById('drag-area')
   const appLayoutHeader = document.getElementById('app-layout-header')
@@ -447,6 +462,10 @@ const naiveUIThemeOverrides = computed(() : GlobalThemeOverrides => {
           v-model:show="showModalCloudSync"
         />
         <ModalFestivalEgg v-model:show="showFestivalEgg" />
+        <ModalItemPriceDetail
+          v-model:show="showModalItemPriceDetail"
+          :items="modalItemPriceDetailItems"
+        />
       </div>
     </n-message-provider>
     </n-dialog-provider>

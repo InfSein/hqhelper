@@ -34,6 +34,24 @@ export const objectEqual = <T>(obj1: T, obj2: T): boolean => {
   return JSON.stringify(obj1) === JSON.stringify(obj2)
 }
 
+export const formatDate = (ts: number) => {
+  const date = new Date(ts)
+  const pad = (n: number) => n.toString().padStart(2, '0')
+
+  const year = date.getFullYear()
+  const month = pad(date.getMonth() + 1)
+  const day = pad(date.getDate())
+
+  return `${year}-${month}-${day}`
+}
+export const formatTime = (ts: number) => new Date(ts).toTimeString().slice(0, 8)
+export const formatTimestamp = (ts: number) => {
+  if (!ts) return '????-??-?? ??:??:??'
+  const date = formatDate(ts)
+  const time = formatTime(ts)
+  return `${date} ${time}`
+}
+
 /** 压缩字符串 */
 export const compressString = (input: string): string => {
   return LzString.compressToBase64(input)
