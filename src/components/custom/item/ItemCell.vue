@@ -48,7 +48,7 @@ const getTradeCost = (itemInfo: ItemInfo, amount: number) => {
     <div class="item-icon">
       <XivFARImage
         :size="26"
-        :src="itemInfo.iconUrl"
+        :src="itemInfo"
       />
     </div>
     <div class="item-info">

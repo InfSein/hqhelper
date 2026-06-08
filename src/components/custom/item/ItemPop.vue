@@ -472,7 +472,7 @@ const innerPopTrigger = computed(() => {
       <div class="base-info">
         <XivFARImage
           class="item-icon"
-          :src="itemInfo.iconUrl"
+          :src="itemInfo"
           :size="35"
         />
         <div class="item-names">
