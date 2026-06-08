@@ -3,3 +3,7 @@
 /* @import 'tailwindcss/preflight.css' layer(base); */
 /* @import 'tailwindcss/utilities.css' layer(utilities); */
 @import 'tailwindcss/utilities.css';
+
+@utility container {
+  width: auto;
+}
