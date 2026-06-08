@@ -48,6 +48,7 @@ const containerTip = computed(() => {
 
 <style scoped>
 .container {
+  width: fit-content;
   display: inline-flex;
   align-items: center;
   gap: 1px;
