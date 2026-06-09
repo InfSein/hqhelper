@@ -53,8 +53,8 @@ const handleSave = () => {
         :get-default-data-row="getDefaultWorkflow"
       >
         <template #tableTitle>
-          <div class="flex-vac">
-            <div class="bold">{{ t('workflow.text.workflow_name') }}</div>
+          <div class="flex items-center">
+            <div class="font-bold">{{ t('workflow.text.workflow_name') }}</div>
             <div>
               <HelpButton
                 icon="question"

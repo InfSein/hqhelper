@@ -145,7 +145,7 @@ const handleRowClick = (row: StatementRow) => {
               class="prepared"
               @click="selectedItem = undefined"
             >
-              <td colspan="4" class="bold">
+              <td colspan="4" class="font-bold">
                 <i class="xiv e05e"></i>
                 {{ t('statement.text.all_prepared_items') }}
               </td>

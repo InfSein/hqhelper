@@ -260,8 +260,8 @@ const purchaseHistoryList = computed(() => {
                 </tbody>
               </n-table>
             </div>
-            <div v-if="!isMobile" class="flex-col">
-              <div class="flex-vac gap-2" style="align-self: end;">
+            <div v-if="!isMobile" class="flex flex-col">
+              <div class="flex items-center gap-0.5" style="align-self: end;">
                 <div>{{ t('item.price.detail_table.table_show_type') }}</div>
                 <n-button
                   v-for="showType in tableShowTypes"
@@ -274,7 +274,7 @@ const purchaseHistoryList = computed(() => {
                   {{ getLogShowTypeName(showType) }}
                 </n-button>
               </div>
-              <div class="flex-hac flex-1">
+              <div class="flex justify-center flex-1">
                 <ChartXy
                   :width="pageConfig.chartWidth"
                   :height="pageConfig.chartHeight"
@@ -287,8 +287,8 @@ const purchaseHistoryList = computed(() => {
         <div class="pricelogs-wrapper">
           <GroupBox :title="' ' + t('item.price.detail_table.group_marketboard')">
             <n-empty v-if="logEmptyInfo" :description="logEmptyInfo" />
-            <div v-else class="flex-col gap-2">
-              <div class="flex-vac gap-2" style="margin-left: 0.5em;">
+            <div v-else class="flex flex-col gap-0.5">
+              <div class="flex items-center gap-0.5 ml-2">
                 <div>{{ t('item.price.detail_table.table_show_type') }}</div>
                 <n-button
                   v-for="showType in tableShowTypes"
@@ -303,7 +303,7 @@ const purchaseHistoryList = computed(() => {
               </div>
               <n-divider style="margin: 0;" />
               <n-scrollbar trigger="none" :style="{ height: scrollBarHeight }">
-                <div class="flex-col gap-2">
+                <div class="flex flex-col gap-0.5">
                   <ItemPriceLogCell
                     v-for="(mi, miIndex) in marketBoardList"
                     :key="'mi_' + miIndex"
@@ -319,8 +319,8 @@ const purchaseHistoryList = computed(() => {
           </GroupBox>
           <GroupBox :title="' ' + t('item.price.detail_table.group_purchasehistory')">
             <n-empty v-if="logEmptyInfo" :description="logEmptyInfo" />
-            <div v-else class="flex-col gap-2">
-              <div class="flex-vac gap-2" style="margin-left: 0.5em;">
+            <div v-else class="flex flex-col gap-0.5">
+              <div class="flex items-center gap-0.5 ml-2">
                 <div>{{ t('item.price.detail_table.table_show_type') }}</div>
                 <n-button
                   v-for="showType in tableShowTypes"
@@ -335,7 +335,7 @@ const purchaseHistoryList = computed(() => {
               </div>
               <n-divider style="margin: 0;" />
               <n-scrollbar trigger="none" :style="{ height: scrollBarHeight }">
-                <div class="flex-col gap-2">
+                <div class="flex flex-col gap-0.5">
                   <ItemPriceLogCell
                     v-for="(ph, phIndex) in purchaseHistoryList"
                     :key="'ph_' + phIndex"

@@ -10,7 +10,7 @@ const descriptions = computed(() => {
 </script>
 
 <template>
-  <div id="main-container" class="flex-center w-full h-full">
+  <div id="main-container" class="flex items-center justify-center w-full h-full">
     <n-result status="404" title="404 NOT FOUND">
       <div>
         <p v-for="(description, index) in descriptions" :key="index">{{ description }}</p>

@@ -618,7 +618,7 @@ const innerPopTrigger = computed(() => {
                 style="padding: 0;"
               >
                 <div>
-                  <div class="bold">{{ t('item.gather_threshold.title.gather_threshold') }}</div>
+                  <div class="font-bold">{{ t('item.gather_threshold.title.gather_threshold') }}</div>
                   <n-table size="small" class="content-table tiny-table w-full">
                     <thead>
                       <tr>
@@ -637,7 +637,7 @@ const innerPopTrigger = computed(() => {
                     </tbody>
                   </n-table>
                   <div style="height: 4px;" />
-                  <div class="bold">{{ t('item.gather_threshold.title.perception_threshold') }}</div>
+                  <div class="font-bold">{{ t('item.gather_threshold.title.perception_threshold') }}</div>
                   <n-table size="small" class="content-table tiny-table w-full">
                     <thead>
                       <tr>
@@ -683,7 +683,7 @@ const innerPopTrigger = computed(() => {
               :key="'time-limit-' + timeLimitIndex"
             >
               <div>{{ timeLimit.start }} ~ {{ timeLimit.end }}</div>
-              <div class="green">{{ timeCanGather(timeLimit) }}</div>
+              <div class="color-success">{{ timeCanGather(timeLimit) }}</div>
             </div>
           </div>
           <div class="content" v-if="itemInfo.gatherInfo?.folkloreId || itemInfo?.gatherInfo?.requirement">

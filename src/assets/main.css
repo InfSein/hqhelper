@@ -1,9 +1,9 @@
-@import './base.css';
-@import './custom.css';
-@import './shared.css';
-@import './font.css';
-@import './font/xiv-axis-font.css';
-@import './scroll-bar.css';
+@import './styles/base.css';
+@import './styles/custom.css';
+@import './styles/font.css';
+@import './styles/scrollbar.css';
+@import './styles/shared.css';
+@import './styles/tailwind.css';
 
 #app {
   width: 100%;

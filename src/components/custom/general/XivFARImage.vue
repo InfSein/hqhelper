@@ -49,7 +49,7 @@ const onImageLoadError = () => {
     :src="imgData.src"
     :width="size"
     :height="size"
-    class="no-select"
+    class="select-none"
     @error="onImageLoadError"
   />
   <div v-else class="err-cell" :style="`--size: ${size}px; font-size: ${(size??14) / 2 + 1}px`">

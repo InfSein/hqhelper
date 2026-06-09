@@ -188,7 +188,7 @@ const getPlaceName = (itemInfo : ItemInfo) => {
             </n-checkbox>
             <div class="flex">
               <div style="min-width: fit-content;">{{ t('gather_clock.export_alarm_macro.preference.alarm_name_includes') }}</div>
-              <div class="flex-wrap">
+              <div class="flex flex-wrap">
                 <n-checkbox v-model:checked="alarmMacroOptions.containsJobName">
                   {{ t('common.job') }}
                 </n-checkbox>

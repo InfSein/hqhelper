@@ -131,7 +131,7 @@ const handleCopyAsMacro = async () => {
   >
     <template #trigger>
       <n-button class="ts-btn" :style="btnStyle" :title="t('common.tomescript')">
-        <div class="w-full flex-col align-right">
+        <div class="flex w-full flex-col text-right">
           <p class="text">{{ t('common.tomescript') }}</p>
           <div class="tome-scripts">
               <div class="tome-script" v-for="(totalAmount, scriptID) in tomeScripts" :key="'tome-script-' + scriptID">

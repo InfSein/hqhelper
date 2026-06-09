@@ -125,7 +125,7 @@ const handleSettingButtonClick = () => {
     @on-setting-button-clicked="handleSettingButtonClick"
   >
     <template #header>
-      <div class="card-title no-select">
+      <div class="card-title select-none">
         <n-icon><AllInclusiveSharp /></n-icon>
         <span class="title">{{ t('common.appfunc.recomm_process') }}</span>
         <div class="card-title-actions">
