@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@crowdin/cli": "^4.13.0",
-    "@tailwindcss/vite": "^4.2.4",
+    "@tailwindcss/vite": "~4.2.4",
     "@tsconfig/node22": "^22.0.5",
     "@types/node": "^22.16.5",
     "@vicons/material": "^0.13.0",
