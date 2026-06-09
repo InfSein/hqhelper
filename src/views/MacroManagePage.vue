@@ -256,7 +256,7 @@ const tableColumns = computed(() => {
       render(row) {
         return h(
           'div',
-          { class: 'flex-col' },
+          { class: 'flex flex-col' },
           row.relateItems.slice(0, 3).map(item => {
             if (typeof item === 'string') {
               return h(NTag, {
@@ -291,7 +291,7 @@ const tableColumns = computed(() => {
         }
         return h(
           'div',
-          { class: 'lh-120 font-small' },
+          { class: 'leading-[1.2] font-small' },
           children
         )
       }
@@ -323,7 +323,7 @@ const tableColumns = computed(() => {
             h(
               'div',
               {
-                class: 'flex-vac gap-2',
+                class: 'flex items-center gap-0.5',
                 style: selectMode.value ? 'visibility: hidden;' : ''
               },
               macros.map((macro, index) => {
@@ -353,7 +353,7 @@ const tableColumns = computed(() => {
         return h(
           'div',
           {
-            class: 'flex gap-4',
+            class: 'flex gap-1',
             style: selectMode.value ? 'visibility: hidden;' : ''
           },
           [

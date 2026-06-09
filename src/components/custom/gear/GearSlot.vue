@@ -24,14 +24,14 @@ const itemInfo = computed(() => {
 <template>
   <n-popover :trigger="isMobile ? 'click' : 'hover'" style="max-width: 300px;">
     <template #trigger>
-      <div class="flex-center">
+      <div class="flex items-center justify-center">
         <n-icon size="20" color="var(--color-text-sub)">
           <gearIcon />
         </n-icon>
       </div>
     </template>
     <div>
-      <p class="bold">{{ slotDescription }}</p>
+      <p class="font-bold">{{ slotDescription }}</p>
       <n-divider class="block-divider" />
       <ItemButton
         v-if="itemInfo"

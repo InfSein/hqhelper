@@ -761,7 +761,7 @@ export const getChangelogs = (
             t('changelog.2_2_3.breaking.text_1')
               + '<br>' + t('changelog.2_2_3.breaking.text_2')
               + '<br>' + t('changelog.2_2_3.breaking.text_3')
-              + '<br><span class="orangered">※ ' + t('donate_us.desc.desc_5') + '</span>'
+              + '<br><span class="text-[orangered]">※ ' + t('donate_us.desc.desc_5') + '</span>'
               + '<br>' + renderImg('http://lsky.nbb.fan/i/2025/04/30/6811e7604ed1e.png')
               + '<br>' + renderImg('http://lsky.nbb.fan/i/2025/04/30/6811e7a50b146.png'),
             t('changelog.2_2_3.breaking.text_4')

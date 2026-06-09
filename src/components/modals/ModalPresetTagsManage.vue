@@ -69,7 +69,7 @@ const handleSave = () => {
         :check-rows-before-save="handleCheck"
       >
         <template #tableTitle>
-          <div class="bold">{{ t('macro_manage.text.tag_name') }}</div>
+          <div class="font-bold">{{ t('macro_manage.text.tag_name') }}</div>
         </template>
       </DraggableTable>
       <p>{{ t('common.all_changes_effects_after_save') }}</p>

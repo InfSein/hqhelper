@@ -78,7 +78,7 @@ const handleCopy = async (text: string) => {
     >
       <div
         v-if="!group?.length"
-        class="flex-center w-full"
+        class="flex items-center justify-center w-full"
         :style="{
           height: contentHeight
         }"

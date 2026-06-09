@@ -366,7 +366,7 @@ const setInventoryByStatementPrepared = () => {
       <div class="block" ref="headerBlock">
         <div class="action">
           <p>{{ t('workflow.text.switch_workflows') }}</p>
-          <div class="flex-wrap" style="gap: 5px;">
+          <div class="flex flex-wrap gap-1">
             <n-button
               v-for="(flow, flowIndex) in workState.workflows"
               :key="flowIndex"

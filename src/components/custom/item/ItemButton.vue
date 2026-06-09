@@ -210,7 +210,7 @@ const handleItemButtonClick = async () => {
         <div v-if="itemInfo?.id" class="item-container">
           <div v-if="showIcon" class="item-icon">
             <XivFARImage
-              :src="itemInfo.iconUrl"
+              :src="itemInfo"
               :size="iconSize"
             />
           </div>

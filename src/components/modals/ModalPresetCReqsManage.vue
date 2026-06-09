@@ -89,7 +89,7 @@ const handleSave = () => {
         :check-rows-before-save="handleCheck"
       >
         <template #tableTitle>
-          <div class="bold">{{ t('macro_manage.text.preset_creqs_manage_table_head') }}</div>
+          <div class="font-bold">{{ t('macro_manage.text.preset_creqs_manage_table_head') }}</div>
         </template>
         <template #default="{ row }">
           <n-input-group>

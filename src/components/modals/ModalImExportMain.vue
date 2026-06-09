@@ -140,7 +140,7 @@ const onImportConfirmed = () => {
           </GroupBox>
           <GroupBox :title="t('common.options')">
             <n-checkbox v-model:checked="exportItemPrices">
-              <div class="flex-center">
+              <div class="flex items-center justify-center">
                 <div>{{ t('main.imexport.export_cost_and_benefit') }}</div>
                 <HelpButton
                   icon="question"

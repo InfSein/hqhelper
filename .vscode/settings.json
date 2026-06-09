@@ -11,5 +11,8 @@
     "src/locales"
   ],
   "i18n-ally.sourceLanguage": "zh",
-  "i18n-ally.keystyle": "nested"
+  "i18n-ally.keystyle": "nested",
+  "tailwindCSS.experimental.classRegex": [
+    ["cn\\(([^)]*)\\)", "(?:'|\"|`)([^']|\"|`*)(?:'|\"|`)"]
+  ]
 }

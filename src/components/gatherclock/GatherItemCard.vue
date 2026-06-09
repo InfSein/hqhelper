@@ -84,7 +84,7 @@ const dealTimeLimit = (start: string, end: string) => {
       remainET = e - c
       ls = Math.floor(EorzeaTime.EorzeaMinute2LocalSecond(remainET))
       if (ls < 30) {
-        ltClass += ' red'
+        ltClass += ' color-error'
       } else if (ls < 60) {
         ltClass += ' color-warning'
       }
@@ -179,7 +179,7 @@ const handleStarButtonClick = (item: ItemInfo) => {
         <div>{{ t('common.favorite.desc.desc_2') }}</div>
       </n-popover>
     </div>
-    <n-divider class="no-margin" />
+    <n-divider class="m-0!" />
     <div class="content">
       <div class="standard-info">
         <div class="gather-job">
@@ -227,7 +227,7 @@ const handleStarButtonClick = (item: ItemInfo) => {
         >
           <div>
             {{ timelimit.start }} ~ {{ timelimit.end }}
-            <span v-if="timelimit.canGather" class="green" style="margin-left: 5px;">
+            <span v-if="timelimit.canGather" class="color-success" style="margin-left: 5px;">
               {{ t('common.gatherable_now') }}
             </span>
             <span

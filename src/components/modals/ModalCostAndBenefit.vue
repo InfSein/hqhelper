@@ -64,7 +64,7 @@ const handleShowItemPriceDetail = () => {
     @on-setting-button-clicked="handleSettingButtonClick"
   >
     <template #header>
-      <div class="card-title no-select">
+      <div class="card-title select-none">
         <n-icon><AttachMoneyOutlined /></n-icon>
         <span class="title">
           {{ t('statistics.group.cost_and_benefit.title') }}
@@ -81,7 +81,7 @@ const handleShowItemPriceDetail = () => {
         :tab="t('common.cost')"
       >
         <div class="container">
-          <div class="align-right">
+          <div class="text-right">
             <span>{{ t('statistics.group.cost_and_benefit.button.text.text_1', { val: costInfo }) }}</span>
             <i class="xiv gil"></i>
             <TooltipText
@@ -103,7 +103,7 @@ const handleShowItemPriceDetail = () => {
         :tab="t('common.benefit')"
       >
         <div class="container">
-          <div class="align-right">
+          <div class="text-right">
             <span>{{ t('statistics.group.cost_and_benefit.button.text.text_2', { val: benefitInfo }) }}</span>
             <i class="xiv gil"></i>
             <TooltipText
