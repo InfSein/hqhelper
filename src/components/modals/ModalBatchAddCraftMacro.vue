@@ -167,7 +167,7 @@ const previewColumns = computed((): DataTableColumns<ParsedMacroEntry> => {
             size: 18,
           }, {
             default: () => h(NScrollbar, { style: 'max-height: 400px;' }, {
-              default: () => h('div', { class: 'flex flex-wrap gap-0.5', style: 'max-width: 250px;' }, 
+              default: () => h('div', { class: 'flex flex-wrap gap-0.5 max-w-[250px]' }, 
                 row.craftActions.map((actionId, index) => {
                   const action = XivCraftActions[actionId]
                   return h(CraftActionButton, {

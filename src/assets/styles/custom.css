@@ -7,7 +7,7 @@
 
 /* Color */
 .color-success {
-  color: var(--color-success);
+  color: var(--color-primary);
 }
 .color-info {
   color: var(--color-info);

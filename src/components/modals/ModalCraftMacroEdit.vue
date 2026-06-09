@@ -285,7 +285,7 @@ const handleSave = async () => {
                         <span>{{ t('macro_manage.text.preset_tags') }}</span>
                       </div>
                       <n-divider style="margin: 0 0 3px;" />
-                      <div v-if="userConfig.macromanage_cache_work_state.presetTags.length" class=" flex flex-wrap gap-0.5">
+                      <div v-if="userConfig.macromanage_cache_work_state.presetTags.length" class="flex flex-wrap gap-0.5">
                         <n-tag
                           v-for="(tag, tagIndex) in userConfig.macromanage_cache_work_state.presetTags"
                           :key="`tag-${tagIndex}`"
