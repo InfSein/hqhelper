@@ -6,19 +6,16 @@
 // } from '@vicons/material'
 import { useStore } from '@/store'
 import { useElectronSync } from '@/composables/electron-sync'
-import { fixWorkState } from '@/models/workflow'
-import type { UserConfigModel } from '@/models/config-user'
-import { type FuncConfigModel } from '@/models/config-func'
+import { fixWorkState } from '@/types/workstate/workflow'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
 import { useNbbCal } from '@/tools/use-nbb-cal'
 import { useFufuCal } from '@/tools/use-fufu-cal'
 import CraftRecommProcess from '@/components/custom/general/CraftRecommProcess.vue'
 import { deepCopy } from '@/tools'
+import type { UserConfigModel } from '@/types/config/user'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 // const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
 
 const store = useStore()
 // const NAIVE_UI_MESSAGE = useMessage()
@@ -33,9 +30,9 @@ const currentWorkflow = computed(() => {
 })
 
 const ignoreNextUpdate = ref(false)
-const disable_workstate_cache = userConfig.value.disable_workstate_cache ?? false
+const disable_workstate_cache = store.userConfig.disable_workstate_cache ?? false
 if (!disable_workstate_cache) {
-  const cachedWorkState = userConfig.value.workflow_cache_work_state
+  const cachedWorkState = store.userConfig.workflow_cache_work_state
   if (cachedWorkState && JSON.stringify(cachedWorkState).length > 2) {
     workState.value = fixWorkState(cachedWorkState)
     // Compatible with older version caching
@@ -43,16 +40,16 @@ if (!disable_workstate_cache) {
 
   // todo - 留意性能：深度侦听需要遍历被侦听对象中的所有嵌套的属性，当用于大型数据结构时，开销很大
   watch(workState, async () => {
-    if (workState.value && userConfig) {
+    if (workState.value) {
       try {
         await Promise.resolve()
         if (ignoreNextUpdate.value) {
           ignoreNextUpdate.value = false
           return
         }
-        userConfig.value.workflow_cache_work_state = workState.value
-        store.setUserConfig(userConfig.value)
-        emitSync('workflowStateChanged', deepCopy(userConfig.value))
+        store.userConfig.workflow_cache_work_state = workState.value
+        store.setUserConfig(store.userConfig)
+        emitSync('workflowStateChanged', deepCopy(store.userConfig))
       } catch (error) {
         console.error('Error handling workState change:', error)
       }
@@ -105,9 +102,9 @@ const recommProcessGroups = computed(() => {
     lv2Items,
     lv3Items,
     lvBaseItems,
-    funcConfig.value.processes_craftable_item_sortby,
-    funcConfig.value.processes_merge_gatherings,
-    userConfig.value.language_ui,
+    store.funcConfig.processes_craftable_item_sortby,
+    store.funcConfig.processes_merge_gatherings,
+    store.userConfig.language_ui,
     t
   )
 })

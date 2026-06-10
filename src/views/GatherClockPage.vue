@@ -8,7 +8,6 @@ import ModalAlarmMacroExport from '@/components/modals/ModalAlarmMacroExport.vue
 import { XivJobs, type XivJob } from '@/assets/data'
 import { useStore } from '@/store'
 import type { ItemGroup } from '@/models/item'
-import { fixAlarmMacroOptions } from '@/models/gather-clock'
 import { playAudio } from '@/tools'
 import { useDialog } from '@/tools/dialog'
 import useUiTools from '@/tools/ui'
@@ -16,6 +15,7 @@ import { getItemInfo, type ItemInfo } from '@/tools/item'
 import { useNbbCal } from '@/tools/use-nbb-cal'
 import UseConfig from '@/composables/useConfig'
 import EorzeaTime from '@/tools/eorzea-time'
+import { fixAlarmMacroOptions, type WorkState } from '@/types/workstate/gatherclock'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
@@ -92,7 +92,7 @@ const canPinWindow = computed(() => {
   return appMode.value === 'overlay' && !!window.electronAPI?.toggleAlwaysOnTop
 })
 
-const workState = ref({
+const workState = ref<WorkState>({
   patch: '7.4-740',
   /** 是否将整个窗口置顶 (限v5及以上的客户端使用) */
   pinWindow: false,

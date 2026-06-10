@@ -1,8 +1,5 @@
-import type { Ref } from 'vue'
 import { XivJobs } from '@/assets/data'
 import type { RecommItemGroup } from '@/models/item'
-import type { UserConfigModel } from "@/models/config-user"
-import type { FuncConfigModel } from "@/models/config-func"
 import { deepCopy } from '.'
 import { getItemInfo, type ItemInfo } from "./item"
 import { useNbbCal } from "./use-nbb-cal"

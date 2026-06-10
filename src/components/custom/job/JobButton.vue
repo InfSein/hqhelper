@@ -5,7 +5,7 @@ import {
   AddCircleOutlineOutlined, AddCircleOutlined, ClearAllOutlined
 } from '@vicons/material'
 import XivFARImage from '../general/XivFARImage.vue'
-import { XivJobs, XivRoles, type XivRole, type HqDataVer } from '@/assets/data'
+import { XivJobs, XivRoles, type XivRole, type HqDataVer, type XivPatchVer } from '@/assets/data'
 import type { GearSelections } from '@/models/gears'
 import { getGearIcon, getGearRecomm, useGearAdder } from '@/tools/gears'
 import useUiTools from '@/tools/ui'
@@ -48,7 +48,7 @@ interface JobButtonProps {
   count: number;
   /** 按钮是否禁用(可选,默认false) */
   disabled?: boolean;
-  patchSelected: string;
+  patchSelected: XivPatchVer | undefined;
   patchData?: HqDataVer
 }
 const props = defineProps<JobButtonProps>()

@@ -4,14 +4,12 @@
 // } from '@vicons/material'
 import ItemStatementTable from '@/components/custom/item/ItemStatementTable.vue'
 import { useStore } from '@/store'
-import { type FuncConfigModel } from '@/models/config-func'
 import { deepCopy } from '@/tools'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
 import type { ProStatementBlock } from '@/tools/use-fufu-cal'
 
 // const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
 const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
 
 const store = useStore()
@@ -60,10 +58,10 @@ onBeforeUnmount(() => {
 })
 
 const showItemDetails = computed(() => {
-  return !funcConfig.value.prostate_concise_mode
+  return !store.funcConfig.prostate_concise_mode
 })
 const highlightedItems = computed(() : number[] => {
-  if (!selectedItem.value || funcConfig.value.statement_no_highlights) return []
+  if (!selectedItem.value || store.funcConfig.statement_no_highlights) return []
   if (!selectedItem.value.craftRequires.length) return [selectedItem.value.id]
   const recipeSearch = [selectedItem.value.id]
   const recipeResult = [selectedItem.value.id]
@@ -79,7 +77,7 @@ const highlightedItems = computed(() : number[] => {
 })
 
 const setPreparedItemsByInventory = () => {
-  const inventory = deepCopy(funcConfig.value.inventory_data)
+  const inventory = deepCopy(store.funcConfig.inventory_data)
   dealPrepared(itemsPrepared.value.materialsLv1, props.statementBlocks[1].items)
   dealPrepared(itemsPrepared.value.materialsLvBase, props.statementBlocks[2].items)
 
@@ -95,7 +93,7 @@ const setPreparedItemsByInventory = () => {
         inventory[id] -= reduceAmount
       } else {
         // 不在库存，按照用户设置处理
-        if (funcConfig.value.inventory_other_items_way === 'clear') {
+        if (store.funcConfig.inventory_other_items_way === 'clear') {
           pmap[id] = 0
         }
       }
@@ -107,8 +105,8 @@ const setInventoryByPreparedItems = () => {
   dealPrepared(itemsPrepared.value.materialsLv1)
   dealPrepared(itemsPrepared.value.materialsLvBase)
 
-  const mode = funcConfig.value.inventory_sync_reverse_mode
-  const inventory = mode === 'overwrite' ? {} : deepCopy(funcConfig.value.inventory_data)
+  const mode = store.funcConfig.inventory_sync_reverse_mode
+  const inventory = mode === 'overwrite' ? {} : deepCopy(store.funcConfig.inventory_data)
 
   Object.entries(statementItems).forEach(([_id, amount]) => {
     const id = Number(_id)
@@ -121,8 +119,8 @@ const setInventoryByPreparedItems = () => {
     }
   })
 
-  if (JSON.stringify(inventory) !== JSON.stringify(funcConfig.value.inventory_data)) {
-    const newFuncConfig = deepCopy(funcConfig.value)
+  if (JSON.stringify(inventory) !== JSON.stringify(store.funcConfig.inventory_data)) {
+    const newFuncConfig = deepCopy(store.funcConfig)
     newFuncConfig.inventory_data = inventory
     store.setFuncConfig(newFuncConfig)
     appForceUpdate()

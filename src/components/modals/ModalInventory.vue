@@ -11,9 +11,9 @@ import ItemSelector from '@/components/custom/item/ItemSelector.vue'
 import ItemSelectTable from '@/components/custom/item/ItemSelectTable.vue'
 import { useStore } from '@/store'
 import type { PreferenceItem as Setting } from '@/models'
-import { fixFuncConfig, type FuncConfigModel } from '@/models/config-func'
 import { deepCopy } from '@/tools'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
+import { fixFuncConfig, type FuncConfigModel } from '@/types/config/func'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
@@ -23,13 +23,13 @@ const NAIVE_UI_MESSAGE = useMessage()
 
 const showModal = defineModel<boolean>('show', { required: true })
 
-const formFuncConfigData = ref<FuncConfigModel>(deepCopy(fixFuncConfig(store.funcConfig, store.userConfig)))
+const formFuncConfigData = ref<FuncConfigModel>(deepCopy(fixFuncConfig(store.funcConfig)))
 const formInventoryItems = ref<ItemInfo[]>([])
 
 const modalId = 'modal-inventory'
 
 const onLoad = () => {
-  formFuncConfigData.value = deepCopy(fixFuncConfig(store.funcConfig, store.userConfig))
+  formFuncConfigData.value = deepCopy(fixFuncConfig(store.funcConfig))
   formInventoryItems.value = Object.keys(formFuncConfigData.value.inventory_data).map(_id => {
     const id = Number(_id)
     const item = getItemInfo(id)

@@ -5,9 +5,9 @@ import {
 import ItemSpan from '../item/ItemSpan.vue'
 import { XivUnpackedTradeMap } from '@/assets/data'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
-import type { MacroGenerateMode } from '@/models/config-func'
 import { useStore } from '@/store'
 import UseConfig from '@/composables/useConfig.ts'
+import type { MacroGenerateMode } from '@/types/config/func.ts'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)

@@ -2,7 +2,6 @@ import { createAlova } from "alova"
 import { useRequest } from "alova/client"
 import adapterFetch from "alova/fetch"
 import vueHook from "alova/vue"
-import { type CloudConfigModel, fixCloudConfig } from '@/models/config-cloud'
 import type {
   HqList,
   NbbResponse,
@@ -13,6 +12,7 @@ import { deepCopy } from "."
 import { md5 } from "./md5"
 import AppStatus from "@/variables/app-status"
 import { useStore } from "@/store"
+import { fixCloudConfig, type CloudConfigModel } from "@/types/config/cloud"
 
 export const useNbbCloud = () => {
   const store = useStore()

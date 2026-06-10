@@ -5,16 +5,14 @@ import JobPanel from '@/components/main/JobPanel.vue'
 import GearSelectionPanel from '@/components/main/GearSelectionPanel.vue'
 import StatisticsPanel from '@/components/main/StatisticsPanel.vue'
 import ModalJoinInWorkflow from '@/components/modals/ModalJoinInWorkflow.vue'
-import { type UserConfigModel } from '@/models/config-user'
 import type { AttireAffix, AccessoryAffix, GearSelections } from '@/models/gears'
 import { getDefaultGearSelections, fixGearSelections } from '@/models/gears'
 import { useStore } from '@/store'
 import { useNbbCal } from '@/tools/use-nbb-cal'
-import type { XivPatchVer } from '@/assets/data';
+import { XivJobRoleMap, type XivPatchVer } from '@/assets/data';
 import type { WorkState } from '@/types/workstate/hqworkbench'
 
 const t = inject<(message: string, args?: any) => string>('t')!
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
 // const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
 
 const store = useStore()
@@ -75,13 +73,23 @@ const handleJoinWorkflow = () => {
   showModalJoinInWorkflow.value = true
 }
 
-const handleImportState = (patch: string, gearSelections?: GearSelections) => {
+const handleImportState = (patch: XivPatchVer, gearSelections?: GearSelections) => {
   workState.value.patch = patch
   workState.value.gears = fixGearSelections(gearSelections)
   NAIVE_UI_MESSAGE.success(t('common.message.import_succeed'))
 }
 provide('handleImportState', handleImportState)
 
+const affixes = computed((): { attire: AttireAffix | "", accessory: AccessoryAffix | "" } => {
+  if (!workState.value.job) {
+    return { attire: '', accessory: '' }
+  }
+  const role = XivJobRoleMap[workState.value.job]
+  return {
+    attire: role?.attire,
+    accessory: role?.accessory
+  }
+})
 const patchData = computed(() => {
   return getPatchData(workState.value.patch as XivPatchVer) ?? undefined
 })
@@ -107,7 +115,6 @@ const specialItems = computed(() => {
       <n-grid-item span="4 600:2 1340:1">
         <JobPanel
           v-model:job-selected="workState.job"
-          v-model:affixes-selected="workState.affixes"
           v-model:gears-selected="workState.gears"
           class="h-full"
           :patch-selected="workState.patch"
@@ -123,8 +130,8 @@ const specialItems = computed(() => {
           :patch-selected="workState.patch"
           :job-id="workState.job"
           :patch-data="patchData"
-          :attire-affix="(workState.affixes?.attire as AttireAffix)"
-          :accessory-affix="(workState.affixes?.accessory as AccessoryAffix)"
+          :attire-affix="affixes.attire"
+          :accessory-affix="affixes.accessory"
           @join-workflow="handleJoinWorkflow"
         />
       </n-grid-item>

@@ -11,8 +11,8 @@ import MacroViewer from '../custom/macro/MacroViewer.vue'
 import { XivJobs, type XivJob } from '@/assets/data'
 import UseConfig from '@/composables/useConfig.ts'
 import type { ItemGroup } from '@/models/item'
-import type { AlarmMacroOptions } from '@/models/gather-clock'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
+import type { AlarmMacroOptions } from '@/types/workstate/gatherclock.ts'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)

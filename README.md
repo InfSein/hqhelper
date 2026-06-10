@@ -10,6 +10,7 @@
 - [ ] `src\store` 进行代码重构。此外，审查各个vue文件的inject，权衡是否真的需要它们。
 - [ ] `src\variables` 进行迁移/移除
 - [ ] 使用 `feature` 模式重新设计项目结构
+- [ ] `src\components\main\GearSelectionPanel.vue` 里面的逻辑写的太他妈啥比了，有空了就重写
 
 **功能**
 - [ ] 解包调整

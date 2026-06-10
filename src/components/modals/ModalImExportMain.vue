@@ -16,6 +16,7 @@ import { useFufuCal } from '@/tools/use-fufu-cal'
 import { export2Excel, importExcel } from '@/tools/excel'
 import type { ItemInfo } from '@/tools/item'
 import type { ItemPriceInfo } from '@/types/item/price.ts'
+import { XivPatchVers, type XivPatchVer } from '@/assets/data'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const updateItemPrices = inject<() => Promise<void>>('updateItemPrices')!
@@ -39,7 +40,7 @@ interface ModalImportExportMainProps {
   crystals: ItemInfo[],
   ui_lang: 'zh' | 'ja' | 'en',
   item_lang: 'zh' | 'ja' | 'en',
-  patchSelected: string
+  patchSelected: XivPatchVer | undefined
 }
 const props = defineProps<ModalImportExportMainProps>()
 
@@ -55,6 +56,13 @@ watch(exportItemPrices, async(newVal, oldVal) => {
     store.funcConfig.export_item_price = newVal
     store.updateFuncConfig()
   }
+})
+
+const defaultPatch = computed(() => {
+  if (props.patchSelected) {
+    return props.patchSelected
+  }
+  return XivPatchVers[0]
 })
 
 const handleExportExcel = async () => {
@@ -194,7 +202,7 @@ const onImportConfirmed = () => {
     <ModalConfirmImportMain
       v-model:show="showConfirmImportModal"
       :gear-selections="importGearSelections"
-      :default-patch="patchSelected"
+      :default-patch="defaultPatch"
       @on-import-confirmed="onImportConfirmed"
     />
   </MyModal>

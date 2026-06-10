@@ -4,7 +4,8 @@ import JobButton from '../custom/job/JobButton.vue'
 import {
   XivJobs,
   XivRoles,
-  type HqDataVer
+  type HqDataVer,
+  type XivPatchVer
 }from '@/assets/data'
 import type { GearSelections } from '@/models/gears'
 import { useStore } from '@/store'
@@ -14,11 +15,10 @@ const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
 
 const store = useStore()
 
-const jobSelected = defineModel<number>('jobSelected', { required: true })
-const affixesSelected = defineModel<any>('affixesSelected', { required: true })
+const jobSelected = defineModel<number | undefined>('jobSelected', { required: true })
 const gearsSelected = defineModel<GearSelections>('gearsSelected', { required: true })
 interface JobPanelProps {
-  patchSelected: string
+  patchSelected: XivPatchVer | undefined
   patchData?: HqDataVer
 }
 const props = defineProps<JobPanelProps>()
@@ -28,15 +28,11 @@ const cardDescription = computed(() => {
   if (!jobSelected.value) return t('main.shared.desc.not_selected')
   else return t('main.select_job.desc.selected', getJobName(jobSelected.value))
 })
-const handleJobSelect = (jobId: number, role: any) => {
+const handleJobSelect = (jobId: number) => {
   if (jobSelected.value === jobId) {
     emit('onJobButtonDupliClick')
   }
   jobSelected.value = jobId
-  affixesSelected.value = {
-    attire: role.attire,
-    accessory: role.accessory
-  }
 }
 
 const uiLanguage = computed(() => {
@@ -144,7 +140,7 @@ const isJobGroupAvailable = (group: number[]) => {
               :disabled="!patchSelected || !isJobAvailable(job)"
               :patch-selected="patchSelected"
               :patch-data="patchData"
-              @on-btn-clicked="handleJobSelect(job, role)"
+              @on-btn-clicked="handleJobSelect(job)"
             />
           </div>
         </n-flex>

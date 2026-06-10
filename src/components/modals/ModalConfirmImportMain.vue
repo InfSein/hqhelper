@@ -3,7 +3,7 @@ import {
   UnarchiveOutlined,
   DoneOutlined
 } from '@vicons/material'
-import { XivGearAffixes, XivJobs, XivPatches } from '@/assets/data'
+import { XivGearAffixes, XivJobs, XivPatches, type XivPatchVer } from '@/assets/data'
 import UseConfig from '@/composables/useConfig'
 import { accessoryAffixes, attireAffixes, fixGearSelections, type AccessoryAffix, type AttireAffix, type GearSelections } from '@/models/gears'
 import { getGearIcon } from '@/tools/gears'
@@ -33,7 +33,7 @@ const onLoad = () => {
 
 interface ModalConfirmImportMainProps {
   gearSelections: GearSelections | undefined
-  defaultPatch: string
+  defaultPatch: XivPatchVer
 }
 const props = defineProps<ModalConfirmImportMainProps>()
 const emit = defineEmits(['onImportConfirmed'])

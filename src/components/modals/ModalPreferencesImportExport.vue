@@ -5,8 +5,8 @@ import {
 } from '@vicons/material'
 import { CopyToClipboard, deepCopy } from '@/tools'
 import { exportPreferences, importPreferences } from '@/tools/preferences'
-import { type UserConfigModel, fixUserConfig } from '@/models/config-user'
-import { fixFuncConfig, type FuncConfigModel } from '@/models/config-func'
+import { fixUserConfig, type UserConfigModel } from '@/types/config/user'
+import { fixFuncConfig, type FuncConfigModel } from '@/types/config/func'
 
 const NAIVE_UI_MESSAGE = useMessage()
 
@@ -61,8 +61,8 @@ const handleImport = () => {
     const oldu = deepCopy(userConfigModel.value)
     const oldf = deepCopy(funcConfigModel.value)
     // 处理一些导入不会有的缓存，这些仍旧使用旧设置
-    u.cache_work_state = oldu.cache_work_state
-    u.fthelper_cache_work_state = oldu.fthelper_cache_work_state
+    u.hqwb_cache_work_state = oldu.hqwb_cache_work_state
+    u.mmhelper_cache_work_state = oldu.mmhelper_cache_work_state
     u.gatherclock_cache_work_state = oldu.gatherclock_cache_work_state
     if (f.universalis_server === oldf.universalis_server) {
       f.cache_item_prices = oldf.cache_item_prices

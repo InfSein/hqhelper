@@ -30,9 +30,9 @@ export const getGearIcon = (slot: GearSlot) => {
   }
 }
 
-export const getGearRecomm = (patch: string, jobId: number) => {
+export const getGearRecomm = (patch: string | undefined, jobId: number) => {
   const result : XivGearSet[] = []
-  if (XivGearRecomm[patch]?.[jobId]?.length) {
+  if (patch && XivGearRecomm[patch]?.[jobId]?.length) {
     XivGearRecomm[patch][jobId].forEach(setId => {
       result.push(XivGearSets[setId])
     })

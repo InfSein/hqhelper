@@ -9,7 +9,6 @@ import {
   CloudDownloadRound, CloudUploadRound,
 } from '@vicons/material'
 import { useStore } from '@/store'
-import { type CloudConfigModel } from '@/models/config-cloud'
 import { fixUserConfig } from '@/types/config/user'
 import { fixFuncConfig } from '@/types/config/func'
 import { fixWorkState as fixWorkflowWorkState } from '@/types/workstate/workflow'
@@ -23,7 +22,6 @@ import { useNbbCloud } from '@/tools/nbb-cloud'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile')!
-const cloudConfig = inject<Ref<CloudConfigModel>>('cloudConfig')!
 const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
 
 const store = useStore()

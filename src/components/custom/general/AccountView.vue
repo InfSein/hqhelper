@@ -6,17 +6,14 @@ import {
   EditNoteOutlined,
 } from '@vicons/material'
 import { useStore } from '@/store'
-import { type CloudConfigModel, fixCloudConfig } from '@/models/config-cloud'
-import type { MainCacheModel } from '@/types/config/cache-main'
 import { CopyToClipboard } from '@/tools'
 import { useDialog } from '@/tools/dialog'
 import { useNbbCloud } from '@/tools/nbb-cloud'
 import useCloud from '@/tools/cloud'
+import { fixCloudConfig } from '@/types/config/cloud'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile')!
-const cloudConfig = inject<Ref<CloudConfigModel>>('cloudConfig')!
-const mainCache = inject<Ref<MainCacheModel>>('mainCache')!
 const displayLoginModal = inject<(action: "login" | "register" | "edituser") => void>('displayLoginModal')!
 const displayCloudSyncModal = inject<() => {}>('displayCloudSyncModal')!
 const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
@@ -35,7 +32,7 @@ const {
   userLoggedIn,
   userTitle,
   userSpecialTitle,
-} = useCloud(cloudConfig, mainCache, t)
+} = useCloud()
 
 interface AccountViewProps {
   triggerClass?: string
@@ -45,17 +42,17 @@ defineProps<AccountViewProps>()
 const wrapper = ref<HTMLElement>()
 
 onMounted(async () => {
-  const nextUpdateTime = cloudConfig.value.nbb_userinfo_last_update + 5000
+  const nextUpdateTime = store.cloudConfig.nbb_userinfo_last_update + 5000
   if (
-    cloudConfig.value.nbb_account_token
+    store.cloudConfig.nbb_account_token
     && Date.now() >= nextUpdateTime
   ) {
     const response = await updateUserInfo()
     if (response.errno) {
       console.warn('User info auto update failed.\n', response)
     } else {
-      const newCloudConfig = resolveUserInfo(response.data, cloudConfig.value)
-      if (JSON.stringify(newCloudConfig) !== JSON.stringify(cloudConfig.value)) {
+      const newCloudConfig = resolveUserInfo(response.data, store.cloudConfig)
+      if (JSON.stringify(newCloudConfig) !== JSON.stringify(store.cloudConfig)) {
         store.setCloudConfig(newCloudConfig)
         appForceUpdate()
       }

@@ -3,7 +3,7 @@
 //   InfoOutlined,
 // } from '@vicons/material'
 import FoldableCard from '../templates/FoldableCard.vue'
-import { XivPatches, type XivPatch } from "@/assets/data"
+import { XivPatches, type XivPatch, type XivPatchVer } from "@/assets/data"
 import { fixGearSelections, isGearEmpty, type GearSelections } from '@/models/gears'
 import HelpButton from '../custom/general/HelpButton.vue'
 import { useDialog } from '@/tools/dialog'
@@ -15,7 +15,7 @@ const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
 const store = useStore()
 const { confirm } = useDialog(t)
 
-const patchSelected = defineModel<string>('patchSelected', { required: true })
+const patchSelected = defineModel<XivPatchVer | undefined>('patchSelected', { required: true })
 const gearsSelected = defineModel<GearSelections>('gearsSelected', { required: true })
 
 const cardDescription = computed(() => {

@@ -7,7 +7,7 @@ import ModalProStatements from '../modals/ModalProStatements.vue'
 import ModalCostAndBenefit from '../modals/ModalCostAndBenefit.vue'
 import ModalImExportMain from '../modals/ModalImExportMain.vue'
 import { useCostAndBenefit } from '@/composables/use-cost-and-benefit'
-import { XivUnpackedTradeMap } from '@/assets/data'
+import { XivUnpackedTradeMap, type XivPatchVer } from '@/assets/data'
 import type { GearSelections } from '@/models/gears'
 import { useFufuCal } from '@/tools/use-fufu-cal'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
@@ -20,7 +20,7 @@ const store = useStore()
 const { getStatementData } = useFufuCal()
 
 interface StatisticsPanelProps {
-  patchSelected: string,
+  patchSelected: XivPatchVer | undefined,
   statistics: any,
   aethersandGatherings: number[] | undefined,
   alkahests: number[] | undefined,

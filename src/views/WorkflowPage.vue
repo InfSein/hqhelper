@@ -21,9 +21,7 @@ import { useStore } from '@/store'
 import { useElectronSync } from '@/composables/electron-sync'
 import {
   getDefaultWorkflow, fixWorkState, _VAR_MAX_WORKFLOW
-} from '@/models/workflow'
-import type { UserConfigModel } from '@/models/config-user'
-import { type FuncConfigModel } from '@/models/config-func'
+} from '@/types/workstate/workflow'
 import { deepCopy } from '@/tools'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
 import { useNbbCal } from '@/tools/use-nbb-cal'
@@ -33,11 +31,10 @@ import TooltipButton from '@/components/custom/general/TooltipButton.vue'
 import ModalWorkflowsManage from '@/components/modals/ModalWorkflowsManage.vue'
 import { useCostAndBenefit } from '@/composables/use-cost-and-benefit'
 import type { SettingGroupKey } from '@/models'
+import type { UserConfigModel } from '@/types/config/user'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
 
 const store = useStore()
 
@@ -53,9 +50,9 @@ const currentWorkflow = computed(() => {
 })
 
 const ignoreNextUpdate = ref(false)
-const disable_workstate_cache = userConfig.value.disable_workstate_cache ?? false
+const disable_workstate_cache = store.userConfig.disable_workstate_cache ?? false
 if (!disable_workstate_cache) {
-  const cachedWorkState = userConfig.value.workflow_cache_work_state
+  const cachedWorkState = store.userConfig.workflow_cache_work_state
   if (cachedWorkState && JSON.stringify(cachedWorkState).length > 2) {
     workState.value = fixWorkState(cachedWorkState)
     // Compatible with older version caching
@@ -63,16 +60,16 @@ if (!disable_workstate_cache) {
 
   // todo - 留意性能：深度侦听需要遍历被侦听对象中的所有嵌套的属性，当用于大型数据结构时，开销很大
   watch(workState, async () => {
-    if (workState.value && userConfig) {
+    if (workState.value) {
       try {
         await Promise.resolve()
         if (ignoreNextUpdate.value) {
           ignoreNextUpdate.value = false
           return
         }
-        userConfig.value.workflow_cache_work_state = workState.value
-        store.setUserConfig(userConfig.value)
-        emitSync('workflowStateChanged', deepCopy(userConfig.value))
+        store.userConfig.workflow_cache_work_state = workState.value
+        store.setUserConfig(store.userConfig)
+        emitSync('workflowStateChanged', deepCopy(store.userConfig))
       } catch (error) {
         console.error('Error handling workState change:', error)
       }
@@ -231,9 +228,9 @@ const recommProcessGroups = computed(() => {
     lv2Items,
     lv3Items,
     lvBaseItems,
-    funcConfig.value.processes_craftable_item_sortby,
-    funcConfig.value.processes_merge_gatherings,
-    userConfig.value.language_ui,
+    store.funcConfig.processes_craftable_item_sortby,
+    store.funcConfig.processes_merge_gatherings,
+    store.userConfig.language_ui,
     t
   )
 })
@@ -459,7 +456,7 @@ const setInventoryByStatementPrepared = () => {
             [{{ updatingPrice ? t('common.loading') : t('statistics.group.cost_and_benefit.title') }}]
           </a>
           <a
-            v-show="funcConfig.inventory_workflow_enable_sync && selectedAnaTab === 'statements'"
+            v-show="store.funcConfig.inventory_workflow_enable_sync && selectedAnaTab === 'statements'"
             class="card-title-extra"
             href="javascript:void(0);"
             style="cursor: pointer;"
@@ -469,7 +466,7 @@ const setInventoryByStatementPrepared = () => {
             [{{ t('workflow.text.sync_from_inventory') }}]
           </a>
           <a
-            v-show="funcConfig.inventory_workflow_enable_sync_reverse && selectedAnaTab === 'statements'"
+            v-show="store.funcConfig.inventory_workflow_enable_sync_reverse && selectedAnaTab === 'statements'"
             class="card-title-extra"
             href="javascript:void(0);"
             style="cursor: pointer;"
@@ -501,7 +498,7 @@ const setInventoryByStatementPrepared = () => {
                 </div>
               </template>
               <CraftStatements
-                v-if="funcConfig.use_traditional_statement"
+                v-if="store.funcConfig.use_traditional_statement"
                 v-bind="statementData"
               />
               <CraftStatementsPro

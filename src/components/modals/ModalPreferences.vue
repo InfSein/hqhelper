@@ -22,13 +22,16 @@ import SettingItem from '../custom/general/SettingItem.vue'
 import ModalPreferencesImportExport from './ModalPreferencesImportExport.vue'
 import { useStore } from '@/store/index'
 import type { PreferenceGroup, SettingGroupKey } from '@/models'
-import { type UserConfigModel, fixUserConfig } from '@/models/config-user'
-import { fixFuncConfig, type FuncConfigModel } from '@/models/config-func'
-import { fixWorkState } from '@/models/workflow'
+import { fixWorkState as fixHqwbWorkState } from '@/types/workstate/hqworkbench'
+import { fixWorkState as fixMmHelperWorkState } from '@/types/workstate/mmhelper'
+import { fixWorkState as fixGatherclockWorkState } from '@/types/workstate/gatherclock'
+import { fixWorkState as fixWorkflowWorkState } from '@/types/workstate/workflow'
 import { deepCopy } from '@/tools'
 import { useDialog } from '@/tools/dialog'
 import useUiTools from '@/tools/ui'
 import { dbKey } from '@/tools/idb'
+import { fixUserConfig, type UserConfigModel } from '@/types/config/user.ts'
+import { fixFuncConfig, type FuncConfigModel } from '@/types/config/func.ts'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
@@ -912,7 +915,7 @@ const currentGroupName = computed(() => {
 
 const currentMenuVal = ref<string>('general')
 const formUserConfigData = ref<UserConfigModel>(deepCopy(fixUserConfig(store.userConfig)))
-const formFuncConfigData = ref<FuncConfigModel>(deepCopy(fixFuncConfig(store.funcConfig, store.userConfig)))
+const formFuncConfigData = ref<FuncConfigModel>(deepCopy(fixFuncConfig(store.funcConfig)))
 
 const onLoad = () => {
   if (props.settingGroup) {
@@ -923,7 +926,7 @@ const onLoad = () => {
     currentMenuVal.value = 'general'
   }
   formUserConfigData.value = deepCopy(fixUserConfig(store.userConfig))
-  formFuncConfigData.value = deepCopy(fixFuncConfig(store.funcConfig, store.userConfig))
+  formFuncConfigData.value = deepCopy(fixFuncConfig(store.funcConfig))
 }
 
 const handleCheck = () => {
@@ -943,16 +946,16 @@ const handleSave = async () => {
   formUserConfigData.value.language_item ??= 'auto'
   formUserConfigData.value.disable_workstate_cache ??= false
   if (formUserConfigData.value.disable_workstate_cache) {
-    formUserConfigData.value.cache_work_state = {}
-    formUserConfigData.value.fthelper_cache_work_state = {}
-    formUserConfigData.value.gatherclock_cache_work_state = {}
-    formUserConfigData.value.workflow_cache_work_state = fixWorkState()
+    formUserConfigData.value.hqwb_cache_work_state = fixHqwbWorkState()
+    formUserConfigData.value.mmhelper_cache_work_state = fixMmHelperWorkState()
+    formUserConfigData.value.gatherclock_cache_work_state = fixGatherclockWorkState()
+    formUserConfigData.value.workflow_cache_work_state = fixWorkflowWorkState()
   }
   const newUserConfig = fixUserConfig(formUserConfigData.value)
   store.setUserConfig(newUserConfig)
 
   // * 处理功能设置
-  const oldFuncConfig = deepCopy(fixFuncConfig(store.funcConfig, store.userConfig))
+  const oldFuncConfig = deepCopy(fixFuncConfig(store.funcConfig))
   if (formFuncConfigData.value.universalis_server !== oldFuncConfig?.universalis_server) {
     formFuncConfigData.value.cache_item_prices = {}
   }
