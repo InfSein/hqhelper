@@ -6,7 +6,6 @@ import { getItemInfo, type ItemInfo } from '@/tools/item'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-// const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
 
 const items = defineModel<Record<number, number>>('items', { required: true })
 interface ItemSelectTableProps {

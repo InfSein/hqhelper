@@ -41,7 +41,6 @@ import ModalDonate from '@/components/modals/ModalDonate.vue'
 // import ChristmasTree from '@/assets/icons/ChristmasTree.vue'
 import { useStore } from '@/store'
 import router from '@/router'
-import { fixUserConfig, type UserConfigModel } from '@/models/config-user'
 import { checkAppUpdates, visitUrl } from '@/tools'
 import { useDialog } from '@/tools/dialog'
 import EorzeaTime from '@/tools/eorzea-time'
@@ -49,7 +48,6 @@ import useUiTools from '@/tools/ui'
 import AppStatus from '@/variables/app-status'
 
 const t = inject<(message: string, args?: any) => string>('t')!
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
 const locale = inject<Ref<"zh" | "en" | "ja">>('locale') ?? ref('zh')
 const isChina = computed(() => locale.value === 'zh')
@@ -64,7 +62,7 @@ const useDesktopUi = computed(() => {
   return !isMobile.value || !!window.electronAPI
 })
 const canOpenDevTools = computed(() => {
-  return !!window.electronAPI?.openDevTools && userConfig.value.enable_dev_mode
+  return !!window.electronAPI?.openDevTools && store.userConfig.enable_dev_mode
 })
 
 const store = useStore()
@@ -73,10 +71,9 @@ const NAIVE_UI_MESSAGE = useMessage()
 const { renderIcon, optionsRenderer } = useUiTools(isMobile)
 
 onMounted(() => {
-  if (userConfig.value.cache_lasttime_version !== AppStatus.Version) {
-    userConfig.value.cache_lasttime_version = AppStatus.Version
-    const newConfig = fixUserConfig(userConfig.value)
-    store.setUserConfig(newConfig)
+  if (store.userConfig.cache_lasttime_version !== AppStatus.Version) {
+    store.userConfig.cache_lasttime_version = AppStatus.Version
+    store.updateUserConfig()
     showChangeLogsModal.value = true
   }
 })
@@ -162,7 +159,7 @@ const menuData = computed(() => {
       key: 'refs',
       icon: FileCopyFilled,
       label: '参考资料',
-      hide: userConfig.value.language_ui !== 'zh', // 这里的内容仅限中文用户可见，不做国际化
+      hide: store.userConfig.language_ui !== 'zh', // 这里的内容仅限中文用户可见，不做国际化
       options: [
         {
           type: 'common',
@@ -385,7 +382,7 @@ const menuData = computed(() => {
           label: '常见问题',
           icon: HelpOutlineOutlined,
           description: '也有不常见的。',
-          hide: userConfig.value.language_ui !== 'zh',
+          hide: store.userConfig.language_ui !== 'zh',
           click: () => {
             visitUrl('https://docs.qq.com/doc/DY3pPZmRGRHpubEFi')
           }

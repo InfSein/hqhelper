@@ -1,4 +1,3 @@
-import type { Ref } from "vue"
 import { createAlova } from "alova"
 import { useRequest } from "alova/client"
 import adapterFetch from "alova/fetch"
@@ -9,14 +8,15 @@ import type {
   NbbResponse,
   ResdataRegisterAndLogin,
   ResdataGetList, ResdataSetList
-} from '@/models/nbb-cloud'
+} from '@/types/api/nbb-cloud'
 import { deepCopy } from "."
 import { md5 } from "./md5"
 import AppStatus from "@/variables/app-status"
+import { useStore } from "@/store"
 
-export const useNbbCloud = (
-  cloudConfig: Ref<CloudConfigModel>,
-) => {
+export const useNbbCloud = () => {
+  const store = useStore()
+
   const alovaApi = createAlova({
     baseURL: 'https://cloud.nbb.ffxiv.cn',
     statesHook: vueHook,
@@ -24,7 +24,7 @@ export const useNbbCloud = (
     beforeRequest(method) {
       // meta传入ignoreToken为true时，将不会添加token
       if (!method.meta?.ignoreToken) {
-        method.config.headers.authorization = cloudConfig.value.nbb_account_token
+        method.config.headers.authorization = store.cloudConfig.nbb_account_token
       }
     },
     responded: (res) => {

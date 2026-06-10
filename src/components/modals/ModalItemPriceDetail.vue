@@ -11,7 +11,7 @@ import { fixFuncConfig, itemPriceTypes, type FuncConfigModel, type ItemPriceType
 import { useDialog } from '@/tools/dialog'
 import { handleGetPriceError } from '@/tools/error'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
-import { ItemPriceApiVersion } from '@/types/item.price.ts'
+import { ItemPriceApiVersion } from '@/types/item/price.ts'
 import { getItemPriceHistory, getItemPriceInfo } from '@/tools/item.price.ts'
 
 const t = inject<(message: string, args?: any) => string>('t')!

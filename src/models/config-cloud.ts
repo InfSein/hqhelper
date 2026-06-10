@@ -1,7 +1,7 @@
 import {
   assignDefaults
 } from '@/tools'
-import type { HqList } from './nbb-cloud'
+import type { HqList } from '../types/api/nbb-cloud'
 
 export interface CloudConfigModel {
   /** NBB云账户头像 */

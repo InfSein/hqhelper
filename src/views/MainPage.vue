@@ -11,31 +11,27 @@ import { getDefaultGearSelections, fixGearSelections } from '@/models/gears'
 import { useStore } from '@/store'
 import { useNbbCal } from '@/tools/use-nbb-cal'
 import type { XivPatchVer } from '@/assets/data';
-
-const store = useStore()
-const NAIVE_UI_MESSAGE = useMessage()
+import type { WorkState } from '@/types/workstate/hqworkbench'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
 // const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
 
+const store = useStore()
+const NAIVE_UI_MESSAGE = useMessage()
 const { calGearSelections, getSpecialItems, getPatchData } = useNbbCal()
 
-const workState = ref({
-  patch: '',
-  job: 0,
-  affixes: {
-    attire: '',
-    accessory: ''
-  },
+const workState = ref<WorkState>({
+  patch: undefined,
+  job: undefined,
   gears: getDefaultGearSelections(),
-})
+}) // todo
 
 const gearSelectionPanel = ref<InstanceType<typeof GearSelectionPanel>>()
 
-const disable_workstate_cache = userConfig.value.disable_workstate_cache ?? false
+const disable_workstate_cache = store.userConfig.disable_workstate_cache ?? false
 if (!disable_workstate_cache) {
-  const cachedWorkState = userConfig.value.cache_work_state
+  const cachedWorkState = store.userConfig.hqwb_cache_work_state
   if (cachedWorkState && JSON.stringify(cachedWorkState).length > 2) {
     workState.value = cachedWorkState
     fixGearSelections(workState.value.gears)
@@ -44,11 +40,11 @@ if (!disable_workstate_cache) {
 
   // todo - 留意性能：深度侦听需要遍历被侦听对象中的所有嵌套的属性，当用于大型数据结构时，开销很大
   watch(workState, async () => {
-    if (workState.value && userConfig) {
+    if (workState.value) {
       try {
         await Promise.resolve()
-        userConfig.value.cache_work_state = workState.value
-        store.setUserConfig(userConfig.value)
+        store.userConfig.hqwb_cache_work_state = workState.value
+        store.updateUserConfig()
       } catch (error) {
         console.error('Error handling workState change:', error)
       }
@@ -59,7 +55,7 @@ if (!disable_workstate_cache) {
 }
 
 const handleJobButtonDupliClick = () => {
-  if (!userConfig.value.disable_jobbtn_doubleclick) {
+  if (!store.userConfig.disable_jobbtn_doubleclick) {
     gearSelectionPanel.value?.addCurrMainOffHand()
   }
 }

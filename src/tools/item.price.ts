@@ -1,5 +1,5 @@
-import type { ApiPriceHistoryInfo, ApiPriceInfo } from "@/types/api.universalis"
-import { ItemPriceApiVersion, type ItemPriceInfo } from "@/types/item.price"
+import type { ApiPriceHistoryInfo, ApiPriceInfo } from "@/types/api/universalis"
+import { ItemPriceApiVersion, type ItemPriceInfo } from "@/types/item/price"
 import { getUniversalisBatch } from "@/utils/api.universalis"
 
 export const getItemPriceInfo = async (

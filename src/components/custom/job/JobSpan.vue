@@ -1,16 +1,11 @@
 <script setup lang="ts">
 import XivFARImage from '../general/XivFARImage.vue'
 import { XivJobs, type XivJob } from '@/assets/data'
-import type { UserConfigModel } from '@/models/config-user'
-import type { FuncConfigModel } from '@/models/config-func'
-import UseConfig from '@/tools/use-config'
-
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
+import UseConfig from '@/composables/useConfig.ts'
 
 const {
   itemLanguage,
-} = UseConfig(userConfig, funcConfig)
+} = UseConfig()
 
 const props = defineProps({
   jobId: {

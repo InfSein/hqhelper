@@ -2,12 +2,13 @@
 import ItemCell from './ItemCell.vue'
 import StatementListPop from './StatementListPop.vue'
 import { getItemInfo, type ItemInfo, type StatementRow } from '@/tools/item'
-import { type UserConfigModel } from '@/models/config-user'
 import { objectEqual } from '@/tools'
+import { useStore } from '@/store'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
+
+const store = useStore()
 
 const itemsPrepared = defineModel<Record<number, number>>('itemsPrepared', { required: true })
 const selectedItem = defineModel<ItemInfo | undefined>('selectedItem', { required: true })
@@ -55,7 +56,7 @@ const rows = computed(() => {
 })
 
 const getItemAmount = (amount: number) => {
-  return userConfig.value.item_amount_use_comma
+  return store.userConfig.item_amount_use_comma
     ? amount.toLocaleString()
     : amount
 }

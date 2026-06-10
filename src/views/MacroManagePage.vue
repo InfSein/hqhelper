@@ -24,9 +24,7 @@ import {
   _VAR_MACRO_MAXAMOUNT,
   fixWorkState, getDefaultCraftMacro,
   type WorkState, type RecordedCraftMacro, type CraftMacroRow,
-} from '@/models/macromanage'
-import type { UserConfigModel } from '@/models/config-user'
-import { type FuncConfigModel } from '@/models/config-func'
+} from '@/types/workstate/macromanage'
 import { CopyToClipboard, deepCopy } from '@/tools'
 import { useDialog } from '@/tools/dialog'
 import useUiTools from '@/tools/ui'
@@ -34,8 +32,6 @@ import useMacroHelper from '@/tools/macro-helper'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
 
 const store = useStore()
 const route = useRoute()
@@ -45,7 +41,7 @@ const NAIVE_UI_MESSAGE = useMessage()
 const { renderIcon } = useUiTools(isMobile)
 const {
   exportCraftMacroText, unarchiveMacroRow,
-} = useMacroHelper(userConfig, funcConfig)
+} = useMacroHelper()
 
 const workState = ref<WorkState>(fixWorkState())
 const showModalCraftMacroEdit = ref(false)
@@ -55,7 +51,7 @@ const imexportMode = ref<"import" | "export">('import')
 const macroEditTarget = ref(getDefaultCraftMacro(-1))
 const macroEditAction = ref<"add" | "edit">('add')
 
-const cachedWorkState = userConfig.value.macromanage_cache_work_state
+const cachedWorkState = store.userConfig.macromanage_cache_work_state
 if (cachedWorkState && JSON.stringify(cachedWorkState).length > 2) {
   workState.value = fixWorkState(cachedWorkState)
   // Compatible with older version caching
@@ -64,11 +60,11 @@ workState.value.recordIndex = Math.max(0, ...workState.value.recordedCraftMacros
 
 // todo - 留意性能：深度侦听需要遍历被侦听对象中的所有嵌套的属性，当用于大型数据结构时，开销很大
 watch(workState, async () => {
-  if (workState.value && userConfig) {
+  if (workState.value) {
     try {
       await Promise.resolve()
-      userConfig.value.macromanage_cache_work_state = workState.value
-      store.setUserConfig(userConfig.value)
+      store.userConfig.macromanage_cache_work_state = workState.value
+      store.setUserConfig(store.userConfig)
     } catch (error) {
       console.error('Error handling workState change:', error)
     }
@@ -607,7 +603,7 @@ const handleCopyMacro = async (macro: string) => {
 
 const handleMacroEditSubmit = (macro: RecordedCraftMacro) => {
   const macroid = macro.id
-  const newWorkState = fixWorkState(deepCopy(userConfig.value.macromanage_cache_work_state))
+  const newWorkState = fixWorkState(deepCopy(store.userConfig.macromanage_cache_work_state))
   if (macroEditAction.value === 'edit') {
     const index = newWorkState.recordedCraftMacros.findIndex(macro => macro.id === macroid)
     if (index !== -1) {
@@ -637,7 +633,7 @@ const handleMacroEditSubmit = (macro: RecordedCraftMacro) => {
   }
 }
 const handleBatchAddSubmit = (macros: RecordedCraftMacro[]) => {
-  const newWorkState = fixWorkState(deepCopy(userConfig.value.macromanage_cache_work_state))
+  const newWorkState = fixWorkState(deepCopy(store.userConfig.macromanage_cache_work_state))
   for (const macro of macros) {
     newWorkState.recordedCraftMacros.push(macro)
   }

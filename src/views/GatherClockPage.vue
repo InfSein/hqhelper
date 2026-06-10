@@ -7,8 +7,6 @@ import GatherItemCard from '@/components/gatherclock/GatherItemCard.vue'
 import ModalAlarmMacroExport from '@/components/modals/ModalAlarmMacroExport.vue'
 import { XivJobs, type XivJob } from '@/assets/data'
 import { useStore } from '@/store'
-import type { UserConfigModel } from '@/models/config-user'
-import type { FuncConfigModel } from '@/models/config-func'
 import type { ItemGroup } from '@/models/item'
 import { fixAlarmMacroOptions } from '@/models/gather-clock'
 import { playAudio } from '@/tools'
@@ -16,13 +14,11 @@ import { useDialog } from '@/tools/dialog'
 import useUiTools from '@/tools/ui'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
 import { useNbbCal } from '@/tools/use-nbb-cal'
-import UseConfig from '@/tools/use-config'
+import UseConfig from '@/composables/useConfig'
 import EorzeaTime from '@/tools/eorzea-time'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
 const currentET = inject<Ref<EorzeaTime>>('currentET')!
 const appMode = inject<Ref<"overlay" | "" | undefined>>('appMode') ?? ref('')
 
@@ -32,7 +28,7 @@ const { getLimitedGatherings } = useNbbCal()
 const { optionsRenderer } = useUiTools(isMobile)
 const {
   uiLanguage, itemLanguage,
-} = UseConfig(userConfig, funcConfig)
+} = UseConfig()
 
 const gatherData = computed(() => {
   const limitedGatherings = getLimitedGatherings()
@@ -229,9 +225,9 @@ const handleNotify = (itemsNeedAlarm: ItemInfo[]) => {
   }
 }
 
-const disable_workstate_cache = userConfig.value.disable_workstate_cache ?? false
+const disable_workstate_cache = store.userConfig.disable_workstate_cache ?? false
 if (!disable_workstate_cache) {
-  const cachedWorkState = userConfig.value.gatherclock_cache_work_state
+  const cachedWorkState = store.userConfig.gatherclock_cache_work_state
   if (cachedWorkState && JSON.stringify(cachedWorkState).length > 2) {
     workState.value = cachedWorkState
     // 在这里处理后续添加的成员默认值
@@ -243,11 +239,11 @@ if (!disable_workstate_cache) {
 
   // todo - 留意性能：深度侦听需要遍历被侦听对象中的所有嵌套的属性，当用于大型数据结构时，开销很大
   watch(workState, async () => {
-    if (workState.value && userConfig) {
+    if (workState.value) {
       try {
         await Promise.resolve()
-        userConfig.value.gatherclock_cache_work_state = workState.value
-        store.setUserConfig(userConfig.value)
+        store.userConfig.gatherclock_cache_work_state = workState.value
+        store.updateUserConfig()
       } catch (error) {
         console.error('Error handling workState change:', error)
       }
@@ -587,7 +583,7 @@ const handleShowAlarmMacroExportModal = () => {
         </n-form>
       </div>
     </FoldableCard>
-    <n-card embedded :bordered="false" :class="userConfig.custom_background ? 'glasscard' : ''" :content-style="isVerticalOverlay ? 'padding: 1em 0.5em;' : undefined">
+    <n-card embedded :bordered="false" :class="store.userConfig.custom_background ? 'glasscard' : ''" :content-style="isVerticalOverlay ? 'padding: 1em 0.5em;' : undefined">
       <div class="title-actions">
         <n-button
           v-for="patch in gatherData"

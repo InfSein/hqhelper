@@ -4,12 +4,12 @@
 // } from '@vicons/material'
 import ItemList from '@/components/custom/item/ItemList.vue'
 import type { ItemInfo } from '@/tools/item'
-import type { UserConfigModel } from '@/models/config-user'
+import { useStore } from '@/store'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-// const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
+
+const store = useStore()
 
 interface CraftStatementsProps {
   craftTargets: ItemInfo[],
@@ -68,7 +68,7 @@ const statementBlocks = computed(() => {
         <ItemList
           :items="block.items"
           :list-height="480"
-          :show-collector-icon="!userConfig.hide_collector_icons"
+          :show-collector-icon="!store.userConfig.hide_collector_icons"
           :container-id="containerId"
         />
       </div>
@@ -87,7 +87,7 @@ const statementBlocks = computed(() => {
           :items="block.items"
           :list-height="480"
           btn-pop-max-width="300px"
-          :show-collector-icon="!userConfig.hide_collector_icons"
+          :show-collector-icon="!store.userConfig.hide_collector_icons"
           :container-id="containerId"
         />
       </div>

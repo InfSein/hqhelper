@@ -2,10 +2,11 @@
 import {
   HomeOutlined
 } from '@vicons/material'
-import type { UserConfigModel } from '@/models/config-user'
+import { useStore } from '@/store'
 
 const t = inject<(message: string, args?: any) => string>('t')!
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
+
+const store = useStore()
 
 defineProps({
   pageName: {
@@ -20,7 +21,7 @@ defineProps({
 
 const cardClasses = computed(() => {
   return [
-    userConfig.value.custom_background ? 'glasscard' : ''
+    store.userConfig.custom_background ? 'glasscard' : ''
   ].join(' ')
 })
 </script>

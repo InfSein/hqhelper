@@ -3,20 +3,16 @@ import { MapOutlined } from '@vicons/material'
 import XivFARImage from '../general/XivFARImage.vue'
 import ItemPop from '../item/ItemPop.vue'
 import { XivJobs } from '@/assets/data'
-import type { UserConfigModel } from '@/models/config-user'
-import type { FuncConfigModel } from '@/models/config-func'
 import type { ItemInfo } from '@/tools/item'
 import { XivMaps, type XivMapAetheryteInfo, type XivMapInfo } from '@/tools/map'
-import UseConfig from '@/tools/use-config'
+import UseConfig from '@/composables/useConfig.ts'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
 
 const {
   itemLanguage,
-} = UseConfig(userConfig, funcConfig)
+} = UseConfig()
 
 interface GatheringPathButtonProps {
   targetItems: ItemInfo[]

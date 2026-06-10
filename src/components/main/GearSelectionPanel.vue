@@ -15,12 +15,13 @@ import {
 } from '@/assets/data'
 import type { AttireAffix, AccessoryAffix, GearSelections } from '@/models/gears'
 import { getDefaultGearSelections } from '@/models/gears'
-import { type UserConfigModel } from '@/models/config-user'
 import { useGearAdder } from '@/tools/gears'
+import { useStore } from '@/store'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
+
+const store = useStore()
 const NAIVE_UI_MESSAGE = useMessage()
 
 const gearSelections = defineModel<GearSelections>('gearSelections', { required: true })
@@ -50,7 +51,7 @@ const affixesTips = computed(() => {
   ]
 })
 const getAffixesName = () => {
-  const uiLanguage = userConfig.value?.language_ui ?? 'zh'
+  const uiLanguage = store.userConfig?.language_ui ?? 'zh'
   const jobName = XivJobs?.[props.jobId]?.[`job_name_${uiLanguage}`] || t('main.select_gear.desc.un_selected')
   const attireName = XivGearAffixes?.[props.attireAffix]?.[`name_${uiLanguage}`] || t('main.select_gear.desc.un_selected')
   const accessoryName = XivGearAffixes?.[props.accessoryAffix]?.[`name_${uiLanguage}`] || t('main.select_gear.desc.un_selected')
@@ -210,7 +211,7 @@ const displayQuickOperates = computed(() => {
 })
 
 const quickOperatesOptions = computed(() => {
-  const mainoffOptions = userConfig.value.split_quick_operate_options_main_off
+  const mainoffOptions = store.userConfig.split_quick_operate_options_main_off
     ? [
       {
         key: 'add-crafter-main',

@@ -9,7 +9,6 @@ import { getStaffMebers } from '@/models/about-app'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 // const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-// const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
 
 const members = getStaffMebers(t)
 

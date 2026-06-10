@@ -7,11 +7,12 @@ import XivFARImage from '../custom/general/XivFARImage.vue'
 import ItemStepper from '../custom/item/ItemStepper.vue'
 import TooltipButton from '../custom/general/TooltipButton.vue'
 import { XivUnpackedFashionClothes } from '@/assets/data'
-import type { UserConfigModel } from '@/models/config-user'
 import { getItemInfo } from '@/tools/item'
+import { useStore } from '@/store'
 
 const t = inject<(message: string, args?: any) => string>('t')!
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
+
+const store = useStore()
 
 const patchModel = defineModel<string>('patch', { required: true })
 const itemSelected = defineModel<Record<number, number>>('itemSelected', { required: true })
@@ -46,7 +47,7 @@ const handleJoinWorkflow = () => {
           :disabled="!items.length"
         >
           <div class="item-selection-container">
-            <n-card size="small" :class="userConfig.custom_background ? 'glasscard smallcard' : ''">
+            <n-card size="small" :class="store.userConfig.custom_background ? 'glasscard smallcard' : ''">
               <template #header>
                 <div class="card-title">
                   <XivFARImage

@@ -1,7 +1,7 @@
 import { computed, type Ref } from "vue"
 import { getImgCdnUrl } from "./item"
 import type { CloudConfigModel } from "@/models/config-cloud"
-import type { MainCacheModel } from "@/models/cache-main"
+import type { MainCacheModel } from "@/types/config/cache-main"
 
 interface UserSpecialTitle {
   key: "dev" | "staff" | "vip"

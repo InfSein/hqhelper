@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import MapButton from './MapButton.vue'
 import { XivMaps } from '@/tools/map'
-import type { UserConfigModel } from '@/models/config-user'
+import { useStore } from '@/store'
 
 const t = inject<(message: string, args?: any) => string>('t')!
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
 // const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+
+const store = useStore()
 
 interface LocationSpanProps {
   placeId: number,
@@ -27,7 +28,7 @@ const placeName = computed(() => {
   if (props.placeName) {
     return props.placeName
   }
-  switch (userConfig.value.language_item) {
+  switch (store.userConfig.language_item) {
     case 'ja': return XivMaps[props.placeId]?.name_ja
     case 'en': return XivMaps[props.placeId]?.name_en
     default:  return XivMaps[props.placeId]?.name_zh

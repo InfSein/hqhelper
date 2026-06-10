@@ -8,21 +8,19 @@ import ItemSpan from '@/components/custom/item/ItemSpan.vue'
 import LocationSpan from '@/components/custom/map/LocationSpan.vue'
 import GatheringPathButton from '@/components/custom/map/GatheringPathButton.vue'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
-import UseConfig from '@/tools/use-config'
+import UseConfig from '@/composables/useConfig'
 import { XivJobs, type XivJob } from '@/assets/data'
 import type EorzeaTime from '@/tools/eorzea-time'
 import type { RecommItemGroup } from '@/models/item'
-import { type UserConfigModel } from '@/models/config-user'
-import { type FuncConfigModel } from '@/models/config-func'
+import { useStore } from '@/store'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const currentET = inject<Ref<EorzeaTime>>('currentET')!
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
 
+const store = useStore()
 const {
   itemLanguage,
-} = UseConfig(userConfig, funcConfig)
+} = UseConfig()
 
 const expandedBlocks = defineModel<Record<number, string[]>>('expandedBlocks', { required: true })
 const completedItems = defineModel<Record<number, Record<number, boolean>>>('completedItems', { required: true })
@@ -38,14 +36,14 @@ export interface CraftRecommProcessesProps {
 const props = defineProps<CraftRecommProcessesProps>()
 
 const showItemGatherDetails = computed(() => {
-  return funcConfig.value.processes_show_item_details
+  return store.funcConfig.processes_show_item_details
 })
 const itemGroups = computed(() => {
   return props.itemGroups
 })
 
 const getJobName = (jobInfo: XivJob) => {
-  switch (userConfig.value.language_ui) {
+  switch (store.userConfig.language_ui) {
     case 'ja':
       return jobInfo?.job_name_ja || t('common.unknown')
     case 'en':
@@ -235,8 +233,8 @@ const isItemGatherableNow = (item: ItemInfo) => {
                 class="gather-detail-recomm"
                 v-if="showItemGatherDetails && item.gatherInfo?.placeID && !completedItems[groupIndex][item.id]"
               >
-                <span v-if="funcConfig.processes_merge_gatherings" style="margin-right: 1px;">(</span>
-                <span v-if="funcConfig.processes_merge_gatherings" class="flex items-center">
+                <span v-if="store.funcConfig.processes_merge_gatherings" style="margin-right: 1px;">(</span>
+                <span v-if="store.funcConfig.processes_merge_gatherings" class="flex items-center">
                   <XivFARImage
                     class="icon select-none"
                     :src="XivJobs[item.gatherInfo.jobId].job_icon_url"
@@ -244,7 +242,7 @@ const isItemGatherableNow = (item: ItemInfo) => {
                   />
                   <p>{{ getJobName(XivJobs[item.gatherInfo.jobId]) }}</p>
                 </span>
-                <span v-if="funcConfig.processes_merge_gatherings" style="margin: 0 3px 0 1px;">)</span>
+                <span v-if="store.funcConfig.processes_merge_gatherings" style="margin: 0 3px 0 1px;">)</span>
                 <span style="margin-right: 1px;">(</span>
                 <span>{{ t('map.text.recomm_aetheryte') }} - {{ item.gatherInfo.recommAetheryte?.[`name_${itemLanguage}`] }}</span>
                 <span style="margin-left: 1px;">)</span>

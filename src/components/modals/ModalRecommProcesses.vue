@@ -4,24 +4,22 @@ import {
 } from '@vicons/material'
 import CraftRecommProcess from '../custom/general/CraftRecommProcess.vue'
 import ModalPreferences from './ModalPreferences.vue'
-import { type UserConfigModel } from '@/models/config-user'
-import { type FuncConfigModel } from '@/models/config-func'
 import { type ItemInfo } from '@/tools/item'
 import { CopyToClipboard } from '@/tools'
 import { useFufuCal } from '@/tools/use-fufu-cal'
-import UseConfig from '@/tools/use-config'
+import UseConfig from '@/composables/useConfig.ts'
+import { useStore } from '@/store'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 // const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
 // const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
 
+const store = useStore()
 const NAIVE_UI_MESSAGE = useMessage()
-const { calRecommProcessGroups } = useFufuCal(userConfig, funcConfig, t)
+const { calRecommProcessGroups } = useFufuCal()
 const {
   itemLanguage,
-} = UseConfig(userConfig, funcConfig)
+} = UseConfig()
   
 const showModal = defineModel<boolean>('show', { required: true })
 const expandedBlocks = ref<Record<number, string[]>>({})
@@ -59,9 +57,9 @@ const itemGroups = computed(() => {
     props.lv2Items,
     props.lv3Items,
     props.lvBaseItems,
-    funcConfig.value.processes_craftable_item_sortby,
-    funcConfig.value.processes_merge_gatherings,
-    userConfig.value.language_ui,
+    store.funcConfig.processes_craftable_item_sortby,
+    store.funcConfig.processes_merge_gatherings,
+    store.userConfig.language_ui,
     t
   )
 })

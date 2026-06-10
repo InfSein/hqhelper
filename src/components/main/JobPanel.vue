@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { type UserConfigModel } from '@/models/config-user'
 import XivFARImage from '../custom/general/XivFARImage.vue'
 import JobButton from '../custom/job/JobButton.vue'
 import {
@@ -8,10 +7,12 @@ import {
   type HqDataVer
 }from '@/assets/data'
 import type { GearSelections } from '@/models/gears'
+import { useStore } from '@/store'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
+
+const store = useStore()
 
 const jobSelected = defineModel<number>('jobSelected', { required: true })
 const affixesSelected = defineModel<any>('affixesSelected', { required: true })
@@ -39,7 +40,7 @@ const handleJobSelect = (jobId: number, role: any) => {
 }
 
 const uiLanguage = computed(() => {
-  return userConfig.value?.language_ui ?? 'zh'
+  return store.userConfig?.language_ui ?? 'zh'
 })
 
 const getRoleName = (role: any) => {

@@ -4,14 +4,9 @@
 
 <script setup lang="ts">
 import type { ItemInfo } from '@/tools/item'
-import useConfig from '@/tools/use-config'
-import { type UserConfigModel } from '@/models/config-user'
-import { type FuncConfigModel } from '@/models/config-func'
+import useConfig from '@/composables/useConfig'
 
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
-
-const { itemLanguage } = useConfig(userConfig, funcConfig)
+const { itemLanguage } = useConfig()
 
 interface XivFARImageProps {
   src: string | ItemInfo

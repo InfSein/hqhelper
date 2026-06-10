@@ -9,10 +9,8 @@ import ModalJoinInWorkflow from '@/components/modals/ModalJoinInWorkflow.vue'
 import { useStore } from '@/store'
 import { HqData } from '@/assets/data'
 import { useNbbCal } from '@/tools/use-nbb-cal'
-import type { UserConfigModel } from '@/models/config-user'
 
 const t = inject<(message: string, args?: any) => string>('t')!
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
 const appMode = inject<Ref<"overlay" | "" | undefined>>('appMode') ?? ref('')
 
 const store = useStore()
@@ -25,22 +23,22 @@ const workState = ref({
   itemSelected: {} as Record<number, number>
 })
 
-const disable_workstate_cache = userConfig.value.disable_workstate_cache ?? false
+const disable_workstate_cache = store.userConfig.disable_workstate_cache ?? false
 if (!disable_workstate_cache) {
-  const cachedWorkState = userConfig.value.fthelper_cache_work_state
+  const cachedWorkState = store.userConfig.mmhelper_cache_work_state
   if (cachedWorkState && JSON.stringify(cachedWorkState).length > 2) {
     workState.value = cachedWorkState
     // 处理新加参数与旧缓存的兼容逻辑
-    workState.value.hidePrecraftMaterials ??= (cachedWorkState?.hidePrecraftGatherings || false)
+    workState.value.hidePrecraftMaterials ??= (cachedWorkState?.hidePrecraftMaterials || false)
   }
 
   // todo - 留意性能：深度侦听需要遍历被侦听对象中的所有嵌套的属性，当用于大型数据结构时，开销很大
   watch(workState, async () => {
-    if (workState.value && userConfig) {
+    if (workState.value) {
       try {
         await Promise.resolve()
-        userConfig.value.fthelper_cache_work_state = workState.value
-        store.setUserConfig(userConfig.value)
+        store.userConfig.mmhelper_cache_work_state = workState.value
+        store.updateUserConfig()
       } catch (error) {
         console.error('Error handling workState change:', error)
       }

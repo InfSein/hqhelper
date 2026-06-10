@@ -5,7 +5,6 @@ import { getItemInfo } from '@/tools/item'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 // const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-// const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
 
 interface ItemRemarkProps {
   remarks: string[]

@@ -17,27 +17,24 @@ import {
   XivAttributes
 } from '@/assets/data'
 import { useStore } from '@/store'
-import type { UserConfigModel } from '@/models/config-user'
-import { fixFuncConfig, type FuncConfigModel, type ItemPriceType } from '@/models/config-func'
 import type EorzeaTime from '@/tools/eorzea-time'
 import { handleGetPriceError } from '@/tools/error'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
-import UseConfig from '@/tools/use-config'
+import UseConfig from '@/composables/useConfig.ts'
 import { getItemPriceInfo } from '@/tools/item.price.ts'
+import type { ItemPriceType } from '@/types/config/func.ts'
 
-const store = useStore()
-const NAIVE_UI_MESSAGE = useMessage()
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
 const currentET = inject<Ref<EorzeaTime>>('currentET')!
 // const appMode = inject<Ref<"overlay" | "" | undefined>>('appMode') ?? ref('')
 const showItemPriceDetail = inject<(items: ItemInfo[]) => void>('showItemPriceDetail')!
 
+const store = useStore()
+const NAIVE_UI_MESSAGE = useMessage()
 const {
   uiLanguage, itemLanguage,
-} = UseConfig(userConfig, funcConfig)
+} = UseConfig()
 
 interface ItemPopProps {
   /** 道具信息 */
@@ -269,7 +266,7 @@ const itemCraftRequires = computed(() => {
     id: number;
     count: number;
   }[] = []
-  if (userConfig.value.item_pop_craft_show_crystals) {
+  if (store.userConfig.item_pop_craft_show_crystals) {
     requires.push(...props.itemInfo.craftRequireCrystals)
   }
   requires.push(...props.itemInfo.craftRequires)
@@ -356,7 +353,7 @@ const openInBestCraft = () => {
 }
 
 const itemPriceInfo = computed(() => {
-  const priceInfo = funcConfig.value.cache_item_prices[props.itemInfo.id]
+  const priceInfo = store.funcConfig.cache_item_prices[props.itemInfo.id]
   const havePrice = !!priceInfo
 
   // 计算上次更新时间
@@ -373,11 +370,11 @@ const itemPriceInfo = computed(() => {
     } else {
       lastUpdate = t('common.val_days_ago', Math.floor(diff / 86400))
     }
-    priceExpired = (Date.now() - lastUpdateTS) > funcConfig.value.universalis_expireTime
+    priceExpired = (Date.now() - lastUpdateTS) > store.funcConfig.universalis_expireTime
   }
 
   // 组装各个类型的价格
-  const prices = funcConfig.value.universalis_poppricetypes.map(priceType => {
+  const prices = store.funcConfig.universalis_poppricetypes.map(priceType => {
     const priceNq = Math.floor(priceInfo?.[`${priceType}NQ`] ?? 0)
     const priceHq = Math.floor(priceInfo?.[`${priceType}HQ`] ?? 0)
     const tooltipForNoPrice = t('item.price.no_price') + '\n' + t('item.price.no_price_reason')
@@ -424,14 +421,12 @@ const refreshItemPrice = async () => {
   }
   refreshingItemPrice.value = true
   try {
-    const itemPrices = await getItemPriceInfo(props.itemInfo.id, funcConfig.value.universalis_server)
-    const newConfig = funcConfig.value
+    const itemPrices = await getItemPriceInfo(props.itemInfo.id, store.funcConfig.universalis_server)
     Object.keys(itemPrices).forEach(id => {
       const itemID = Number(id)
-      newConfig.cache_item_prices[itemID] = itemPrices[itemID]
+      store.funcConfig.cache_item_prices[itemID] = itemPrices[itemID]
     })
-    await store.setFuncConfig(fixFuncConfig(newConfig, store.userConfig))
-    funcConfig.value = newConfig
+    store.updateFuncConfig()
     NAIVE_UI_MESSAGE.success(t('item.price.update_succeed'))
   } catch (error: any) {
     const errMsg = handleGetPriceError(error, t)
@@ -444,7 +439,7 @@ const showPriceDetailModal = () => {
 }
 
 const innerPopTrigger = computed(() => {
-  if (!isMobile.value && userConfig.value.click_to_show_pop_in_span) {
+  if (!isMobile.value && store.userConfig.click_to_show_pop_in_span) {
     return 'click'
   } else {
     return undefined
@@ -871,7 +866,7 @@ const innerPopTrigger = computed(() => {
           </div>
         </div>
         <!-- 价格 -->
-        <div class="description-block" v-if="funcConfig.universalis_showpriceinpop && itemInfo.tradable">
+        <div class="description-block" v-if="store.funcConfig.universalis_showpriceinpop && itemInfo.tradable">
           <div class="title">
             {{ t('common.price') }}
             <div class="extra flex">

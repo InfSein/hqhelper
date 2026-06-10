@@ -6,7 +6,6 @@ import {
 
 const t = inject<(message: string, args?: any) => string>('t')!
 // const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-// const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
 
 const showModal = defineModel<boolean>('show', { required: true })
 interface MyModalProps {

@@ -24,7 +24,7 @@ const store = useStore()
 // const NAIVE_UI_MESSAGE = useMessage()
 const { emitSync, onSync } = useElectronSync()
 const { calItems } = useNbbCal()
-const { getStatementData, getProStatementData, calRecommProcessData, calRecommProcessGroups } = useFufuCal(userConfig, funcConfig, t)
+const { getStatementData, getProStatementData, calRecommProcessData, calRecommProcessGroups } = useFufuCal()
 
 const workState = ref(fixWorkState())
 

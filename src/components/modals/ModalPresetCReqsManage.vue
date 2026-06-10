@@ -5,17 +5,15 @@ import {
 } from '@vicons/material'
 import DraggableTable from '../custom/general/DraggableTable.vue'
 import { useStore } from '@/store'
-import { _VAR_PRESET_CREQ_MAXAMOUNT, type StrictCraftRequirements } from '@/models/macromanage'
-import type { UserConfigModel } from '@/models/config-user'
+import { _VAR_PRESET_CREQ_MAXAMOUNT, type StrictCraftRequirements } from '@/types/workstate/macromanage.ts'
 import { deepCopy } from '@/tools'
-
-const store = useStore()
-const NAIVE_UI_MESSAGE = useMessage()
 
 const t = inject<(message: string, args?: any) => string>('t')!
 // const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
 const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
+
+const store = useStore()
+const NAIVE_UI_MESSAGE = useMessage()
 
 const showModal = defineModel<boolean>('show', { required: true })
 
@@ -23,7 +21,7 @@ const creqs = ref<StrictCraftRequirements[]>([])
 const dataTable = ref<any>()
 
 const onLoad = () => {
-  creqs.value = userConfig.value.macromanage_cache_work_state.presetCReqs ?? []
+  creqs.value = store.userConfig.macromanage_cache_work_state.presetCReqs ?? []
 }
 
 const getDefaultCReq = () : StrictCraftRequirements => {
@@ -61,7 +59,7 @@ const handleSave = () => {
   if (!saveSuccess) {
     return
   }
-  const newUserConfig = deepCopy(userConfig.value)
+  const newUserConfig = deepCopy(store.userConfig)
   newUserConfig.macromanage_cache_work_state.presetCReqs = creqs.value
   store.setUserConfig(newUserConfig)
   appForceUpdate()

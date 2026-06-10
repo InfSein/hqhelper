@@ -1,16 +1,15 @@
 <script setup lang="ts">
 import XivFARImage from '../general/XivFARImage.vue'
 import ItemSpan from './ItemSpan.vue'
-import type { UserConfigModel } from '@/models/config-user'
-// import type { FuncConfigModel } from '@/models/config-func'
 import { XivJobs, type XivJob } from '@/assets/data'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
+import { useStore } from '@/store'
 // import UseConfig from '@/tools/use-config'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 // const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-// const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
+
+const store = useStore()
 
 interface ItemCellProps {
   itemInfo: ItemInfo
@@ -22,7 +21,7 @@ interface ItemCellProps {
 defineProps<ItemCellProps>()
 
 const getJobName = (jobInfo: XivJob) => {
-  switch (userConfig.value.language_ui) {
+  switch (store.userConfig.language_ui) {
     case 'ja':
       return (jobInfo?.job_name_ja || t('common.unknown')).substring(0, 2)
     case 'en':

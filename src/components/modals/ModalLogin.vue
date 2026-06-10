@@ -10,7 +10,7 @@ import {
 import ModalNbbAvatarSelector from './ModalNbbAvatarSelector.vue'
 import { useStore } from '@/store'
 import { type CloudConfigModel } from '@/models/config-cloud'
-import type { NbbResponse, ResdataRegisterAndLogin } from '@/models/nbb-cloud'
+import type { NbbResponse, ResdataRegisterAndLogin } from '@/types/api/nbb-cloud.ts'
 import { deepCopy } from '@/tools'
 import { getImgCdnUrl } from '@/tools/item'
 import { useNbbCloud } from '@/tools/nbb-cloud'
@@ -26,7 +26,7 @@ const {
   register, login, resetPassword,
   resolveUserInfo,
   resetNickNameAndTitle, resetAvatar,
-} = useNbbCloud(cloudConfig)
+} = useNbbCloud()
 
 const showModal = defineModel<boolean>('show', { required: true })
 

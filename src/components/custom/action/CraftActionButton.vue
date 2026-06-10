@@ -4,18 +4,14 @@ import {
 } from 'naive-ui'
 import XivFARImage from '../general/XivFARImage.vue'
 import type { XivCraftAction } from '@/assets/data'
-import { type UserConfigModel } from '@/models/config-user'
-import { type FuncConfigModel } from '@/models/config-func'
 import { getImgCdnUrl } from '@/tools/item'
-import UseConfig from '@/tools/use-config'
+import UseConfig from '@/composables/useConfig.ts'
 
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
 
 const {
   itemLanguage,
-} = UseConfig(userConfig, funcConfig)
+} = UseConfig()
 
 interface CraftActionButtonProps {
   craftAction: XivCraftAction,

@@ -6,15 +6,13 @@ import {
 import { deepCopy } from '@/tools'
 import useUiTools from '@/tools/ui'
 import { useStore } from '@/store'
-import { fixUserConfig, type UserConfigModel } from '@/models/config-user'
-import { fixFuncConfig, type FuncConfigModel, type WorkflowJoinMode } from '@/models/config-func'
 import { _VAR_MAX_WORKFLOW, getDefaultWorkflow } from '@/models/workflow'
 import ItemSelectTable from '../custom/item/ItemSelectTable.vue'
+import { fixUserConfig } from '@/types/config/user.ts'
+import { fixFuncConfig, type WorkflowJoinMode } from '@/types/config/func.ts'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
 
 const store = useStore()
 const NAIVE_UI_MESSAGE = useMessage()
@@ -33,11 +31,11 @@ const joinMode = ref<WorkflowJoinMode>('accumulation')
 const itemsToAdd = ref<Record<number, number>>({})
 
 const onLoad = () => {
-  joinMode.value = funcConfig.value.workflow_default_join_mode
+  joinMode.value = store.funcConfig.workflow_default_join_mode
   itemsToAdd.value = deepCopy(props.items)
   targetWorkflow.value = workflowOptions.value[0].value
   workflowOptions.value.forEach(option => {
-    if (option.value === funcConfig.value.workflow_default_join_target) {
+    if (option.value === store.funcConfig.workflow_default_join_target) {
       targetWorkflow.value = option.value
     }
   })
@@ -49,7 +47,7 @@ const workflowOptions = computed(() => {
       label: string;
       value: number | "add";
       disabled?: boolean;
-  }[] = userConfig.value.workflow_cache_work_state.workflows.map((workflow, flowIndex) => {
+  }[] = store.userConfig.workflow_cache_work_state.workflows.map((workflow, flowIndex) => {
     return {
       label: workflow.name || t('workflow.text.workflow_with_index', flowIndex + 1),
       value: flowIndex
@@ -118,7 +116,7 @@ const handleSubmit = () => {
     newFuncConfig.workflow_default_join_target = targetWorkflow.value
   }
   store.setUserConfig(newUserConfig)
-  if (joinMode.value !== funcConfig.value.workflow_default_join_mode) {
+  if (joinMode.value !== store.funcConfig.workflow_default_join_mode) {
     newFuncConfig.workflow_default_join_mode = joinMode.value
   }
   store.setFuncConfig(newFuncConfig)

@@ -5,13 +5,14 @@ import {
   HistoryOutlined, StickyNote2Outlined,
 } from '@vicons/material'
 import { getChangelogs, type PatchChangeGroup } from '@/data/change-logs'
-import type { UserConfigModel } from '@/models/config-user'
 import AppStatus from '@/variables/app-status'
+import { useStore } from '@/store'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
 const devMode = import.meta.env.DEV
+
+const store = useStore()
 
 const showModal = defineModel<boolean>('show', { required: true })
 
@@ -23,10 +24,10 @@ const wrapperStyle = computed(() => {
   }
 })
 const latestPatchNote = computed(() => {
-  return getChangelogs(userConfig.value.language_ui, t)[0]
+  return getChangelogs(store.userConfig.language_ui, t)[0]
 })
 const historyChangelogs = computed(() => {
-  return getChangelogs(userConfig.value.language_ui, t).slice(1)
+  return getChangelogs(store.userConfig.language_ui, t).slice(1)
 })
 const latestPatchNoteNumWidth = computed(() => {
   const maxLengthOfNote = latestPatchNote.value.changes.map(change => change.changes.length).reduce((a, b) => Math.max(a, b), 0)
@@ -84,7 +85,7 @@ const handleCopyLatestPatchNodeMarkdown = () => {
 const handleCopyAllPatchNodeMarkdown = () => {
   const br = '\r\n'
   let content = `# HqHelper CHANGELOG${br}${br}`
-  const allNote = getChangelogs(userConfig.value.language_ui, t)
+  const allNote = getChangelogs(store.userConfig.language_ui, t)
   allNote.forEach(note => {
     content += `## ${note.version} (${note.date})${br}${br}`
     note.changes.forEach(change => {

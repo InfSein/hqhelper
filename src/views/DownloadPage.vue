@@ -10,18 +10,14 @@ import {
   InfoRound
 } from '@vicons/material'
 import type { AppVersionJson } from '@/models'
-import type { UserConfigModel } from '@/models/config-user'
-import type { FuncConfigModel } from '@/models/config-func'
 import { checkAppUpdates } from '@/tools'
-import useConfig from '@/tools/use-config'
+import useConfig from '@/composables/useConfig'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile')!
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
 
 const NAIVE_UI_MESSAGE = useMessage()
-const { uiLanguage } = useConfig(userConfig, funcConfig)
+const { uiLanguage } = useConfig()
 
 const loading = ref(false)
 const appVersionInfo = ref<AppVersionJson | undefined>(undefined)

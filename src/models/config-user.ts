@@ -2,9 +2,9 @@ import {
   assignDefaults
 } from '@/tools'
 import { fixWorkState as fixWorkflowWorkState, type WorkState as WorkflowWorkState } from '@/models/workflow'
-import { fixWorkState as fixMacromanageWorkState, type WorkState as MacromanageWorkState } from '@/models/macromanage'
-import { fixWorkState as fixFashionclothWorkState, type WorkState as FashionclothWorkState } from '@/models/fc-helper'
-import { fixWorkState as fixCsHelperWorkState, type WorkState as CsHelperWorkState } from '@/models/cs-helper'
+import { fixWorkState as fixMacromanageWorkState, type WorkState as MacromanageWorkState } from '@/types/workstate/macromanage'
+import { fixWorkState as fixFashionclothWorkState, type WorkState as FashionclothWorkState } from '@/types/workstate/fchelper'
+import { fixWorkState as fixCsHelperWorkState, type WorkState as CsHelperWorkState } from '@/types/workstate/cshelper'
 
 export type UserConfigKey = "general" | "appearance" | "enhancements" | "performance" | "special" | "update"
 

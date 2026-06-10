@@ -2,15 +2,12 @@
 import {
   CodeSharp
 } from '@vicons/material'
-import UseConfig from '@/tools/use-config'
+import UseConfig from '@/composables/useConfig'
 import type { ItemInfo } from '@/tools/item'
-import type { UserConfigModel } from '@/models/config-user'
-import type { FuncConfigModel, MacroGenerateMode } from '@/models/config-func'
+import type { MacroGenerateMode } from '@/types/config/func'
 
 const NAIVE_UI_MESSAGE = useMessage()
 const t = inject<(message: string, args?: any) => string>('t')!
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
 const copyAsMacro = inject<(macroMap: Record<MacroGenerateMode, string>, container?: HTMLElement | undefined) => Promise<{
   result: "success" | "info" | "error";
   msg: string;
@@ -18,7 +15,7 @@ const copyAsMacro = inject<(macroMap: Record<MacroGenerateMode, string>, contain
 
 const {
   itemLanguage,
-} = UseConfig(userConfig, funcConfig)
+} = UseConfig()
 
 interface ButtonCopyAsMacroProps {
   items: ItemInfo[],

@@ -5,16 +5,12 @@ import {
 import ItemSpan from '../item/ItemSpan.vue'
 import { XivUnpackedTradeMap } from '@/assets/data'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
-import { fixUserConfig, type UserConfigModel } from '@/models/config-user'
-import type { FuncConfigModel } from '@/models/config-func'
 import type { MacroGenerateMode } from '@/models/config-func'
 import { useStore } from '@/store'
-import UseConfig from '@/tools/use-config'
+import UseConfig from '@/composables/useConfig.ts'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
 const copyAsMacro = inject<(macroMap: Record<MacroGenerateMode, string>, container?: HTMLElement | undefined) => Promise<{
   result: "success" | "info" | "error";
   msg: string;
@@ -24,7 +20,7 @@ const store = useStore()
 const NAIVE_UI_MESSAGE = useMessage()
 const {
   itemLanguage,
-} = UseConfig(userConfig, funcConfig)
+} = UseConfig()
 
 interface TomeScriptButtonProps {
   /**
@@ -37,11 +33,10 @@ interface TomeScriptButtonProps {
 }
 const props = defineProps<TomeScriptButtonProps>()
 
-const showBiColorItems = ref(userConfig.value.tomescript_show_bicolor_items)
+const showBiColorItems = ref(store.userConfig.tomescript_show_bicolor_items)
 const handleShowBiColorItemsChange = (val: boolean) => {
-  const newConfig = fixUserConfig(store.userConfig)
-  newConfig.tomescript_show_bicolor_items = val ?? false
-  store.setUserConfig(newConfig)
+  store.userConfig.tomescript_show_bicolor_items = val ?? false
+  store.updateUserConfig()
 }
 
 const getItemPrice = (itemInfo: ItemInfo) => {
@@ -70,7 +65,7 @@ const getItemName = (itemInfo: ItemInfo) => {
   }
 }
 const getItemAmount = (amount: number) => {
-  return userConfig.value.item_amount_use_comma
+  return store.userConfig.item_amount_use_comma
     ? amount.toLocaleString()
     : amount
 }

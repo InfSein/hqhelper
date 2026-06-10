@@ -30,28 +30,26 @@ import {
   getDefaultCraftMacro, prepareMacroForSave,
   type RecordedCraftMacro,
   type StrictCraftRequirements,
-} from '@/models/macromanage'
-import { type UserConfigModel } from '@/models/config-user'
-import { type FuncConfigModel } from '@/models/config-func'
+} from '@/types/workstate/macromanage.ts'
 import { deepCopy, findDuplicatesFromArray } from '@/tools'
 import { useDialog } from '@/tools/dialog'
 import { getItemInfo } from '@/tools/item'
-import UseConfig from '@/tools/use-config'
+import UseConfig from '@/composables/useConfig.ts'
 import useMacroHelper from '@/tools/macro-helper'
+import { useStore } from '@/store'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 // const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
 
+const store = useStore()
 const { confirm } = useDialog(t)
 const NAIVE_UI_MESSAGE = useMessage()
 const {
   itemLanguage,
-} = UseConfig(userConfig, funcConfig)
+} = UseConfig()
 const {
   parseCraftMacroText, parseCraftProcedure, exportCraftMacroText,
-} = useMacroHelper(userConfig, funcConfig)
+} = useMacroHelper()
 
 const modalId = 'modal-craft-macro-edit'
 
@@ -285,9 +283,9 @@ const handleSave = async () => {
                         <span>{{ t('macro_manage.text.preset_tags') }}</span>
                       </div>
                       <n-divider style="margin: 0 0 3px;" />
-                      <div v-if="userConfig.macromanage_cache_work_state.presetTags.length" class="flex flex-wrap gap-0.5">
+                      <div v-if="store.userConfig.macromanage_cache_work_state.presetTags.length" class="flex flex-wrap gap-0.5">
                         <n-tag
-                          v-for="(tag, tagIndex) in userConfig.macromanage_cache_work_state.presetTags"
+                          v-for="(tag, tagIndex) in store.userConfig.macromanage_cache_work_state.presetTags"
                           :key="`tag-${tagIndex}`"
                           size="small"
                           :type="formData.tags.includes(tag) ? 'success' : 'default'"
@@ -354,9 +352,9 @@ const handleSave = async () => {
                         <span>{{ t('macro_manage.text.preset_creqs') }}</span>
                       </div>
                       <n-divider style="margin: 0 0 3px;" />
-                      <div v-if="userConfig.macromanage_cache_work_state.presetCReqs.length" class="flex flex-col gap-0.5">
+                      <div v-if="store.userConfig.macromanage_cache_work_state.presetCReqs.length" class="flex flex-col gap-0.5">
                         <n-button
-                          v-for="(creq, creqIndex) in userConfig.macromanage_cache_work_state.presetCReqs"
+                          v-for="(creq, creqIndex) in store.userConfig.macromanage_cache_work_state.presetCReqs"
                           :key="`creq-${creqIndex}`"
                           size="tiny"
                           :ghost="!isActiveCReq(creq)"

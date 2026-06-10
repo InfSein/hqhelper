@@ -6,6 +6,7 @@ import type { FuncConfigModel } from "@/models/config-func"
 import { deepCopy } from '.'
 import { getItemInfo, type ItemInfo } from "./item"
 import { useNbbCal } from "./use-nbb-cal"
+import { useStore } from '@/store'
 
 export interface StatementData {
   craftTargets: ItemInfo[];
@@ -24,11 +25,10 @@ export interface ProStatementBlock {
   preparedKey: ProStatementPreparedKey;
 }
 
-export function useFufuCal(
-  userConfig: Ref<UserConfigModel>,
-  funcConfig: Ref<FuncConfigModel>,
-  t: (message: string, args?: any) => string,
-) {
+export function useFufuCal() {
+  const store = useStore()
+  const t = inject<(message: string, args?: any) => string>('t')!
+
   const calItems = (selections: Record<number, number>) => {
     const { calItems } = useNbbCal()
     return calItems(selections)
@@ -54,7 +54,7 @@ export function useFufuCal(
     return { craftTargets, materialsLv1, materialsLv2, materialsLv3, materialsLv4, materialsLv5, materialsLvBase }
 
     function processStatistics(_in: any, out: any[]) {
-      const ignoreCrystal = funcConfig.value.statement_ignore_crystals
+      const ignoreCrystal = store.funcConfig.statement_ignore_crystals
       for (const id in _in) {
         const item = getItemInfo(_in[id])
         if (ignoreCrystal && item.isCrystal) continue
@@ -105,7 +105,7 @@ export function useFufuCal(
     Object.values(statisticsForLv1.lv1).forEach((calResult : any) => {
       const itemID : number = calResult.id
       const amount : number = calResult.need
-      if (funcConfig.value.statement_ignore_crystals && isCrystal(itemID)) return
+      if (store.funcConfig.statement_ignore_crystals && isCrystal(itemID)) return
       lv1Items[itemID] = amount
     })
 
@@ -121,7 +121,7 @@ export function useFufuCal(
     Object.values(statistics.lvBase).forEach((calResult : any) => {
       const itemID : number = calResult.id
       const amount : number = calResult.need
-      if (funcConfig.value.statement_ignore_crystals && isCrystal(itemID)) return
+      if (store.funcConfig.statement_ignore_crystals && isCrystal(itemID)) return
       baseItems[itemID] = amount
     })
     // nbb计算模型目前会忽略掉制作目标(这里的话是直接素材列表)中没有配方的道具，这里对它们进行特殊处理

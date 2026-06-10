@@ -4,22 +4,20 @@ import {
 } from '@vicons/material'
 import ItemPop from './ItemPop.vue'
 import XivFARImage from '../general/XivFARImage.vue'
-import type { UserConfigModel } from '@/models/config-user'
-import type { FuncConfigModel } from '@/models/config-func'
 import { CopyToClipboard } from '@/tools'
 import { getItemContexts, type ItemInfo } from '@/tools/item'
-import UseConfig from '@/tools/use-config'
+import UseConfig from '@/composables/useConfig.ts'
+import { useStore } from '@/store'
 
 const t = inject<(message: string, args?: any) => string>('t')!
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
 const joinItemsToWorkflow = inject<(items: Record<number, number>) => void>('joinItemsToWorkflow')!
 
+const store = useStore()
 const NAIVE_UI_MESSAGE = useMessage()
 const {
   itemLanguage,
-} = UseConfig(userConfig, funcConfig)
+} = UseConfig()
 
 interface ItemSpanProps {
   itemInfo: ItemInfo
@@ -82,7 +80,7 @@ const getItemName = () => {
 }
 const itemAmount = computed(() => {
   const _amount = props.amount ?? 0
-  return userConfig.value.item_amount_use_comma
+  return store.userConfig.item_amount_use_comma
     ? _amount.toLocaleString()
     : _amount
 })
@@ -157,7 +155,7 @@ const handleItemButtonTouchEnd = (/*e: TouchEvent*/) => {
 // #endregion
 
 const popTrigger = computed(() => {
-  if (!isMobile.value && userConfig.value.click_to_show_pop_in_span) {
+  if (!isMobile.value && store.userConfig.click_to_show_pop_in_span) {
     return 'click'
   } else {
     return undefined
@@ -185,7 +183,7 @@ const containerStyle = computed(() => {
 })
 
 const handleItemIconClick = async () => {
-  const action = userConfig.value.item_info_icon_click_event
+  const action = store.userConfig.item_info_icon_click_event
   const itemName = getItemName()
   let copyContent = ''
   if (action === 'copy_name') {

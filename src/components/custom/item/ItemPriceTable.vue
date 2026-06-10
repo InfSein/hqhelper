@@ -1,16 +1,13 @@
 <script setup lang="ts">
 import type { DataTableColumns } from 'naive-ui'
-
-type SortOrder = 'ascend' | 'descend' | false
 import ItemCell from './ItemCell.vue'
 import type { ItemInfo } from '@/tools/item'
-import type { UserConfigModel } from '@/models/config-user'
-import type { FuncConfigModel } from '@/models/config-func'
+import { useStore } from '@/store'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
+
+const store = useStore()
 
 interface ItemPriceTableProps {
   items: ItemInfo[],
@@ -33,12 +30,13 @@ interface TableRow {
     rawTotal: number
   }
 }
+type SortOrder = 'ascend' | 'descend' | false
 
 const priceSortOrder = ref<SortOrder>(false)
 const subTotalSortOrder = ref<SortOrder>(false)
 
 onMounted(() => {
-  const sortBy = funcConfig.value.costandbenefit_item_sort_by
+  const sortBy = store.funcConfig.costandbenefit_item_sort_by
   if (sortBy === 'priceAsc') priceSortOrder.value = 'ascend'
   else if (sortBy === 'priceDesc') priceSortOrder.value = 'descend'
   else if (sortBy === 'subTotalAsc') subTotalSortOrder.value = 'ascend'
@@ -117,7 +115,7 @@ const handleSorterChange = (sorter: any) => {
 }
 
 const getItemPriceDecimal = (item: ItemInfo, type: 'NQ' | 'HQ') => {
-  return funcConfig.value.cache_item_prices[item.id]?.[`${funcConfig.value.universalis_priceType}${type}`]
+  return store.funcConfig.cache_item_prices[item.id]?.[`${store.funcConfig.universalis_priceType}${type}`]
 }
 const getItemPrice = (item: ItemInfo, type: 'NQ' | 'HQ') => {
   const price = getItemPriceDecimal(item, type)
@@ -147,7 +145,7 @@ const getItemPrice = (item: ItemInfo, type: 'NQ' | 'HQ') => {
 }
 
 const getItemAmount = (amount: number) => {
-  return userConfig.value.item_amount_use_comma
+  return store.userConfig.item_amount_use_comma
     ? amount.toLocaleString()
     : amount
 }

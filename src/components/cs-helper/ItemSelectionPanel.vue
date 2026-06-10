@@ -8,22 +8,20 @@ import XivFARImage from '@/components/custom/general/XivFARImage.vue'
 import ItemStepper from '@/components/custom/item/ItemStepper.vue'
 import TooltipButton from '@/components/custom/general/TooltipButton.vue'
 import { XivJobs, XivUnpackedCollectableSubmissions } from '@/assets/data'
-import { type WorkState } from '@/models/cs-helper'
-import type { UserConfigModel } from '@/models/config-user'
-import type { FuncConfigModel } from '@/models/config-func'
-import UseConfig from '@/tools/use-config'
+import { type WorkState } from '@/types/workstate/cshelper.ts'
+import UseConfig from '@/composables/useConfig.ts'
 import { getItemInfo } from '@/tools/item'
 import { ExpansionSpecialItems } from '@/variables'
 import ItemSubmissionReward from '../custom/item/ItemSubmissionReward.vue'
+import { useStore } from '@/store'
 
 const t = inject<(message: string, args?: any) => string>('t')!
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
 
+const store = useStore()
 const {
   uiLanguage,
   itemLanguage,
-} = UseConfig(userConfig, funcConfig)
+} = UseConfig()
 
 const workState = defineModel<WorkState>('workState', { required: true })
 
@@ -112,7 +110,7 @@ const handleJoinWorkflow = () => {
               </div>
             </template>
             <div class="item-selection-container">
-              <n-card size="small" :class="userConfig.custom_background ? 'glasscard smallcard' : ''">
+              <n-card size="small" :class="store.userConfig.custom_background ? 'glasscard smallcard' : ''">
                 <template #header>
                   <div class="card-title">
                     <XivFARImage
@@ -162,7 +160,7 @@ const handleJoinWorkflow = () => {
                   </div>
                 </div>
               </n-card>
-              <n-card size="small" :class="userConfig.custom_background ? 'glasscard smallcard' : ''">
+              <n-card size="small" :class="store.userConfig.custom_background ? 'glasscard smallcard' : ''">
                 <template #header>
                   <div class="card-title">
                     <XivFARImage
@@ -249,7 +247,7 @@ const handleJoinWorkflow = () => {
                   </template>
 
                   <div class="item-selection-container">
-                    <n-card size="small" :class="userConfig.custom_background ? 'glasscard smallcard' : ''">
+                    <n-card size="small" :class="store.userConfig.custom_background ? 'glasscard smallcard' : ''">
                       <template #header>
                         <div class="card-title">
                           <span class="title">{{ t('cs_helper.group.lv91_100') }}</span>
@@ -266,7 +264,7 @@ const handleJoinWorkflow = () => {
                         />
                       </div>
                     </n-card>
-                    <n-card size="small" :class="userConfig.custom_background ? 'glasscard smallcard' : ''">
+                    <n-card size="small" :class="store.userConfig.custom_background ? 'glasscard smallcard' : ''">
                       <template #header>
                         <div class="card-title">
                           <span class="title">{{ t('cs_helper.group.lv81_90') }}</span>

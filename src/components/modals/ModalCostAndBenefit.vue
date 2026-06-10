@@ -8,15 +8,14 @@ import HelpButton from '../custom/general/HelpButton.vue'
 import ModalPreferences from './ModalPreferences.vue'
 import useItemPrice from '@/composables/useItemPrice.ts'
 import type { ItemInfo } from '@/tools/item'
-import type { FuncConfigModel } from '@/models/config-func'
+import { useStore } from '@/store'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-// const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
 // const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
 const showItemPriceDetail = inject<(items: ItemInfo[]) => void>('showItemPriceDetail')!
 
+const store = useStore()
 const { calCostAndBenefit } = useItemPrice()
 
 const modalId = 'modal-cost-and-benefits'
@@ -38,7 +37,7 @@ const isCostPartial = computed(() => costAndBenefit.value.isCostPartial)
 const isBenefitPartial = computed(() => costAndBenefit.value.isBenefitPartial)
 
 const showItemDetails = computed(() => {
-  return funcConfig.value.costandbenefit_show_item_details
+  return store.funcConfig.costandbenefit_show_item_details
 })
 
 const showPreferencesModal = ref(false)

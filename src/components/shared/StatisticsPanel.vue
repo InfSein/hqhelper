@@ -3,17 +3,15 @@ import CraftStatistics from '../custom/general/CraftStatistics.vue'
 import ModalCraftStatements from '../modals/ModalCraftStatements.vue'
 import ModalProStatements from '../modals/ModalProStatements.vue'
 import ModalCostAndBenefit from '../modals/ModalCostAndBenefit.vue'
-import { type UserConfigModel } from '@/models/config-user'
-import { type FuncConfigModel } from '@/models/config-func'
 import { useCostAndBenefit } from '@/composables/use-cost-and-benefit'
 import { useFufuCal } from '@/tools/use-fufu-cal'
+import { useStore } from '@/store'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 // const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
 
-const { getStatementData } = useFufuCal(userConfig, funcConfig, t)
+const store = useStore()
+const { getStatementData } = useFufuCal()
 
 interface StatisticsPanelProps {
   itemSelected: Record<number, number>
@@ -26,7 +24,7 @@ const hidePrecraftMaterials = defineModel<boolean | undefined>('hidePrecraftMate
 const showStatementModal = ref(false)
 const showProStatementModal = ref(false)
 const showStatement = () => {
-  if (funcConfig.value.use_traditional_statement) {
+  if (store.funcConfig.use_traditional_statement) {
     showStatementModal.value = true
   } else {
     showProStatementModal.value = true

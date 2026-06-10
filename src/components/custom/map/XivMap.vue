@@ -1,17 +1,13 @@
 <script setup lang="ts">
 import XivFARImage from '../general/XivFARImage.vue'
-import type { UserConfigModel } from '@/models/config-user'
-import type { FuncConfigModel } from '@/models/config-func'
 import { type XivMapAetheryteInfo, type XivMapInfo } from '@/tools/map'
-import UseConfig from '@/tools/use-config'
+import UseConfig from '@/composables/useConfig.ts'
 
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
 
 const {
   itemLanguage,
-} = UseConfig(userConfig, funcConfig)
+} = UseConfig()
 
 interface MapButtonProps {
   mapData: XivMapInfo,

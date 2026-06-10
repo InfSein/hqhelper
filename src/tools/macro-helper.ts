@@ -1,15 +1,12 @@
-import { type Ref } from "vue"
 import { XivCraftActions, type XivCraftAction } from '@/assets/data'
-import type { UserConfigModel } from "@/models/config-user"
-import type { FuncConfigModel } from "@/models/config-func"
-import type { CraftMacroRow, RecordedCraftMacro } from "@/models/macromanage"
+import type { CraftMacroRow, RecordedCraftMacro } from "@/types/workstate/macromanage"
 import { deepCopy } from "."
 import { getItemInfo } from "./item"
+import { useStore } from "@/store"
 
-const useMacroHelper = (
-  userConfig: Ref<UserConfigModel>,
-  funcConfig: Ref<FuncConfigModel>,
-) => {
+const useMacroHelper = () => {
+  const store = useStore()
+
   /** 将生产宏转换为技能列表 */
   const parseCraftMacroText = (macro: string) => {
     const actions : string[] = []
@@ -71,7 +68,7 @@ const useMacroHelper = (
     const actions = deepCopy(_actions)
 
     let threshold = 15, pushLines = 14
-    if (funcConfig.value.cmacro_use_macrolock) {
+    if (store.funcConfig.cmacro_use_macrolock) {
       threshold--; pushLines--
     }
 
@@ -85,8 +82,8 @@ const useMacroHelper = (
     }
 
     // 处理一些设置项的默认值
-    const cmacro_transition_tipper_content = funcConfig.value.cmacro_transition_tipper_content || '/e Macro #~INDEX completed. <se.1>'
-    const cmacro_end_tipper_content = funcConfig.value.cmacro_end_tipper_content || '/e Craft done! <se.14>'
+    const cmacro_transition_tipper_content = store.funcConfig.cmacro_transition_tipper_content || '/e Macro #~INDEX completed. <se.1>'
+    const cmacro_end_tipper_content = store.funcConfig.cmacro_end_tipper_content || '/e Craft done! <se.14>'
 
     const result = {
       macros_zh: [] as string[],
@@ -104,12 +101,12 @@ const useMacroHelper = (
       const langs = ['zh', 'en', 'ja']
       langs.forEach(_lang => {
         const lang = _lang as "zh" | "en" | "ja"
-        if (funcConfig.value.cmacro_use_macrolock) {
+        if (store.funcConfig.cmacro_use_macrolock) {
           macro[`macro_${lang}`] += '/macrolock' + linebreak
         }
         column.forEach(action => {
           let actionName = action[`name_${lang}`]
-          if (!funcConfig.value.cmacro_remove_quotes) {
+          if (!store.funcConfig.cmacro_remove_quotes) {
             actionName = `"${actionName}"`
           }
           macro[`macro_${lang}`] += `/ac ${actionName} <wait.${action.wait_time}>${linebreak}`

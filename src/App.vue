@@ -15,12 +15,12 @@ import { useLocale } from './locales'
 import { checkAppUpdates, CopyToClipboard, deepCopy, getAppBackground, sleep } from './tools'
 import EorzeaTime from './tools/eorzea-time'
 import { type ItemInfo } from './tools/item'
-import { fixUserConfig , type UserConfigModel } from '@/models/config-user'
-import { fixFuncConfig, type FuncConfigModel, type MacroGenerateMode } from './models/config-func'
-import { fixCloudConfig, type CloudConfigModel } from '@/models/config-cloud'
-import { fixMainCache, type MainCacheModel } from '@/models/cache-main'
 import AppStatus from './variables/app-status'
 import { registerDialogProvider, useDialog } from './tools/dialog'
+import { fixUserConfig, type UserConfigModel } from './types/config/user.ts'
+import { fixFuncConfig, type FuncConfigModel, type MacroGenerateMode } from './types/config/func.ts'
+import { fixCloudConfig, type CloudConfigModel } from './types/config/cloud.ts'
+import { fixMainCache, type MainCacheModel } from './types/config/cache-main.ts'
 
 const ModalCopyAsMacro = defineAsyncComponent(() => import('@/components/modals/ModalCopyAsMacro.vue'))
 const ModalJoinInWorkflow = defineAsyncComponent(() => import('@/components/modals/ModalJoinInWorkflow.vue'))
@@ -36,11 +36,11 @@ const { t: rawT, setLocale } = useLocale()
 const { emitSync, onSync } = useElectronSync()
 
 const userConfig = ref<UserConfigModel>(fixUserConfig(store.userConfig))
-const funcConfig = ref<FuncConfigModel>(fixFuncConfig(store.funcConfig, store.userConfig))
+const funcConfig = ref<FuncConfigModel>(fixFuncConfig(store.funcConfig))
 const cloudConfig = ref<CloudConfigModel>(fixCloudConfig(store.cloudConfig))
 const mainCache = ref<MainCacheModel>(fixMainCache(store.mainCache))
 const locale = computed(() => {
-  return userConfig.value?.language_ui ?? 'zh'
+  return store.userConfig?.language_ui ?? 'zh'
 })
 setLocale(locale.value)
 
@@ -54,7 +54,7 @@ const updateIsMobile = () => {
 
 const osTheme = useOsTheme()
 const theme = computed(() => {
-  const _theme = userConfig.value.theme
+  const _theme = store.userConfig.theme
   if (_theme === 'system') {
     return osTheme.value === 'dark' ? 'dark' : 'light'
   }
@@ -95,7 +95,7 @@ const appForceUpdate = () => {
   )
   // Update electron settings
   emitSync('update-setting', deepCopy({
-    userConfig: userConfig.value,
+    userConfig: store.userConfig,
     funcConfig: funcConfig.value,
     cloudConfig: cloudConfig.value,
     mainCache: mainCache.value,
@@ -107,7 +107,7 @@ onSync('update-setting', (value) => {
     userConfig: _userConfig, funcConfig: _funcConfig, cloudConfig: _cloudConfig, mainCache: _mainCache
   } = value
   handleAppUpdate(_userConfig, _funcConfig, _cloudConfig, _mainCache)
-  store.setUserConfig(userConfig.value)
+  store.setUserConfig(store.userConfig)
   store.setFuncConfig(funcConfig.value)
   store.setCloudConfig(cloudConfig.value)
   store.setMainCache(mainCache.value)
@@ -118,8 +118,8 @@ const handleAppUpdate = (
   _cloudConfig: CloudConfigModel | undefined,
   _mainCache: MainCacheModel | undefined
 ) => {
-  userConfig.value = fixUserConfig(_userConfig)
-  funcConfig.value = fixFuncConfig(_funcConfig, _userConfig)
+  store.userConfig = fixUserConfig(_userConfig)
+  funcConfig.value = fixFuncConfig(_funcConfig)
   cloudConfig.value = fixCloudConfig(_cloudConfig)
   mainCache.value = fixMainCache(_mainCache)
   // Update i18n
@@ -128,11 +128,11 @@ const handleAppUpdate = (
   const instance = getCurrentInstance()
   instance?.proxy?.$forceUpdate()
   // 加载背景
-  getAppBackground(userConfig.value.custom_background).then(val => appBg.value = val)
+  getAppBackground(store.userConfig.custom_background).then(val => appBg.value = val)
 }
 const switchTheme = () => {
-  userConfig.value.theme = theme.value === 'light' ? 'dark' : 'light'
-  store.setUserConfig(userConfig.value)
+  store.userConfig.theme = theme.value === 'light' ? 'dark' : 'light'
+  store.setUserConfig(store.userConfig)
 }
 
 const t = (message: string, args?: any) => {
@@ -291,7 +291,7 @@ onMounted(async () => {
   const date = now.getDate()
   const eggId = 20241225
   if (
-    userConfig.value.last_triggered_egg !== eggId &&
+    store.userConfig.last_triggered_egg !== eggId &&
     (now.getMonth() === 11) && ((date === 24 && now.getHours() >= 18) || date === 25)
   ) {
     showFestivalEgg.value = true
@@ -305,7 +305,7 @@ onMounted(async () => {
   updateDraggableArea()
   window.addEventListener('resize', updateDraggableArea)
   // 加载背景
-  appBg.value = await getAppBackground(userConfig.value.custom_background)
+  appBg.value = await getAppBackground(store.userConfig.custom_background)
 })
 onBeforeUnmount(() => {
   window.removeEventListener('resize', updateIsMobile)
@@ -319,7 +319,7 @@ watch(
   }
 )
 const handleAutoUpdate = async () => {
-  if (!userConfig.value.disable_auto_update && appMode.value !== 'overlay' && !window.androidAPI?.checkUpdate) {
+  if (!store.userConfig.disable_auto_update && appMode.value !== 'overlay' && !window.androidAPI?.checkUpdate) {
     try {
       const checkUpdateResponse = await checkAppUpdates()
       if (checkUpdateResponse.success) {
@@ -392,18 +392,11 @@ const updateDraggableArea = () => {
 
 const naiveUIThemeOverrides = computed(() : GlobalThemeOverrides => {
   let fontFamily = 'Lato, -apple-system, Helvetica Neue, Segoe UI, Microsoft Yahei, 微软雅黑, Arial, Helvetica, sans-serif'
-  if (userConfig.value.custom_font) {
-    fontFamily = userConfig.value.custom_font + ', ' + fontFamily
+  if (store.userConfig.custom_font) {
+    fontFamily = store.userConfig.custom_font + ', ' + fontFamily
   }
   fontFamily = 'FFXIV, ' + fontFamily
-  const fontSize = userConfig.value.custom_font_size || '14px'
-
-  /*
-  let buttonBorder : string | undefined = undefined
-  if (userConfig.value.custom_background) {
-    buttonBorder = theme.value === 'dark' ? undefined : '1px solid #b9b9ba'
-  }
-  */
+  const fontSize = store.userConfig.custom_font_size || '14px'
 
   return {
     common: {

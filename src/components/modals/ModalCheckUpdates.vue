@@ -13,12 +13,10 @@ import AppStatus from '@/variables/app-status'
 import { useDialog } from '@/tools/dialog'
 import { checkUrlLag } from '@/tools/web-request'
 import type { AppVersionJson } from '@/models'
-import { fixUserConfig, type UserConfigModel } from '@/models/config-user'
 import { checkAppUpdates } from '@/tools'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 // const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
 
 const store = useStore()
 const { alertError, confirm } = useDialog(t)
@@ -33,8 +31,8 @@ onMounted(() => {
       ver: 'v3'
     })
   }
-  useCustomProxy.value = userConfig.value.use_custom_proxy
-  customProxyUrl.value = userConfig.value.custom_proxy_url
+  useCustomProxy.value = store.userConfig.use_custom_proxy
+  customProxyUrl.value = store.userConfig.custom_proxy_url
 })
 const onLoad = async () => {
   if (window.electronAPI?.clientVersion) {
@@ -258,10 +256,9 @@ const getProxyPingStyle = (proxy: string) => {
 }
 
 const saveUpdateSettings = () => {
-  const newConfig = fixUserConfig(store.userConfig)
-  newConfig.use_custom_proxy = useCustomProxy.value
-  newConfig.custom_proxy_url = customProxyUrl.value
-  store.setUserConfig(newConfig)
+  store.userConfig.use_custom_proxy = useCustomProxy.value
+  store.userConfig.custom_proxy_url = customProxyUrl.value
+  store.updateUserConfig()
 }
 const handleDownloadWebPack = async () => {
   if (!window.electronAPI?.downloadUpdatePack) {
@@ -310,7 +307,7 @@ const getClientDownloadLink = async () => {
   return url
 }
 const handleDownloadElectronPack = async () => {
-  if (userConfig.value.update_client_builtin) {
+  if (store.userConfig.update_client_builtin) {
     if (!window.electronAPI?.downloadAndOpen) {
       await alertError('function downloadAndOpen is not defined.\nPlease check the client version (v6+ is required).'); return
     }

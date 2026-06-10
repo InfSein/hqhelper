@@ -1,7 +1,7 @@
-import type { ItemPriceInfo } from "@/types/item.price"
+import type { ItemPriceInfo } from "@/types/item/price"
 import type { UserConfigModel } from "./config-user"
 import { deepCopy, assignDefaults } from "@/tools"
-import type { ApiPriceHistoryInfo } from "@/types/api.universalis"
+import type { ApiPriceHistoryInfo } from "@/types/api/universalis"
 
 export const itemPriceTypes = [
   'averagePrice',

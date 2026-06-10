@@ -10,21 +10,17 @@ import {
 } from '@vicons/material'
 import {
   type RecordedCraftMacro,
-} from '@/models/macromanage'
-import { type UserConfigModel } from '@/models/config-user'
-import { type FuncConfigModel } from '@/models/config-func'
+} from '@/types/workstate/macromanage'
 import { useDialog } from '@/tools/dialog'
 import useMacroHelper from '@/tools/macro-helper'
 
 const t = inject<(message: string, args?: any) => string>('t')!
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
 
 const { confirm } = useDialog(t)
 const NAIVE_UI_MESSAGE = useMessage()
 const {
   exportRecordedMacros, importRecordedMacros,
-} = useMacroHelper(userConfig, funcConfig)
+} = useMacroHelper()
 
 const showModal = defineModel<boolean>('show', { required: true })
 const recordedMacros = defineModel<RecordedCraftMacro[]>('recordedMacros', { required: true })

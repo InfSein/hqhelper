@@ -5,7 +5,7 @@ import {
 } from '@vicons/material'
 import { useStore } from '@/store'
 import { useDialog } from '@/tools/dialog'
-import type { MainCacheModel } from '@/models/cache-main'
+import type { MainCacheModel } from '@/types/config/cache-main'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)

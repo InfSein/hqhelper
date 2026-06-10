@@ -11,20 +11,16 @@ import {
   XivCraftActionGroups,
   type XivCraftActionGroupKey,
 } from '@/assets/data'
-import { type UserConfigModel } from '@/models/config-user'
-import { type FuncConfigModel } from '@/models/config-func'
 import { deepCopy } from '@/tools'
-import UseConfig from '@/tools/use-config'
+import UseConfig from '@/composables/useConfig.ts'
 import FoldableCard from '../templates/FoldableCard.vue'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
 
 const {
   itemLanguage,
-} = UseConfig(userConfig, funcConfig)
+} = UseConfig()
 
 const showModal = defineModel<boolean>('show', { required: true })
 

@@ -7,7 +7,7 @@ import {
 } from '@vicons/material'
 import { useStore } from '@/store'
 import { type CloudConfigModel, fixCloudConfig } from '@/models/config-cloud'
-import type { MainCacheModel } from '@/models/cache-main'
+import type { MainCacheModel } from '@/types/config/cache-main'
 import { CopyToClipboard } from '@/tools'
 import { useDialog } from '@/tools/dialog'
 import { useNbbCloud } from '@/tools/nbb-cloud'
@@ -27,7 +27,7 @@ const NAIVE_UI_MESSAGE = useMessage()
 const {
   updateUserInfo,
   resolveUserInfo,
-} = useNbbCloud(cloudConfig)
+} = useNbbCloud()
 const {
   avatarUrl,
   userId,

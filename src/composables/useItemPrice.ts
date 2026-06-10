@@ -1,6 +1,6 @@
 import type { FuncConfigModel } from "@/models/config-func"
 import type { ItemInfo } from "@/tools/item"
-import { ItemPriceApiVersion, type ItemPriceInfo } from "@/types/item.price"
+import { ItemPriceApiVersion, type ItemPriceInfo } from "@/types/item/price"
 
 const useItemPrice = () => {
   const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!

@@ -14,7 +14,7 @@ import {
   _VAR_MACRO_MAXAMOUNT,
   getDefaultCraftMacro, prepareMacroForSave,
   type RecordedCraftMacro,
-} from '@/models/macromanage'
+} from '@/types/workstate/macromanage.ts'
 import HelpButton from '../custom/general/HelpButton.vue'
 import CraftActionButton from '../custom/action/CraftActionButton.vue'
 import { useDialog } from '@/tools/dialog'

@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import ModalDonate from '@/components/modals/ModalDonate.vue'
 import { useStore } from '@/store'
-import type { UserConfigModel } from '@/models/config-user'
-import type { MainCacheModel } from '@/models/cache-main'
 import {
   visitUrl,
 } from '@/tools'
@@ -12,8 +10,6 @@ import {
 } from '@/variables'
 
 const t = inject<(message: string, args?: any) => string>('t')!
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-const mainCache = inject<Ref<MainCacheModel>>('mainCache')!
 
 const store = useStore()
 const NAIVE_UI_MESSAGE = useMessage()
@@ -64,7 +60,7 @@ const announcementsToShow = computed(() : Announcement[] => {
   return announcements.value
     .filter(announcement => {
       return !announcement.hidden
-        && !mainCache.value.ignore_announcements.includes(announcement.id)
+        && !store.mainCache.ignore_announcements.includes(announcement.id)
         && !hiddenAnnouncements.value.includes(announcement.id)
     })
     .map(announcement => {
@@ -86,14 +82,14 @@ const handleIgnoreAnnouncement = async (aid: AnnouncementId) => {
   )) {
     return
   }
-  mainCache.value.ignore_announcements.push(aid)
-  store.setMainCache(mainCache.value)
+  store.mainCache.ignore_announcements.push(aid)
+  store.updateMainCache()
   NAIVE_UI_MESSAGE.success(t('announcement.message.ignored'))
 }
 </script>
 
 <template>
-  <div v-if="announcementsToShow.length" class="announcements-container" :class="userConfig.custom_background ? 'glasscard' : ''">
+  <div v-if="announcementsToShow.length" class="announcements-container" :class="store.userConfig.custom_background ? 'glasscard' : ''">
     <n-alert
       v-for="announcement in announcementsToShow"
       :key="'anno-' + announcement.id"

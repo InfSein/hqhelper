@@ -1,4 +1,4 @@
-import type { ApiHistoryInfo, ApiListInfo } from "./api.universalis"
+import type { ApiHistoryInfo, ApiListInfo } from "../api/universalis"
 
 export const ItemPriceApiVersion = 3
 export interface ItemPriceInfo {

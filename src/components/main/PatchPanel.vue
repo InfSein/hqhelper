@@ -3,16 +3,16 @@
 //   InfoOutlined,
 // } from '@vicons/material'
 import FoldableCard from '../templates/FoldableCard.vue'
-import { type UserConfigModel } from '@/models/config-user'
 import { XivPatches, type XivPatch } from "@/assets/data"
 import { fixGearSelections, isGearEmpty, type GearSelections } from '@/models/gears'
 import HelpButton from '../custom/general/HelpButton.vue'
 import { useDialog } from '@/tools/dialog'
+import { useStore } from '@/store'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
 
+const store = useStore()
 const { confirm } = useDialog(t)
 
 const patchSelected = defineModel<string>('patchSelected', { required: true })
@@ -40,14 +40,14 @@ const handlePatchSelect = async (patch: XivPatch) => {
     }
   }
   patchSelected.value = patch.v
-  const autoFold = !(userConfig.value?.disable_patchcard_autofold ?? false)
+  const autoFold = !(store.userConfig?.disable_patchcard_autofold ?? false)
   if (isMobile.value && autoFold) {
     containerCard.value?.handleFoldOrExpand()
   }
 }
 
 const getPatchName = (patch: XivPatch) => {
-  const uiLanguage = userConfig.value?.language_ui ?? 'zh'
+  const uiLanguage = store.userConfig?.language_ui ?? 'zh'
 
   let patchName = patch.name_zh
   if (uiLanguage === 'en') {

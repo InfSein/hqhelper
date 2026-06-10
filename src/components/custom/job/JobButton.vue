@@ -10,15 +10,11 @@ import type { GearSelections } from '@/models/gears'
 import { getGearIcon, getGearRecomm, useGearAdder } from '@/tools/gears'
 import useUiTools from '@/tools/ui'
 import { visitUrl } from '@/tools'
-import type { UserConfigModel } from '@/models/config-user'
-import type { FuncConfigModel } from '@/models/config-func'
-import UseConfig from '@/tools/use-config'
+import UseConfig from '@/composables/useConfig.ts'
 import { NIcon } from 'naive-ui'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
 
 const {
   addMainOffHand,
@@ -28,7 +24,7 @@ const {
 const { renderIcon, optionsRenderer } = useUiTools(isMobile)
 const {
   uiLanguage,
-} = UseConfig(userConfig, funcConfig)
+} = UseConfig()
 
 const gearsSelected = defineModel<GearSelections>('gearsSelected', { required: true })
 interface JobButtonProps {

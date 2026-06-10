@@ -11,20 +11,16 @@ import {
 } from '@/assets/data'
 import type { GearSelections, AttireAffix, AccessoryAffix } from '@/models/gears'
 import { attireAffixes, accessoryAffixes } from '@/models/gears'
-import { type UserConfigModel } from '@/models/config-user'
-import { type FuncConfigModel } from '@/models/config-func'
 import { deepCopy } from '@/tools'
 import { getGearIcon } from '@/tools/gears'
-import useConfig from '@/tools/use-config'
+import useConfig from '@/composables/useConfig.ts'
 
 const t = inject<(message: string, args?: any) => string>('t')!
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
 
 const {
   uiLanguage,
-} = useConfig(userConfig, funcConfig)
+} = useConfig()
   
 const props = defineProps({
   patchData: {

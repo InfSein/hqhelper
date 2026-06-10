@@ -1,4 +1,7 @@
 <script setup lang="ts">
+
+// todo 记得处理兼容性问题
+
 import { 
   CloudSyncOutlined,
   ChecklistRtlOutlined,
@@ -6,22 +9,20 @@ import {
   CloudDownloadRound, CloudUploadRound,
 } from '@vicons/material'
 import { useStore } from '@/store'
-import { fixUserConfig, type UserConfigModel } from '@/models/config-user'
-import { fixFuncConfig, type FuncConfigModel } from '@/models/config-func'
 import { type CloudConfigModel } from '@/models/config-cloud'
-import { fixWorkState as fixWorkflowWorkState } from '@/models/workflow'
-import { fixWorkState as fixMacromanageWorkState } from '@/models/macromanage'
-import { fixWorkState as fixFashionclothWorkState } from '@/models/fc-helper'
-import { fixWorkState as fixCsHelperWorkState } from '@/models/cs-helper'
-import { HqList, type NbbResponse } from '@/models/nbb-cloud'
+import { fixUserConfig } from '@/types/config/user'
+import { fixFuncConfig } from '@/types/config/func'
+import { fixWorkState as fixWorkflowWorkState } from '@/types/workstate/workflow'
+import { fixWorkState as fixMacromanageWorkState } from '@/types/workstate/macromanage'
+import { fixWorkState as fixFashionclothWorkState } from '@/types/workstate/fchelper'
+import { fixWorkState as fixCsHelperWorkState } from '@/types/workstate/cshelper'
+import { HqList, type NbbResponse } from '@/types/api/nbb-cloud'
 import { deepCopy } from '@/tools'
 import { useDialog } from '@/tools/dialog'
 import { useNbbCloud } from '@/tools/nbb-cloud'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile')!
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
 const cloudConfig = inject<Ref<CloudConfigModel>>('cloudConfig')!
 const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
 
@@ -31,7 +32,7 @@ const NAIVE_UI_MESSAGE = useMessage()
 const {
   getListBatch, addList, editList,
   resolveListTitle,
-} = useNbbCloud(cloudConfig)
+} = useNbbCloud()
 
 const showModal = defineModel<boolean>('show', { required: true })
 
@@ -86,13 +87,13 @@ const loadLists = async () => {
   cloudLists.value = clists
 
   // 设置默认同步范围
-  if (cloudConfig.value.nbb_sync_targets === 'all') {
+  if (store.cloudConfig.nbb_sync_targets === 'all') {
     for (const listtype of listTypes) {
       syncRange.value[listtype] = true
     }
   } else {
     for (const listtype of listTypes) {
-      syncRange.value[listtype] = cloudConfig.value.nbb_sync_targets.includes(listtype)
+      syncRange.value[listtype] = store.cloudConfig.nbb_sync_targets.includes(listtype)
     }
   }
 
@@ -239,7 +240,7 @@ const handleUpload = async () => {
   }
 
   // 将同步范围保存到缓存
-  const newCloudConfig = deepCopy(cloudConfig.value)
+  const newCloudConfig = deepCopy(store.cloudConfig)
   newCloudConfig.nbb_sync_targets = syncTargets.value
   store.setCloudConfig(newCloudConfig)
   appForceUpdate()
@@ -251,7 +252,7 @@ const handleUpload = async () => {
     let content = ''
     switch (listtype) {
       case HqList.ConfigBackupUserConfig: {
-        const obj = deepCopy(userConfig.value as any)
+        const obj = deepCopy(store.userConfig as any)
         delete obj.cache_work_state
         delete obj.fthelper_cache_work_state
         delete obj.gatherclock_cache_work_state
@@ -262,7 +263,7 @@ const handleUpload = async () => {
         break
       }
       case HqList.ConfigBackupFuncConfig: {
-        const obj = deepCopy(funcConfig.value as any)
+        const obj = deepCopy(store.funcConfig as any)
         delete obj.inventory_statement_enable_sync
         delete obj.inventory_workflow_enable_sync
         delete obj.inventory_other_items_way
@@ -272,40 +273,40 @@ const handleUpload = async () => {
         break
       }
       case HqList.WorkstateBackupMain:
-        content = JSON.stringify(userConfig.value.cache_work_state)
+        content = JSON.stringify(store.userConfig.hqwb_cache_work_state)
         break
       case HqList.WorkstateBackupFtHelper:
-        content = JSON.stringify(userConfig.value.fthelper_cache_work_state)
+        content = JSON.stringify(store.userConfig.mmhelper_cache_work_state)
         break
       case HqList.WorkstateBackupGatherClock:
-        content = JSON.stringify(userConfig.value.gatherclock_cache_work_state)
+        content = JSON.stringify(store.userConfig.gatherclock_cache_work_state)
         break
       case HqList.WorkstateBackupWorkflow: {
-        const workstate = fixWorkflowWorkState(userConfig.value.workflow_cache_work_state)
+        const workstate = fixWorkflowWorkState(store.userConfig.workflow_cache_work_state)
         content = JSON.stringify(workstate)
         break
       }
       case HqList.WorkstateBackupMacromanage: {
-        const workstate = fixMacromanageWorkState(userConfig.value.macromanage_cache_work_state)
+        const workstate = fixMacromanageWorkState(store.userConfig.macromanage_cache_work_state)
         content = JSON.stringify(workstate)
         break
       }
       case HqList.WorkstateBackupFashioncloth: {
-        const workstate = fixFashionclothWorkState(userConfig.value.fashioncloth_cache_work_state)
+        const workstate = fixFashionclothWorkState(store.userConfig.fashioncloth_cache_work_state)
         content = JSON.stringify(workstate)
         break
       }
       case HqList.WorkstateBackupCsHelper: {
-        const workstate = fixCsHelperWorkState(userConfig.value.cshelper_cache_work_state)
+        const workstate = fixCsHelperWorkState(store.userConfig.cshelper_cache_work_state)
         content = JSON.stringify(workstate)
         break
       }
       case HqList.DataBackupInventory: 
         content = JSON.stringify({
-          inventory_statement_enable_sync: funcConfig.value.inventory_statement_enable_sync,
-          inventory_workflow_enable_sync: funcConfig.value.inventory_workflow_enable_sync,
-          inventory_other_items_way: funcConfig.value.inventory_other_items_way,
-          inventory_data: funcConfig.value.inventory_data,
+          inventory_statement_enable_sync: store.funcConfig.inventory_statement_enable_sync,
+          inventory_workflow_enable_sync: store.funcConfig.inventory_workflow_enable_sync,
+          inventory_other_items_way: store.funcConfig.inventory_other_items_way,
+          inventory_data: store.funcConfig.inventory_data,
         })
         break
       default:
@@ -363,8 +364,8 @@ const handleDownload = async () => {
   let configChanged = false
 
   // #region Sync user config
-  const oldUserConfig = deepCopy(userConfig.value)
-  let newUserConfig = deepCopy(userConfig.value)
+  const oldUserConfig = deepCopy(store.userConfig)
+  let newUserConfig = deepCopy(store.userConfig)
 
   if (syncTargets.value.includes(HqList.ConfigBackupUserConfig)) {
     newUserConfig = JSON.parse(cloudLists.value![HqList.ConfigBackupUserConfig].content)
@@ -373,15 +374,15 @@ const handleDownload = async () => {
   newUserConfig.cache_lasttime_version = oldUserConfig.cache_lasttime_version
 
   if (syncTargets.value.includes(HqList.WorkstateBackupMain)) {
-    newUserConfig.cache_work_state = JSON.parse(cloudLists.value![HqList.WorkstateBackupMain].content)
+    newUserConfig.hqwb_cache_work_state = JSON.parse(cloudLists.value![HqList.WorkstateBackupMain].content)
   } else {
-    newUserConfig.cache_work_state = oldUserConfig.cache_work_state
+    newUserConfig.hqwb_cache_work_state = oldUserConfig.hqwb_cache_work_state
   }
 
   if (syncTargets.value.includes(HqList.WorkstateBackupFtHelper)) {
-    newUserConfig.fthelper_cache_work_state = JSON.parse(cloudLists.value![HqList.WorkstateBackupFtHelper].content)
+    newUserConfig.mmhelper_cache_work_state = JSON.parse(cloudLists.value![HqList.WorkstateBackupFtHelper].content)
   } else {
-    newUserConfig.fthelper_cache_work_state = oldUserConfig.fthelper_cache_work_state
+    newUserConfig.mmhelper_cache_work_state = oldUserConfig.mmhelper_cache_work_state
   }
 
   if (syncTargets.value.includes(HqList.WorkstateBackupGatherClock)) {
@@ -417,16 +418,16 @@ const handleDownload = async () => {
   if (JSON.stringify(oldUserConfig) !== JSON.stringify(newUserConfig)) {
     console.log('userconfig json diff.\n', JSON.stringify(oldUserConfig), JSON.stringify(newUserConfig))
     configChanged = true
-    newUserConfig = fixUserConfig(newUserConfig)
-    store.setUserConfig(newUserConfig)
+    store.userConfig = fixUserConfig(newUserConfig)
+    store.updateUserConfig()
   } else {
     console.log('[CloudSync] Tip: no changes for userConfig.')
   }
   // #endregion
 
   // #region Sync func config
-  const oldFuncConfig = deepCopy(funcConfig.value)
-  let newFuncConfig = deepCopy(funcConfig.value)
+  const oldFuncConfig = deepCopy(store.funcConfig)
+  let newFuncConfig = deepCopy(store.funcConfig)
 
   if (syncTargets.value.includes(HqList.ConfigBackupFuncConfig)) {
     newFuncConfig = JSON.parse(cloudLists.value![HqList.ConfigBackupFuncConfig].content)
@@ -464,7 +465,7 @@ const handleDownload = async () => {
   // #endregion
   
   // 将同步范围保存到缓存
-  const newCloudConfig = deepCopy(cloudConfig.value)
+  const newCloudConfig = deepCopy(store.cloudConfig)
   newCloudConfig.nbb_sync_targets = syncTargets.value
   store.setCloudConfig(newCloudConfig)
 

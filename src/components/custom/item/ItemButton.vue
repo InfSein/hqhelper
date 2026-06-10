@@ -7,22 +7,21 @@
 import XivFARImage from '../general/XivFARImage.vue'
 import ItemPop from './ItemPop.vue'
 import { getItemContexts, type ItemInfo } from '@/tools/item'
-import type { UserConfigModel } from '@/models/config-user'
-import type { FuncConfigModel } from '@/models/config-func'
 import { CopyToClipboard } from '@/tools'
-import UseConfig from '@/tools/use-config'
+import UseConfig from '@/composables/useConfig.ts'
 import { XivJobs } from '@/assets/data'
+import { useStore } from '@/store'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 // const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
 const joinItemsToWorkflow = inject<(items: Record<number, number>) => void>('joinItemsToWorkflow')!
+
+const store = useStore()
 
 const NAIVE_UI_MESSAGE = useMessage()
 const {
   itemLanguage,
-} = UseConfig(userConfig, funcConfig)
+} = UseConfig()
 
 interface ItemButtonProps {
   /** 道具信息 */
@@ -77,7 +76,7 @@ const getItemName = () => {
   }
 }
 const itemAmount = computed(() => {
-  return userConfig.value.item_amount_use_comma
+  return store.userConfig.item_amount_use_comma
     ? props.itemInfo.amount.toLocaleString()
     : props.itemInfo.amount
 })
@@ -169,7 +168,7 @@ const handleItemButtonTouchEnd = (/*e: TouchEvent*/) => {
 // #endregion
 
 const handleItemButtonClick = async () => {
-  const action = userConfig.value.item_button_click_event
+  const action = store.userConfig.item_button_click_event
   const itemName = getItemName()
   let copyContent = ''
   if (action === 'copy_name') {

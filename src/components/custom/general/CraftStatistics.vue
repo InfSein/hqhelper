@@ -2,14 +2,14 @@
 import ItemList from '@/components/custom/item/ItemList.vue'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
 import { useNbbCal } from '@/tools/use-nbb-cal'
-import type { UserConfigModel } from '@/models/config-user'
+import { useStore } from '@/store'
 
 // const store = useStore()
 // const NAIVE_UI_MESSAGE = useMessage()
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-// const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
+
+const store = useStore()
 
 interface CraftStatisticsProps {
   itemSelected: Record<number, number>
@@ -164,7 +164,7 @@ const otherMaterials = computed(() => {
         <ItemList
           :items="precrafts"
           :list-height="listHeight ?? (isMobile ? undefined : 245)"
-          :show-collector-icon="!userConfig.hide_collector_icons"
+          :show-collector-icon="!store.userConfig.hide_collector_icons"
         />
       </div>
     </GroupBox>
@@ -201,7 +201,7 @@ const otherMaterials = computed(() => {
         <ItemList
           :items="gatheringsCommon"
           :list-height="listHeight ?? (isMobile ? undefined : 245)"
-          :show-collector-icon="!userConfig.hide_collector_icons"
+          :show-collector-icon="!store.userConfig.hide_collector_icons"
         />
       </div>
     </GroupBox>
@@ -214,7 +214,7 @@ const otherMaterials = computed(() => {
         <ItemList
           :items="gatheringsTimed"
           :list-height="listHeight ?? (isMobile ? undefined : 245)"
-          :show-collector-icon="!userConfig.hide_collector_icons"
+          :show-collector-icon="!store.userConfig.hide_collector_icons"
         />
       </div>
     </GroupBox>
@@ -230,7 +230,7 @@ const otherMaterials = computed(() => {
         <ItemList
           :items="otherMaterials"
           :list-height="listHeight ?? (isMobile ? undefined : 245)"
-          :show-collector-icon="!userConfig.hide_collector_icons"
+          :show-collector-icon="!store.userConfig.hide_collector_icons"
         />
       </div>
     </GroupBox>

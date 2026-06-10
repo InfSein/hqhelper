@@ -8,19 +8,16 @@ import ModalCostAndBenefit from '../modals/ModalCostAndBenefit.vue'
 import ModalImExportMain from '../modals/ModalImExportMain.vue'
 import { useCostAndBenefit } from '@/composables/use-cost-and-benefit'
 import { XivUnpackedTradeMap } from '@/assets/data'
-import { type UserConfigModel } from '@/models/config-user'
-import { type FuncConfigModel } from '@/models/config-func'
 import type { GearSelections } from '@/models/gears'
-
 import { useFufuCal } from '@/tools/use-fufu-cal'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
+import { useStore } from '@/store'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
 
-const { getStatementData } = useFufuCal(userConfig, funcConfig, t)
+const store = useStore()
+const { getStatementData } = useFufuCal()
 
 interface StatisticsPanelProps {
   patchSelected: string,
@@ -32,7 +29,7 @@ interface StatisticsPanelProps {
 const props = defineProps<StatisticsPanelProps>()
 
 const showBiColorItemsInTomeScriptButton = computed(() => {
-  return userConfig.value?.tomescript_show_bicolor_items ?? false
+  return store.userConfig?.tomescript_show_bicolor_items ?? false
 })
 
 const lvBaseItems = computed(() => {
@@ -187,7 +184,7 @@ const reagentsBtnColors = ['#FF8080', '#8080FF', '#FFC080', '#00BFFF', '#40E0D0'
 const showStatementModal = ref(false)
 const showProStatementModal = ref(false)
 const showStatement = () => {
-  if (funcConfig.value.use_traditional_statement) {
+  if (store.funcConfig.use_traditional_statement) {
     showStatementModal.value = true
   } else {
     showProStatementModal.value = true
@@ -206,10 +203,10 @@ const importExportData = computed(() => {
     limitedGathering: gatheringsTimed.value,
     aethersands: aethersands.value,
     crystals: crystals.value,
-    ui_lang: userConfig.value.language_ui,
-    item_lang: userConfig.value.language_item === 'auto'
-      ? userConfig.value.language_ui
-      : userConfig.value.language_item,
+    ui_lang: store.userConfig.language_ui,
+    item_lang: store.userConfig.language_item === 'auto'
+      ? store.userConfig.language_ui
+      : store.userConfig.language_item,
     patchSelected: props.patchSelected
   }
 })
@@ -290,7 +287,7 @@ provide('updateItemPrices', updateItemPrices)
           <ItemList
             :items="precrafts.masterPrecrafts"
             :list-height="isMobile ? undefined : 320"
-            :show-collector-icon="!userConfig.hide_collector_icons"
+            :show-collector-icon="!store.userConfig.hide_collector_icons"
             :btn-info-max-width="isMobile ? undefined : '192px'"
           />
         </div>
@@ -306,7 +303,7 @@ provide('updateItemPrices', updateItemPrices)
           <ItemList
             :items="precrafts.commonPrecrafts"
             :list-height="isMobile ? undefined : 320"
-            :show-collector-icon="!userConfig.hide_collector_icons"
+            :show-collector-icon="!store.userConfig.hide_collector_icons"
             :btn-info-max-width="isMobile ? undefined : '192px'"
           />
         </div>
@@ -326,7 +323,7 @@ provide('updateItemPrices', updateItemPrices)
                   <ItemList
                     :items="gatheringsCommon"
                     :list-height="isMobile ? undefined : 320"
-                    :show-collector-icon="!userConfig.hide_collector_icons"
+                    :show-collector-icon="!store.userConfig.hide_collector_icons"
                   />
                 </div>
               </n-collapse-item>
@@ -335,7 +332,7 @@ provide('updateItemPrices', updateItemPrices)
                   <ItemList
                     :items="gatheringsTimed"
                     :list-height="isMobile ? undefined : 320"
-                    :show-collector-icon="!userConfig.hide_collector_icons"
+                    :show-collector-icon="!store.userConfig.hide_collector_icons"
                   />
                 </div>
               </n-collapse-item>

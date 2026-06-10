@@ -4,24 +4,22 @@ import {
   DoneOutlined
 } from '@vicons/material'
 import { XivGearAffixes, XivJobs, XivPatches } from '@/assets/data'
-import type { UserConfigModel } from '@/models/config-user'
-import type { FuncConfigModel } from '@/models/config-func'
-import UseConfig from '@/tools/use-config'
+import UseConfig from '@/composables/useConfig'
 import { accessoryAffixes, attireAffixes, fixGearSelections, type AccessoryAffix, type AttireAffix, type GearSelections } from '@/models/gears'
 import { getGearIcon } from '@/tools/gears'
+import { useStore } from '@/store'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
 const handleImportState = inject<(patch: string, gearSelections?: GearSelections) => void>('handleImportState')!
 
+const store = useStore()
 const {
   uiLanguage,
-} = UseConfig(userConfig, funcConfig)
+} = UseConfig()
 
 const modalMaxWidth = computed(() => {
-  switch (userConfig.value.language_ui) {
+  switch (store.userConfig.language_ui) {
     case 'en': return '1300px'
     case 'ja': return '1500px'
     default: return '900px'

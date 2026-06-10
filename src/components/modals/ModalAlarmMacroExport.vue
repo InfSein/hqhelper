@@ -9,21 +9,17 @@ import {
 import ItemSpan from '../custom/item/ItemSpan.vue'
 import MacroViewer from '../custom/macro/MacroViewer.vue'
 import { XivJobs, type XivJob } from '@/assets/data'
-import { type UserConfigModel } from '@/models/config-user'
-import type { FuncConfigModel } from '@/models/config-func'
-import UseConfig from '@/tools/use-config'
+import UseConfig from '@/composables/useConfig.ts'
 import type { ItemGroup } from '@/models/item'
 import type { AlarmMacroOptions } from '@/models/gather-clock'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
 
 const {
   uiLanguage, itemLanguage,
-} = UseConfig(userConfig, funcConfig)
+} = UseConfig()
 
 const showModal = defineModel<boolean>('show', { required: true })
 const alarmMacroOptions = defineModel<AlarmMacroOptions>('options', { required: true })

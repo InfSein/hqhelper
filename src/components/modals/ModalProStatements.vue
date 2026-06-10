@@ -4,19 +4,17 @@ import {
 } from '@vicons/material'
 import ModalRecommProcesses from './ModalRecommProcesses.vue'
 import ModalPreferences from './ModalPreferences.vue'
-import { type UserConfigModel } from '@/models/config-user'
-import { type FuncConfigModel } from '@/models/config-func'
 import { type ItemInfo } from '@/tools/item'
 import { useFufuCal } from '@/tools/use-fufu-cal'
 import CraftStatementsPro from '../custom/general/CraftStatementsPro.vue'
+import { useStore } from '@/store'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
 // const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
 
-const { getProStatementData, calRecommProcessData } = useFufuCal(userConfig, funcConfig, t)
+const store = useStore()
+const { getProStatementData, calRecommProcessData } = useFufuCal()
 
 const showModal = defineModel<boolean>('show', { required: true })
 const showRecommendedProcessesModal = ref(false)
@@ -71,7 +69,7 @@ const handleShowRecommendedProcesses = () => {
 }
 
 const handleStatementLoaded = () => {
-  if (funcConfig.value.inventory_statement_enable_sync) {
+  if (store.funcConfig.inventory_statement_enable_sync) {
     if (proStatementInstace?.value?.setPreparedItemsByInventory) {
       proStatementInstace.value.setPreparedItemsByInventory()
     } else {

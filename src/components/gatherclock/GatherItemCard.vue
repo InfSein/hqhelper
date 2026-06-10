@@ -8,22 +8,18 @@ import ItemButton from '@/components/custom/item/ItemButton.vue'
 import XivMap from '@/components/custom/map/XivMap.vue'
 import LocationSpan from '@/components/custom/map/LocationSpan.vue'
 import { XivJobs, type XivJob } from '@/assets/data'
-import type { UserConfigModel } from '@/models/config-user'
-import type { FuncConfigModel } from '@/models/config-func'
 import { XivMaps } from '@/tools/map'
 import { type ItemInfo } from '@/tools/item'
-import UseConfig from '@/tools/use-config'
+import UseConfig from '@/composables/useConfig'
 import EorzeaTime from '@/tools/eorzea-time'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
 const currentET = inject<Ref<EorzeaTime>>('currentET')!
 
 const {
   uiLanguage, itemLanguage,
-} = UseConfig(userConfig, funcConfig)
+} = UseConfig()
 
 interface GatherItemCardProps {
   banItemPop: boolean

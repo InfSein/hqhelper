@@ -1,10 +1,11 @@
-import {
-  assignDefaults
-} from '@/tools'
-import { fixWorkState as fixWorkflowWorkState, type WorkState as WorkflowWorkState } from '@/models/workflow'
-import { fixWorkState as fixMacromanageWorkState, type WorkState as MacromanageWorkState } from '@/models/macromanage'
-import { fixWorkState as fixFashionclothWorkState, type WorkState as FashionclothWorkState } from '@/models/fc-helper'
-import { fixWorkState as fixCsHelperWorkState, type WorkState as CsHelperWorkState } from '@/models/cs-helper'
+import { assignDefaults } from '@/tools'
+import { fixWorkState as fixHqwbWorkState, type WorkState as HqwbWorkState } from '@/types/workstate/hqworkbench'
+import { fixWorkState as fixMmHelperWorkState, type WorkState as MmHelperWorkState } from '@/types/workstate/mmhelper'
+import { fixWorkState as fixGatherClockWorkState, type WorkState as GatherClockWorkState } from '@/types/workstate/gatherclock'
+import { fixWorkState as fixWorkflowWorkState, type WorkState as WorkflowWorkState } from '@/types/workstate/workflow'
+import { fixWorkState as fixMacromanageWorkState, type WorkState as MacromanageWorkState } from '@/types/workstate/macromanage'
+import { fixWorkState as fixFashionclothWorkState, type WorkState as FashionclothWorkState } from '@/types/workstate/fchelper'
+import { fixWorkState as fixCsHelperWorkState, type WorkState as CsHelperWorkState } from '@/types/workstate/cshelper'
 
 export type UserConfigKey = "general" | "appearance" | "enhancements" | "performance" | "special" | "update"
 
@@ -12,14 +13,15 @@ export interface UserConfigModel {
   // #region 在偏好设置弹窗中设置的配置项
   // * general
   /** 界面语言 */
-  language_ui: 'zh' | 'en' | 'ja'
+  language_ui: "zh" | "en" | "ja"
   /** 物品语言 */
-  language_item: 'auto' | 'zh' | 'en' | 'ja'
+  language_item: "auto" | "zh" | "en" | "ja"
   /** 保存偏好设置后执行的操作 */
-  action_after_savesettings: 'ask' | 'reload' | 'none'
+  action_after_savesettings: "ask" | "reload" | "none"
+
   // * appearance
   /** 主题 */
-  theme: 'light' | 'dark' | 'system'
+  theme: "light" | "dark" | "system"
   /** 自定义背景 */
   custom_background: string
   /** 自定义字体 */
@@ -28,6 +30,7 @@ export interface UserConfigModel {
   custom_font_size: string
   /** 隐藏物品按钮的职业图标 */
   hide_collector_icons: boolean
+
   // * enhancements
   /** 禁用选择版本后自动折叠 */
   disable_patchcard_autofold: boolean
@@ -42,16 +45,18 @@ export interface UserConfigModel {
   /** 物品数量按千分号格式化 */
   item_amount_use_comma: boolean
   /** 点击物品按钮时的行为 */
-  item_button_click_event: 'none' | 'copy_name' | 'copy_isearch'
+  item_button_click_event: "none" | "copy_name" | "copy_isearch"
   /** 点击物品信息图标时的行为 */
-  item_info_icon_click_event: 'none' | 'copy_name' | 'copy_isearch'
+  item_info_icon_click_event: "none" | "copy_name" | "copy_isearch"
   /** 材料清单格式 */
-  item_list_style: 'standard' | 'tight' | 'modern' | 'teamcraft'
+  item_list_style: "standard" | "tight" | "modern" | "teamcraft"
+
   // * performance
   /** 禁用工作状态记忆 */
   disable_workstate_cache: boolean
   /** 启用开发者模式 */
   enable_dev_mode: boolean
+
   // * update
   /** 禁用自动更新 */
   disable_auto_update: boolean
@@ -62,7 +67,7 @@ export interface UserConfigModel {
   /** 自定义加速服务地址 */
   custom_proxy_url: string
   // #endregion
-  
+
   // #region 在其他界面中设置的配置项
   // * tome-script-button
   /** 在点数按钮的统计中显示双色宝石兑换物 */
@@ -74,9 +79,9 @@ export interface UserConfigModel {
   preference_menu_folded: boolean
   cache_lasttime_version: string
   cache_ui_fold: Record<string, boolean>
-  cache_work_state: any
-  fthelper_cache_work_state: any
-  gatherclock_cache_work_state: any
+  hqwb_cache_work_state: HqwbWorkState
+  mmhelper_cache_work_state: MmHelperWorkState
+  gatherclock_cache_work_state: GatherClockWorkState
   workflow_cache_work_state: WorkflowWorkState
   macromanage_cache_work_state: MacromanageWorkState
   fashioncloth_cache_work_state: FashionclothWorkState
@@ -121,10 +126,10 @@ const defaultUserConfig: UserConfigModel = {
   last_triggered_egg: 0,
   preference_menu_folded: false,
   cache_lasttime_version: 'none',
-  cache_ui_fold: {}, // active cache, { key:string -> value:boolean }
-  cache_work_state: {}, // active cache, view struct in `MainPage.vue` 's `workState`
-  fthelper_cache_work_state: {},
-  gatherclock_cache_work_state: {},
+  cache_ui_fold: {},
+  hqwb_cache_work_state: fixHqwbWorkState(),
+  mmhelper_cache_work_state: fixMmHelperWorkState(),
+  gatherclock_cache_work_state: fixGatherClockWorkState(),
   workflow_cache_work_state: fixWorkflowWorkState(),
   macromanage_cache_work_state: fixMacromanageWorkState(),
   fashioncloth_cache_work_state: fixFashionclothWorkState(),
@@ -135,7 +140,6 @@ const defaultUserConfig: UserConfigModel = {
  * 修正用户配置，将其合并到默认配置中
  * 如果用户配置中有未定义的字段，则会使用默认配置中的值覆盖
  * 这样可以在添加配置项后保持对旧版本缓存的兼容性
- * @param config 传入缓存中的用户配置：`store.userConfig`
  * @returns 修正后的用户配置
  */
 export const fixUserConfig = (config?: UserConfigModel) => {
@@ -151,7 +155,26 @@ export const fixUserConfig = (config?: UserConfigModel) => {
       config.language_ui = 'ja'
     }
   }
-  
+
+  // 处理旧版本(2.x.x)设置项
+  const oldConf = config as any
+  if (oldConf.cache_work_state) {
+    delete oldConf.cache_work_state
+  }
+  if (oldConf.fthelper_cache_work_state) {
+    config.mmhelper_cache_work_state = fixMmHelperWorkState(oldConf.fthelper_cache_work_state)
+    delete oldConf.fthelper_cache_work_state
+  }
+
+  // 处理结构体设置项
+  config.hqwb_cache_work_state = fixHqwbWorkState(config.hqwb_cache_work_state)
+  config.mmhelper_cache_work_state = fixMmHelperWorkState(config.mmhelper_cache_work_state)
+  config.gatherclock_cache_work_state = fixGatherClockWorkState(config.gatherclock_cache_work_state)
+  config.workflow_cache_work_state = fixWorkflowWorkState(config.workflow_cache_work_state)
+  config.macromanage_cache_work_state = fixMacromanageWorkState(config.macromanage_cache_work_state)
+  config.fashioncloth_cache_work_state = fixFashionclothWorkState(config.fashioncloth_cache_work_state)
+  config.cshelper_cache_work_state = fixCsHelperWorkState(config.cshelper_cache_work_state)
+
   // 处理其他的设置项
   return assignDefaults(defaultUserConfig, config || {}) as UserConfigModel
 }

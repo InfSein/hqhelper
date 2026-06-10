@@ -4,20 +4,18 @@ import {
 } from '@vicons/material'
 import ButtonCopyAsMacro from '../macro/ButtonCopyAsMacro.vue'
 import type { ItemInfo, StatementRow } from '@/tools/item'
-import type { UserConfigModel } from '@/models/config-user'
-import type { FuncConfigModel } from '@/models/config-func'
 import { CopyToClipboard, deepCopy } from '@/tools'
-import UseConfig from '@/tools/use-config'
+import UseConfig from '@/composables/useConfig.ts'
+import { useStore } from '@/store'
 
 const NAIVE_UI_MESSAGE = useMessage()
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
 
+const store = useStore()
 const {
   itemLanguage,
-} = UseConfig(userConfig, funcConfig)
+} = UseConfig()
 
 const getItemName = (itemInfo: ItemInfo) => {
   switch (itemLanguage.value) {
@@ -62,9 +60,9 @@ const listValue = computed(() => {
   const result : string[] = []
   items.value.forEach(item => {
     if (item.amount) {
-      if (userConfig.value.item_list_style === 'teamcraft') {
+      if (store.userConfig.item_list_style === 'teamcraft') {
         result.push(`${item.amount}x ${getItemName(item)}`)
-      } else if (userConfig.value.item_list_style === 'tight') {
+      } else if (store.userConfig.item_list_style === 'tight') {
         result.push(`${getItemName(item)}x${item.amount}`)
       } else {
         result.push(`${getItemName(item)} x ${item.amount}`)

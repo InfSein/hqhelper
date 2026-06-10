@@ -1,3 +1,8 @@
+import {
+  XivJobs
+} from '@/assets/data'
+import { deepCopy } from '@/tools'
+
 export const gearSlots = [
   "mainHand", "offHand",
   "headAttire", "bodyAttire", "handsAttire", "legsAttire", "feetAttire",
@@ -52,16 +57,6 @@ export const defaultGearSelections : GearSelections = {
   wrist: {} as Record<AccessoryAffix, number>,
   rings: {} as Record<AccessoryAffix, number>,
 }
-
-/** 判断给定已选部件对象是否为空 (即是否还未选择任何部件) */
-export const isGearEmpty = (gearSelections: GearSelections) => {
-  return Object.values(gearSelections).every(obj => Object.values(obj).every(val => val === 0))
-}
-
-import {
-  XivJobs
-} from '@/assets/data'
-import { deepCopy } from '@/tools'
 
 export const fixGearSelections = (gears?: GearSelections) => {
   if (!gears) {
