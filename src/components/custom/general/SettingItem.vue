@@ -3,7 +3,7 @@ import {
   KeyboardArrowRightOutlined
 } from '@vicons/material'
 import HelpButton from './HelpButton.vue'
-import type { AppTextUi, PreferenceItem } from '@/models'
+import type { AppTextUi, PreferenceItem } from '@/types/index.ts'
 import useUiTools from '@/tools/ui'
 import ImageSelector from './ImageSelector.vue'
 

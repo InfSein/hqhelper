@@ -30,8 +30,8 @@ import CraftRecommProcess from '@/components/custom/general/CraftRecommProcess.v
 import TooltipButton from '@/components/custom/general/TooltipButton.vue'
 import ModalWorkflowsManage from '@/components/modals/ModalWorkflowsManage.vue'
 import { useCostAndBenefit } from '@/composables/use-cost-and-benefit'
-import type { SettingGroupKey } from '@/models'
-import type { UserConfigModel } from '@/types/config/user'
+import { type SettingGroupKey } from '@/types'
+import { type UserConfigModel } from '@/types/config/user'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)

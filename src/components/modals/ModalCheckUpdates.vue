@@ -12,7 +12,7 @@ import { useStore } from '@/store'
 import AppStatus from '@/variables/app-status'
 import { useDialog } from '@/tools/dialog'
 import { checkUrlLag } from '@/tools/web-request'
-import type { AppVersionJson } from '@/models'
+import { type AppVersionJson } from '@/types'
 import { checkAppUpdates } from '@/tools'
 
 const t = inject<(message: string, args?: any) => string>('t')!

@@ -9,7 +9,7 @@ import {
   FileDownloadRound,
   InfoRound
 } from '@vicons/material'
-import type { AppVersionJson } from '@/models'
+import { type AppVersionJson } from '@/types'
 import { checkAppUpdates } from '@/tools'
 import useConfig from '@/composables/useConfig'
 

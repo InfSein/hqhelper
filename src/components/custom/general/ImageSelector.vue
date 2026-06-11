@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { PreferenceItemImageSelectOption } from '@/models'
+import { type PreferenceItemImageSelectOption } from '@/types'
 import { deepCopy } from '@/tools'
 import { useDialog } from '@/tools/dialog'
 import useIdb from '@/tools/idb'
