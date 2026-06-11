@@ -9,12 +9,12 @@ import { XivJobs, type XivJob } from '@/assets/data'
 import { useStore } from '@/store'
 import type { ItemGroup } from '@/types/item'
 import { playAudio } from '@/tools'
-import { useDialog } from '@/tools/dialog'
-import useUiTools from '@/tools/ui'
+import { useDialog } from '@/composables/useDialog'
+import useUiTools from '@/composables/useUiTools'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
 import { useNbbCal } from '@/tools/use-nbb-cal'
 import UseConfig from '@/composables/useConfig'
-import EorzeaTime from '@/tools/eorzea-time'
+import EorzeaTime from '@/utils/game.et'
 import { fixAlarmMacroOptions, type WorkState } from '@/types/workstate/gatherclock'
 
 const t = inject<(message: string, args?: any) => string>('t')!
@@ -23,9 +23,9 @@ const currentET = inject<Ref<EorzeaTime>>('currentET')!
 const appMode = inject<Ref<"overlay" | "" | undefined>>('appMode') ?? ref('')
 
 const store = useStore()
-const { alertError } = useDialog(t)
+const { alertError } = useDialog()
 const { getLimitedGatherings } = useNbbCal()
-const { optionsRenderer } = useUiTools(isMobile)
+const { optionsRenderer } = useUiTools()
 const {
   uiLanguage, itemLanguage,
 } = UseConfig()

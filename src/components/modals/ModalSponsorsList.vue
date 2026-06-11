@@ -4,13 +4,13 @@ import {
   RefreshOutlined,
 } from '@vicons/material'
 import { useStore } from '@/store'
-import { useDialog } from '@/tools/dialog'
+import { useDialog } from '@/composables/useDialog'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
 
 const store = useStore()
-const { alertInfo } = useDialog(t)
+const { alertInfo } = useDialog()
 
 const showModal = defineModel<boolean>('show', { required: true })
 

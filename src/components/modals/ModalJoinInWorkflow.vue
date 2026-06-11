@@ -4,7 +4,7 @@ import {
   DoneOutlined,
 } from '@vicons/material'
 import { deepCopy } from '@/tools'
-import useUiTools from '@/tools/ui'
+import useUiTools from '@/composables/useUiTools.ts'
 import { useStore } from '@/store'
 import ItemSelectTable from '../custom/item/ItemSelectTable.vue'
 import { fixUserConfig } from '@/types/config/user.ts'
@@ -16,7 +16,7 @@ const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
 
 const store = useStore()
 const NAIVE_UI_MESSAGE = useMessage()
-const { optionsRenderer } = useUiTools(isMobile)
+const { optionsRenderer } = useUiTools()
 
 const modalId = 'modal-join-in-workflow'
 

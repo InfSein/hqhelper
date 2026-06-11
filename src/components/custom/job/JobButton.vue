@@ -7,8 +7,8 @@ import {
 import XivFARImage from '../general/XivFARImage.vue'
 import { XivJobs, XivRoles, type XivRole, type HqDataVer, type XivPatchVer } from '@/assets/data'
 import type { GearSelections } from '@/types/game/gear'
-import { getGearIcon, getGearRecomm, useGearAdder } from '@/tools/gears'
-import useUiTools from '@/tools/ui'
+import { getGearIcon, getGearRecomm, useGearAdder } from '@/tools/game/gear'
+import useUiTools from '@/composables/useUiTools.ts'
 import { visitUrl } from '@/tools'
 import UseConfig from '@/composables/useConfig.ts'
 import { NIcon } from 'naive-ui'
@@ -21,7 +21,7 @@ const {
   addAttire,
   addAccessory
 } = useGearAdder()
-const { renderIcon, optionsRenderer } = useUiTools(isMobile)
+const { renderIcon, optionsRenderer } = useUiTools()
 const {
   uiLanguage,
 } = UseConfig()

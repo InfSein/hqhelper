@@ -17,15 +17,15 @@ import { fixWorkState as fixFashionclothWorkState } from '@/types/workstate/fche
 import { fixWorkState as fixCsHelperWorkState } from '@/types/workstate/cshelper'
 import { HqList, type NbbResponse } from '@/types/api/nbb-cloud'
 import { deepCopy } from '@/tools'
-import { useDialog } from '@/tools/dialog'
-import { useNbbCloud } from '@/tools/nbb-cloud'
+import { useDialog } from '@/composables/useDialog'
+import { useNbbCloud } from '@/composables/useNbbCloud'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile')!
 const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
 
 const store = useStore()
-const { alertInfo, alertError, confirm } = useDialog(t)
+const { alertInfo, alertError, confirm } = useDialog()
 const NAIVE_UI_MESSAGE = useMessage()
 const {
   getListBatch, addList, editList,

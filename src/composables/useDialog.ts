@@ -16,9 +16,9 @@ export function registerDialogProvider(instance: DialogProvider) {
   dialogProvider = instance
 }
 
-export const useDialog = (
-  t: (message: string, args?: any) => string,
-) => {
+export const useDialog = () => {
+  const t = inject<(message: string, args?: any) => string>('t')!
+
   const buildDialogOptions = (
     input: string | DialogOptions,
     defaultTitle: string,

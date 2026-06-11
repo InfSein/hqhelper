@@ -8,10 +8,10 @@ import ItemButton from '@/components/custom/item/ItemButton.vue'
 import XivMap from '@/components/custom/map/XivMap.vue'
 import LocationSpan from '@/components/custom/map/LocationSpan.vue'
 import { XivJobs, type XivJob } from '@/assets/data'
-import { XivMaps } from '@/tools/map'
+import { XivMaps } from '@/tools/game/map'
 import { type ItemInfo } from '@/tools/item'
 import UseConfig from '@/composables/useConfig'
-import EorzeaTime from '@/tools/eorzea-time'
+import EorzeaTime from '@/utils/game.et'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)

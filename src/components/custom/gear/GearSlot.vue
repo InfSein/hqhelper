@@ -2,7 +2,7 @@
 import type { GearSlot } from '@/types/game/gear'
 import ItemButton from '../item/ItemButton.vue'
 import { getItemInfo } from '@/tools/item'
-import { getGearIcon } from '@/tools/gears'
+import { getGearIcon } from '@/tools/game/gear'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)

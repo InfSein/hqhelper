@@ -4,7 +4,7 @@ import XivFARImage from '../general/XivFARImage.vue'
 import ItemPop from '../item/ItemPop.vue'
 import { XivJobs } from '@/assets/data'
 import type { ItemInfo } from '@/tools/item'
-import { XivMaps, type XivMapAetheryteInfo, type XivMapInfo } from '@/tools/map'
+import { XivMaps, type XivMapAetheryteInfo, type XivMapInfo } from '@/tools/game/map.ts'
 import UseConfig from '@/composables/useConfig.ts'
 
 const t = inject<(message: string, args?: any) => string>('t')!

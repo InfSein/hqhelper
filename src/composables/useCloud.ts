@@ -1,5 +1,5 @@
 import { computed } from "vue"
-import { getImgCdnUrl } from "./item"
+import { getImgCdnUrl } from "@/tools/item"
 import { useStore } from "@/store"
 
 interface UserSpecialTitle {

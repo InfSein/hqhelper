@@ -11,12 +11,12 @@ import {
 import {
   type RecordedCraftMacro,
 } from '@/types/workstate/macromanage'
-import { useDialog } from '@/tools/dialog'
-import useMacroHelper from '@/tools/macro-helper'
+import { useDialog } from '@/composables/useDialog'
+import useMacroHelper from '@/composables/useMacroHelper'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 
-const { confirm } = useDialog(t)
+const { confirm } = useDialog()
 const NAIVE_UI_MESSAGE = useMessage()
 const {
   exportRecordedMacros, importRecordedMacros,

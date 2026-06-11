@@ -32,17 +32,17 @@ import {
   type StrictCraftRequirements,
 } from '@/types/workstate/macromanage.ts'
 import { deepCopy, findDuplicatesFromArray } from '@/tools'
-import { useDialog } from '@/tools/dialog'
+import { useDialog } from '@/composables/useDialog.ts'
 import { getItemInfo } from '@/tools/item'
 import UseConfig from '@/composables/useConfig.ts'
-import useMacroHelper from '@/tools/macro-helper'
+import useMacroHelper from '@/composables/useMacroHelper.ts'
 import { useStore } from '@/store'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 // const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
 
 const store = useStore()
-const { confirm } = useDialog(t)
+const { confirm } = useDialog()
 const NAIVE_UI_MESSAGE = useMessage()
 const {
   itemLanguage,

@@ -26,9 +26,9 @@ import {
   type WorkState, type RecordedCraftMacro, type CraftMacroRow,
 } from '@/types/workstate/macromanage'
 import { CopyToClipboard, deepCopy } from '@/tools'
-import { useDialog } from '@/tools/dialog'
-import useUiTools from '@/tools/ui'
-import useMacroHelper from '@/tools/macro-helper'
+import { useDialog } from '@/composables/useDialog'
+import useUiTools from '@/composables/useUiTools'
+import useMacroHelper from '@/composables/useMacroHelper'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
@@ -36,9 +36,9 @@ const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
 const store = useStore()
 const route = useRoute()
 const router = useRouter()
-const { confirmWarning } = useDialog(t)
+const { confirmWarning } = useDialog()
 const NAIVE_UI_MESSAGE = useMessage()
-const { renderIcon } = useUiTools(isMobile)
+const { renderIcon } = useUiTools()
 const {
   exportCraftMacroText, unarchiveMacroRow,
 } = useMacroHelper()

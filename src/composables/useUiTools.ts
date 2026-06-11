@@ -1,9 +1,9 @@
 import { h, type Component, type Ref, type VNode } from "vue"
 import { NIcon, NTooltip, type DropdownGroupOption, type DropdownOption, type SelectOption } from "naive-ui"
 
-const useUiTools = (
-  isMobile: Ref<boolean>,
-) => {
+const useUiTools = () => {
+  const isMobile = inject<Ref<boolean>>('isMobile')!
+
   const renderIcon = (icon: Component, props?: any) => {
     return () => {
       return h(NIcon, props, {

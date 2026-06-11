@@ -1,7 +1,7 @@
 import clipBoard from "vue-clipboard3"
 import * as LzString from 'lz-string'
 import type { AppVersionJson, CallResult } from "@/types"
-import useIdb from "./idb"
+import useIdb from "@/utils/app.idb"
 
 const Clip = clipBoard
 const { toClipboard } = Clip()

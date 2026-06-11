@@ -12,7 +12,7 @@ import {
 import type { GearSelections, AttireAffix, AccessoryAffix } from '@/types/game/gear'
 import { attireAffixes, accessoryAffixes } from '@/types/game/gear'
 import { deepCopy } from '@/tools'
-import { getGearIcon } from '@/tools/gears'
+import { getGearIcon } from '@/tools/game/gear'
 import useConfig from '@/composables/useConfig.ts'
 
 const t = inject<(message: string, args?: any) => string>('t')!

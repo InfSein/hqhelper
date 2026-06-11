@@ -14,7 +14,7 @@ import {
   type HqDataVer
 } from '@/assets/data'
 import { type AttireAffix, type AccessoryAffix, type GearSelections, fixGearSelections } from '@/types/game/gear'
-import { useGearAdder } from '@/tools/gears'
+import { useGearAdder } from '@/tools/game/gear'
 import { useStore } from '@/store'
 
 const t = inject<(message: string, args?: any) => string>('t')!

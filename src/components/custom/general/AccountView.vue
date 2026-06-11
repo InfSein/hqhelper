@@ -7,9 +7,9 @@ import {
 } from '@vicons/material'
 import { useStore } from '@/store'
 import { CopyToClipboard } from '@/tools'
-import { useDialog } from '@/tools/dialog'
-import { useNbbCloud } from '@/tools/nbb-cloud'
-import useCloud from '@/tools/cloud'
+import { useDialog } from '@/composables/useDialog'
+import { useNbbCloud } from '@/composables/useNbbCloud'
+import useCloud from '@/composables/useCloud'
 import { fixCloudConfig } from '@/types/config/cloud'
 
 const t = inject<(message: string, args?: any) => string>('t')!
@@ -19,7 +19,7 @@ const displayCloudSyncModal = inject<() => {}>('displayCloudSyncModal')!
 const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
 
 const store = useStore()
-const { confirmWarning } = useDialog(t)
+const { confirmWarning } = useDialog()
 const NAIVE_UI_MESSAGE = useMessage()
 const {
   updateUserInfo,

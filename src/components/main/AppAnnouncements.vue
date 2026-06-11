@@ -4,7 +4,7 @@ import { useStore } from '@/store'
 import {
   visitUrl,
 } from '@/tools'
-import { useDialog } from '@/tools/dialog'
+import { useDialog } from '@/composables/useDialog'
 import {
   qGroupInfo, githubInfo, otherSocialInfo,
 } from '@/variables'
@@ -13,7 +13,7 @@ const t = inject<(message: string, args?: any) => string>('t')!
 
 const store = useStore()
 const NAIVE_UI_MESSAGE = useMessage()
-const { confirm } = useDialog(t)
+const { confirm } = useDialog()
 
 const showDonateModal = ref(false)
 const hiddenAnnouncements = ref<AnnouncementId[]>([])

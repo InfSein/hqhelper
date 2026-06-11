@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import XivFARImage from '../general/XivFARImage.vue'
-import { type XivMapAetheryteInfo, type XivMapInfo } from '@/tools/map'
+import { type XivMapAetheryteInfo, type XivMapInfo } from '@/tools/game/map.ts'
 import UseConfig from '@/composables/useConfig.ts'
 
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)

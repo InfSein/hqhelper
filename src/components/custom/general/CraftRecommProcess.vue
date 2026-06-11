@@ -10,7 +10,7 @@ import GatheringPathButton from '@/components/custom/map/GatheringPathButton.vue
 import { getItemInfo, type ItemInfo } from '@/tools/item'
 import UseConfig from '@/composables/useConfig'
 import { XivJobs, type XivJob } from '@/assets/data'
-import type EorzeaTime from '@/tools/eorzea-time'
+import type EorzeaTime from '@/utils/game.et'
 import type { RecommItemGroup } from '@/types/item'
 import { useStore } from '@/store'
 

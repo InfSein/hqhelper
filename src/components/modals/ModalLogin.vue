@@ -12,7 +12,7 @@ import { useStore } from '@/store'
 import type { NbbResponse, ResdataRegisterAndLogin } from '@/types/api/nbb-cloud.ts'
 import { deepCopy } from '@/tools'
 import { getImgCdnUrl } from '@/tools/item'
-import { useNbbCloud } from '@/tools/nbb-cloud'
+import { useNbbCloud } from '@/composables/useNbbCloud.ts'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})

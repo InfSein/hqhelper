@@ -1,7 +1,7 @@
 import { XivCraftActions, type XivCraftAction } from '@/assets/data'
 import type { CraftMacroRow, RecordedCraftMacro } from "@/types/workstate/macromanage"
-import { deepCopy } from "."
-import { getItemInfo } from "./item"
+import { deepCopy } from "../tools"
+import { getItemInfo } from "../tools/item"
 import { useStore } from "@/store"
 
 const useMacroHelper = () => {

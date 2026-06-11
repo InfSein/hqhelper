@@ -2,7 +2,7 @@ import type { Component, StyleValue } from "vue"
 import type { CascaderOption } from "naive-ui"
 import type { UserConfigKey } from "./config/user"
 import type { FuncConfigKey } from "./config/func"
-import type { dbKey } from "@/tools/idb"
+import type { dbKey } from "@/utils/app.idb"
 
 export interface CallResult <T = string> {
   success: boolean

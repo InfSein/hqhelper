@@ -6,7 +6,7 @@ import {
 import { XivGearAffixes, XivJobs, XivPatches, type XivPatchVer } from '@/assets/data'
 import UseConfig from '@/composables/useConfig'
 import { accessoryAffixes, attireAffixes, fixGearSelections, type AccessoryAffix, type AttireAffix, type GearSelections } from '@/types/game/gear'
-import { getGearIcon } from '@/tools/gears'
+import { getGearIcon } from '@/tools/game/gear'
 import { useStore } from '@/store'
 
 const t = inject<(message: string, args?: any) => string>('t')!

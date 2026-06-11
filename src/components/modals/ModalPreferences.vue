@@ -27,9 +27,9 @@ import { fixWorkState as fixMmHelperWorkState } from '@/types/workstate/mmhelper
 import { fixWorkState as fixGatherclockWorkState } from '@/types/workstate/gatherclock'
 import { fixWorkState as fixWorkflowWorkState } from '@/types/workstate/workflow'
 import { deepCopy } from '@/tools'
-import { useDialog } from '@/tools/dialog'
-import useUiTools from '@/tools/ui'
-import { dbKey } from '@/tools/idb'
+import { useDialog } from '@/composables/useDialog.ts'
+import useUiTools from '@/composables/useUiTools.ts'
+import { dbKey } from '@/utils/app.idb.ts'
 import { fixUserConfig, type UserConfigModel } from '@/types/config/user.ts'
 import { fixFuncConfig, type FuncConfigModel } from '@/types/config/func.ts'
 
@@ -38,9 +38,9 @@ const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
 const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
 
 const store = useStore()
-const { confirm } = useDialog(t)
+const { confirm } = useDialog()
 const NAIVE_UI_MESSAGE = useMessage()
-const { renderIcon } = useUiTools(isMobile)
+const { renderIcon } = useUiTools()
 
 const showModal = defineModel<boolean>('show', { required: true })
 const emit = defineEmits(['close', 'afterSubmit'])

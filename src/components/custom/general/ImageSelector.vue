@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { type PreferenceItemImageSelectOption } from '@/types'
 import { deepCopy } from '@/tools'
-import { useDialog } from '@/tools/dialog'
-import useIdb from '@/tools/idb'
-import type { dbKey } from '@/tools/idb'
+import { useDialog } from '@/composables/useDialog'
+import useIdb from '@/utils/app.idb'
+import type { dbKey } from '@/utils/app.idb'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 
 const idb = useIdb()
-const { confirm } = useDialog(t)
+const { confirm } = useDialog()
 
 const selectedImage = defineModel<string>('selectedImage', { required: true })
 

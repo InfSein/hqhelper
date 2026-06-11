@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import MapButton from './MapButton.vue'
-import { XivMaps } from '@/tools/map'
+import { XivMaps } from '@/tools/game/map.ts'
 import { useStore } from '@/store'
 
 const t = inject<(message: string, args?: any) => string>('t')!

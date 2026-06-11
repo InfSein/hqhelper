@@ -13,10 +13,10 @@ import { useStore } from '@/store/index'
 import { useElectronSync } from '@/composables/electron-sync'
 import { useLocale } from './locales'
 import { checkAppUpdates, CopyToClipboard, deepCopy, getAppBackground, sleep } from './tools'
-import EorzeaTime from './tools/eorzea-time'
+import EorzeaTime from './utils/game.et.ts'
 import { type ItemInfo } from './tools/item'
 import AppStatus from './variables/app-status'
-import { registerDialogProvider, useDialog } from './tools/dialog'
+import { registerDialogProvider, useDialog } from './composables/useDialog.ts'
 import { fixUserConfig, type UserConfigModel } from './types/config/user.ts'
 import { fixFuncConfig, type FuncConfigModel, type MacroGenerateMode } from './types/config/func.ts'
 import { fixCloudConfig, type CloudConfigModel } from './types/config/cloud.ts'
@@ -270,7 +270,7 @@ provide('displayFestivalEggModal', () => {
   showFestivalEgg.value = true
 })
 const dialogRef = ref<InstanceType<typeof Dialog> | null>(null)
-const { alertError, confirm } = useDialog(t)
+const { alertError, confirm } = useDialog()
 
 const appBg = ref('')
 

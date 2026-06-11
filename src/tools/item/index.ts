@@ -55,9 +55,9 @@ import {
 import {
   XivMaps, type XivMapAetheryteInfo,
   calculatePosVal,
-} from '@/tools/map'
-import { deepCopy, range } from '.'
-import { useNbbCal } from './use-nbb-cal'
+} from '@/tools/game/map'
+import { deepCopy, range } from '..'
+import { useNbbCal } from '../use-nbb-cal'
 
 const { getReduceMap, getReduceMapReverted } = useNbbCal()
 const reduceMap = getReduceMap()
@@ -542,7 +542,7 @@ import {
 } from '@vicons/material'
 import { type Component } from 'vue'
 import { NIcon } from 'naive-ui'
-import { getNearestAetheryte } from './map'
+import { getNearestAetheryte } from '../game/map'
 export const getItemContexts = (
   itemInfo: ItemInfo,
   itemLanguage: "zh" | "en" | "ja",

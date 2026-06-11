@@ -1,10 +1,10 @@
 import type { ComputedRef } from 'vue'
 import { useStore } from '@/store'
-import { useDialog } from '@/tools/dialog'
+import { useDialog } from '@/composables/useDialog'
 import { handleGetPriceError } from '@/tools/error'
 import type { StatementData } from '@/tools/use-fufu-cal'
 import useItemPrice from './useItemPrice'
-import { getItemPriceInfo } from '@/tools/item.price'
+import { getItemPriceInfo } from '@/tools/item/price'
 
 /**
  * 成本/收益分析
@@ -13,7 +13,7 @@ export function useCostAndBenefit(statementData: ComputedRef<StatementData>) {
   const t = inject<(message: string, args?: any) => string>('t')!
 
   const store = useStore()
-  const { alertError } = useDialog(t)
+  const { alertError } = useDialog()
   const NAIVE_UI_MESSAGE = useMessage()
   const { calCostAndBenefit } = useItemPrice()
 

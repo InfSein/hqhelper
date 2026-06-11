@@ -17,11 +17,11 @@ import {
   XivAttributes
 } from '@/assets/data'
 import { useStore } from '@/store'
-import type EorzeaTime from '@/tools/eorzea-time'
+import type EorzeaTime from '@/utils/game.et.ts'
 import { handleGetPriceError } from '@/tools/error'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
 import UseConfig from '@/composables/useConfig.ts'
-import { getItemPriceInfo } from '@/tools/item.price.ts'
+import { getItemPriceInfo } from '@/tools/item/price.ts'
 import type { ItemPriceType } from '@/types/config/func.ts'
 
 const t = inject<(message: string, args?: any) => string>('t')!

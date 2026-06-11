@@ -17,11 +17,11 @@ import {
 } from '@/types/workstate/macromanage.ts'
 import HelpButton from '../custom/general/HelpButton.vue'
 import CraftActionButton from '../custom/action/CraftActionButton.vue'
-import { useDialog } from '@/tools/dialog'
+import { useDialog } from '@/composables/useDialog.ts'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 
-const { alertError } = useDialog(t)
+const { alertError } = useDialog()
 
 const showModal = defineModel<boolean>('show', { required: true })
 

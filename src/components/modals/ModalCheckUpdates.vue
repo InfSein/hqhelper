@@ -10,7 +10,7 @@ import ModalPreferences from './ModalPreferences.vue'
 import type { ProcessStage, ProgressData } from 'env.electron'
 import { useStore } from '@/store'
 import AppStatus from '@/variables/app-status'
-import { useDialog } from '@/tools/dialog'
+import { useDialog } from '@/composables/useDialog.ts'
 import { checkUrlLag } from '@/tools/web-request'
 import { type AppVersionJson } from '@/types'
 import { checkAppUpdates } from '@/tools'
@@ -19,7 +19,7 @@ const t = inject<(message: string, args?: any) => string>('t')!
 // const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
 
 const store = useStore()
-const { alertError, confirm } = useDialog(t)
+const { alertError, confirm } = useDialog()
 
 const showModal = defineModel<boolean>('show', { required: true })
 

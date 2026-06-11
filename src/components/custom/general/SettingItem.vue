@@ -4,13 +4,13 @@ import {
 } from '@vicons/material'
 import HelpButton from './HelpButton.vue'
 import type { AppTextUi, PreferenceItem } from '@/types/index.ts'
-import useUiTools from '@/tools/ui'
+import useUiTools from '@/composables/useUiTools.ts'
 import ImageSelector from './ImageSelector.vue'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
 
-const { optionsRenderer } = useUiTools(isMobile)
+const { optionsRenderer } = useUiTools()
 
 const formData = defineModel<any>('formData', { required: true })
 interface SettingItemProps {

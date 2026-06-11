@@ -42,9 +42,9 @@ import ModalDonate from '@/components/modals/ModalDonate.vue'
 import { useStore } from '@/store'
 import router from '@/router'
 import { checkAppUpdates, visitUrl } from '@/tools'
-import { useDialog } from '@/tools/dialog'
-import EorzeaTime from '@/tools/eorzea-time'
-import useUiTools from '@/tools/ui'
+import { useDialog } from '@/composables/useDialog.ts'
+import EorzeaTime from '@/utils/game.et.ts'
+import useUiTools from '@/composables/useUiTools.ts'
 import AppStatus from '@/variables/app-status'
 
 const t = inject<(message: string, args?: any) => string>('t')!
@@ -66,9 +66,9 @@ const canOpenDevTools = computed(() => {
 })
 
 const store = useStore()
-const { confirm } = useDialog(t)
+const { confirm } = useDialog()
 const NAIVE_UI_MESSAGE = useMessage()
-const { renderIcon, optionsRenderer } = useUiTools(isMobile)
+const { renderIcon, optionsRenderer } = useUiTools()
 
 onMounted(() => {
   if (store.userConfig.cache_lasttime_version !== AppStatus.Version) {

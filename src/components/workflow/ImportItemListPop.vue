@@ -2,7 +2,7 @@
 import {
   ArchiveSharp, DoneOutlined,
 } from '@vicons/material'
-import { useDialog } from '@/tools/dialog'
+import { useDialog } from '@/composables/useDialog'
 import { getItemInfo, getItemNameRevertMap } from '@/tools/item'
 
 const NAIVE_UI_MESSAGE = useMessage()
@@ -10,7 +10,7 @@ const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
 const joinItemsToWorkflow = inject<(items: Record<number, number>) => void>('joinItemsToWorkflow')!
 
-const { alertError } = useDialog(t)
+const { alertError } = useDialog()
 
 const showPop = ref(false)
 const importStr = ref('')
