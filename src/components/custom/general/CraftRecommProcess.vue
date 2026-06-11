@@ -11,7 +11,7 @@ import { getItemInfo, type ItemInfo } from '@/tools/item'
 import UseConfig from '@/composables/useConfig'
 import { XivJobs, type XivJob } from '@/assets/data'
 import type EorzeaTime from '@/tools/eorzea-time'
-import type { RecommItemGroup } from '@/models/item'
+import type { RecommItemGroup } from '@/types/item'
 import { useStore } from '@/store'
 
 const t = inject<(message: string, args?: any) => string>('t')!

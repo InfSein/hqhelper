@@ -1,5 +1,5 @@
 import type { Ref } from "vue"
-import type { AccessoryAffix, AttireAffix, GearSelections, GearSlot } from "@/models/gears"
+import type { AccessoryAffix, AttireAffix, GearSelections, GearSlot } from "@/types/game/gear"
 import { XivGearRecomm, XivGearSets, type HqDataVer, type XivGearSet } from "@/assets/data"
 
 import mainhandIcon from '@/assets/icons/game-gear/Armoury_MainArm.svg'

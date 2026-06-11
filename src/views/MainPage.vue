@@ -5,8 +5,8 @@ import JobPanel from '@/components/main/JobPanel.vue'
 import GearSelectionPanel from '@/components/main/GearSelectionPanel.vue'
 import StatisticsPanel from '@/components/main/StatisticsPanel.vue'
 import ModalJoinInWorkflow from '@/components/modals/ModalJoinInWorkflow.vue'
-import type { AttireAffix, AccessoryAffix, GearSelections } from '@/models/gears'
-import { getDefaultGearSelections, fixGearSelections } from '@/models/gears'
+import type { AttireAffix, AccessoryAffix, GearSelections } from '@/types/game/gear'
+import { fixGearSelections } from '@/types/game/gear'
 import { useStore } from '@/store'
 import { useNbbCal } from '@/tools/use-nbb-cal'
 import { XivJobRoleMap, type XivPatchVer } from '@/assets/data';
@@ -22,8 +22,8 @@ const { calGearSelections, getSpecialItems, getPatchData } = useNbbCal()
 const workState = ref<WorkState>({
   patch: undefined,
   job: undefined,
-  gears: getDefaultGearSelections(),
-}) // todo
+  gears: fixGearSelections(),
+})
 
 const gearSelectionPanel = ref<InstanceType<typeof GearSelectionPanel>>()
 

@@ -9,8 +9,8 @@ import {
   XivJobs,
   type HqDataVer
 } from '@/assets/data'
-import type { GearSelections, AttireAffix, AccessoryAffix } from '@/models/gears'
-import { attireAffixes, accessoryAffixes } from '@/models/gears'
+import type { GearSelections, AttireAffix, AccessoryAffix } from '@/types/game/gear'
+import { attireAffixes, accessoryAffixes } from '@/types/game/gear'
 import { deepCopy } from '@/tools'
 import { getGearIcon } from '@/tools/gears'
 import useConfig from '@/composables/useConfig.ts'

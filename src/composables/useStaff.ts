@@ -1,49 +1,27 @@
-import { computed } from "vue"
+import type { DonateInfo, StaffMember } from "@/types/staff"
 
-export interface StaffMember {
-  name: string
-  avatar_url: string
-  desc: string
-  introductions: string[]
-  pages: {
-    name: string
-    url: string
-  }[]
-  donate_info?: DonateInfo
-}
-interface DonateInfo {
-  self?: boolean
-  donate_desc: string
-  donate_ways: DonateWay[]
-}
-interface DonateWay {
-  type: "qq" | "afd" | "alipay" | "wechat_admire"
-  data_type: "url" | "qrcode" | "img"
-  data: string
-}
+const useStaff = () => {
+  const t = inject<(message: string, args?: any) => string>('t')!
 
-export const createStaffMember = (
-  name: string,
-  avatar_url: string,
-  desc: string,
-  introductions: string[],
-  pages: { name: string; url: string }[],
-  donate_info?: DonateInfo,
-) : StaffMember => {
-  return {
-    name,
-    avatar_url,
-    desc,
-    introductions,
-    pages,
-    donate_info,
+  const createStaffMember = (
+    name: string,
+    avatar_url: string,
+    desc: string,
+    introductions: string[],
+    pages: { name: string; url: string }[],
+    donate_info?: DonateInfo,
+  ) : StaffMember => {
+    return {
+      name,
+      avatar_url,
+      desc,
+      introductions,
+      pages,
+      donate_info,
+    }
   }
-}
 
-export const getStaffMebers = (
-  t: (message: string, args?: any) => string
-) => {
-  const members = computed(() => {
+  const staffMembers = computed(() => {
     return {
       infsein: createStaffMember(
         "InfSein",
@@ -107,5 +85,10 @@ export const getStaffMebers = (
       ),
     }
   })
-  return members
+
+  return {
+    staffMembers
+  }
 }
+
+export default useStaff

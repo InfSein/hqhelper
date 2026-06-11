@@ -10,7 +10,7 @@ import ItemSpan from '../custom/item/ItemSpan.vue'
 import MacroViewer from '../custom/macro/MacroViewer.vue'
 import { XivJobs, type XivJob } from '@/assets/data'
 import UseConfig from '@/composables/useConfig.ts'
-import type { ItemGroup } from '@/models/item'
+import type { ItemGroup } from '@/types/item/index.ts'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
 import type { AlarmMacroOptions } from '@/types/workstate/gatherclock.ts'
 

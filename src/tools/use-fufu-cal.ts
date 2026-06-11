@@ -1,5 +1,5 @@
 import { XivJobs } from '@/assets/data'
-import type { RecommItemGroup } from '@/models/item'
+import type { RecommItemGroup } from '@/types/item'
 import { deepCopy } from '.'
 import { getItemInfo, type ItemInfo } from "./item"
 import { useNbbCal } from "./use-nbb-cal"

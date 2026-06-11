@@ -4,10 +4,11 @@
 // } from '@vicons/material'
 import FoldableCard from '../templates/FoldableCard.vue'
 import { XivPatches, type XivPatch, type XivPatchVer } from "@/assets/data"
-import { fixGearSelections, isGearEmpty, type GearSelections } from '@/models/gears'
+import { fixGearSelections, type GearSelections } from '@/types/game/gear'
 import HelpButton from '../custom/general/HelpButton.vue'
 import { useDialog } from '@/tools/dialog'
 import { useStore } from '@/store'
+import { isGearEmpty } from '@/tools/game/gear.ts'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)

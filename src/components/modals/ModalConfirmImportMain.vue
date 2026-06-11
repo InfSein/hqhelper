@@ -5,7 +5,7 @@ import {
 } from '@vicons/material'
 import { XivGearAffixes, XivJobs, XivPatches, type XivPatchVer } from '@/assets/data'
 import UseConfig from '@/composables/useConfig'
-import { accessoryAffixes, attireAffixes, fixGearSelections, type AccessoryAffix, type AttireAffix, type GearSelections } from '@/models/gears'
+import { accessoryAffixes, attireAffixes, fixGearSelections, type AccessoryAffix, type AttireAffix, type GearSelections } from '@/types/game/gear'
 import { getGearIcon } from '@/tools/gears'
 import { useStore } from '@/store'
 

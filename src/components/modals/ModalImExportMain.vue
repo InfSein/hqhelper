@@ -11,7 +11,7 @@ import {
 import HelpButton from '../custom/general/HelpButton.vue'
 import ModalConfirmImportMain from './ModalConfirmImportMain.vue'
 import { useStore } from '@/store'
-import type { GearSelections } from '@/models/gears'
+import type { GearSelections } from '@/types/game/gear'
 import { useFufuCal } from '@/tools/use-fufu-cal'
 import { export2Excel, importExcel } from '@/tools/excel'
 import type { ItemInfo } from '@/tools/item'

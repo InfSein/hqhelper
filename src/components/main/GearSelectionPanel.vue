@@ -13,8 +13,7 @@ import {
   XivRoles,
   type HqDataVer
 } from '@/assets/data'
-import type { AttireAffix, AccessoryAffix, GearSelections } from '@/models/gears'
-import { getDefaultGearSelections } from '@/models/gears'
+import { type AttireAffix, type AccessoryAffix, type GearSelections, fixGearSelections } from '@/types/game/gear'
 import { useGearAdder } from '@/tools/gears'
 import { useStore } from '@/store'
 
@@ -103,7 +102,7 @@ const createWeaponComputed = (key: "mainHand" | "offHand") => {
       return gearSelections.value?.[key]?.[props.jobId ?? 0] || 0
     },
     set: (value : number) => {
-      if (!gearSelections.value) gearSelections.value = getDefaultGearSelections()
+      if (!gearSelections.value) gearSelections.value = fixGearSelections()
       if (!gearSelections.value[key]) gearSelections.value[key] = {}
       gearSelections.value[key][props.jobId ?? 0] = value
     }
@@ -117,7 +116,7 @@ const createAttireComputed = (key: "headAttire" | "bodyAttire" | "handsAttire" |
     },
     set: (value : number) => {
       if (!props.attireAffix) return
-      if (!gearSelections.value) gearSelections.value = getDefaultGearSelections()
+      if (!gearSelections.value) gearSelections.value = fixGearSelections()
       if (!gearSelections.value[key]) gearSelections.value[key] = {} as Record<AttireAffix, number>
       gearSelections.value[key][props.attireAffix] = value
     }
@@ -131,7 +130,7 @@ const createAccessoryComputed = (key: "earrings" | "necklace" | "wrist" | "rings
     },
     set: (value : number) => {
       if (!props.accessoryAffix) return
-      if (!gearSelections.value) gearSelections.value = getDefaultGearSelections()
+      if (!gearSelections.value) gearSelections.value = fixGearSelections()
       if (!gearSelections.value[key]) gearSelections.value[key] = {} as Record<AccessoryAffix, number>
       gearSelections.value[key][props.accessoryAffix] = value
     }
@@ -152,7 +151,7 @@ const Rings = createAccessoryComputed('rings')
 
 // #region Button Functions
 const clearAll = () => {
-  gearSelections.value = getDefaultGearSelections()
+  gearSelections.value = fixGearSelections()
 }
 const clearCurrent = () => {
   if (jobNotSelected.value) {

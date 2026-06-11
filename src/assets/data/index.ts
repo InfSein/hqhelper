@@ -1,7 +1,7 @@
 // #region Import for other ts files
 import type {
   AttireAffix, AccessoryAffix,
-} from '@/models/gears'
+} from '@/types/game/gear'
 // #endregion
 
 export const XivPatchVers = ["7.0", "7.1", "7.2", "7.3", "7.4"] as const

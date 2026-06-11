@@ -6,7 +6,7 @@ import {
 } from '@vicons/material'
 import XivFARImage from '../general/XivFARImage.vue'
 import { XivJobs, XivRoles, type XivRole, type HqDataVer, type XivPatchVer } from '@/assets/data'
-import type { GearSelections } from '@/models/gears'
+import type { GearSelections } from '@/types/game/gear'
 import { getGearIcon, getGearRecomm, useGearAdder } from '@/tools/gears'
 import useUiTools from '@/tools/ui'
 import { visitUrl } from '@/tools'

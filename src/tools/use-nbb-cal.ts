@@ -7,7 +7,7 @@ import {
   type XivPatchVer,
 } from '@/assets/data'
 import { Cal } from './nbb-cal-v5'
-import type { GearSelections } from '@/models/gears'
+import type { GearSelections } from '@/types/game/gear'
 import { getItemInfo, type ItemInfo } from './item'
 
 export function useNbbCal() {

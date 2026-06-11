@@ -5,12 +5,12 @@
 import StaffGroup from './StaffGroup.vue'
 import ModalSponsorsList from '@/components/modals/ModalSponsorsList.vue'
 import AppStatus from '@/variables/app-status'
-import { getStaffMebers } from '@/models/about-app'
+import useStaff from "@/composables/useStaff"
 
 const t = inject<(message: string, args?: any) => string>('t')!
 // const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
 
-const members = getStaffMebers(t)
+const { staffMembers } = useStaff()
 
 const currentElectronVersion = ref('')
 
@@ -60,13 +60,13 @@ const viewSponsors = () => {
             <tr>
               <td>{{ t('about_app.staff.producer') }}</td>
               <td>
-                <StaffGroup :group-members="[members.infsein, members.nbb, members.yakita]" />
+                <StaffGroup :group-members="[staffMembers.infsein, staffMembers.nbb, staffMembers.yakita]" />
               </td>
             </tr>
             <tr>
               <td>{{ t('about_app.staff.contributor') }}</td>
               <td>
-                <StaffGroup :group-members="[members.wcy, members.kimuchi, members.etnatker]" />
+                <StaffGroup :group-members="[staffMembers.wcy, staffMembers.kimuchi, staffMembers.etnatker]" />
               </td>
             </tr>
           </tbody>

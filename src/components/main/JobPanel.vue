@@ -7,7 +7,7 @@ import {
   type HqDataVer,
   type XivPatchVer
 }from '@/assets/data'
-import type { GearSelections } from '@/models/gears'
+import type { GearSelections } from '@/types/game/gear'
 import { useStore } from '@/store'
 
 const t = inject<(message: string, args?: any) => string>('t')!

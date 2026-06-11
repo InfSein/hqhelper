@@ -3,7 +3,7 @@ import * as XLSX from 'xlsx'
 import {
   XivJobs, XivGearAffixes
 } from '@/assets/data'
-import { attireAffixes, accessoryAffixes, type GearSelections, type AttireAffix, type AccessoryAffix, fixGearSelections } from "@/models/gears"
+import { attireAffixes, accessoryAffixes, type GearSelections, type AttireAffix, type AccessoryAffix, fixGearSelections } from "@/types/game/gear"
 import { getItemInfo, type ItemInfo } from './item'
 import type { StatementData } from './use-fufu-cal'
 import type { ItemPriceInfo } from '@/types/item/price'

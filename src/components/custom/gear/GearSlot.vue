@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { GearSlot } from '@/models/gears'
+import type { GearSlot } from '@/types/game/gear'
 import ItemButton from '../item/ItemButton.vue'
 import { getItemInfo } from '@/tools/item'
 import { getGearIcon } from '@/tools/gears'

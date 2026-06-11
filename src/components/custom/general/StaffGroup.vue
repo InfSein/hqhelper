@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { StaffMember } from '@/models/about-app'
+import type { StaffMember } from '@/types/staff'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)

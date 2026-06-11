@@ -7,15 +7,15 @@ import {
 import HelpButton from '../custom/general/HelpButton.vue'
 import StaffGroup from '../custom/general/StaffGroup.vue'
 import ModalSponsorsList from './ModalSponsorsList.vue'
-import { getStaffMebers } from '@/models/about-app'
 import {
   qGroupInfo,
 } from '@/variables'
+import useStaff from "@/composables/useStaff"
 
 const t = inject<(message: string, args?: any) => string>('t')!
 // const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
 
-const members = getStaffMebers(t)
+const { staffMembers } = useStaff()
 
 const showModal = defineModel<boolean>('show', { required: true })
 
@@ -29,7 +29,7 @@ const onLoad = () => {
 }
 
 const donatableStaffs = computed(() => {
-  return Object.values(members.value).filter((member) => {
+  return Object.values(staffMembers.value).filter((member) => {
     return member.donate_info?.donate_ways?.length
   }).map((data, index) => {
     return {
