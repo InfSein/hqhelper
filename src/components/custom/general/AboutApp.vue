@@ -4,7 +4,7 @@
 // } from '@vicons/material'
 import StaffGroup from './StaffGroup.vue'
 import ModalSponsorsList from '@/components/modals/ModalSponsorsList.vue'
-import AppStatus from '@/variables/app-status'
+import AppStatus from '@/constants/app.ts'
 import useStaff from "@/composables/useStaff"
 
 const t = inject<(message: string, args?: any) => string>('t')!

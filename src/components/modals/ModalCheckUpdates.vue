@@ -9,7 +9,7 @@ import {
 import ModalPreferences from './ModalPreferences.vue'
 import type { ProcessStage, ProgressData } from 'env.electron'
 import { useStore } from '@/store'
-import AppStatus from '@/variables/app-status'
+import AppStatus from '@/constants/app.ts'
 import { useDialog } from '@/composables/useDialog.ts'
 import { checkUrlLag } from '@/tools/web-request'
 import { type AppVersionJson } from '@/types'

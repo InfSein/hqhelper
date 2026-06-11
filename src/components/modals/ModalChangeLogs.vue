@@ -5,7 +5,7 @@ import {
   HistoryOutlined, StickyNote2Outlined,
 } from '@vicons/material'
 import { getChangelogs, type PatchChangeGroup } from '@/data/change-logs'
-import AppStatus from '@/variables/app-status'
+import AppStatus from '@/constants/app'
 import { useStore } from '@/store'
 
 const t = inject<(message: string, args?: any) => string>('t')!

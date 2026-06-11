@@ -11,7 +11,7 @@ import { XivJobs, XivUnpackedCollectableSubmissions } from '@/assets/data'
 import { type WorkState } from '@/types/workstate/cshelper.ts'
 import UseConfig from '@/composables/useConfig.ts'
 import { getItemInfo } from '@/tools/item'
-import { ExpansionSpecialItems } from '@/variables'
+import { ExpansionSpecialItems } from '@/constants/game'
 import ItemSubmissionReward from '../custom/item/ItemSubmissionReward.vue'
 import { useStore } from '@/store'
 

@@ -9,7 +9,7 @@ import StaffGroup from '../custom/general/StaffGroup.vue'
 import ModalSponsorsList from './ModalSponsorsList.vue'
 import {
   qGroupInfo,
-} from '@/variables'
+} from '@/constants'
 import useStaff from "@/composables/useStaff"
 
 const t = inject<(message: string, args?: any) => string>('t')!

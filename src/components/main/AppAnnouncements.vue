@@ -7,7 +7,7 @@ import {
 import { useDialog } from '@/composables/useDialog'
 import {
   qGroupInfo, githubInfo, otherSocialInfo,
-} from '@/variables'
+} from '@/constants'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 

@@ -8,7 +8,7 @@ import IconWeibo from '@/assets/icons/external/IconWeibo.vue'
 import IconTwitter from '@/assets/icons/external/IconTwitter.vue'
 import {
   qGroupInfo, githubInfo, otherSocialInfo
-} from '@/variables'
+} from '@/constants'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)

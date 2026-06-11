@@ -45,7 +45,7 @@ import { checkAppUpdates, visitUrl } from '@/tools'
 import { useDialog } from '@/composables/useDialog.ts'
 import EorzeaTime from '@/utils/game.et.ts'
 import useUiTools from '@/composables/useUiTools.ts'
-import AppStatus from '@/variables/app-status'
+import AppStatus from '@/constants/app.ts'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
