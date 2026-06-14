@@ -8,6 +8,7 @@ import {
   AllInclusiveSharp,
   OpenInNewOutlined,
   UnfoldMoreSharp, UnfoldLessSharp,
+  ChevronLeftOutlined, ChevronRightOutlined
 } from '@vicons/material'
 import ImportItemListPop from '@/components/workflow/ImportItemListPop.vue'
 import ItemSelector from '@/components/custom/item/ItemSelector.vue'
@@ -150,6 +151,41 @@ const pageHeightVals = computed(() => {
       recommProcess: contentHeight + 'px',
       recommProcessContainer: (contentHeight + 12) + 'px', // tabpane 有 12px 的 padding-top
     }
+  }
+})
+
+const currentView = ref<'AB' | 'BC'>('BC')
+
+let wheelLock = false
+const handleWheel = (e: WheelEvent) => {
+  if (isMobile.value || wheelLock) return
+  if (Math.abs(e.deltaX) > 40 && Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+    let target = e.target as HTMLElement | null
+    while (target && target !== e.currentTarget) {
+      if (target.scrollWidth > target.clientWidth) {
+        const style = window.getComputedStyle(target)
+        if (style.overflowX === 'auto' || style.overflowX === 'scroll') {
+          return 
+        }
+      }
+      target = target.parentElement
+    }
+
+    wheelLock = true
+    if (e.deltaX > 0 && currentView.value === 'AB') {
+      currentView.value = 'BC'
+    } else if (e.deltaX < 0 && currentView.value === 'BC') {
+      currentView.value = 'AB'
+    }
+    setTimeout(() => { wheelLock = false }, 400)
+  }
+}
+
+const sliderStyle = computed(() => {
+  if (isMobile.value) return {}
+  const baseTranslate = currentView.value === 'BC' ? `calc(-100% + var(--select-card-width))` : `0px`
+  return {
+    transform: `translateX(${baseTranslate})`
   }
 })
 
@@ -398,13 +434,28 @@ const setInventoryByStatementPrepared = () => {
       :style="{
         '--select-card-width': selectCardWidth,
       }"
+      @wheel="handleWheel"
     >
-      <FoldableCard
-        card-key="workflow-content-items"
-        class="items-wrapper"
-        :fold-direction="isMobile ? 'vertical' : 'horizontal'"
-        @on-card-fold-status-changed="handleSelectCardFoldStatusChanged"
-      >
+      <div class="slider-container" :style="sliderStyle">
+        <FoldableCard
+          card-key="workflow-content-notebook"
+          class="block-a"
+          :unfoldable="!isMobile"
+        >
+          <template #header>
+            <i class="xiv square-1"></i>
+            <span class="card-title-text">Area A</span>
+          </template>
+          <div class="block" style="display: flex; justify-content: center; align-items: center; height: 100%;">
+            <n-empty description="Blank Area A" />
+          </div>
+        </FoldableCard>
+        <FoldableCard
+          card-key="workflow-content-items"
+          class="items-wrapper block-b"
+          :fold-direction="isMobile ? 'vertical' : 'horizontal'"
+          @on-card-fold-status-changed="handleSelectCardFoldStatusChanged"
+        >
         <template #header>
           <i class="xiv square-1"></i>
           <span class="card-title-text">{{ t('common.select_item2') }}</span>
@@ -442,7 +493,11 @@ const setInventoryByStatementPrepared = () => {
         </div>
         
       </FoldableCard>
-      <FoldableCard :unfoldable="!isMobile" card-key="workflow-content-statistics" class="statistics-wrapper">
+      <FoldableCard
+        card-key="workflow-content-statistics"
+        class="statistics-wrapper block-c"
+        :unfoldable="!isMobile"
+      >
         <template #header>
           <i class="xiv square-2"></i>
           <span class="card-title-text">{{ t('common.view_analysis') }}</span>
@@ -565,6 +620,25 @@ const setInventoryByStatementPrepared = () => {
           </n-tabs>
         </div>
       </FoldableCard>
+      </div>
+
+      <n-float-button
+        v-if="!isMobile && currentView === 'BC'"
+        position="absolute"
+        style="left: 10px; top: 50%; transform: translateY(-50%); z-index: 10;"
+        @click="currentView = 'AB'"
+      >
+        <n-icon><ChevronLeftOutlined /></n-icon>
+      </n-float-button>
+
+      <n-float-button
+        v-if="!isMobile && currentView === 'AB'"
+        position="absolute"
+        style="right: 10px; top: 50%; transform: translateY(-50%); z-index: 10;"
+        @click="currentView = 'BC'"
+      >
+        <n-icon><ChevronRightOutlined /></n-icon>
+      </n-float-button>
     </div>
 
     <ModalWorkflowsManage
@@ -613,9 +687,16 @@ const setInventoryByStatementPrepared = () => {
 
   .content-block {
     flex: 1;
-    display: grid;
-    grid-template-columns: var(--select-card-width) 1fr;
-    gap: 8px;
+    position: relative;
+    overflow: hidden;
+
+    .slider-container {
+      display: flex;
+      height: 100%;
+      width: 100%;
+      gap: 8px;
+      transition: transform 0.3s ease-in-out;
+    }
 
     .block {
       padding: 0 4px;
@@ -650,6 +731,22 @@ const setInventoryByStatementPrepared = () => {
   }
 }
 
+/* Desktop */
+@media screen and (min-width: 768px) {
+  .wrapper {
+    .content-block {
+      .block-a, .block-c {
+        width: calc(100% - var(--select-card-width) - 8px);
+        flex-shrink: 0;
+      }
+      .block-b {
+        width: var(--select-card-width);
+        flex-shrink: 0;
+      }
+    }
+  }
+}
+
 /* Mobile */
 @media screen and (max-width: 767px) {
   .wrapper {
@@ -662,6 +759,16 @@ const setInventoryByStatementPrepared = () => {
     .content-block {
       display: flex;
       flex-direction: column;
+      overflow: visible;
+      
+      .slider-container {
+        flex-direction: column;
+        transform: none !important;
+        height: auto;
+      }
+      .block-a, .block-b, .block-c {
+        width: 100%;
+      }
     }
   }
 }
