@@ -155,6 +155,16 @@ const pageHeightVals = computed(() => {
 })
 
 const currentView = ref<'AB' | 'BC'>('BC')
+const isSwitchingView = ref(false)
+
+watch(currentView, (newVal, oldVal) => {
+  if (newVal !== oldVal) {
+    isSwitchingView.value = true
+    setTimeout(() => {
+      isSwitchingView.value = false
+    }, 300)
+  }
+})
 
 let wheelLock = false
 const handleWheel = (e: WheelEvent) => {
@@ -185,7 +195,8 @@ const sliderStyle = computed(() => {
   if (isMobile.value) return {}
   const baseTranslate = currentView.value === 'BC' ? `calc(-100% + var(--select-card-width))` : `0px`
   return {
-    transform: `translateX(${baseTranslate})`
+    transform: `translateX(${baseTranslate})`,
+    transition: isSwitchingView.value ? 'transform 0.3s ease-in-out' : 'none'
   }
 })
 
@@ -695,7 +706,6 @@ const setInventoryByStatementPrepared = () => {
       height: 100%;
       width: 100%;
       gap: 8px;
-      transition: transform 0.3s ease-in-out;
     }
 
     .block {
