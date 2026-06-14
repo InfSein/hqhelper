@@ -10,6 +10,9 @@ import {
   UnfoldMoreSharp, UnfoldLessSharp,
   ChevronLeftOutlined, ChevronRightOutlined
 } from '@vicons/material'
+import {
+  XivUnpackedRecipes,
+} from '@/assets/data'
 import ImportItemListPop from '@/components/workflow/ImportItemListPop.vue'
 import ItemSelector from '@/components/custom/item/ItemSelector.vue'
 import ItemSelectTable from '@/components/custom/item/ItemSelectTable.vue'
@@ -112,26 +115,6 @@ onMounted(() => {
 onBeforeUnmount(() => {
   window.removeEventListener('resize', updateHeights)
 })
-
-// #region header
-const handleAddWorkflow = () => {
-  if (workState.value.workflows.length >= _VAR_MAX_WORKFLOW) {
-    NAIVE_UI_MESSAGE.warning(t('workflow.message.max_len', _VAR_MAX_WORKFLOW))
-    return
-  }
-  workState.value.workflows.push(getDefaultWorkflow())
-}
-const showWorkflowsManageModal = ref(false)
-const handleManageWorkflows = () => {
-  showWorkflowsManageModal.value = true
-}
-const handleFixWorkStateAfterWorkflowsManaged = () => {
-  if (workState.value.currentWorkflow >= workState.value.workflows.length) {
-    workState.value.currentWorkflow = workState.value.workflows.length - 1
-  }
-}
-// #endregion
-
 const pageHeightVals = computed(() => {
   const pageHeight = windowHeight.value - 320
   const contentHeight = pageHeight - headerHeight.value
@@ -154,6 +137,26 @@ const pageHeightVals = computed(() => {
   }
 })
 
+// #region header
+const handleAddWorkflow = () => {
+  if (workState.value.workflows.length >= _VAR_MAX_WORKFLOW) {
+    NAIVE_UI_MESSAGE.warning(t('workflow.message.max_len', _VAR_MAX_WORKFLOW))
+    return
+  }
+  workState.value.workflows.push(getDefaultWorkflow())
+}
+const showWorkflowsManageModal = ref(false)
+const handleManageWorkflows = () => {
+  showWorkflowsManageModal.value = true
+}
+const handleFixWorkStateAfterWorkflowsManaged = () => {
+  if (workState.value.currentWorkflow >= workState.value.workflows.length) {
+    workState.value.currentWorkflow = workState.value.workflows.length - 1
+  }
+}
+// #endregion
+
+// #region content(block swap)
 const currentView = ref<'AB' | 'BC'>('BC')
 const isSwitchingView = ref(false)
 
@@ -205,6 +208,46 @@ const sliderStyle = computed(() => {
     transition: isSwitchingView.value ? 'transform 0.3s ease-in-out' : 'none'
   }
 })
+// #endregion
+
+// #region content-notebooks
+interface NotebookGroup {
+  job: number
+  menus: {
+    /** 分级配方 */
+    common: NotebookMenu[]
+    /** 特殊配方 */
+    special: NotebookMenu[]
+    /** 秘籍配方 */
+    master: NotebookMenu[]
+  }
+}
+interface NotebookMenu {
+  id: number
+  name: string
+  items: ItemInfo[]
+}
+/*const notebookGroups = computed((): NotebookGroup[] => {
+  const groups: NotebookGroup[] = []
+  for (const job in XivUnpackedRecipes) {
+    const recipes = XivUnpackedRecipes[Number(job)]
+    const menus: NotebookMenu[] = []
+    for (const menuId in recipes) {
+      const menu = recipes[Number(menuId)]
+      menus.push({
+        id: Number(menuId),
+        name: menu.name,
+        items: menu.items
+      })
+    }
+    groups.push({
+      job: Number(job),
+      menus
+    })
+  }
+  return groups
+})*/
+// #endregion
 
 // #region content-items
 const handleItemInputValueUpdate = (value: number) => {
@@ -455,7 +498,7 @@ const setInventoryByStatementPrepared = () => {
     >
       <div class="slider-container" :style="sliderStyle">
         <FoldableCard
-          card-key="workflow-content-notebook"
+          card-key="workflow-content-notebooks"
           class="block-a"
           :unfoldable="!isMobile"
         >
