@@ -169,7 +169,13 @@ watch(currentView, (newVal, oldVal) => {
 let wheelLock = false
 const handleWheel = (e: WheelEvent) => {
   if (isMobile.value || wheelLock) return
-  if (Math.abs(e.deltaX) > 40 && Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+  
+  const isHorizontalScroll = Math.abs(e.deltaX) > 40 && Math.abs(e.deltaX) > Math.abs(e.deltaY)
+  const isShiftVerticalScroll = e.shiftKey && Math.abs(e.deltaY) > 40 && Math.abs(e.deltaY) > Math.abs(e.deltaX)
+  
+  if (isHorizontalScroll || isShiftVerticalScroll) {
+    const delta = isHorizontalScroll ? e.deltaX : e.deltaY
+
     let target = e.target as HTMLElement | null
     while (target && target !== e.currentTarget) {
       if (target.scrollWidth > target.clientWidth) {
@@ -182,9 +188,9 @@ const handleWheel = (e: WheelEvent) => {
     }
 
     wheelLock = true
-    if (e.deltaX > 0 && currentView.value === 'AB') {
+    if (delta > 0 && currentView.value === 'AB') {
       currentView.value = 'BC'
-    } else if (e.deltaX < 0 && currentView.value === 'BC') {
+    } else if (delta < 0 && currentView.value === 'BC') {
       currentView.value = 'AB'
     }
     setTimeout(() => { wheelLock = false }, 400)
