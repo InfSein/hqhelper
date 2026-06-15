@@ -270,7 +270,7 @@ provide('displayFestivalEggModal', () => {
   showFestivalEgg.value = true
 })
 const dialogRef = ref<InstanceType<typeof Dialog> | null>(null)
-const { alertError, confirm } = useDialog()
+const { alertError, confirm } = useDialog(t)
 
 const appBg = ref('')
 
