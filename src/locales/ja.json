@@ -2476,5 +2476,10 @@
       "set_inventory_by_prepared": "在庫一覧の数量をレポートの「所持数」に設定します。",
       "set_prepared_by_inventory": "レポート内の「所持」数量を「在庫一覧」の数量に設定する"
     }
+  },
+  "recipe": {
+    "notebookgroup": {
+      "other_master_recipes": "秘伝書:その他"
+    }
   }
 }

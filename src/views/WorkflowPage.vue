@@ -11,6 +11,7 @@ import {
   ChevronLeftOutlined, ChevronRightOutlined
 } from '@vicons/material'
 import {
+  XivSrbMap,
   XivUnpackedRecipes,
 } from '@/assets/data'
 import ImportItemListPop from '@/components/workflow/ImportItemListPop.vue'
@@ -26,7 +27,7 @@ import { useElectronSync } from '@/composables/electron-sync'
 import {
   getDefaultWorkflow, fixWorkState, _VAR_MAX_WORKFLOW
 } from '@/types/workstate/workflow'
-import { deepCopy } from '@/tools'
+import { deepCopy, sortRecord } from '@/tools'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
 import { useNbbCal } from '@/tools/use-nbb-cal'
 import { useFufuCal } from '@/tools/use-fufu-cal'
@@ -36,14 +37,15 @@ import ModalWorkflowsManage from '@/components/modals/ModalWorkflowsManage.vue'
 import { useCostAndBenefit } from '@/composables/use-cost-and-benefit'
 import { type SettingGroupKey } from '@/types'
 import { type UserConfigModel } from '@/types/config/user'
+import useConfig from '@/composables/useConfig'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
 
 const store = useStore()
-
 const NAIVE_UI_MESSAGE = useMessage()
 const { emitSync, onSync } = useElectronSync()
+const { itemLanguage } = useConfig()
 const { calItems } = useNbbCal()
 const { getStatementData, getProStatementData, calRecommProcessData, calRecommProcessGroups } = useFufuCal()
 
@@ -215,38 +217,101 @@ interface NotebookGroup {
   job: number
   menus: {
     /** 分级配方 */
-    common: NotebookMenu[]
+    common: Record<number, NotebookMenu>
     /** 特殊配方 */
-    special: NotebookMenu[]
+    special: Record<number, NotebookMenu>
     /** 秘籍配方 */
-    master: NotebookMenu[]
+    master: Record<number, NotebookMenu>
   }
 }
 interface NotebookMenu {
   id: number
   name: string
-  items: ItemInfo[]
+  contentGroups: Record<number, {
+    id: number
+    name?: string
+    items: ItemInfo[]
+  }>
 }
-/*const notebookGroups = computed((): NotebookGroup[] => {
-  const groups: NotebookGroup[] = []
-  for (const job in XivUnpackedRecipes) {
-    const recipes = XivUnpackedRecipes[Number(job)]
-    const menus: NotebookMenu[] = []
-    for (const menuId in recipes) {
-      const menu = recipes[Number(menuId)]
-      menus.push({
-        id: Number(menuId),
-        name: menu.name,
-        items: menu.items
-      })
+const notebookGroups = computed(() => {
+  const groups: Record<number, NotebookGroup> = {}
+  Object.values(XivUnpackedRecipes).forEach(recipe => {
+    groups[recipe.job] ??= {
+      job: recipe.job,
+      menus: {
+        common: {},
+        special: {},
+        master: {}
+      }
     }
-    groups.push({
-      job: Number(job),
-      menus
+    const group = groups[recipe.job]
+
+    const item = getItemInfo(recipe.target)
+
+    // * 秘籍
+    if (recipe.srb) {
+      const srbInfo = XivSrbMap[recipe.srb]
+      const menu = group.menus.master
+      if (srbInfo) {
+        const id = srbInfo.id
+        menu[id] ??= { id, name: srbInfo[`name_${itemLanguage.value}`], contentGroups: {} }
+        menu[id].contentGroups[0] ??= { id: 0, items: [] }
+        menu[id].contentGroups[0].items.push(item)
+      } else {
+        const id = 99; const srb = recipe.srb
+        const srbItem = getItemInfo(srb)
+        menu[id] ??= { id, name: t('recipe.notebookgroup.other_master_recipes'), contentGroups: {} }
+        menu[id].contentGroups[srb] ??= { id: srb, name: srbItem[`name_${itemLanguage.value}`], items: [] }
+        menu[id].contentGroups[srb].items.push(item)
+      }
+    }
+
+    // * 特殊
+    else if (item.isFurnishing) {
+      const id = 1
+      group.menus.special[id] ??= { id, name: t('recipe.notebookgroup.furnishing'), contentGroups: {} }
+      group.menus.special[id].contentGroups[0] ??= { id: 0, items: [] }
+      group.menus.special[id].contentGroups[0].items.push(item)
+    } else if (item.collectable) {
+      const id = 2
+      group.menus.special[id] ??= { id, name: t('recipe.notebookgroup.collectable'), contentGroups: {} }
+      group.menus.special[id].contentGroups[0] ??= { id: 0, items: [] }
+      group.menus.special[id].contentGroups[0].items.push(item)
+    } else if (
+      item.uiTypeId === /*染剂*/55
+    ) {
+      const id = 99
+      group.menus.special[id] ??= { id, name: t('recipe.notebookgroup.other'), contentGroups: {} }
+      group.menus.special[id].contentGroups[0] ??= { id: 0, items: [] }
+      group.menus.special[id].contentGroups[0].items.push(item)
+    }
+
+    // * 普通（分级）
+    else {
+      const minLv = Math.floor(recipe.clv / 5) * 5 + (recipe.clv % 5 ? -4 : 1)
+      const maxLv = minLv + 4
+      const id = minLv
+      group.menus.common[id] ??= { id, name: `${minLv}-${maxLv}`, contentGroups: {} }
+      group.menus.common[id].contentGroups[0] ??= { id: 0, items: [] }
+      group.menus.common[id].contentGroups[0].items.push(item)
+    }
+  })
+  Object.values(groups).forEach(group => {
+    Object.values(group.menus.common).forEach(menu => {
+      menu.contentGroups = sortRecord(menu.contentGroups)
     })
-  }
-  return groups
-})*/
+    Object.values(group.menus.special).forEach(menu => {
+      menu.contentGroups = sortRecord(menu.contentGroups)
+    })
+    Object.values(group.menus.master).forEach(menu => {
+      menu.contentGroups = sortRecord(menu.contentGroups)
+    })
+    group.menus.common = sortRecord(group.menus.common, true)
+    group.menus.special = sortRecord(group.menus.special)
+    group.menus.master = sortRecord(group.menus.master, true)
+  })
+  return sortRecord(groups)
+})
 // #endregion
 
 // #region content-items

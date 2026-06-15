@@ -249,6 +249,7 @@ export interface ItemInfo {
   isCrystal: boolean,
   isAethersand: boolean,
   isFishingItem: boolean,
+  isFurnishing: boolean,
   tradeInfo: ItemTradeInfo | undefined,
   collectInfo?: {
     levelMin: number,
@@ -499,6 +500,9 @@ export const getItemInfo = (item: `${number}` | number | CalculatedItem) => {
   // 目前也没有数据，给个标识让人去饿猫鱼糕找吧！
   // 如果可以兑换，那一般不是钓鱼采集品(例如 [44174]ロイヤルロブスター)
   itemInfo.isFishingItem = !itemInfo.tradeInfo && itemType === 47
+
+  // * 处理物品是否为家具/庭具
+  itemInfo.isFurnishing = itemType === 57 || (itemType >= 65 && itemType <= 80)
 
   // * 组装物品兑换信息
   itemInfo.tradeInfo = XivUnpackedTradeMap[itemInfo.id]

@@ -34,6 +34,12 @@ export const objectEqual = <T>(obj1: T, obj2: T): boolean => {
   return JSON.stringify(obj1) === JSON.stringify(obj2)
 }
 
+export const sortRecord = <T>(record: Record<number, T>, desc = false) => {
+  return Object.fromEntries(
+    Object.entries(record).sort(([a], [b]) => desc ? Number(b) - Number(a) : Number(a) - Number(b))
+  ) as Record<number, T>
+}
+
 export const formatDate = (ts: number) => {
   const date = new Date(ts)
   const pad = (n: number) => n.toString().padStart(2, '0')

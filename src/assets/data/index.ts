@@ -10,6 +10,20 @@ export type XivPatchVer = (typeof XivPatchVers)[number]
 // #region Manuals
 import JsonXivItemRemarks from './manuals/xiv-item-remarks.json'
 export const XivItemRemarks = JsonXivItemRemarks as Record<number, string[]>
+
+import JsonXivSrbs from './manuals/xiv-srbs.json'
+export const XivSrbs = JsonXivSrbs as Record<number, {
+  id: number
+  name: string[]
+  srb: number[]
+}>
+export const XivSrbMap = Object.fromEntries(
+  Object.values(XivSrbs).flatMap(srb =>
+    srb.srb.map(v => [v, {
+      id: srb.id, name_zh: srb.name[2], name_en: srb.name[1], name_ja: srb.name[0]
+    }])
+  )
+) as Record<number, { id: number, name_zh: string, name_en: string, name_ja: string }>
 // #endregion
 
 // #region Unpacks

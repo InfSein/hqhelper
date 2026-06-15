@@ -2497,5 +2497,13 @@
       "set_inventory_by_prepared": "将背包库存的数量设置为报表中的“已有”数量。",
       "set_prepared_by_inventory": "将报表中的“已有”数量设置为背包库存的数量。"
     }
+  },
+  "recipe": {
+    "notebookgroup": {
+      "other_master_recipes": "秘籍：其他",
+      "furnishing": "房屋",
+      "collectable": "收藏品交易",
+      "other": "其他"
+    }
   }
 }
