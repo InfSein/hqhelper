@@ -11,9 +11,14 @@ import {
   ChevronLeftOutlined, ChevronRightOutlined
 } from '@vicons/material'
 import {
+  XivJobs,
   XivSrbMap,
   XivUnpackedRecipes,
 } from '@/assets/data'
+import CommonGroupIcon from '@/assets/icons/game-ui/recipe-notebook/group-common.svg'
+import SpecialGroupIcon from '@/assets/icons/game-ui/recipe-notebook/group-special.svg'
+import MasterGroupIcon from '@/assets/icons/game-ui/recipe-notebook/group-master.svg'
+import XivFARImage from '@/components/custom/general/XivFARImage.vue'
 import ImportItemListPop from '@/components/workflow/ImportItemListPop.vue'
 import ItemSelector from '@/components/custom/item/ItemSelector.vue'
 import ItemSelectTable from '@/components/custom/item/ItemSelectTable.vue'
@@ -38,6 +43,7 @@ import { useCostAndBenefit } from '@/composables/use-cost-and-benefit'
 import { type SettingGroupKey } from '@/types'
 import { type UserConfigModel } from '@/types/config/user'
 import useConfig from '@/composables/useConfig'
+import ItemButton from '@/components/custom/item/ItemButton.vue'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
@@ -122,6 +128,7 @@ const pageHeightVals = computed(() => {
   const contentHeight = pageHeight - headerHeight.value
   if (isMobile.value) {
     return {
+      notebookMenu: 'auto',
       itemSelectTable: 'auto',
       statisticsBlock: undefined,
       statementsBlock: 'auto',
@@ -130,6 +137,7 @@ const pageHeightVals = computed(() => {
     }
   } else {
     return {
+      notebookMenu: (contentHeight - 65) + 'px',
       itemSelectTable: (contentHeight - 65) + 'px',
       statisticsBlock: (contentHeight / 2 - 45),
       statementsBlock: (contentHeight - 50) + 'px',
@@ -236,17 +244,19 @@ interface NotebookMenu {
 const notebookGroups = computed(() => {
   const groups: Record<number, NotebookGroup> = {}
   Object.values(XivUnpackedRecipes).forEach(recipe => {
-    groups[recipe.job] ??= {
-      job: recipe.job,
+    const item = getItemInfo(recipe.target)
+    const job = item.craftInfo?.jobId
+    if (!job) return
+
+    groups[job] ??= {
+      job,
       menus: {
         common: {},
         special: {},
         master: {}
       }
     }
-    const group = groups[recipe.job]
-
-    const item = getItemInfo(recipe.target)
+    const group = groups[job]
 
     // * 秘籍
     if (recipe.srb) {
@@ -288,7 +298,7 @@ const notebookGroups = computed(() => {
 
     // * 普通（分级）
     else {
-      const minLv = Math.floor(recipe.clv / 5) * 5 + (recipe.clv % 5 ? -4 : 1)
+      const minLv = Math.floor(recipe.clv / 5) * 5 + (recipe.clv % 5 === 0 ? -4 : 1)
       const maxLv = minLv + 4
       const id = minLv
       group.menus.common[id] ??= { id, name: `${minLv}-${maxLv}`, contentGroups: {} }
@@ -312,6 +322,10 @@ const notebookGroups = computed(() => {
   })
   return sortRecord(groups)
 })
+
+const currGroup = computed(() => notebookGroups.value[workState.value.selectedJob])
+const currMenus = computed(() => currGroup.value?.menus?.[workState.value.selectedMenu] ?? {})
+const currContentGroups = computed(() => currMenus.value?.[workState.value.selectedContentGroup]?.contentGroups ?? {})
 // #endregion
 
 // #region content-items
@@ -568,11 +582,85 @@ const setInventoryByStatementPrepared = () => {
           :unfoldable="!isMobile"
         >
           <template #header>
-            <i class="xiv square-1"></i>
-            <span class="card-title-text">Area A</span>
+            <i class="xiv square-0"></i>
+            <span class="card-title-text">{{ t('recipe.notebook') }}</span>
           </template>
-          <div class="block" style="display: flex; justify-content: center; align-items: center; height: 100%;">
-            <n-empty description="Blank Area A" />
+          <div class="flex flex-wrap items-center gap-1.5">
+            <n-button
+              v-for="job in Object.keys(notebookGroups)"
+              :key="job"
+              class="p-px w-9! h-9!"
+              :type="workState.selectedJob === Number(job) ? 'primary' : 'default'"
+              @click="workState.selectedJob = Number(job)"
+            >
+              <XivFARImage
+                :src="XivJobs[Number(job)].job_icon_url"
+                :size="32"
+              />
+            </n-button>
+          </div>
+          <n-divider class="my-2!" />
+          <div class="w-full h-full flex">
+            <div class="w-40 pr-2" style="border-right: 1px solid var(--color-border);">
+              <n-tabs type="segment" animated v-model:value="workState.selectedMenu" class="mb-2">
+                <n-tab name="common">
+                  <n-tooltip placement="top">
+                    <template #trigger>
+                      <n-icon :size="18"><component :is="CommonGroupIcon" /></n-icon>
+                    </template>
+                    {{ t('recipe.notebookgroup.common') }}
+                  </n-tooltip>
+                </n-tab>
+                <n-tab name="special">
+                  <n-tooltip placement="top">
+                    <template #trigger>
+                      <n-icon :size="18"><component :is="SpecialGroupIcon" /></n-icon>
+                    </template>
+                    {{ t('recipe.notebookgroup.special') }}
+                  </n-tooltip>
+                </n-tab>
+                <n-tab name="master">
+                  <n-tooltip placement="top">
+                    <template #trigger>
+                      <n-icon :size="18"><component :is="MasterGroupIcon" /></n-icon>
+                    </template>
+                    {{ t('recipe.notebookgroup.master') }}
+                  </n-tooltip>
+                </n-tab>
+              </n-tabs>
+              <div class="flex flex-col gap-0.5">
+                <n-button
+                  v-for="menu in Object.values(currMenus)"
+                  :key="menu.id + menu.name"
+                  size="small"
+                  :tertiary="workState.selectedContentGroup === menu.id"
+                  :quaternary="workState.selectedContentGroup !== menu.id"
+                  class="justify-start"
+                  @click="workState.selectedContentGroup = menu.id"
+                >
+                  {{ menu.name }}
+                </n-button>
+              </div>
+            </div>
+            <div class="flex-1 pl-2 flex">
+              <n-scrollbar trigger="none" :style="{ height: pageHeightVals.notebookMenu, flex: '1' }">
+                <div v-for="cg in currContentGroups" :key="cg.id" class="flex flex-col gap-1">
+                  <div v-if="cg.items">
+                    {{ cg.name }}
+                  </div>
+                  <ItemButton
+                    v-for="item in cg.items"
+                    :key="item.id"
+                    :item-info="item"
+                    show-icon
+                    show-name
+                  />
+                </div>
+              </n-scrollbar>
+              <div v-if="!isMobile" class="w-1/2 pl-2 ml-2" style="border-left: 1px solid var(--color-border);">
+                Item Detail
+              </div>
+            </div>
           </div>
         </FoldableCard>
         <FoldableCard
@@ -581,170 +669,169 @@ const setInventoryByStatementPrepared = () => {
           :fold-direction="isMobile ? 'vertical' : 'horizontal'"
           @on-card-fold-status-changed="handleSelectCardFoldStatusChanged"
         >
-        <template #header>
-          <i class="xiv square-1"></i>
-          <span class="card-title-text">{{ t('common.select_item2') }}</span>
-          <ImportItemListPop>
-            <a v-show="!selectCardFolded" class="card-title-extra" href="javascript:void(0);">
-              [{{ t('common.import') }}]
+          <template #header>
+            <i class="xiv square-1"></i>
+            <span class="card-title-text">{{ t('common.select_item2') }}</span>
+            <ImportItemListPop>
+              <a v-show="!selectCardFolded" class="card-title-extra" href="javascript:void(0);">
+                [{{ t('common.import') }}]
+              </a>
+            </ImportItemListPop>
+          </template>
+          <div class="block items-block">
+            <div class="top-actions">
+              <n-input-group>
+                <n-input-group-label>{{ t('common.add_item') }}</n-input-group-label>
+                <ItemSelector
+                  @on-item-selected="handleItemInputValueUpdate"
+                />
+              </n-input-group>
+            </div>
+            <div class="content-table">
+              <ItemSelectTable
+                v-model:items="currentWorkflow.targetItems"
+                show-item-details
+                :item-span-max-width="isMobile ? '160px' : '230px'"
+                :content-height="pageHeightVals.itemSelectTable"
+              />
+            </div>
+            <div class="bottom-actions">
+              <TooltipButton
+                :icon="DeleteSweepRound"
+                :text="t('common.clear')"
+                :tip="t('workflow.text.clear_current_workflow')"
+                @click="handleClearCurrentWorkflow"
+              />
+            </div>
+          </div>
+        </FoldableCard>
+        <FoldableCard
+          card-key="workflow-content-statistics"
+          class="statistics-wrapper block-c"
+          :unfoldable="!isMobile"
+        >
+          <template #header>
+            <i class="xiv square-2"></i>
+            <span class="card-title-text">{{ t('common.view_analysis') }}</span>
+            <a
+              class="card-title-extra"
+              href="javascript:void(0);"
+              :disabled="updatingPrice"
+              :style="updatingPrice ? 'cursor: not-allowed; color: gray;' : 'cursor: pointer;'"
+              @click="handleAnalysisItemPrices"
+            >
+              [{{ updatingPrice ? t('common.loading') : t('statistics.group.cost_and_benefit.title') }}]
             </a>
-          </ImportItemListPop>
-        </template>
-        <div class="block items-block">
-          <div class="top-actions">
-            <n-input-group>
-              <n-input-group-label>{{ t('common.add_item') }}</n-input-group-label>
-              <ItemSelector
-                @on-item-selected="handleItemInputValueUpdate"
-              />
-            </n-input-group>
-          </div>
-          <div class="content-table">
-            <ItemSelectTable
-              v-model:items="currentWorkflow.targetItems"
-              show-item-details
-              :item-span-max-width="isMobile ? '160px' : '230px'"
-              :content-height="pageHeightVals.itemSelectTable"
-            />
-          </div>
-          <div class="bottom-actions">
-            <TooltipButton
-              :icon="DeleteSweepRound"
-              :text="t('common.clear')"
-              :tip="t('workflow.text.clear_current_workflow')"
-              @click="handleClearCurrentWorkflow"
-            />
-          </div>
-        </div>
-        
-      </FoldableCard>
-      <FoldableCard
-        card-key="workflow-content-statistics"
-        class="statistics-wrapper block-c"
-        :unfoldable="!isMobile"
-      >
-        <template #header>
-          <i class="xiv square-2"></i>
-          <span class="card-title-text">{{ t('common.view_analysis') }}</span>
-          <a
-            class="card-title-extra"
-            href="javascript:void(0);"
-            :disabled="updatingPrice"
-            :style="updatingPrice ? 'cursor: not-allowed; color: gray;' : 'cursor: pointer;'"
-            @click="handleAnalysisItemPrices"
-          >
-            [{{ updatingPrice ? t('common.loading') : t('statistics.group.cost_and_benefit.title') }}]
-          </a>
-          <a
-            v-show="store.funcConfig.inventory_workflow_enable_sync && selectedAnaTab === 'statements'"
-            class="card-title-extra"
-            href="javascript:void(0);"
-            style="cursor: pointer;"
-            :title="t('workflow.tooltip.set_prepared_by_inventory')"
-            @click="handleSetStatementPreparedByInventory"
-          >
-            [{{ t('workflow.text.sync_from_inventory') }}]
-          </a>
-          <a
-            v-show="store.funcConfig.inventory_workflow_enable_sync_reverse && selectedAnaTab === 'statements'"
-            class="card-title-extra"
-            href="javascript:void(0);"
-            style="cursor: pointer;"
-            :title="t('workflow.tooltip.set_inventory_by_prepared')"
-            @click="setInventoryByStatementPrepared"
-          >
-            [{{ t('workflow.text.sync_to_inventory') }}]
-          </a>
-        </template>
-        <div class="block">
-          <n-tabs v-model:value="selectedAnaTab" type="segment" animated class="h-full">
-            <n-tab-pane name="statistics">
-              <template #tab>
-                <div class="tab-title">
-                  <n-icon :size="16"><QueryStatsFilled /></n-icon>
-                  <div>{{ t('common.statistics') }}</div>
-                </div>
-              </template>
-              <CraftStatistics
-                :item-selected="currentWorkflow.targetItems"
-                :list-height="pageHeightVals.statisticsBlock"
-              />
-            </n-tab-pane>
-            <n-tab-pane name="statements">
-              <template #tab>
-                <div class="tab-title">
-                  <n-icon :size="16"><TableViewOutlined /></n-icon>
-                  <div>{{ t('common.statement') }}</div>
-                </div>
-              </template>
-              <CraftStatements
-                v-if="store.funcConfig.use_traditional_statement"
-                v-bind="statementData"
-              />
-              <CraftStatementsPro
-                v-else
-                ref="proStatementInstace"
-                v-model:items-prepared="currentWorkflow.preparedItems"
-                :craft-targets="craftTargetsArray"
-                :statement-blocks="proStatementData.statementBlocks"
-                :content-height="pageHeightVals.statementsBlock"
-              />
-            </n-tab-pane>
-            <n-tab-pane name="processes" :style="{
-              transform: 'translate(0)',
-              minHeight: pageHeightVals.recommProcessContainer,
-            }">
-              <template #tab>
-                <div class="tab-title">
-                  <n-icon :size="16"><AllInclusiveSharp /></n-icon>
-                  <div>{{ t('common.process') }}</div>
-                </div>
-              </template>
-              <CraftRecommProcess
-                v-model:expanded-blocks="currentWorkflow.recommData.expandedBlocks"
-                v-model:completed-items="currentWorkflow.recommData.completedItems"
-                :item-groups="recommProcessGroups"
-                :content-max-height="pageHeightVals.recommProcess"
-                content-max-width="1080px"
-              />
+            <a
+              v-show="store.funcConfig.inventory_workflow_enable_sync && selectedAnaTab === 'statements'"
+              class="card-title-extra"
+              href="javascript:void(0);"
+              style="cursor: pointer;"
+              :title="t('workflow.tooltip.set_prepared_by_inventory')"
+              @click="handleSetStatementPreparedByInventory"
+            >
+              [{{ t('workflow.text.sync_from_inventory') }}]
+            </a>
+            <a
+              v-show="store.funcConfig.inventory_workflow_enable_sync_reverse && selectedAnaTab === 'statements'"
+              class="card-title-extra"
+              href="javascript:void(0);"
+              style="cursor: pointer;"
+              :title="t('workflow.tooltip.set_inventory_by_prepared')"
+              @click="setInventoryByStatementPrepared"
+            >
+              [{{ t('workflow.text.sync_to_inventory') }}]
+            </a>
+          </template>
+          <div class="block">
+            <n-tabs v-model:value="selectedAnaTab" type="segment" animated class="h-full">
+              <n-tab-pane name="statistics">
+                <template #tab>
+                  <div class="tab-title">
+                    <n-icon :size="16"><QueryStatsFilled /></n-icon>
+                    <div>{{ t('common.statistics') }}</div>
+                  </div>
+                </template>
+                <CraftStatistics
+                  :item-selected="currentWorkflow.targetItems"
+                  :list-height="pageHeightVals.statisticsBlock"
+                />
+              </n-tab-pane>
+              <n-tab-pane name="statements">
+                <template #tab>
+                  <div class="tab-title">
+                    <n-icon :size="16"><TableViewOutlined /></n-icon>
+                    <div>{{ t('common.statement') }}</div>
+                  </div>
+                </template>
+                <CraftStatements
+                  v-if="store.funcConfig.use_traditional_statement"
+                  v-bind="statementData"
+                />
+                <CraftStatementsPro
+                  v-else
+                  ref="proStatementInstace"
+                  v-model:items-prepared="currentWorkflow.preparedItems"
+                  :craft-targets="craftTargetsArray"
+                  :statement-blocks="proStatementData.statementBlocks"
+                  :content-height="pageHeightVals.statementsBlock"
+                />
+              </n-tab-pane>
+              <n-tab-pane name="processes" :style="{
+                transform: 'translate(0)',
+                minHeight: pageHeightVals.recommProcessContainer,
+              }">
+                <template #tab>
+                  <div class="tab-title">
+                    <n-icon :size="16"><AllInclusiveSharp /></n-icon>
+                    <div>{{ t('common.process') }}</div>
+                  </div>
+                </template>
+                <CraftRecommProcess
+                  v-model:expanded-blocks="currentWorkflow.recommData.expandedBlocks"
+                  v-model:completed-items="currentWorkflow.recommData.completedItems"
+                  :item-groups="recommProcessGroups"
+                  :content-max-height="pageHeightVals.recommProcess"
+                  content-max-width="1080px"
+                />
 
-              <n-float-button-group v-if="!isMobile" right="20px" bottom="5px">
-                <n-tooltip v-if="canUseNewWindow" :trigger="isMobile ? 'manual' : 'hover'" placement="left">
-                  <template #trigger>
-                    <n-float-button @click="handleOpenProcessInNewWindow">
-                      <n-icon>
-                        <OpenInNewOutlined />
-                      </n-icon>
-                    </n-float-button>
-                  </template>
-                  {{ t('common.open_in_new_window') }}
-                </n-tooltip>
-                <n-tooltip v-if="recommProcessGroups.length" :trigger="isMobile ? 'manual' : 'hover'" placement="left">
-                  <template #trigger>
-                    <n-float-button @click="handleCollapseOrUncollapseAllRecommGroupBlocks">
-                      <n-icon>
-                        <UnfoldMoreSharp v-if="recommGroupAllCollapsed" />
-                        <UnfoldLessSharp v-else />
-                      </n-icon>
-                    </n-float-button>
-                  </template>
-                  {{ recommGroupAllCollapsed ? t('common.expand_all') : t('common.fold_all') }}
-                </n-tooltip>
-                <n-tooltip :trigger="isMobile ? 'manual' : 'hover'" placement="left">
-                  <template #trigger>
-                    <n-float-button @click="handleRecommSettingButtonClick">
-                      <n-icon>
-                        <SettingsSharp />
-                      </n-icon>
-                    </n-float-button>
-                  </template>
-                  {{ t('common.setting') }}
-                </n-tooltip>
-              </n-float-button-group>
-            </n-tab-pane>
-          </n-tabs>
-        </div>
-      </FoldableCard>
+                <n-float-button-group v-if="!isMobile" right="20px" bottom="5px">
+                  <n-tooltip v-if="canUseNewWindow" :trigger="isMobile ? 'manual' : 'hover'" placement="left">
+                    <template #trigger>
+                      <n-float-button @click="handleOpenProcessInNewWindow">
+                        <n-icon>
+                          <OpenInNewOutlined />
+                        </n-icon>
+                      </n-float-button>
+                    </template>
+                    {{ t('common.open_in_new_window') }}
+                  </n-tooltip>
+                  <n-tooltip v-if="recommProcessGroups.length" :trigger="isMobile ? 'manual' : 'hover'" placement="left">
+                    <template #trigger>
+                      <n-float-button @click="handleCollapseOrUncollapseAllRecommGroupBlocks">
+                        <n-icon>
+                          <UnfoldMoreSharp v-if="recommGroupAllCollapsed" />
+                          <UnfoldLessSharp v-else />
+                        </n-icon>
+                      </n-float-button>
+                    </template>
+                    {{ recommGroupAllCollapsed ? t('common.expand_all') : t('common.fold_all') }}
+                  </n-tooltip>
+                  <n-tooltip :trigger="isMobile ? 'manual' : 'hover'" placement="left">
+                    <template #trigger>
+                      <n-float-button @click="handleRecommSettingButtonClick">
+                        <n-icon>
+                          <SettingsSharp />
+                        </n-icon>
+                      </n-float-button>
+                    </template>
+                    {{ t('common.setting') }}
+                  </n-tooltip>
+                </n-float-button-group>
+              </n-tab-pane>
+            </n-tabs>
+          </div>
+        </FoldableCard>
       </div>
 
       <n-float-button

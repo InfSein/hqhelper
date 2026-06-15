@@ -2503,7 +2503,11 @@
       "other_master_recipes": "秘籍：其他",
       "furnishing": "房屋",
       "collectable": "收藏品交易",
-      "other": "其他"
-    }
+      "other": "其他",
+      "common": "分级配方",
+      "special": "特殊配方",
+      "master": "秘籍配方"
+    },
+    "notebook": "制作笔记"
   }
 }
