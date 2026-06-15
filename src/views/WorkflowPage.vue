@@ -44,6 +44,7 @@ import { type SettingGroupKey } from '@/types'
 import { type UserConfigModel } from '@/types/config/user'
 import useConfig from '@/composables/useConfig'
 import ItemButton from '@/components/custom/item/ItemButton.vue'
+import ItemCell from '@/components/custom/item/ItemCell.vue'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
@@ -113,9 +114,6 @@ const updateHeights = () => {
     headerHeight.value = 0
   }
 }
-const handleUpdateHeights = () => {
-  setTimeout(updateHeights, 10)
-}
 onMounted(() => {
   updateHeights()
   window.addEventListener('resize', updateHeights)
@@ -124,7 +122,7 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', updateHeights)
 })
 const pageHeightVals = computed(() => {
-  const pageHeight = windowHeight.value - 320
+  const pageHeight = windowHeight.value - 272
   const contentHeight = pageHeight - headerHeight.value
   if (isMobile.value) {
     return {
@@ -137,7 +135,7 @@ const pageHeightVals = computed(() => {
     }
   } else {
     return {
-      notebookMenu: (contentHeight - 65) + 'px',
+      notebookMenu: (contentHeight - 10) + 'px',
       itemSelectTable: (contentHeight - 65) + 'px',
       statisticsBlock: (contentHeight / 2 - 45),
       statementsBlock: (contentHeight - 50) + 'px',
@@ -167,10 +165,9 @@ const handleFixWorkStateAfterWorkflowsManaged = () => {
 // #endregion
 
 // #region content(block swap)
-const currentView = ref<'AB' | 'BC'>('BC')
 const isSwitchingView = ref(false)
 
-watch(currentView, (newVal, oldVal) => {
+watch(() => workState.value.pageView, (newVal, oldVal) => {
   if (newVal !== oldVal) {
     isSwitchingView.value = true
     setTimeout(() => {
@@ -201,10 +198,10 @@ const handleWheel = (e: WheelEvent) => {
     }
 
     wheelLock = true
-    if (delta > 0 && currentView.value === 'AB') {
-      currentView.value = 'BC'
-    } else if (delta < 0 && currentView.value === 'BC') {
-      currentView.value = 'AB'
+    if (delta > 0 && workState.value.pageView === 'AB') {
+      workState.value.pageView = 'BC'
+    } else if (delta < 0 && workState.value.pageView === 'BC') {
+      workState.value.pageView = 'AB'
     }
     setTimeout(() => { wheelLock = false }, 400)
   }
@@ -212,7 +209,7 @@ const handleWheel = (e: WheelEvent) => {
 
 const sliderStyle = computed(() => {
   if (isMobile.value) return {}
-  const baseTranslate = currentView.value === 'BC' ? `calc(-100% + var(--select-card-width))` : `0px`
+  const baseTranslate = workState.value.pageView === 'BC' ? `calc(-100% + var(--select-card-width))` : `0px`
   return {
     transform: `translateX(${baseTranslate})`,
     transition: isSwitchingView.value ? 'transform 0.3s ease-in-out' : 'none'
@@ -225,11 +222,11 @@ interface NotebookGroup {
   job: number
   menus: {
     /** 分级配方 */
-    common: Record<number, NotebookMenu>
+    common: Record<`i_${number}`, NotebookMenu>
     /** 特殊配方 */
-    special: Record<number, NotebookMenu>
+    special: Record<`i_${number}`, NotebookMenu>
     /** 秘籍配方 */
-    master: Record<number, NotebookMenu>
+    master: Record<`i_${number}`, NotebookMenu>
   }
 }
 interface NotebookMenu {
@@ -262,38 +259,39 @@ const notebookGroups = computed(() => {
     if (recipe.srb) {
       const srbInfo = XivSrbMap[recipe.srb]
       const menu = group.menus.master
+      const srb = recipe.srb
+      const srbItem = getItemInfo(srb)
       if (srbInfo) {
         const id = srbInfo.id
-        menu[id] ??= { id, name: srbInfo[`name_${itemLanguage.value}`], contentGroups: {} }
-        menu[id].contentGroups[0] ??= { id: 0, items: [] }
-        menu[id].contentGroups[0].items.push(item)
+        menu[`i_${id}`] ??= { id, name: srbInfo[`name_${itemLanguage.value}`], contentGroups: {} }
+        menu[`i_${id}`].contentGroups[0] ??= { id: 0, name: srbItem[`name_${itemLanguage.value}`], items: [] }
+        menu[`i_${id}`].contentGroups[0].items.push(item)
       } else {
-        const id = 99; const srb = recipe.srb
-        const srbItem = getItemInfo(srb)
-        menu[id] ??= { id, name: t('recipe.notebookgroup.other_master_recipes'), contentGroups: {} }
-        menu[id].contentGroups[srb] ??= { id: srb, name: srbItem[`name_${itemLanguage.value}`], items: [] }
-        menu[id].contentGroups[srb].items.push(item)
+        const id = 99; 
+        menu[`i_${id}`] ??= { id, name: t('recipe.notebookgroup.other_master_recipes'), contentGroups: {} }
+        menu[`i_${id}`].contentGroups[srb] ??= { id: srb, name: srbItem[`name_${itemLanguage.value}`], items: [] }
+        menu[`i_${id}`].contentGroups[srb].items.push(item)
       }
     }
 
     // * 特殊
     else if (item.isFurnishing) {
       const id = 1
-      group.menus.special[id] ??= { id, name: t('recipe.notebookgroup.furnishing'), contentGroups: {} }
-      group.menus.special[id].contentGroups[0] ??= { id: 0, items: [] }
-      group.menus.special[id].contentGroups[0].items.push(item)
+      group.menus.special[`i_${id}`] ??= { id, name: t('recipe.notebookgroup.furnishing'), contentGroups: {} }
+      group.menus.special[`i_${id}`].contentGroups[0] ??= { id: 0, items: [] }
+      group.menus.special[`i_${id}`].contentGroups[0].items.push(item)
     } else if (item.collectable) {
       const id = 2
-      group.menus.special[id] ??= { id, name: t('recipe.notebookgroup.collectable'), contentGroups: {} }
-      group.menus.special[id].contentGroups[0] ??= { id: 0, items: [] }
-      group.menus.special[id].contentGroups[0].items.push(item)
+      group.menus.special[`i_${id}`] ??= { id, name: t('recipe.notebookgroup.collectable'), contentGroups: {} }
+      group.menus.special[`i_${id}`].contentGroups[0] ??= { id: 0, items: [] }
+      group.menus.special[`i_${id}`].contentGroups[0].items.push(item)
     } else if (
       item.uiTypeId === /*染剂*/55
     ) {
       const id = 99
-      group.menus.special[id] ??= { id, name: t('recipe.notebookgroup.other'), contentGroups: {} }
-      group.menus.special[id].contentGroups[0] ??= { id: 0, items: [] }
-      group.menus.special[id].contentGroups[0].items.push(item)
+      group.menus.special[`i_${id}`] ??= { id, name: t('recipe.notebookgroup.other'), contentGroups: {} }
+      group.menus.special[`i_${id}`].contentGroups[0] ??= { id: 0, items: [] }
+      group.menus.special[`i_${id}`].contentGroups[0].items.push(item)
     }
 
     // * 普通（分级）
@@ -301,31 +299,31 @@ const notebookGroups = computed(() => {
       const minLv = Math.floor(recipe.clv / 5) * 5 + (recipe.clv % 5 === 0 ? -4 : 1)
       const maxLv = minLv + 4
       const id = minLv
-      group.menus.common[id] ??= { id, name: `${minLv}-${maxLv}`, contentGroups: {} }
-      group.menus.common[id].contentGroups[0] ??= { id: 0, items: [] }
-      group.menus.common[id].contentGroups[0].items.push(item)
+      group.menus.common[`i_${id}`] ??= { id, name: `${minLv}-${maxLv}`, contentGroups: {} }
+      group.menus.common[`i_${id}`].contentGroups[0] ??= { id: 0, items: [] }
+      group.menus.common[`i_${id}`].contentGroups[0].items.push(item)
     }
   })
   Object.values(groups).forEach(group => {
-    Object.values(group.menus.common).forEach(menu => {
-      menu.contentGroups = sortRecord(menu.contentGroups)
-    })
-    Object.values(group.menus.special).forEach(menu => {
-      menu.contentGroups = sortRecord(menu.contentGroups)
-    })
-    Object.values(group.menus.master).forEach(menu => {
-      menu.contentGroups = sortRecord(menu.contentGroups)
-    })
     group.menus.common = sortRecord(group.menus.common, true)
     group.menus.special = sortRecord(group.menus.special)
     group.menus.master = sortRecord(group.menus.master, true)
   })
-  return sortRecord(groups)
+  return groups
 })
 
 const currGroup = computed(() => notebookGroups.value[workState.value.selectedJob])
 const currMenus = computed(() => currGroup.value?.menus?.[workState.value.selectedMenu] ?? {})
 const currContentGroups = computed(() => currMenus.value?.[workState.value.selectedContentGroup]?.contentGroups ?? {})
+
+const onNotebookMenuSwitched = () => {
+  const keys = Object.keys(currMenus.value) as `i_${number}`[]
+  if (!keys.length) return
+  const firstKey = keys[0]
+  workState.value.selectedContentGroup = firstKey
+}
+watch(() => workState.value.selectedMenu, onNotebookMenuSwitched)
+
 // #endregion
 
 // #region content-items
@@ -530,14 +528,10 @@ const setInventoryByStatementPrepared = () => {
 
 <template>
   <div id="main-container" class="wrapper">
-    <FoldableCard card-key="workflow-header" class="header-block" @onCardFoldStatusChanged="handleUpdateHeights">
-      <template #header>
-        <i class="xiv sync-invert"></i>	
-        <span class="card-title-text">{{ t('workflow.text.set_workflows') }}</span>
-      </template>
+    <n-card embedded :bordered="false" class="header-block">
       <div class="block" ref="headerBlock">
         <div class="action">
-          <p>{{ t('workflow.text.switch_workflows') }}</p>
+          <p><i class="xiv sync-invert"></i> {{ t('workflow.text.switch_workflows') }}</p>
           <div class="flex flex-wrap gap-1">
             <n-button
               v-for="(flow, flowIndex) in workState.workflows"
@@ -567,7 +561,7 @@ const setInventoryByStatementPrepared = () => {
           </div>
         </div>
       </div>
-    </FoldableCard>
+    </n-card>
     <div
       class="content-block"
       :style="{
@@ -600,13 +594,22 @@ const setInventoryByStatementPrepared = () => {
             </n-button>
           </div>
           <n-divider class="my-2!" />
-          <div class="w-full h-full flex">
-            <div class="w-40 pr-2" style="border-right: 1px solid var(--color-border);">
-              <n-tabs type="segment" animated v-model:value="workState.selectedMenu" class="mb-2">
+          <div class="w-full flex">
+            <div class="w-48 pr-2" style="border-right: 1px solid var(--color-border);">
+              <n-tabs
+                v-model:value="workState.selectedMenu"
+                type="segment" animated
+                class="mb-2"
+              >
                 <n-tab name="common">
                   <n-tooltip placement="top">
                     <template #trigger>
-                      <n-icon :size="18"><component :is="CommonGroupIcon" /></n-icon>
+                      <n-icon
+                        :size="18"
+                        :color="workState.selectedMenu === 'common' ? 'var(--color-primary)' : undefined"
+                      >
+                        <component :is="CommonGroupIcon" />
+                      </n-icon>
                     </template>
                     {{ t('recipe.notebookgroup.common') }}
                   </n-tooltip>
@@ -614,7 +617,12 @@ const setInventoryByStatementPrepared = () => {
                 <n-tab name="special">
                   <n-tooltip placement="top">
                     <template #trigger>
-                      <n-icon :size="18"><component :is="SpecialGroupIcon" /></n-icon>
+                      <n-icon
+                        :size="18"
+                        :color="workState.selectedMenu === 'special' ? 'var(--color-primary)' : undefined"
+                      >
+                        <component :is="SpecialGroupIcon" />
+                      </n-icon>
                     </template>
                     {{ t('recipe.notebookgroup.special') }}
                   </n-tooltip>
@@ -622,7 +630,12 @@ const setInventoryByStatementPrepared = () => {
                 <n-tab name="master">
                   <n-tooltip placement="top">
                     <template #trigger>
-                      <n-icon :size="18"><component :is="MasterGroupIcon" /></n-icon>
+                      <n-icon
+                        :size="18"
+                        :color="workState.selectedMenu === 'master' ? 'var(--color-primary)' : undefined"
+                      >
+                        <component :is="MasterGroupIcon" />
+                      </n-icon>
                     </template>
                     {{ t('recipe.notebookgroup.master') }}
                   </n-tooltip>
@@ -633,10 +646,10 @@ const setInventoryByStatementPrepared = () => {
                   v-for="menu in Object.values(currMenus)"
                   :key="menu.id + menu.name"
                   size="small"
-                  :tertiary="workState.selectedContentGroup === menu.id"
-                  :quaternary="workState.selectedContentGroup !== menu.id"
+                  :tertiary="workState.selectedContentGroup === `i_${menu.id}`"
+                  :quaternary="workState.selectedContentGroup !== `i_${menu.id}`"
                   class="justify-start"
-                  @click="workState.selectedContentGroup = menu.id"
+                  @click="workState.selectedContentGroup = `i_${menu.id}`"
                 >
                   {{ menu.name }}
                 </n-button>
@@ -644,21 +657,30 @@ const setInventoryByStatementPrepared = () => {
             </div>
             <div class="flex-1 pl-2 flex">
               <n-scrollbar trigger="none" :style="{ height: pageHeightVals.notebookMenu, flex: '1' }">
-                <div v-for="cg in currContentGroups" :key="cg.id" class="flex flex-col gap-1">
-                  <div v-if="cg.items">
+                <div v-for="cg in currContentGroups" :key="cg.id" class="flex flex-col gap-1 pr-3">
+                  <div v-if="cg.name" class="w-full rounded px-1" style="background-color: var(--color-border);">
+                    <i class="xiv e032"></i>
                     {{ cg.name }}
                   </div>
-                  <ItemButton
+                  <n-button
                     v-for="item in cg.items"
                     :key="item.id"
-                    :item-info="item"
-                    show-icon
-                    show-name
-                  />
+                    class="w-full justify-start px-2! py-1! h-auto!"
+                    :type="workState.selectedItem === item.id ? 'primary' : 'default'"
+                    @click="workState.selectedItem = item.id"
+                  >
+                    <ItemCell
+                      :item-info="item"
+                      :amount="0"
+                      show-item-details
+                    />
+                  </n-button>
                 </div>
               </n-scrollbar>
-              <div v-if="!isMobile" class="w-1/2 pl-2 ml-2" style="border-left: 1px solid var(--color-border);">
-                Item Detail
+              <div v-if="!isMobile" class="w-1/2 pl-2" style="border-left: 1px solid var(--color-border);">
+                <n-scrollbar trigger="none" :style="{ height: pageHeightVals.notebookMenu }">
+                  Recipe Detail
+                </n-scrollbar>
               </div>
             </div>
           </div>
@@ -833,24 +855,6 @@ const setInventoryByStatementPrepared = () => {
           </div>
         </FoldableCard>
       </div>
-
-      <n-float-button
-        v-if="!isMobile && currentView === 'BC'"
-        position="absolute"
-        style="left: 10px; top: 50%; transform: translateY(-50%); z-index: 10;"
-        @click="currentView = 'AB'"
-      >
-        <n-icon><ChevronLeftOutlined /></n-icon>
-      </n-float-button>
-
-      <n-float-button
-        v-if="!isMobile && currentView === 'AB'"
-        position="absolute"
-        style="right: 10px; top: 50%; transform: translateY(-50%); z-index: 10;"
-        @click="currentView = 'BC'"
-      >
-        <n-icon><ChevronRightOutlined /></n-icon>
-      </n-float-button>
     </div>
 
     <ModalWorkflowsManage
@@ -871,6 +875,24 @@ const setInventoryByStatementPrepared = () => {
     />
 
     <n-back-top />
+
+    <n-float-button
+      v-if="!isMobile && workState.pageView === 'BC'"
+      position="absolute"
+      style="left: 4px; top: calc(50% + 58px); transform: translateY(-50%); z-index: 10;"
+      @click="workState.pageView = 'AB'"
+    >
+      <n-icon><ChevronLeftOutlined /></n-icon>
+    </n-float-button>
+
+    <n-float-button
+      v-if="!isMobile && workState.pageView === 'AB'"
+      position="absolute"
+      style="right: 4px; top: calc(50% + 58px); transform: translateY(-50%); z-index: 10;"
+      @click="workState.pageView = 'BC'"
+    >
+      <n-icon><ChevronRightOutlined /></n-icon>
+    </n-float-button>
   </div>
 </template>
 

@@ -37,16 +37,20 @@ export const getDefaultWorkflow = () => deepCopy(defaultWorkflow)
 export const _VAR_MAX_WORKFLOW = 10;
 
 export interface WorkState {
+  pageView: "AB" | "BC";
   selectedJob: number;
   selectedMenu: "common" | "special" | "master";
-  selectedContentGroup: number;
+  selectedContentGroup: `i_${number}`;
+  selectedItem: number;
   currentWorkflow: number;
   workflows: Workflow[];
 }
 export const defaultWorkState: WorkState = {
+  pageView: 'BC',
   selectedJob: 8,
   selectedMenu: 'common',
-  selectedContentGroup: 0,
+  selectedContentGroup: 'i_0',
+  selectedItem: 0,
   currentWorkflow: 0,
   workflows: [getDefaultWorkflow()]
 }
