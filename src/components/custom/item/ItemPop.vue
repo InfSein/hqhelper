@@ -20,7 +20,7 @@ import { useStore } from '@/store'
 import type EorzeaTime from '@/utils/game.et.ts'
 import { handleGetPriceError } from '@/tools/error'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
-import UseConfig from '@/composables/useConfig.ts'
+import useConfig from '@/composables/useConfig.ts'
 import { getItemPriceInfo } from '@/tools/item/price.ts'
 import type { ItemPriceType } from '@/types/config/func.ts'
 import ItemInfoHeader from './ItemInfoHeader.vue'
@@ -35,7 +35,7 @@ const store = useStore()
 const NAIVE_UI_MESSAGE = useMessage()
 const {
   uiLanguage, itemLanguage,
-} = UseConfig()
+} = useConfig()
 
 interface ItemPopProps {
   /** 道具信息 */
