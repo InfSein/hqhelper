@@ -6,7 +6,7 @@ import {
   QueryStatsFilled,
   TableViewOutlined,
   AllInclusiveSharp,
-  OpenInNewOutlined,
+  OpenInNewOutlined, OpenInNewFilled,
   UnfoldMoreSharp, UnfoldLessSharp,
   ChevronLeftOutlined, ChevronRightOutlined,
   PlaylistAddOutlined,
@@ -339,6 +339,10 @@ const handleAddNotebookItem = (itemId: number) => {
   currentWorkflow.value.targetItems[itemId] ??= 0
   currentWorkflow.value.targetItems[itemId]++
   currentWorkflow.value.preparedItems.craftTarget[itemId] ??= 0
+}
+const simulateCraftCurrSelectedItem = () => {
+  if (!currSelectedItem.value?.craftInfo?.recipeId) return
+  window.open(`https://tnze.yyyy.games/#/recipe?recipeId=${currSelectedItem.value.craftInfo.recipeId}`)
 }
 // #endregion
 
@@ -708,8 +712,16 @@ const setInventoryByStatementPrepared = () => {
               </n-scrollbar>
               <div v-if="!isMobile" class="w-1/2 pl-2" style="border-left: 1px solid var(--color-border);">
                 <n-card v-if="currSelectedItem" size="small" :bordered="false" class="h-full" content-class="h-full flex flex-col">
-                  <ItemInfoHeader :item-info="currSelectedItem" class="mt-0!" />
-                  <n-divider class="my-1!" />
+                  <div class="flex items-baseline">
+                    <ItemInfoHeader :item-info="currSelectedItem" class="flex-1 mt-0!" />
+                    <n-button size="tiny" type="primary" @click="simulateCraftCurrSelectedItem">
+                      <template #icon>
+                        <n-icon :size="12"><OpenInNewFilled /></n-icon>
+                      </template>
+                      {{ t('common.simulate_craft') }}
+                    </n-button>
+                  </div>
+                  <div class="h-1" />
                   <div class="flex flex-wrap items-center gap-x-2 text-xs">
                     <div class="flex-1">
                       {{ t('item.text.recipe_detail', {
@@ -732,9 +744,9 @@ const setInventoryByStatementPrepared = () => {
                       {{ t('recipe.text.control_needs', [currSelectedItem.craftInfo?.thresholds?.control]) }}
                     </div>
                   </div>
-                  <div v-if="currSelectedItem.craftInfo?.masterRecipeId" class="flex items-center gap-0.5 text-xs">
+                  <div v-if="currSelectedItem.craftInfo?.masterRecipeId" class="flex items-center justify-end gap-0.5 text-xs">
                     {{ t('item.text.need_learn') }}
-                    <ItemSpan span-max-width="180px" :img-size="12" :item-info="getItemInfo(currSelectedItem.craftInfo.masterRecipeId)" />
+                    <ItemSpan span-max-width="180px" :img-size="12" :item-info="getItemInfo(currSelectedItem.craftInfo.masterRecipeId)" class="gap-0.5!" />
                   </div>
                   <n-divider class="my-1!" />
                   <div class="flex-1 flex items-center justify-center">todo...</div>
