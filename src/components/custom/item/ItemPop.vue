@@ -23,6 +23,7 @@ import { getItemInfo, type ItemInfo } from '@/tools/item'
 import UseConfig from '@/composables/useConfig.ts'
 import { getItemPriceInfo } from '@/tools/item/price.ts'
 import type { ItemPriceType } from '@/types/config/func.ts'
+import ItemInfoHeader from './ItemInfoHeader.vue'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
@@ -83,18 +84,6 @@ const getItemName = () => {
       return props.itemInfo.name_zh || '未翻译的物品'
     default:
       return props.itemInfo[`name_${itemLanguage.value}`]
-  }
-}
-/** 获取物品副名称(即其他语言的名称) */
-const getItemSubName = () => {
-  switch (itemLanguage.value) {
-    case 'ja':
-      return props.itemInfo.name_en
-    case 'en':
-      return props.itemInfo.name_ja
-    case 'zh':
-    default:
-      return props.itemInfo.name_ja + ' / ' + props.itemInfo.name_en
   }
 }
 const getItemDescriptions = () => {
@@ -464,22 +453,7 @@ const innerPopTrigger = computed(() => {
     </template>
     <div class="item-popover">
       <!-- 抬头 -->
-      <div class="base-info">
-        <XivFARImage
-          class="item-icon"
-          :src="itemInfo"
-          :size="35"
-        />
-        <div class="item-names">
-          <div class="main">
-            <span>{{ getItemName() }}</span>
-            <!-- <span class="extra-name" v-if="itemLanguage === 'zh' && itemInfo.usedZHTemp">
-              {{ t('common.temp_trans') }}
-            </span> -->
-          </div>
-          <div class="sub">{{ getItemSubName() }}</div>
-        </div>
-      </div>
+      <ItemInfoHeader :item-info="itemInfo" />
       <div class="item-level">{{ t('item.text.item_level_with_val', itemInfo.itemLevel) }}</div>
       <n-divider class="item-divider" />
       <div class="item-descriptions">
@@ -955,26 +929,7 @@ const innerPopTrigger = computed(() => {
 }
 .item-popover {
   user-select: text;
-  
-  .base-info {
-    display: flex;
-    align-items: flex-start;
-    gap: 5px;
-    margin-top: 2%;
 
-    .item-names {
-      .main span {
-        line-height: 1;
-        font-size: calc(var(--n-font-size) + 2px);
-      }
-      .sub,
-      .main span.extra-name {
-        line-height: 1;
-        font-size: calc(var(--n-font-size) - 2px);
-        color: var(--color-text-sub);
-      }
-    }
-  }
   .item-level {
     line-height: 1.2;
     margin-top: 3px;

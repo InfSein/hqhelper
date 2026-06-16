@@ -49,7 +49,7 @@ export const defaultWorkState: WorkState = {
   pageView: 'BC',
   selectedJob: 8,
   selectedMenu: 'common',
-  selectedContentGroup: 'i_0',
+  selectedContentGroup: 'i_96',
   selectedItem: 0,
   currentWorkflow: 0,
   workflows: [getDefaultWorkflow()]

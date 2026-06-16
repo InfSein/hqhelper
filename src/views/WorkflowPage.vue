@@ -8,7 +8,8 @@ import {
   AllInclusiveSharp,
   OpenInNewOutlined,
   UnfoldMoreSharp, UnfoldLessSharp,
-  ChevronLeftOutlined, ChevronRightOutlined
+  ChevronLeftOutlined, ChevronRightOutlined,
+  PlaylistAddOutlined,
 } from '@vicons/material'
 import {
   XivJobs,
@@ -20,11 +21,18 @@ import SpecialGroupIcon from '@/assets/icons/game-ui/recipe-notebook/group-speci
 import MasterGroupIcon from '@/assets/icons/game-ui/recipe-notebook/group-master.svg'
 import XivFARImage from '@/components/custom/general/XivFARImage.vue'
 import ImportItemListPop from '@/components/workflow/ImportItemListPop.vue'
+import ItemButton from '@/components/custom/item/ItemButton.vue'
+import ItemSpan from '@/components/custom/item/ItemSpan.vue'
+import ItemCell from '@/components/custom/item/ItemCell.vue'
+import ItemInfoHeader from '@/components/custom/item/ItemInfoHeader.vue'
 import ItemSelector from '@/components/custom/item/ItemSelector.vue'
 import ItemSelectTable from '@/components/custom/item/ItemSelectTable.vue'
 import CraftStatistics from '@/components/custom/general/CraftStatistics.vue'
 import CraftStatements from '@/components/custom/general/CraftStatements.vue'
 import CraftStatementsPro from '@/components/custom/general/CraftStatementsPro.vue'
+import CraftRecommProcess from '@/components/custom/general/CraftRecommProcess.vue'
+import TooltipButton from '@/components/custom/general/TooltipButton.vue'
+import ModalWorkflowsManage from '@/components/modals/ModalWorkflowsManage.vue'
 import ModalCostAndBenefit from '@/components/modals/ModalCostAndBenefit.vue'
 import ModalPreferences from '@/components/modals/ModalPreferences.vue'
 import { useStore } from '@/store'
@@ -36,15 +44,10 @@ import { deepCopy, sortRecord } from '@/tools'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
 import { useNbbCal } from '@/tools/use-nbb-cal'
 import { useFufuCal } from '@/tools/use-fufu-cal'
-import CraftRecommProcess from '@/components/custom/general/CraftRecommProcess.vue'
-import TooltipButton from '@/components/custom/general/TooltipButton.vue'
-import ModalWorkflowsManage from '@/components/modals/ModalWorkflowsManage.vue'
 import { useCostAndBenefit } from '@/composables/use-cost-and-benefit'
 import { type SettingGroupKey } from '@/types'
 import { type UserConfigModel } from '@/types/config/user'
 import useConfig from '@/composables/useConfig'
-import ItemButton from '@/components/custom/item/ItemButton.vue'
-import ItemCell from '@/components/custom/item/ItemCell.vue'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
@@ -315,6 +318,11 @@ const notebookGroups = computed(() => {
 const currGroup = computed(() => notebookGroups.value[workState.value.selectedJob])
 const currMenus = computed(() => currGroup.value?.menus?.[workState.value.selectedMenu] ?? {})
 const currContentGroups = computed(() => currMenus.value?.[workState.value.selectedContentGroup]?.contentGroups ?? {})
+const currSelectedItem = computed(() => {
+  const itemId = workState.value.selectedItem
+  if (!itemId) return null
+  return getItemInfo(itemId)
+})
 
 const onNotebookMenuSwitched = () => {
   const keys = Object.keys(currMenus.value) as `i_${number}`[]
@@ -324,6 +332,14 @@ const onNotebookMenuSwitched = () => {
 }
 watch(() => workState.value.selectedMenu, onNotebookMenuSwitched)
 
+const handleAddNotebookItem = (itemId: number) => {
+  if (!itemId) {
+    NAIVE_UI_MESSAGE.error('ITEM NOT FOUND'); return
+  }
+  currentWorkflow.value.targetItems[itemId] ??= 0
+  currentWorkflow.value.targetItems[itemId]++
+  currentWorkflow.value.preparedItems.craftTarget[itemId] ??= 0
+}
 // #endregion
 
 // #region content-items
@@ -662,25 +678,85 @@ const setInventoryByStatementPrepared = () => {
                     <i class="xiv e032"></i>
                     {{ cg.name }}
                   </div>
-                  <n-button
+                  <div
                     v-for="item in cg.items"
                     :key="item.id"
-                    class="w-full justify-start px-2! py-1! h-auto!"
-                    :type="workState.selectedItem === item.id ? 'primary' : 'default'"
-                    @click="workState.selectedItem = item.id"
+                    class="flex gap-1"
                   >
-                    <ItemCell
-                      :item-info="item"
-                      :amount="0"
-                      show-item-details
-                    />
-                  </n-button>
+                    <n-button
+                      :type="workState.selectedItem === item.id ? 'primary' : 'default'"
+                      class="flex-1 justify-start px-2! py-1! h-auto!"
+                      @click="workState.selectedItem = item.id"
+                    >
+                      <ItemCell
+                        :item-info="item"
+                        :amount="0"
+                        show-item-details
+                      />
+                    </n-button>
+                    <n-button
+                      type="info"
+                      :ghost="workState.selectedItem !== item.id"
+                      class="h-auto!"
+                      :title="t('workflow.text.add_item_to_curr_workflow.tip_1') + '\r\n' + t('workflow.text.add_item_to_curr_workflow.tip_2')"
+                      @click="handleAddNotebookItem(item.id)"
+                    >
+                      <n-icon :size="18"><PlaylistAddOutlined /></n-icon>
+                    </n-button>
+                  </div>
                 </div>
               </n-scrollbar>
               <div v-if="!isMobile" class="w-1/2 pl-2" style="border-left: 1px solid var(--color-border);">
-                <n-scrollbar trigger="none" :style="{ height: pageHeightVals.notebookMenu }">
-                  Recipe Detail
-                </n-scrollbar>
+                <n-card v-if="currSelectedItem" size="small" :bordered="false" class="h-full" content-class="h-full flex flex-col">
+                  <ItemInfoHeader :item-info="currSelectedItem" class="mt-0!" />
+                  <n-divider class="my-1!" />
+                  <div class="flex flex-wrap items-center gap-x-2 text-xs">
+                    <div class="flex-1">
+                      {{ t('item.text.recipe_detail', {
+                        dur: currSelectedItem.craftInfo?.durability,
+                        pro: currSelectedItem.craftInfo?.progress,
+                        qua: currSelectedItem.craftInfo?.quality
+                      }) }}
+                    </div>
+                    <div v-if="(currSelectedItem.craftInfo?.yields || 1) > 1" class="color-success">
+                      {{ t('item.text.yields_info', currSelectedItem.craftInfo?.yields) }}
+                    </div>
+                    <div v-if="!currSelectedItem.craftInfo?.qsable" class="color-error">{{ t('item.text.cannot_quick_synthesis') }}</div>
+                    <div v-if="!currSelectedItem.craftInfo?.hqable" class="color-error">{{ t('item.text.cannot_hq') }}</div>
+                  </div>
+                  <div class="flex flex-wrap items-center gap-x-4 text-xs">
+                    <div v-if="currSelectedItem.craftInfo?.thresholds?.craftsmanship">
+                      {{ t('recipe.text.craftsmanship_needs', [currSelectedItem.craftInfo?.thresholds?.craftsmanship]) }}
+                    </div>
+                    <div v-if="currSelectedItem.craftInfo?.thresholds?.control">
+                      {{ t('recipe.text.control_needs', [currSelectedItem.craftInfo?.thresholds?.control]) }}
+                    </div>
+                  </div>
+                  <div v-if="currSelectedItem.craftInfo?.masterRecipeId" class="flex items-center gap-0.5 text-xs">
+                    {{ t('item.text.need_learn') }}
+                    <ItemSpan span-max-width="180px" :img-size="12" :item-info="getItemInfo(currSelectedItem.craftInfo.masterRecipeId)" />
+                  </div>
+                  <n-divider class="my-1!" />
+                  <div class="flex-1 flex items-center justify-center">todo...</div>
+                  <div class="flex justify-end gap-1">
+                    <TooltipButton
+                      type="primary"
+                      :ghost="workState.selectedItem !== currSelectedItem.id"
+                      :tip="[t('workflow.text.add_item_to_curr_workflow.tip_1'), t('workflow.text.add_item_to_curr_workflow.tip_2')]"
+                      @click="handleAddNotebookItem(currSelectedItem.id)"
+                    >
+                      <template #icon>
+                        <n-icon :size="18"><PlaylistAddOutlined /></n-icon>
+                      </template>
+                      {{ t('workflow.text.join_in_workflow') }}
+                    </TooltipButton>
+                  </div>
+                </n-card>
+                <div v-else class="h-full flex items-center justify-center">
+                  <n-empty>
+                    {{ t('workflow.text.notebook_item_not_selected') }}
+                  </n-empty>
+                </div>
               </div>
             </div>
           </div>

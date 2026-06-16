@@ -2491,7 +2491,12 @@
       "workflow_name": "工作流名称",
       "workflow_name_default_info": "如果没有为工作流设置名称，则按顺序自动显示为「工作流1~{maxlen}」。",
       "workflow_name_reorder_on_deleted": "删除某一工作流时，其后的所有未命名工作流将重新编号。",
-      "workflow_with_index": "工作流{index}"
+      "workflow_with_index": "工作流{index}",
+      "add_item_to_curr_workflow": {
+        "tip_1": "将该物品添加到当前工作流",
+        "tip_2": "如果已经添加过该物品，则会增加数量"
+      },
+      "notebook_item_not_selected": "请先选择物品"
     },
     "tooltip": {
       "set_inventory_by_prepared": "将背包库存的数量设置为报表中的“已有”数量。",
@@ -2508,6 +2513,10 @@
       "special": "特殊配方",
       "master": "秘籍配方"
     },
-    "notebook": "制作笔记"
+    "notebook": "制作笔记",
+    "text": {
+      "craftsmanship_needs": "需要作业精度达到{0}",
+      "control_needs": "需要加工精度达到{0}"
+    }
   }
 }
