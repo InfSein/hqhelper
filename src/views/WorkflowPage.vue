@@ -48,6 +48,7 @@ import { useCostAndBenefit } from '@/composables/use-cost-and-benefit'
 import { type SettingGroupKey } from '@/types'
 import { type UserConfigModel } from '@/types/config/user'
 import useConfig from '@/composables/useConfig'
+import ItemRecipeTree from '@/components/custom/item/ItemRecipeTree.vue'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
@@ -714,12 +715,6 @@ const setInventoryByStatementPrepared = () => {
                 <n-card v-if="currSelectedItem" size="small" :bordered="false" class="h-full" content-class="h-full flex flex-col">
                   <div class="flex items-baseline">
                     <ItemInfoHeader :item-info="currSelectedItem" class="flex-1 mt-0!" />
-                    <n-button size="tiny" type="primary" @click="simulateCraftCurrSelectedItem">
-                      <template #icon>
-                        <n-icon :size="12"><OpenInNewFilled /></n-icon>
-                      </template>
-                      {{ t('common.simulate_craft') }}
-                    </n-button>
                   </div>
                   <div class="h-1" />
                   <div class="flex flex-wrap items-center gap-x-2 text-xs">
@@ -749,8 +744,16 @@ const setInventoryByStatementPrepared = () => {
                     <ItemSpan span-max-width="180px" :img-size="12" :item-info="getItemInfo(currSelectedItem.craftInfo.masterRecipeId)" class="gap-0.5!" />
                   </div>
                   <n-divider class="my-1!" />
-                  <div class="flex-1 flex items-center justify-center">todo...</div>
-                  <div class="flex justify-end gap-1">
+                  <div class="flex-1">
+                    <ItemRecipeTree :level="0" :item="currSelectedItem" :amount="1" />
+                  </div>
+                  <div class="flex justify-end gap-2">
+                    <n-button @click="simulateCraftCurrSelectedItem">
+                      <template #icon>
+                        <n-icon :size="18"><OpenInNewFilled /></n-icon>
+                      </template>
+                      {{ t('common.simulate_craft') }}
+                    </n-button>
                     <TooltipButton
                       type="primary"
                       :ghost="workState.selectedItem !== currSelectedItem.id"
