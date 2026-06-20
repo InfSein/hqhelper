@@ -18,9 +18,6 @@ const itemCraftRequires = computed(() => {
     id: number;
     count: number;
   }[] = []
-  if (store.userConfig.item_pop_craft_show_crystals) {
-    requires.push(...props.item.craftRequireCrystals)
-  }
   requires.push(...props.item.craftRequires)
   return requires
 })
@@ -34,11 +31,16 @@ const getPrefChar = (index: number, total: number) => {
 </script>
 
 <template>
-  <div class="bordered" :class="level === 1 ? 'irt-container py-0.5' : ''">
+  <div class="bordered" :class="level === 1 ? 'irt-container py-0.5 px-1' : ''">
     <ItemSpan v-if="level !== 0" :item-info="item" :amount="amount" show-amount />
     <div v-if="item.craftRequires?.length">
-      <div v-for="(require, index) in itemCraftRequires" :key="`cr-${item.id}-${index}`" class="relative" :class="level ">
-        <div v-if="level !== 0" class="absolute left-0 top-0 w-6 text-center select-none">
+      <div
+        v-for="(require, index) in itemCraftRequires"
+        :key="`cr-${item.id}-${index}`"
+        class="relative"
+        :class="level < 1 ? '' : 'pl-8'"
+      >
+        <div v-if="level !== 0" class="absolute left-0 top-0 w-8 text-center select-none">
           {{ getPrefChar(index, itemCraftRequires.length) }}
         </div>
         <ItemRecipeTree :item="getItemInfo(require.id)" :amount="require.count * amount" :level="level + 1" />

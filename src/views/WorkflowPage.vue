@@ -755,7 +755,7 @@ const setInventoryByStatementPrepared = () => {
                       {{ t('common.simulate_craft') }}
                     </n-button>
                     <TooltipButton
-                      type="primary"
+                      type="info"
                       :ghost="workState.selectedItem !== currSelectedItem.id"
                       :tip="[t('workflow.text.add_item_to_curr_workflow.tip_1'), t('workflow.text.add_item_to_curr_workflow.tip_2')]"
                       @click="handleAddNotebookItem(currSelectedItem.id)"
