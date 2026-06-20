@@ -2,9 +2,6 @@
 import { computed } from 'vue'
 import ItemSpan from './ItemSpan.vue'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
-import { useStore } from '@/store'
-
-const store = useStore()
 
 interface ItemRecipeTreeProps {
   item: ItemInfo
@@ -19,31 +16,45 @@ const itemCraftRequires = computed(() => {
     count: number;
   }[] = []
   requires.push(...props.item.craftRequires)
-  return requires
+  return props.item.craftRequires.map(require => {
+    const requireItem = getItemInfo(require.id)
+    const targetItemYield = props.item?.craftInfo?.yields ?? 1
+    const craftRounds = Math.ceil(props.amount / targetItemYield)
+    return {
+      ...require,
+      targetItem: props.item,
+      requireItem: requireItem,
+      needAmount: require.count * craftRounds,
+    }
+  })
 })
-
-const getPrefChar = (index: number, total: number) => {
-  if (index === total - 1) {
-    return '└─'
-  }
-  return '├─'
-}
 </script>
 
 <template>
   <div class="bordered" :class="level === 1 ? 'irt-container py-0.5 px-1' : ''">
     <ItemSpan v-if="level !== 0" :item-info="item" :amount="amount" show-amount />
-    <div v-if="item.craftRequires?.length">
+    <div v-if="item.craftRequires?.length" class="relative">
       <div
         v-for="(require, index) in itemCraftRequires"
         :key="`cr-${item.id}-${index}`"
         class="relative"
-        :class="level < 1 ? '' : 'pl-8'"
       >
-        <div v-if="level !== 0" class="absolute left-0 top-0 w-8 text-center select-none">
-          {{ getPrefChar(index, itemCraftRequires.length) }}
+        <!-- 树枝线条 -->
+        <template v-if="level !== 0">
+          <!-- 垂直线条 -->
+          <div 
+            class="absolute left-2 top-0 border-l border-(--color-text-sub) opacity-50"
+            :class="index === itemCraftRequires.length - 1 ? 'h-2.75' : 'bottom-0'"
+          ></div>
+          <!-- 水平线条 -->
+          <div 
+            class="absolute left-2 top-2.75 w-3 border-t border-(--color-text-sub) opacity-50"
+          ></div>
+        </template>
+
+        <div :class="level !== 0 ? 'pl-6' : ''">
+          <ItemRecipeTree :item="require.requireItem" :amount="require.needAmount" :level="level + 1" />
         </div>
-        <ItemRecipeTree :item="getItemInfo(require.id)" :amount="require.count * amount" :level="level + 1" />
       </div>
     </div>
   </div>

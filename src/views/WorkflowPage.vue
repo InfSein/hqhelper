@@ -131,6 +131,7 @@ const pageHeightVals = computed(() => {
   if (isMobile.value) {
     return {
       notebookMenu: 'auto',
+      notebookItemContent: 'auto',
       itemSelectTable: 'auto',
       statisticsBlock: undefined,
       statementsBlock: 'auto',
@@ -140,6 +141,7 @@ const pageHeightVals = computed(() => {
   } else {
     return {
       notebookMenu: (contentHeight - 10) + 'px',
+      notebookItemContent: (contentHeight - 190) + 'px',
       itemSelectTable: (contentHeight - 65) + 'px',
       statisticsBlock: (contentHeight / 2 - 45),
       statementsBlock: (contentHeight - 50) + 'px',
@@ -679,7 +681,7 @@ const setInventoryByStatementPrepared = () => {
             <div class="flex-1 pl-2 flex">
               <n-scrollbar trigger="none" :style="{ height: pageHeightVals.notebookMenu, flex: '1' }">
                 <div v-for="cg in currContentGroups" :key="cg.id" class="flex flex-col gap-1 pr-3">
-                  <div v-if="cg.name" class="w-full rounded px-1" style="background-color: var(--color-border);">
+                  <div v-if="cg.name" class="sticky top-0 z-10 w-full rounded px-1" style="background-color: var(--color-border);">
                     <i class="xiv e032"></i>
                     {{ cg.name }}
                   </div>
@@ -744,9 +746,11 @@ const setInventoryByStatementPrepared = () => {
                     <ItemSpan span-max-width="180px" :img-size="12" :item-info="getItemInfo(currSelectedItem.craftInfo.masterRecipeId)" class="gap-0.5!" />
                   </div>
                   <n-divider class="my-1!" />
-                  <div class="flex-1">
+                  <div class="font-bold">配方需求</div>
+                  <n-scrollbar :style="{ height: pageHeightVals.notebookItemContent }">
                     <ItemRecipeTree :level="0" :item="currSelectedItem" :amount="1" />
-                  </div>
+                  </n-scrollbar>
+                  <n-divider class="my-1!" />
                   <div class="flex justify-end gap-2">
                     <n-button @click="simulateCraftCurrSelectedItem">
                       <template #icon>

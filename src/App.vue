@@ -435,6 +435,13 @@ const naiveUIThemeOverrides = computed(() : GlobalThemeOverrides => {
           </n-layout>
 
           <AccountView v-if="!isMobile && appMode !== 'overlay'" trigger-class="account-view" />
+
+          <div
+            v-if="AppStatus.IsDev && !isMobile"
+            class="absolute bottom-1 left-2 text-xs text-(--color-text-sub) select-none"
+          >
+            当前为开发中版本，不代表最终效果。
+          </div>
         </n-layout>
 
         <Dialog ref="dialogRef" />
