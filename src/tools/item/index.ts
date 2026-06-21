@@ -92,6 +92,29 @@ export const getItemNameRevertMap = () => {
   return map
 }
 
+/**
+ * 对给定物品数组进行排序
+ * @param items 要排序的物品数组
+ * @param by 排序方式
+ *  - recipeOrder: 按照 `游戏内制作笔记` 的优先级进行排序
+ *  - itemId: 按照 `id` 进行升序排序
+ * @returns 排序后的物品数组
+ */
+export const sortItems = (items: ItemInfo[], by: "recipeOrder" | "itemId") => {
+  if (by === 'recipeOrder') {
+    return items.sort((a, b) => 
+      (a.craftInfo.craftLevel - b.craftInfo.craftLevel) ||
+      (a.craftInfo.starCount - b.craftInfo.starCount) ||
+      (a.craftInfo.rLv - b.craftInfo.rLv) ||
+      (a.uiTypeOrder - b.uiTypeOrder) ||
+      (a.sortOrder - b.sortOrder) ||
+      (a.id - b.id)
+    )
+  } else {
+    return items.sort((a, b) => a.id - b.id)
+  }
+}
+
 export interface ItemInfo {
   id: number
   /**

@@ -41,7 +41,7 @@ import {
   getDefaultWorkflow, fixWorkState, _VAR_MAX_WORKFLOW
 } from '@/types/workstate/workflow'
 import { deepCopy, sortRecord } from '@/tools'
-import { getItemInfo, type ItemInfo } from '@/tools/item'
+import { getItemInfo, sortItems, type ItemInfo } from '@/tools/item'
 import { useNbbCal } from '@/tools/use-nbb-cal'
 import { useFufuCal } from '@/tools/use-fufu-cal'
 import { useCostAndBenefit } from '@/composables/use-cost-and-benefit'
@@ -141,7 +141,7 @@ const pageHeightVals = computed(() => {
   } else {
     return {
       notebookMenu: (contentHeight - 10) + 'px',
-      notebookItemContent: (contentHeight - 190) + 'px',
+      notebookItemContent: (contentHeight - 194) + 'px',
       itemSelectTable: (contentHeight - 65) + 'px',
       statisticsBlock: (contentHeight / 2 - 45),
       statementsBlock: (contentHeight - 50) + 'px',
@@ -311,9 +311,26 @@ const notebookGroups = computed(() => {
     }
   })
   Object.values(groups).forEach(group => {
+    // * 对菜单项进行排序
     group.menus.common = sortRecord(group.menus.common, true)
     group.menus.special = sortRecord(group.menus.special)
     group.menus.master = sortRecord(group.menus.master, true)
+    // * 对菜单中的物品进行排序
+    Object.values(group.menus.common).forEach(menu => {
+      Object.values(menu.contentGroups).forEach(contentGroup => {
+        sortItems(contentGroup.items, 'recipeOrder')
+      })
+    })
+    Object.values(group.menus.special).forEach(menu => {
+      Object.values(menu.contentGroups).forEach(contentGroup => {
+        sortItems(contentGroup.items, 'recipeOrder')
+      })
+    })
+    Object.values(group.menus.master).forEach(menu => {
+      Object.values(menu.contentGroups).forEach(contentGroup => {
+        sortItems(contentGroup.items, 'recipeOrder')
+      })
+    })
   })
   return groups
 })

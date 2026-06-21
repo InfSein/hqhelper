@@ -1,7 +1,7 @@
 import { XivJobs } from '@/assets/data'
 import type { RecommItemGroup } from '@/types/item'
 import { deepCopy } from '.'
-import { getItemInfo, type ItemInfo } from "./item"
+import { getItemInfo, sortItems, type ItemInfo } from "./item"
 import { useNbbCal } from "./use-nbb-cal"
 import { useStore } from '@/store'
 
@@ -382,14 +382,7 @@ export function useFufuCal() {
         const items = craftings[jobId]
         // NOTE: 'recipeOrderSearch' is the same as 'itemId'.
         if (processes_craftable_item_sortby === 'recipeOrder') {
-          items.sort((a, b) => 
-            (a.craftInfo.craftLevel - b.craftInfo.craftLevel) ||
-            (a.craftInfo.starCount - b.craftInfo.starCount) ||
-            (a.craftInfo.rLv - b.craftInfo.rLv) ||
-            (a.uiTypeOrder - b.uiTypeOrder) ||
-            (a.sortOrder - b.sortOrder) ||
-            (a.id - b.id)
-          )
+          sortItems(items, 'recipeOrder')
         }
         groups.push({
           type: `craft-${type}`,
