@@ -21,7 +21,6 @@ import SpecialGroupIcon from '@/assets/icons/game-ui/recipe-notebook/group-speci
 import MasterGroupIcon from '@/assets/icons/game-ui/recipe-notebook/group-master.svg'
 import XivFARImage from '@/components/custom/general/XivFARImage.vue'
 import ImportItemListPop from '@/components/workflow/ImportItemListPop.vue'
-import ItemButton from '@/components/custom/item/ItemButton.vue'
 import ItemSpan from '@/components/custom/item/ItemSpan.vue'
 import ItemCell from '@/components/custom/item/ItemCell.vue'
 import ItemInfoHeader from '@/components/custom/item/ItemInfoHeader.vue'
