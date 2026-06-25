@@ -602,19 +602,22 @@ export const getItemContexts = (
           label: t('common.name_zh'),
           key: 'copy-zh',
           show: itemLanguage !== 'zh',
-          icon: renderIcon(LanguageOutlined)
+          icon: renderIcon(LanguageOutlined),
+          click: () => handleCopy(itemInfo.name_zh)
         },
         {
           label: t('common.name_ja'),
           key: 'copy-ja',
           show: itemLanguage !== 'ja',
-          icon: renderIcon(LanguageOutlined)
+          icon: renderIcon(LanguageOutlined),
+          click: () => handleCopy(itemInfo.name_ja)
         },
         {
           label: t('common.name_en'),
           key: 'copy-en',
           show: itemLanguage !== 'en',
-          icon: renderIcon(LanguageOutlined)
+          icon: renderIcon(LanguageOutlined),
+          click: () => handleCopy(itemInfo.name_en)
         }
       ]
     },
@@ -713,18 +716,5 @@ export const getItemContexts = (
     }
   }
 
-  const handleKeyEvent = async (key: string | number, option: any) => {
-    switch (key) {
-      case 'copy-zh':
-        await handleCopy(itemInfo.name_zh); break
-      case 'copy-ja':
-        await handleCopy(itemInfo.name_ja); break
-      case 'copy-en':
-        await handleCopy(itemInfo.name_en); break
-      default:
-        console.log('[开发提示] 未分配点击事件', key, option)
-    }
-  }
-
-  return { options, handleKeyEvent }
+  return { options }
 }

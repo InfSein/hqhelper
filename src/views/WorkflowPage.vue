@@ -47,6 +47,7 @@ import { useCostAndBenefit } from '@/composables/use-cost-and-benefit'
 import { type SettingGroupKey } from '@/types'
 import { type UserConfigModel } from '@/types/config/user'
 import useConfig from '@/composables/useConfig'
+import { useItemContextMenu } from '@/composables/useItemContextMenu'
 import ItemRecipeTree from '@/components/custom/item/ItemRecipeTree.vue'
 
 const t = inject<(message: string, args?: any) => string>('t')!
@@ -60,6 +61,29 @@ const { calItems } = useNbbCal()
 const { getStatementData, getProStatementData, calRecommProcessData, calRecommProcessGroups } = useFufuCal()
 
 const workState = ref(fixWorkState())
+
+// #region Notebook 右键菜单
+// 共享单例策略：v-for 内所有 item 共用同一个 dropdown，右键时更新 activeContextItem
+const activeContextItem = ref<ItemInfo | null>(null)
+const {
+  showDropdown: notebookDropdownShow,
+  dropdownX: notebookDropdownX,
+  dropdownY: notebookDropdownY,
+  dropdownOptions: notebookDropdownOptions,
+  handleContextMenu: _notebookHandleContextMenu,
+  handleSelect: notebookHandleSelect,
+  onClickOutside: notebookOnClickOutside,
+} = useItemContextMenu(
+  () => activeContextItem.value ?? ({} as ItemInfo),
+  () => itemLanguage.value,
+  t
+)
+/** 右键某个 notebook item 时，先记录目标再弹出菜单 */
+const handleNotebookItemContextMenu = (e: MouseEvent, item: ItemInfo) => {
+  activeContextItem.value = item
+  _notebookHandleContextMenu(e)
+}
+// #endregion
 
 const currentWorkflow = computed(() => {
   return workState.value.workflows[workState.value.currentWorkflow]
@@ -710,6 +734,7 @@ const setInventoryByStatementPrepared = () => {
                       :type="workState.selectedItem === item.id ? 'primary' : 'default'"
                       class="flex-1 justify-start px-2! py-1! h-auto!"
                       @click="workState.selectedItem = item.id"
+                      @contextmenu="handleNotebookItemContextMenu($event, item)"
                     >
                       <ItemCell
                         :item-info="item"
@@ -729,6 +754,18 @@ const setInventoryByStatementPrepared = () => {
                   </div>
                 </div>
               </n-scrollbar>
+              <!-- Notebook item 右键菜单（共享单例） -->
+              <n-dropdown
+                size="small"
+                placement="bottom-start"
+                trigger="manual"
+                :x="notebookDropdownX"
+                :y="notebookDropdownY"
+                :options="notebookDropdownOptions"
+                :show="notebookDropdownShow"
+                :on-clickoutside="notebookOnClickOutside"
+                @select="notebookHandleSelect"
+              />
               <div v-if="!isMobile" class="w-1/2 pl-2" style="border-left: 1px solid var(--color-border);">
                 <n-card v-if="currSelectedItem" size="small" :bordered="false" class="h-full" content-class="h-full flex flex-col">
                   <div class="flex items-baseline">
