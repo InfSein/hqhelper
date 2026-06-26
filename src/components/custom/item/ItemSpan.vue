@@ -99,8 +99,6 @@ const {
   handleTouchEnd,
 } = useItemContextMenu(
   () => props.itemInfo,
-  () => itemLanguage.value,
-  t,
   () => props.containerId
 )
 

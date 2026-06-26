@@ -62,29 +62,6 @@ const { getStatementData, getProStatementData, calRecommProcessData, calRecommPr
 
 const workState = ref(fixWorkState())
 
-// #region Notebook 右键菜单
-// 共享单例策略：v-for 内所有 item 共用同一个 dropdown，右键时更新 activeContextItem
-const activeContextItem = ref<ItemInfo | null>(null)
-const {
-  showDropdown: notebookDropdownShow,
-  dropdownX: notebookDropdownX,
-  dropdownY: notebookDropdownY,
-  dropdownOptions: notebookDropdownOptions,
-  handleContextMenu: _notebookHandleContextMenu,
-  handleSelect: notebookHandleSelect,
-  onClickOutside: notebookOnClickOutside,
-} = useItemContextMenu(
-  () => activeContextItem.value ?? ({} as ItemInfo),
-  () => itemLanguage.value,
-  t
-)
-/** 右键某个 notebook item 时，先记录目标再弹出菜单 */
-const handleNotebookItemContextMenu = (e: MouseEvent, item: ItemInfo) => {
-  activeContextItem.value = item
-  _notebookHandleContextMenu(e)
-}
-// #endregion
-
 const currentWorkflow = computed(() => {
   return workState.value.workflows[workState.value.currentWorkflow]
 })
@@ -387,6 +364,7 @@ const simulateCraftCurrSelectedItem = () => {
   if (!currSelectedItem.value?.craftInfo?.recipeId) return
   window.open(`https://tnze.yyyy.games/#/recipe?recipeId=${currSelectedItem.value.craftInfo.recipeId}`)
 }
+
 // #endregion
 
 // #region content-items
@@ -587,6 +565,25 @@ const setInventoryByStatementPrepared = () => {
   }
 }
 // #endregion
+
+// #region item context
+const activeContextItem = ref<ItemInfo | null>(null)
+const {
+  showDropdown: notebookDropdownShow,
+  dropdownX: notebookDropdownX,
+  dropdownY: notebookDropdownY,
+  dropdownOptions: notebookDropdownOptions,
+  handleContextMenu: _notebookHandleContextMenu,
+  handleSelect: notebookHandleSelect,
+  onClickOutside: notebookOnClickOutside,
+} = useItemContextMenu(
+  () => activeContextItem.value ?? ({} as ItemInfo),
+)
+const handleNotebookItemContextMenu = (e: MouseEvent, item: ItemInfo) => {
+  activeContextItem.value = item
+  _notebookHandleContextMenu(e)
+}
+// #endregion
 </script>
 
 <template>
@@ -740,6 +737,7 @@ const setInventoryByStatementPrepared = () => {
                         :item-info="item"
                         :amount="0"
                         show-item-details
+                        hide-pop-icon
                       />
                     </n-button>
                     <n-button
@@ -754,7 +752,6 @@ const setInventoryByStatementPrepared = () => {
                   </div>
                 </div>
               </n-scrollbar>
-              <!-- Notebook item 右键菜单（共享单例） -->
               <n-dropdown
                 size="small"
                 placement="bottom-start"
@@ -800,7 +797,7 @@ const setInventoryByStatementPrepared = () => {
                   </div>
                   <n-divider class="my-1!" />
                   <div class="font-bold">配方需求</div>
-                  <n-scrollbar :style="{ height: pageHeightVals.notebookItemContent }">
+                  <n-scrollbar class="ml-1" :style="{ height: pageHeightVals.notebookItemContent }">
                     <ItemRecipeTree :level="0" :item="currSelectedItem" :amount="1" />
                   </n-scrollbar>
                   <n-divider class="my-1!" />

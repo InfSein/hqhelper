@@ -7,7 +7,7 @@
 import XivFARImage from '../general/XivFARImage.vue'
 import ItemPop from './ItemPop.vue'
 import { type ItemInfo } from '@/tools/item'
-import UseConfig from '@/composables/useConfig.ts'
+import useConfig from '@/composables/useConfig.ts'
 import { useItemContextMenu } from '@/composables/useItemContextMenu'
 import { XivJobs } from '@/assets/data'
 import { useStore } from '@/store'
@@ -19,7 +19,7 @@ const store = useStore()
 
 const {
   itemLanguage,
-} = UseConfig()
+} = useConfig()
 
 interface ItemButtonProps {
   /** 道具信息 */
@@ -110,8 +110,6 @@ const {
   handleTouchEnd,
 } = useItemContextMenu(
   () => props.itemInfo,
-  () => itemLanguage.value,
-  t,
   () => props.containerId
 )
 

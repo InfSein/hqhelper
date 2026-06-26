@@ -2,22 +2,23 @@ import { ref, computed, nextTick, inject } from 'vue'
 import { useMessage } from 'naive-ui'
 import { CopyToClipboard } from '@/tools'
 import { getItemContexts, type ItemInfo } from '@/tools/item'
+import useConfig from '@/composables/useConfig.ts'
 
 /**
  * 封装道具右键菜单的通用逻辑。
  *
  * @param getItemInfo       获取当前 ItemInfo 的 getter（响应式追踪）
- * @param getItemLanguage   获取当前物品语言的 getter
- * @param t                 i18n 翻译函数
  * @param containerId       复制时用到的容器 ID（可选，字符串或 getter）
  */
 export function useItemContextMenu(
   getItemInfo: () => ItemInfo,
-  getItemLanguage: () => string,
-  t: (message: string, args?: any) => string,
   containerId?: string | (() => string | undefined)
 ) {
+  const {
+    itemLanguage,
+  } = useConfig()
   const NAIVE_UI_MESSAGE = useMessage()
+  const t = inject<(message: string, args?: any) => string>('t')!
   const joinItemsToWorkflow = inject<(items: Record<number, number>) => void>('joinItemsToWorkflow')!
 
   // ------------------------------------------------------------------ //
@@ -50,7 +51,7 @@ export function useItemContextMenu(
   const dropdownOptions = computed(() =>
     getItemContexts(
       getItemInfo(),
-      getItemLanguage() as 'zh' | 'en' | 'ja',
+      itemLanguage.value,
       t,
       handleCopy,
       joinItemsToWorkflow
