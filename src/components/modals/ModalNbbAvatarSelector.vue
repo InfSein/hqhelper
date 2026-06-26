@@ -3,7 +3,7 @@ import {
   FaceRetouchingNaturalFilled, DoneOutlined,
 } from '@vicons/material'
 import XivFARImage from '../custom/general/XivFARImage.vue'
-import { getImgCdnUrl } from '@/tools/item'
+import { getImgCdnUrl } from '@/tools/game'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 
