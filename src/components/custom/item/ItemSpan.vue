@@ -4,17 +4,15 @@ import {
 } from '@vicons/material'
 import ItemPop from './ItemPop.vue'
 import XivFARImage from '../general/XivFARImage.vue'
-import { CopyToClipboard } from '@/tools'
-import { getItemContexts, type ItemInfo } from '@/tools/item'
+import { type ItemInfo } from '@/tools/item'
+import { useItemContextMenu } from '@/composables/useItemContextMenu'
 import UseConfig from '@/composables/useConfig.ts'
 import { useStore } from '@/store'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const joinItemsToWorkflow = inject<(items: Record<number, number>) => void>('joinItemsToWorkflow')!
 
 const store = useStore()
-const NAIVE_UI_MESSAGE = useMessage()
 const {
   itemLanguage,
 } = UseConfig()
@@ -87,70 +85,22 @@ const itemAmount = computed(() => {
 
 // #region 右键菜单相关
 
-const showDropdownRef = ref(false)
-const xRef = ref(0)
-const yRef = ref(0)
-
-const handleCopy = async (content: string, successMessage?: string) => {
-  let container : HTMLElement | undefined | null
-  if (props.containerId) {
-    container = document.getElementById(props.containerId)
-  }
-  const response = await CopyToClipboard(content, container)
-  if (response) {
-    NAIVE_UI_MESSAGE.error(t('common.message.copy_failed_unexpected_error'))
-  } else {
-    NAIVE_UI_MESSAGE.success(successMessage ?? t('common.message.copy_succeed'))
-  }
-}
-const { options, handleKeyEvent } = getItemContexts(props.itemInfo, itemLanguage.value, t, handleCopy, joinItemsToWorkflow)
-const handleContextMenu = (e: MouseEvent) => {
-  e.preventDefault()
-  showDropdownRef.value = false
-  nextTick().then(() => {
-    showDropdownRef.value = true
-    xRef.value = e.clientX
-    yRef.value = e.clientY
-  })
-}
-const handleSelect = async (key: string | number, option: any) => {
-  showDropdownRef.value = false
-  if (option?.click) {
-    option.click()
-  } else {
-    handleKeyEvent(key, option)
-  }
-}
-const onClickoutside = () => {
-  showDropdownRef.value = false
-}
-
-// * 移动端通过长按来弹出右键菜单
-// 注：这些事件也只会在移动端触发，不用担心在电脑端的兼容性
-const touchTimeoutEvent = ref<number | undefined>(undefined)
-const handleItemButtonTouchStart = (e: TouchEvent) => {
-  touchTimeoutEvent.value = setTimeout(() => {
-    if (e?.touches?.length) {
-      xRef.value = e.touches[0].clientX
-      yRef.value = e.touches[0].clientY
-      showDropdownRef.value = true
-    } else {
-      console.error('No touches found in handleItemButtonTouchStart. event:', e)
-    }
-  }, 500) // 长按500毫秒触发长按事件
-}
-const handleItemButtonTouchMove = (/*e: TouchEvent*/) => {
-  // 如果有移动则取消所有事件
-  clearTimeout(touchTimeoutEvent.value)
-  touchTimeoutEvent.value = 0
-}
-const handleItemButtonTouchEnd = (/*e: TouchEvent*/) => {
-  // 按下时长不足以触发长按事件时,触发点击事件
-  clearTimeout(touchTimeoutEvent.value)
-  if (touchTimeoutEvent.value !== 0) {
-    // do click if event added later
-  }
-}
+const {
+  showDropdown,
+  dropdownX,
+  dropdownY,
+  dropdownOptions,
+  handleCopy,
+  handleContextMenu,
+  handleSelect,
+  onClickOutside,
+  handleTouchStart,
+  handleTouchMove,
+  handleTouchEnd,
+} = useItemContextMenu(
+  () => props.itemInfo,
+  () => props.containerId
+)
 
 // #endregion
 
@@ -229,9 +179,9 @@ const handleItemIconClick = async () => {
       >
         <n-icon v-if="!hidePopIcon" class="item-popicon" size="14" color="#3b7fef"
           @contextmenu="handleContextMenu"
-          @touchstart.passive="handleItemButtonTouchStart" 
-          @touchmove.passive="handleItemButtonTouchMove" 
-          @touchend.passive="handleItemButtonTouchEnd"
+          @touchstart.passive="handleTouchStart"
+          @touchmove.passive="handleTouchMove"
+          @touchend.passive="handleTouchEnd"
           @click.stop="handleItemIconClick"
         >
           <InfoOutlined />
@@ -239,11 +189,11 @@ const handleItemIconClick = async () => {
             size="small"
             placement="bottom-start"
             trigger="manual"
-            :x="xRef"
-            :y="yRef"
-            :options="options"
-            :show="showDropdownRef"
-            :on-clickoutside="onClickoutside"
+            :x="dropdownX"
+            :y="dropdownY"
+            :options="dropdownOptions"
+            :show="showDropdown"
+            :on-clickoutside="onClickOutside"
             @select="handleSelect"
           />
         </n-icon>

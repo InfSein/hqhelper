@@ -11,7 +11,7 @@ import ModalNbbAvatarSelector from './ModalNbbAvatarSelector.vue'
 import { useStore } from '@/store'
 import type { NbbResponse, ResdataRegisterAndLogin } from '@/types/api/nbb-cloud.ts'
 import { deepCopy } from '@/tools'
-import { getImgCdnUrl } from '@/tools/item'
+import { getImgCdnUrl } from '@/tools/game'
 import { useNbbCloud } from '@/composables/useNbbCloud.ts'
 
 const t = inject<(message: string, args?: any) => string>('t')!

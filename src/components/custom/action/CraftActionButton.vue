@@ -4,7 +4,7 @@ import {
 } from 'naive-ui'
 import XivFARImage from '../general/XivFARImage.vue'
 import type { XivCraftAction } from '@/assets/data'
-import { getImgCdnUrl } from '@/tools/item'
+import { getImgCdnUrl } from '@/tools/game'
 import UseConfig from '@/composables/useConfig.ts'
 
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)

@@ -15,6 +15,7 @@ interface ItemCellProps {
   itemInfo: ItemInfo
   amount: number
   showItemDetails: boolean
+  hidePopIcon?: boolean
   itemSpanMaxWidth?: string
   containerId?: string
 }
@@ -52,7 +53,7 @@ const getTradeCost = (itemInfo: ItemInfo, amount: number) => {
     </div>
     <div class="item-info">
       <div class="item-name">
-        <ItemSpan hide-icon :item-info="itemInfo" :span-max-width="itemSpanMaxWidth" :container-id="containerId" />
+        <ItemSpan hide-icon :hide-pop-icon="hidePopIcon" :item-info="itemInfo" :span-max-width="itemSpanMaxWidth" :container-id="containerId" />
       </div>
       <div class="item-details">
         <div v-if="itemInfo.craftInfo?.jobId" class="cell crafter">
@@ -111,6 +112,7 @@ const getTradeCost = (itemInfo: ItemInfo, amount: number) => {
     v-else
     :item-info="itemInfo"
     :container-id="containerId"
+    :hide-pop-icon="hidePopIcon"
   />
 </template>
 
