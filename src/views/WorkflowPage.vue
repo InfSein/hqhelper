@@ -131,7 +131,6 @@ const pageHeightVals = computed(() => {
   if (isMobile.value) {
     return {
       notebookMenu: 'auto',
-      notebookItemContent: 'auto',
       itemSelectTable: 'auto',
       statisticsBlock: undefined,
       statementsBlock: 'auto',
@@ -140,8 +139,7 @@ const pageHeightVals = computed(() => {
     }
   } else {
     return {
-      notebookMenu: (contentHeight - 10) + 'px',
-      notebookItemContent: (contentHeight - 194) + 'px',
+      notebookMenu: (contentHeight - 0) + 'px',
       itemSelectTable: (contentHeight - 65) + 'px',
       statisticsBlock: (contentHeight / 2 - 45),
       statementsBlock: (contentHeight - 50) + 'px',
@@ -655,7 +653,7 @@ const handleNotebookItemContextMenu = (e: MouseEvent, item: ItemInfo) => {
           </div>
           <n-divider class="my-2!" />
           <div class="w-full flex">
-            <div class="w-48 pr-2" style="border-right: 1px solid var(--color-border);">
+            <div class="w-48 flex flex-col pr-2" :style="{ height: pageHeightVals.notebookMenu, borderRight: '1px solid var(--color-border)' }">
               <n-tabs
                 v-model:value="workState.selectedMenu"
                 type="segment" animated
@@ -701,22 +699,24 @@ const handleNotebookItemContextMenu = (e: MouseEvent, item: ItemInfo) => {
                   </n-tooltip>
                 </n-tab>
               </n-tabs>
-              <div class="flex flex-col gap-0.5">
-                <n-button
-                  v-for="menu in Object.values(currMenus)"
-                  :key="menu.id + menu.name"
-                  size="small"
-                  :tertiary="workState.selectedContentGroup === `i_${menu.id}`"
-                  :quaternary="workState.selectedContentGroup !== `i_${menu.id}`"
-                  class="justify-start"
-                  @click="workState.selectedContentGroup = `i_${menu.id}`"
-                >
-                  {{ menu.name }}
-                </n-button>
-              </div>
+              <n-scrollbar trigger="none" class="flex-1">
+                <div class="flex flex-col gap-0.5">
+                  <n-button
+                    v-for="menu in Object.values(currMenus)"
+                    :key="menu.id + menu.name"
+                    size="small"
+                    :tertiary="workState.selectedContentGroup === `i_${menu.id}`"
+                    :quaternary="workState.selectedContentGroup !== `i_${menu.id}`"
+                    class="justify-start"
+                    @click="workState.selectedContentGroup = `i_${menu.id}`"
+                  >
+                    {{ menu.name }}
+                  </n-button>
+                </div>
+              </n-scrollbar>
             </div>
-            <div class="flex-1 pl-2 flex">
-              <n-scrollbar trigger="none" :style="{ height: pageHeightVals.notebookMenu, flex: '1' }">
+            <div class="flex-1 pl-2 flex" :style="{ height: pageHeightVals.notebookMenu }">
+              <n-scrollbar trigger="none" class="flex-1">
                 <div v-for="cg in currContentGroups" :key="cg.id" class="flex flex-col gap-1 pr-3">
                   <div v-if="cg.name" class="sticky top-0 z-10 w-full rounded px-1" style="background-color: var(--color-border);">
                     <i class="xiv e032"></i>
@@ -764,7 +764,13 @@ const handleNotebookItemContextMenu = (e: MouseEvent, item: ItemInfo) => {
                 @select="notebookHandleSelect"
               />
               <div v-if="!isMobile" class="w-1/2 pl-2" style="border-left: 1px solid var(--color-border);">
-                <n-card v-if="currSelectedItem" size="small" :bordered="false" class="h-full" content-class="h-full flex flex-col">
+                <n-card
+                  v-if="currSelectedItem"
+                  size="small"
+                  :bordered="false"
+                  class="h-full"
+                  content-class="h-full flex flex-col"
+                >
                   <div class="flex items-baseline">
                     <ItemInfoHeader :item-info="currSelectedItem" class="flex-1 mt-0!" />
                   </div>
@@ -797,7 +803,7 @@ const handleNotebookItemContextMenu = (e: MouseEvent, item: ItemInfo) => {
                   </div>
                   <n-divider class="my-1!" />
                   <div class="font-bold">配方需求</div>
-                  <n-scrollbar class="ml-1" :style="{ height: pageHeightVals.notebookItemContent }">
+                  <n-scrollbar class="ml-1 flex-1">
                     <ItemRecipeTree :level="0" :item="currSelectedItem" :amount="1" />
                   </n-scrollbar>
                   <n-divider class="my-1!" />
