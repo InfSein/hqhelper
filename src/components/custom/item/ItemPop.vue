@@ -439,36 +439,34 @@ const innerPopTrigger = computed(() => {
 <template>
   <n-popover
     v-if="itemInfo.id && !disablePop"
-    scrollable
     :trigger="popTrigger || (isMobile ? 'click' : 'hover')"
     :placement="isMobile ? 'bottom' : 'right-start'"
     :width="popUseCustomWidth ? popCustomWidth : (isMobile ? 'trigger' : undefined)"
     :style="{
       maxWidth: popMaxWidth ?? (isMobile ? 'unset' : '290px'),
-      maxHeight: '550px',
     }"
   >
     <template #trigger>
       <slot />
     </template>
-    <div class="item-popover">
+    <ItemInfoHeader :item-info="itemInfo" />
+    <div class="item-level">{{ t('item.text.item_level_with_val', itemInfo.itemLevel) }}</div>
+    <n-divider class="item-divider" />
+    <!-- 版本/ID等 -->
+    <div class="item-attributes">
+      <div class="item-type">
+        <XivFARImage
+          class="item-icon"
+          :src="itemInfo.uiTypeIconUrl"
+          :size="14"
+        />
+        <p>{{ getItemTypeName() }}</p>
+      </div>
+      <p>{{ t('item.text.basic_info', { patch: itemInfo.patch, id: itemInfo.id }) }}</p>
+    </div>
+    <n-scrollbar class="select-text max-h-110">
       <!-- 抬头 -->
-      <ItemInfoHeader :item-info="itemInfo" />
-      <div class="item-level">{{ t('item.text.item_level_with_val', itemInfo.itemLevel) }}</div>
-      <n-divider class="item-divider" />
       <div class="item-descriptions">
-        <!-- 版本/ID等 -->
-        <div class="item-attributes">
-          <div class="item-type">
-            <XivFARImage
-              class="item-icon"
-              :src="itemInfo.uiTypeIconUrl"
-              :size="14"
-            />
-            <p>{{ getItemTypeName() }}</p>
-          </div>
-          <p>{{ t('item.text.basic_info', { patch: itemInfo.patch, id: itemInfo.id }) }}</p>
-        </div>
         <!-- 游戏内物品描述 -->
         <div class="main-descriptions" v-html="getItemDescriptions()"></div>
         <!-- 装备属性 -->
@@ -909,7 +907,7 @@ const innerPopTrigger = computed(() => {
           </p>
         </div>
       </div>
-    </div>
+    </n-scrollbar>
   </n-popover>
   <slot v-else />
 </template>
@@ -927,142 +925,139 @@ const innerPopTrigger = computed(() => {
     text-align: right;
   }
 }
-.item-popover {
-  user-select: text;
 
-  .item-level {
-    line-height: 1.2;
-    margin-top: 3px;
-  }
-  .item-divider {
-    margin: 0 2px;
-  }
-  .item-descriptions {
+.item-level {
+  line-height: 1.2;
+  margin-top: 3px;
+}
+.item-divider {
+  margin: 0 2px;
+}
+.item-attributes {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  line-height: 1.2;
+  flex-wrap: wrap;
+
+  .item-type {
     display: flex;
-    flex-direction: column;
-    gap: 3px;
+    align-items: center;
+    gap: 1px;
+  }
+  .item-type::before { content: "["; }
+  .item-type::after { content: "]"; }
+}
+.item-descriptions {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
 
-    .item-attributes {
+  .main-descriptions {
+    text-indent: 1em;
+    line-height: 1.2;
+  }
+  .temp-attr-descriptions {
+    line-height: 1.2;
+
+    .title {
+      margin-top: 2px;
+    }
+    .content {
+      margin-left: 1em;
+    }
+    .content .block p::before {
+      content: "· ";
+    }
+    .extra {
+      font-size: calc(var(--n-font-size) - 2px);
+      margin: 2px 0 5px;
+    }
+  }
+  .description-block {
+    line-height: 1.2;
+
+    .title {
+      font-weight: bold;
       display: flex;
-      align-items: center;
-      gap: 3px;
-      line-height: 1.2;
-      flex-wrap: wrap;
+      align-items: baseline;
+      --size-small: calc(var(--n-font-size) - 2px);
+      --textgap-left: calc(var(--n-font-size) - 1px);
 
-      .item-type {
-        display: flex;
-        align-items: center;
-        gap: 1px;
-      }
-      .item-type::before { content: "["; }
-      .item-type::after { content: "]"; }
-    }
-    .main-descriptions {
-      text-indent: 1em;
-      line-height: 1.2;
-    }
-    .temp-attr-descriptions {
-      line-height: 1.2;
-
-      .title {
-        margin-top: 2px;
-      }
-      .content {
-        margin-left: 1em;
-      }
-      .content .block p::before {
-        content: "· ";
-      }
       .extra {
-        font-size: calc(var(--n-font-size) - 2px);
-        margin: 2px 0 5px;
-      }
-    }
-    .description-block {
-      line-height: 1.2;
+        margin-left: 3px;
+        font-weight: normal;
+        font-size: var(--size-small);
+        line-height: 1;
 
-      .title {
-        font-weight: bold;
-        display: flex;
-        align-items: baseline;
-        --size-small: calc(var(--n-font-size) - 2px);
-        --textgap-left: calc(var(--n-font-size) - 1px);
-
-        .extra {
-          margin-left: 3px;
-          font-weight: normal;
-          font-size: var(--size-small);
-          line-height: 1;
-
-          img {
-            float: left;
-            height: var(--size-small);
-            display: block;
-          }
-          p {
-            font-size: var(--size-small);
-            padding-left: var(--textgap-left);
-          }
-        }
-        .extra::after {
-          content: '';
-          clear: both;
+        img {
+          float: left;
+          height: var(--size-small);
           display: block;
         }
+        p {
+          font-size: var(--size-small);
+          padding-left: var(--textgap-left);
+        }
       }
-      .content .item {
-        margin-left: 1em;
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 3px;
+      .extra::after {
+        content: '';
+        clear: both;
+        display: block;
       }
-      .content .item.trade-item {
-        flex-wrap: nowrap;
-      }
-      .content .item.trade-item-l2 {
-        margin-left: 1.5em;
-      }
-      .content .item.actions {
-        margin: 3px 1em;
-        flex-direction: column;
+    }
+    .content .item {
+      margin-left: 1em;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 3px;
+    }
+    .content .item.trade-item {
+      flex-wrap: nowrap;
+    }
+    .content .item.trade-item-l2 {
+      margin-left: 1.5em;
+    }
+    .content .item.actions {
+      margin: 3px 1em;
+      flex-direction: column;
 
-        button {
-          width: 100%;
-        }
-      }
-      .content.armor {
-        width: fit-content;
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0,1fr));
-        column-gap: 5px;
-      }
-      .content .list {
-        margin-left: 1em;
-        padding-left: 1em;
-        li::marker {
-          content: ' > ';
-        }
-      }
-      .content .content-table {
-        width: fit-content;
-        margin-top: 2px;
-        margin-left: 1em;
-      }
-      .content .other-attrs,
-      .content.extra {
-        display: flex;
-        align-items: center;
-        gap: 0 5px;
-        flex-wrap: wrap;
-        font-size: calc(var(--n-font-size) - 2px);
+      button {
+        width: 100%;
       }
     }
-    .tail-descriptions {
-      margin-top: 5px;
+    .content.armor {
+      width: fit-content;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      column-gap: 5px;
+    }
+    .content .list {
+      margin-left: 1em;
+      padding-left: 1em;
+      li::marker {
+        content: ' > ';
+      }
+    }
+    .content .content-table {
+      width: fit-content;
+      margin-top: 2px;
+      margin-left: 1em;
+    }
+    .content .other-attrs,
+    .content.extra {
+      display: flex;
+      align-items: center;
+      gap: 0 5px;
+      flex-wrap: wrap;
       font-size: calc(var(--n-font-size) - 2px);
-      line-height: 1;
     }
+  }
+  .tail-descriptions {
+    margin-top: 5px;
+    font-size: calc(var(--n-font-size) - 2px);
+    line-height: 1;
   }
 }
 </style>
