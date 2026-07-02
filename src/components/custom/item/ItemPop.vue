@@ -59,6 +59,7 @@ interface ItemPopProps {
 const props = defineProps<ItemPopProps>()
 
 const showItemHqAttr = ref(true)
+const popScrolling = ref(false)
 
 onMounted(() => {
   if (!itemHasHQ.value) {
@@ -434,6 +435,10 @@ const innerPopTrigger = computed(() => {
     return undefined
   }
 })
+const handleOnScroll = (e: Event) => {
+  const target = e.target as HTMLElement
+  popScrolling.value = target.scrollTop > 0
+}
 </script>
 
 <template>
@@ -453,7 +458,7 @@ const innerPopTrigger = computed(() => {
     <div class="item-level">{{ t('item.text.item_level_with_val', itemInfo.itemLevel) }}</div>
     <n-divider class="item-divider" />
     <!-- 版本/ID等 -->
-    <div class="item-attributes">
+    <div class="item-attributes" :class="{ scrolling: popScrolling }">
       <div class="item-type">
         <XivFARImage
           class="item-icon"
@@ -464,7 +469,7 @@ const innerPopTrigger = computed(() => {
       </div>
       <p>{{ t('item.text.basic_info', { patch: itemInfo.patch, id: itemInfo.id }) }}</p>
     </div>
-    <n-scrollbar class="select-text max-h-110">
+    <n-scrollbar class="select-text max-h-110" @scroll="handleOnScroll">
       <!-- 抬头 -->
       <div class="item-descriptions">
         <!-- 游戏内物品描述 -->
@@ -939,6 +944,26 @@ const innerPopTrigger = computed(() => {
   gap: 3px;
   line-height: 1.2;
   flex-wrap: wrap;
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -4px;
+    height: 4px;
+
+    opacity: 0;
+    transition: opacity .2s;
+
+    background: var(--color-background-popover);
+    border-top: 1px solid var(--color-border);
+  }
+  &.scrolling::after {
+    opacity: 1;
+    z-index: 1;
+  }
 
   .item-type {
     display: flex;
