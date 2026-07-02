@@ -32,3 +32,50 @@
 **杂项**
 - [x] 引入 tailwind
 - [x] 升级 electron
+
+## 项目说明
+
+HqHelper Dawntrail 是一个用于辅助最终幻想 XIV 制作、采集、价格查看和工作流管理的前端应用。
+
+### 技术架构
+
+- 使用 Vue 3、TypeScript、Vite、Pinia 和 Naive UI 构建页面。
+- Electron 客户端通过预加载脚本向页面暴露安全 API。
+- FishXIVItemReader 背包数据由 Electron 主进程接收，再通过 `window.wsApi` 转交给 Vue 前端。
+
+### 本地运行
+
+```bash
+npm i
+npm run dev
+```
+
+### 部署与构建
+
+```bash
+npm run build
+```
+
+Electron 客户端打包在 `hqhelper-client` 项目中执行。
+
+### 测试方法
+
+```bash
+npm run type-check
+```
+
+### 搜索记录
+
+- 2026-07-02：查看了 [skills.sh](https://www.skills.sh/)，未发现比当前 Vue、Pinia、前端设计技能更贴合本次 WebSocket 接入的专用技能。
+- 2026-07-02：查看了 [Electron IPC 文档](https://www.electronjs.org/docs/latest/tutorial/ipc)，采用主进程维护连接、`contextBridge` 暴露有限 API、`webContents.send` 推送消息的方式。
+- 2026-07-02：GitHub 搜索发现 `native-websocket-vue3` 等前端 WebSocket 封装，但本项目需要 Electron 主进程持有本地连接，因此未引入新依赖。
+
+### 已完成功能
+
+- 制作、采集、工作流和价格相关功能。
+- 偏好设置、主题、语言、更新和导入导出功能。
+- FishXIVItemReader WebSocket 背包数据接入框架。
+
+### 待办事项
+
+- 将收到的背包快照接入具体库存业务逻辑。

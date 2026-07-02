@@ -56,6 +56,12 @@ export interface UserConfigModel {
   disable_workstate_cache: boolean
   /** 启用开发者模式 */
   enable_dev_mode: boolean
+  /** 接收第三方背包数据 */
+  receive_third_party_data: boolean
+  /** FishXIVItemReader WebSocket 端口 */
+  inventory_ws_port: number
+  /** FishXIVItemReader WebSocket 密钥 */
+  inventory_ws_token: string
 
   // * update
   /** 禁用自动更新 */
@@ -113,6 +119,9 @@ const defaultUserConfig: UserConfigModel = {
   // performance
   disable_workstate_cache: false,
   enable_dev_mode: false,
+  receive_third_party_data: false,
+  inventory_ws_port: 17814,
+  inventory_ws_token: '',
   // update
   disable_auto_update: false,
   update_client_builtin: false,
@@ -134,6 +143,30 @@ const defaultUserConfig: UserConfigModel = {
   macromanage_cache_work_state: fixMacromanageWorkState(),
   fashioncloth_cache_work_state: fixFashionclothWorkState(),
   cshelper_cache_work_state: fixCsHelperWorkState(),
+}
+
+// 对密钥做基础编码，避免在缓存中直接裸存。
+export const encodeInventoryToken = (token: string) => {
+  if (!token) return ''
+  return btoa(token)
+}
+
+// 读取缓存时还原密钥，兼容旧字段。
+export const decodeInventoryToken = (token: string) => {
+  if (!token) return ''
+  try {
+    return atob(token)
+  } catch {
+    return token
+  }
+}
+
+// 生成用于本地缓存的用户配置。
+export const packUserConfigForStorage = (config: UserConfigModel) => {
+  const packed = { ...config } as UserConfigModel & { inventory_ws_token_encoded?: string }
+  packed.inventory_ws_token_encoded = encodeInventoryToken(config.inventory_ws_token)
+  packed.inventory_ws_token = ''
+  return packed
 }
 
 /**
@@ -164,6 +197,9 @@ export const fixUserConfig = (config?: UserConfigModel) => {
   if (oldConf.fthelper_cache_work_state) {
     config.mmhelper_cache_work_state = fixMmHelperWorkState(oldConf.fthelper_cache_work_state)
     delete oldConf.fthelper_cache_work_state
+  }
+  if (oldConf.inventory_ws_token_encoded) {
+    config.inventory_ws_token = decodeInventoryToken(oldConf.inventory_ws_token_encoded)
   }
 
   // 处理结构体设置项

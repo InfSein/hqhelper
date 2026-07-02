@@ -122,9 +122,27 @@ const warnings = computed(() => {
         :style="{ width: isMobile ? '85%' : '70%' }"
         :placeholder="settingItem.placeholder"
       />
+      <n-input
+        v-if="settingItem.type === 'password'"
+        v-model:value="formData[settingItem.key]"
+        type="password"
+        show-password-on="click"
+        :style="{ width: isMobile ? '85%' : '70%' }"
+        :placeholder="settingItem.placeholder"
+      />
+      <n-input-number
+        v-if="settingItem.type === 'number'"
+        v-model:value="formData[settingItem.key]"
+        :min="settingItem.min"
+        :max="settingItem.max"
+        :style="{ width: isMobile ? '85%' : '70%' }"
+        :placeholder="settingItem.placeholder"
+      />
       <n-button
         v-if="settingItem.type === 'button'"
         :type="settingItem.buttonProps?.type ?? 'default'"
+        :loading="settingItem.buttonProps?.loading"
+        :disabled="settingItem.buttonProps?.disabled"
         @click="settingItem.buttonProps?.onClick"
       >
         <template #icon>

@@ -1967,6 +1967,43 @@
       "title": "作業状態の記憶を無効にする"
     },
     "enable_dev_mode": "開発者モードの有効化",
+    "inventory_plugin": {
+      "receive": {
+        "title": "外部データを受信",
+        "desc": {
+          "desc_1": "有効にすると、FishXIVItemReader から所持品データを受信します。",
+          "desc_2": "トークンが未入力の場合は接続しません。"
+        }
+      },
+      "port": {
+        "title": "WebSocket ポート",
+        "desc": {
+          "desc_1": "既定のポートは 17814 です。プラグイン側の設定と一致させてください。"
+        }
+      },
+      "token": {
+        "title": "WebSocket トークン",
+        "desc": {
+          "desc_1": "FishXIVItemReader の画面からトークンをコピーして貼り付けてください。"
+        }
+      },
+      "test": {
+        "title": "接続テスト",
+        "idle": "接続テスト",
+        "testing": "テスト中",
+        "status": "現在の状態：{status}",
+        "result": "テスト結果：{result}"
+      },
+      "status": {
+        "disconnected": "未接続",
+        "connecting": "接続中",
+        "connected": "接続済み",
+        "error": "接続エラー"
+      },
+      "message": {
+        "invalid_settings": "有効なポートとトークンを入力してください。"
+      }
+    },
     "export": {
       "desc": {
         "desc_1": "現在、このデバイスの設定/機能設定を他のデバイスにエクスポートできるようになりました。アイテム価格などのキャッシュは含まれません。",

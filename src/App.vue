@@ -21,6 +21,7 @@ import { fixUserConfig, type UserConfigModel } from './types/config/user.ts'
 import { fixFuncConfig, type FuncConfigModel, type MacroGenerateMode } from './types/config/func.ts'
 import { fixCloudConfig, type CloudConfigModel } from './types/config/cloud.ts'
 import { fixMainCache, type MainCacheModel } from './types/config/cache-main.ts'
+import { useInventoryPluginAutoConnect } from '@/composables/useInventoryPlugin.ts'
 
 const ModalCopyAsMacro = defineAsyncComponent(() => import('@/components/modals/ModalCopyAsMacro.vue'))
 const ModalJoinInWorkflow = defineAsyncComponent(() => import('@/components/modals/ModalJoinInWorkflow.vue'))
@@ -34,6 +35,7 @@ const route = useRoute()
 const store = useStore()
 const { t: rawT, setLocale } = useLocale()
 const { emitSync, onSync } = useElectronSync()
+useInventoryPluginAutoConnect()
 
 const userConfig = ref<UserConfigModel>(fixUserConfig(store.userConfig))
 const funcConfig = ref<FuncConfigModel>(fixFuncConfig(store.funcConfig))

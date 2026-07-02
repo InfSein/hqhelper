@@ -32,6 +32,7 @@ import useUiTools from '@/composables/useUiTools.ts'
 import { dbKey } from '@/utils/app.idb.ts'
 import { fixUserConfig, type UserConfigModel } from '@/types/config/user.ts'
 import { fixFuncConfig, type FuncConfigModel } from '@/types/config/func.ts'
+import { useInventoryPlugin } from '@/composables/useInventoryPlugin.ts'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
@@ -41,6 +42,10 @@ const store = useStore()
 const { confirm } = useDialog()
 const NAIVE_UI_MESSAGE = useMessage()
 const { renderIcon } = useUiTools()
+const {
+  connectionStatus: inventoryConnectionStatus,
+  testConnection: testInventoryConnection
+} = useInventoryPlugin()
 
 const showModal = defineModel<boolean>('show', { required: true })
 const emit = defineEmits(['close', 'afterSubmit'])
@@ -52,6 +57,21 @@ interface ModalPreferencesProps {
   appShowFp?: boolean
 }
 const props = defineProps<ModalPreferencesProps>()
+
+const isTestingInventoryConnection = ref(false)
+const inventoryConnectionTestMessage = ref('')
+const inventoryStatusText = computed(() => {
+  return t(`preference.inventory_plugin.status.${inventoryConnectionStatus.value}`)
+})
+const inventoryTestDescriptions = computed(() => {
+  const descriptions = [
+    t('preference.inventory_plugin.test.status', { status: inventoryStatusText.value })
+  ]
+  if (inventoryConnectionTestMessage.value) {
+    descriptions.push(t('preference.inventory_plugin.test.result', { result: inventoryConnectionTestMessage.value }))
+  }
+  return descriptions
+})
 
 // #region data
 const dealSimOptions = (options: string[]) => {
@@ -340,6 +360,51 @@ const preferenceGroups = computed(() : PreferenceGroup[] => {
               hide: !window.electronAPI?.openDevTools,
               type: 'switch',
               require_reload: true
+            },
+            {
+              key: 'receive_third_party_data',
+              label: t('preference.inventory_plugin.receive.title'),
+              hide: !window.wsApi,
+              descriptions: [
+                t('preference.inventory_plugin.receive.desc.desc_1'),
+                t('preference.inventory_plugin.receive.desc.desc_2'),
+              ],
+              type: 'switch'
+            },
+            {
+              key: 'inventory_ws_port',
+              label: t('preference.inventory_plugin.port.title'),
+              hide: !window.wsApi,
+              descriptions: [
+                t('preference.inventory_plugin.port.desc.desc_1'),
+              ],
+              type: 'number',
+              min: 1,
+              max: 65535,
+            },
+            {
+              key: 'inventory_ws_token',
+              label: t('preference.inventory_plugin.token.title'),
+              hide: !window.wsApi,
+              descriptions: [
+                t('preference.inventory_plugin.token.desc.desc_1'),
+              ],
+              type: 'password',
+            },
+            {
+              key: 'inventory_ws_test_connection',
+              label: t('preference.inventory_plugin.test.title'),
+              hide: !window.wsApi,
+              descriptions: inventoryTestDescriptions.value,
+              type: 'button',
+              buttonProps: {
+                text: isTestingInventoryConnection.value
+                  ? t('preference.inventory_plugin.test.testing')
+                  : t('preference.inventory_plugin.test.idle'),
+                loading: isTestingInventoryConnection.value,
+                disabled: isTestingInventoryConnection.value,
+                onClick: handleTestInventoryConnection
+              }
             }
           ]
         },
@@ -930,7 +995,37 @@ const onLoad = () => {
 }
 
 const handleCheck = () => {
+  const port = Number(formUserConfigData.value.inventory_ws_port)
+  const token = formUserConfigData.value.inventory_ws_token?.trim() ?? ''
+  if (
+    formUserConfigData.value.receive_third_party_data
+    && (!Number.isInteger(port) || port < 1 || port > 65535 || !token)
+  ) {
+    return t('preference.inventory_plugin.message.invalid_settings')
+  }
   return ''
+}
+const handleTestInventoryConnection = async () => {
+  const port = Number(formUserConfigData.value.inventory_ws_port)
+  const token = formUserConfigData.value.inventory_ws_token?.trim() ?? ''
+  if (!Number.isInteger(port) || port < 1 || port > 65535 || !token) {
+    inventoryConnectionTestMessage.value = t('preference.inventory_plugin.message.invalid_settings')
+    NAIVE_UI_MESSAGE.error(inventoryConnectionTestMessage.value)
+    return
+  }
+
+  isTestingInventoryConnection.value = true
+  try {
+    const result = await testInventoryConnection(port, token)
+    inventoryConnectionTestMessage.value = result.message
+    if (result.success) {
+      NAIVE_UI_MESSAGE.success(result.message)
+    } else {
+      NAIVE_UI_MESSAGE.error(result.message)
+    }
+  } finally {
+    isTestingInventoryConnection.value = false
+  }
 }
 const handleSave = async () => {
   // * 检查设置合法性
@@ -945,6 +1040,9 @@ const handleSave = async () => {
   formUserConfigData.value.language_ui ??= 'zh'
   formUserConfigData.value.language_item ??= 'auto'
   formUserConfigData.value.disable_workstate_cache ??= false
+  formUserConfigData.value.receive_third_party_data ??= false
+  formUserConfigData.value.inventory_ws_port = Number(formUserConfigData.value.inventory_ws_port) || 17814
+  formUserConfigData.value.inventory_ws_token ??= ''
   if (formUserConfigData.value.disable_workstate_cache) {
     formUserConfigData.value.hqwb_cache_work_state = fixHqwbWorkState()
     formUserConfigData.value.mmhelper_cache_work_state = fixMmHelperWorkState()

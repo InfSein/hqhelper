@@ -1967,6 +1967,43 @@
       "title": "Disable Work State Memory"
     },
     "enable_dev_mode": "Enable dev mode",
+    "inventory_plugin": {
+      "receive": {
+        "title": "Receive third-party data",
+        "desc": {
+          "desc_1": "When enabled, the app receives inventory data from FishXIVItemReader.",
+          "desc_2": "The app will not connect until a token is provided."
+        }
+      },
+      "port": {
+        "title": "WebSocket port",
+        "desc": {
+          "desc_1": "The default port is 17814. Keep it the same as the plugin setting."
+        }
+      },
+      "token": {
+        "title": "WebSocket token",
+        "desc": {
+          "desc_1": "Copy the token from FishXIVItemReader and paste it here."
+        }
+      },
+      "test": {
+        "title": "Test connection",
+        "idle": "Test connection",
+        "testing": "Testing",
+        "status": "Current status: {status}",
+        "result": "Test result: {result}"
+      },
+      "status": {
+        "disconnected": "Disconnected",
+        "connecting": "Connecting",
+        "connected": "Connected",
+        "error": "Connection error"
+      },
+      "message": {
+        "invalid_settings": "Please enter a valid port and token."
+      }
+    },
     "export": {
       "desc": {
         "desc_1": "You can now export the preferences/features settings of this device to another device. Excludes item price caches.",

@@ -1,4 +1,6 @@
 // env.electron.d.ts
+import type { ConnectionStatus, ConnectionTestResult } from '@/types/inventory'
+
 export interface ElectronAPI {
   /**
    * @deprecated 此接口已被弃用且没有实际效果，请勿使用
@@ -53,6 +55,19 @@ export interface ElectronAPI {
   openDevTools: () => void;
 }
 
+export interface FishXIVWebSocketAPI {
+  /** 监听 FishXIVItemReader 推送的数据 */
+  onMessage: (callback: (data: unknown) => void) => () => void;
+  /** 监听 WebSocket 连接状态 */
+  onStatusChange: (callback: (status: ConnectionStatus) => void) => () => void;
+  /** 连接 FishXIVItemReader */
+  connect: (settings: { port: number; token: string }) => Promise<boolean>;
+  /** 断开 FishXIVItemReader */
+  disconnect: () => Promise<void>;
+  /** 测试连接，不保存设置 */
+  testConnection: (settings: { port: number; token: string }) => Promise<ConnectionTestResult>;
+}
+
 export type ProcessStage = "requesting" | "downloading" | "extracting" | "replacing" | "cleaning" | "relaunching" | "opening" | "end";
 export interface ProgressData {
   /** 当前阶段 */
@@ -75,5 +90,6 @@ export interface ProgressData {
 declare global {
   interface Window {
     electronAPI: undefined | ElectronAPI;
+    wsApi: undefined | FishXIVWebSocketAPI;
   }
 }
