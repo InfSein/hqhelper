@@ -75,7 +75,7 @@ const getPlatformBtns = (platform: "win" | "mac" | "android") => {
   if (platform === 'android') {
     dlink = vi.dlink_android.replace('~VERSION', vi.android)
     subLinks = vi.client_info.android_cn_sub_links
-  } else if (platform === 'win') {
+  } else if (platform === 'mac') {
     dlink = vi.dlink_electron_mac.replace('~VERSION', vi.electron)
     subLinks = vi.client_info.mac_cn_sub_links
   } else { // win
