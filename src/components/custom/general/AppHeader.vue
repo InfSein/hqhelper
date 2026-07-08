@@ -419,13 +419,14 @@ const menuData = computed(() => {
           hide: !!window.electronAPI || isMobile.value,
         },
         {
-          type: 'router',
+          type: 'common',
           icon: DevicesOutlined,
           label: t('common.appfunc.download_client'),
           hide: !!window.electronAPI || !!window.androidAPI,
           description: t('appheader.menu.tooltip.download_client'),
-          routerKey: 'download',
-          allowNewWindow: false,
+          click: () => {
+            window.open('https://download.hqhelper.com', '_blank')
+          }
         },
       ],
     },

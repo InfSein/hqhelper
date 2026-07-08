@@ -12,7 +12,7 @@ import Dialog from "@/components/custom/general/Dialog.vue"
 import { useStore } from '@/store/index'
 import { useElectronSync } from '@/composables/electron-sync'
 import { useLocale } from './locales'
-import { checkAppUpdates, CopyToClipboard, deepCopy, getAppBackground, sleep } from './tools'
+import { checkAppUpdates, checkElectronUpdates, CopyToClipboard, deepCopy, getAppBackground, sleep } from './tools'
 import EorzeaTime from './utils/game.et.ts'
 import { type ItemInfo } from './tools/item'
 import AppStatus from './constants/app.ts'
@@ -321,26 +321,28 @@ watch(
 const handleAutoUpdate = async () => {
   if (!store.userConfig.disable_auto_update && appMode.value !== 'overlay' && !window.androidAPI?.checkUpdate) {
     try {
-      const checkUpdateResponse = await checkAppUpdates()
-      if (checkUpdateResponse.success) {
-        const versionContent = checkUpdateResponse.data!
-        
-        let needUpdateElectron = false, needUpdateHqHelper = false
-        if (window.electronAPI) {
+      if (window.electronAPI) {
+        const checkElectronUpdateResponse = await checkElectronUpdates()
+        if (checkElectronUpdateResponse.success) {
+          const latest = checkElectronUpdateResponse.data!.electron
           const currentElectronVersion = await window.electronAPI.clientVersion
-          needUpdateElectron = currentElectronVersion !== versionContent.electron
-        }
-        needUpdateHqHelper = AppStatus.Version !== versionContent.hqhelper
-
-        if (needUpdateElectron) {
-          if (await confirm(
-            t('update.message.checked_new_client', versionContent.electron)
-            + (needUpdateHqHelper ? ('\n' + t('update.message.checked_new_hqhelper', versionContent.hqhelper)) : '')
-            + '\n' + t('update.message.ask_update_now')
-          )) {
-            displayCheckUpdatesModal()
+          if (currentElectronVersion !== latest) {
+            if (await confirm(
+              t('update.message.checked_new_client', latest)
+              + '\n' + t('update.message.ask_update_now')
+            )) {
+              displayCheckUpdatesModal()
+            }
+            return
           }
-        } else if (needUpdateHqHelper) {
+        } else {
+          console.error('检查客户端更新失败:', checkElectronUpdateResponse.message, '\n', checkElectronUpdateResponse)
+        }
+      }
+      const checkAppUpdateResponse = await checkAppUpdates()
+      if (checkAppUpdateResponse.success) {
+        const versionContent = checkAppUpdateResponse.data!
+        if (AppStatus.Version !== versionContent.hqhelper) {
           if (await confirm(
             t('update.message.checked_new_hqhelper', versionContent.hqhelper)
             + '\n' + t('update.message.ask_update_now')
@@ -357,7 +359,7 @@ const handleAutoUpdate = async () => {
           }
         }
       } else {
-        console.error('自动更新失败:', checkUpdateResponse.message, '\n', checkUpdateResponse)
+        console.error('检查HqHelper更新失败:', checkAppUpdateResponse.message, '\n', checkAppUpdateResponse)
       }
     } catch (err) {
       console.error('自动更新发生错误', err)
