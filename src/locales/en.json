@@ -1285,30 +1285,6 @@
       "wechat_admire": "WeChat Pay"
     }
   },
-  "download_page": {
-    "link": {
-      "cn_with_index": "CN Download Link {index}",
-      "global": "Global Download Link"
-    },
-    "text": {
-      "text_1": "Most HqHelper features are available on the web.",
-      "text_10": "※ Only compatible with Windows 7 or later",
-      "text_11": "{platform} Client",
-      "text_12": "※Only available for Mac OS 10.13 or later",
-      "text_13": "※Only available for devices with M-series chips",
-      "text_14": "We do not have an Apple developer signature. If you see 'HqHelper is damaged'...",
-      "text_15": "You must disable Gatekeeper or whitelist HqHelper to install.",
-      "text_16": "Clients can also open workflow recommended processes in new windows.",
-      "text_2": "However, we provide a client version for exclusive features not possible in a browser.",
-      "text_3": "Client-Exclusive Features:",
-      "text_4": "Offline capability for basic calculations.",
-      "text_5": "Gathering timer overlay with pinning support.",
-      "text_6": "Bookmark this page for easy access to client updates.",
-      "text_7": "The client is a container; internal HqHelper updates may still be required.",
-      "text_8": "Current latest version: {ver}",
-      "text_9": "Click below to download."
-    }
-  },
   "err_404": {
     "advise": "Please go Back or return to Home.",
     "page_not_exist": "Page not found."

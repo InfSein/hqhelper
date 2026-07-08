@@ -1,6 +1,6 @@
 import clipBoard from "vue-clipboard3"
 import * as LzString from 'lz-string'
-import type { AppVersionJson, CallResult } from "@/models"
+import type { AppVersionJson, CallResult, DownloadVersionJson } from "@/models"
 import useIdb from "./idb"
 
 const Clip = clipBoard
@@ -97,6 +97,28 @@ export const checkAppUpdates = async () : Promise<CallResult<AppVersionJson>> =>
       versionResponse = await fetch(url).then(response => response.text())
     }
     const versionContent = JSON.parse(versionResponse) as AppVersionJson
+    return {
+      success: true, message: '',
+      data: versionContent
+    }
+  } catch (e: any) {
+    console.error(e)
+    return {
+      success: false, message: e?.message || 'UNKNOWN ERROR' + e
+    }
+  }
+}
+export const checkElectronUpdates = async () : Promise<CallResult<DownloadVersionJson>> => {
+  try {
+    const url = `https://download.hqhelper.com/version.json?t=${new Date().getTime()}`
+
+    let versionResponse = ''
+    if (window.electronAPI?.httpGet) {
+      versionResponse = await window.electronAPI.httpGet(url)
+    } else {
+      versionResponse = await fetch(url).then(response => response.text())
+    }
+    const versionContent = JSON.parse(versionResponse) as DownloadVersionJson
     return {
       success: true, message: '',
       data: versionContent
