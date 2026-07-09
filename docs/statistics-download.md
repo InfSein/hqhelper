@@ -7,6 +7,7 @@
 
 ![Downloads of HqHelper Webpack](https://img.shields.io/github/downloads/InfSein/hqhelper-dawntrail/total?style=flat&logo=github&label=downloads@webpack&color=blue)
 ![Downloads of HqHelper Client](https://img.shields.io/github/downloads/InfSein/hqhelper-client/total?style=flat&logo=github&label=downloads@client&color=blue)
+![Downloads of HqHelper Android Client](https://img.shields.io/github/downloads/InfSein/hqhelper-android/total?style=flat&logo=github&label=downloads@android&color=blue)
 
 **第1代HqHelper总下载量：**
 
@@ -100,3 +101,4 @@
 ### 2.5.x (对应 FFXIV 的 7.5~7.56)
 
 ![](https://img.shields.io/github/downloads/InfSein/hqhelper-dawntrail/v2.5.0/total)
+![](https://img.shields.io/github/downloads/InfSein/hqhelper-dawntrail/v2.5.1/total)
