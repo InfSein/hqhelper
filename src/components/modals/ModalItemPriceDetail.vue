@@ -3,9 +3,9 @@ import {
   TableViewFilled,
 } from '@vicons/material'
 import ChartXy from '../chart/ChartXy.vue'
-import GroupBox from '../templates/GroupBox.vue'
-import ItemPriceLogCell from '../custom/item/ItemPriceLogCell.vue'
-import ItemSelector from '../custom/item/ItemSelector.vue'
+import GroupBox from '@/components/templates/GroupBox.vue'
+import ItemPriceLogCell from '@/components/item/ItemPriceLogCell.vue'
+import ItemSelector from '@/components/item/ItemSelector.vue'
 import { useStore } from '@/store'
 import { useDialog } from '@/composables/useDialog.ts'
 import { handleGetPriceError } from '@/tools/error'

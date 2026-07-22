@@ -2,9 +2,9 @@
 import { 
   AttachMoneyOutlined
 } from '@vicons/material'
-import ItemPriceTable from '../custom/item/ItemPriceTable.vue'
-import TooltipText from '../custom/general/TooltipText.vue'
-import HelpButton from '../custom/general/HelpButton.vue'
+import ItemPriceTable from '@/components/item/ItemPriceTable.vue'
+import TooltipText from '@/components/ui/TooltipText.vue'
+import HelpButton from '@/components/ui/HelpButton.vue'
 import ModalPreferences from './ModalPreferences.vue'
 import useItemPrice from '@/composables/useItemPrice.ts'
 import type { ItemInfo } from '@/tools/item'

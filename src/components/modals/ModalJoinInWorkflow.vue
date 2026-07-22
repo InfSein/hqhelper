@@ -6,7 +6,7 @@ import {
 import { deepCopy } from '@/tools'
 import useUiTools from '@/composables/useUiTools.ts'
 import { useStore } from '@/store'
-import ItemSelectTable from '../custom/item/ItemSelectTable.vue'
+import ItemSelectTable from '@/components/item/ItemSelectTable.vue'
 import { fixUserConfig } from '@/types/config/user.ts'
 import { fixFuncConfig, type WorkflowJoinMode } from '@/types/config/func.ts'
 import { _VAR_MAX_WORKFLOW, getDefaultWorkflow } from '@/types/workstate/workflow.ts'

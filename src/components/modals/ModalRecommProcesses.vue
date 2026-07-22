@@ -2,7 +2,7 @@
 import { 
   AllInclusiveSharp, CopyAllOutlined
 } from '@vicons/material'
-import CraftRecommProcess from '../custom/general/CraftRecommProcess.vue'
+import CraftRecommProcess from '@/components/craft/CraftRecommProcess.vue'
 import ModalPreferences from './ModalPreferences.vue'
 import { type ItemInfo } from '@/tools/item'
 import { CopyToClipboard } from '@/tools'

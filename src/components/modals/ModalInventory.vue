@@ -5,10 +5,10 @@ import {
   DeleteSweepRound,
   SaveOutlined,
 } from '@vicons/material'
-import TooltipButton from '@/components/custom/general/TooltipButton.vue'
-import SettingItem from '@/components/custom/general/SettingItem.vue'
-import ItemSelector from '@/components/custom/item/ItemSelector.vue'
-import ItemSelectTable from '@/components/custom/item/ItemSelectTable.vue'
+import TooltipButton from '@/components/ui/TooltipButton.vue'
+import SettingItem from '@/components/ui/SettingItem.vue'
+import ItemSelector from '@/components/item/ItemSelector.vue'
+import ItemSelectTable from '@/components/item/ItemSelectTable.vue'
 import { useStore } from '@/store'
 import { type PreferenceItem as Setting } from '@/types'
 import { deepCopy } from '@/tools'

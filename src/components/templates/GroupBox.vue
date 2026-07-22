@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import HelpButton from '../custom/general/HelpButton.vue'
+import HelpButton from '@/components/ui/HelpButton.vue'
 
 // const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
 

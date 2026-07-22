@@ -4,8 +4,8 @@ import {
   ChecklistRtlSharp,
   DoneOutlined, SettingsBackupRestoreSharp,
 } from '@vicons/material'
-import HelpButton from '../custom/general/HelpButton.vue'
-import StaffGroup from '../custom/general/StaffGroup.vue'
+import HelpButton from '@/components/ui/HelpButton.vue'
+import StaffGroup from '@/components/app/StaffGroup.vue'
 import ModalSponsorsList from './ModalSponsorsList.vue'
 import {
   qGroupInfo,
