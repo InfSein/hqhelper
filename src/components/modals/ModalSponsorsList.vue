@@ -16,12 +16,26 @@ const { alertInfo } = useDialog(t)
 
 const showModal = defineModel<boolean>('show', { required: true })
 
+  //增加一个新api，这个api无需鉴权，作用是返回系统中所有的赞助者，按照上次赞助时间排序，返回字段如下：
 interface SponsorInfo {
+  /** 赞助者名称 */
   name: string;
+  /** 赞助者关联的系统id */
   nbbid?: number;
+  /** 上次赞助时间 */
   date: string;
+  /** 上次赞助留言，没有返回空字符串即可 */
   word: string;
   sponsored: number[];
+}
+interface SponsorApiResponse {
+  success: boolean
+  errmsg: string
+  data: {
+    content: {
+      sponsors: SponsorInfo[]
+    }
+  }
 }
 
 const sponsorLoadingStatus = ref<"finished" | "loading" | "error">('loading')
@@ -34,20 +48,16 @@ const loadSponsors = async () => {
     sponsorLoadError.value = ''
     sponsors.value = []
     let loadSponsorsResponse : string
-    let url = 'https://strapi.nbb.fan/api/hq-helper-configs/vif4s1czgkysocpg1bnoa8vi'
-    url += `?t=${new Date().getTime()}&fields[0]=content`
+    const url = `https://hqhelper.com/api/sponsors?t=${new Date().getTime()}`
     if (window.electronAPI?.httpGet) {
       loadSponsorsResponse = await window.electronAPI.httpGet(url)
     } else {
       loadSponsorsResponse = await fetch(url)
         .then(response => response.text())
     }
-    const sponsorsContent = JSON.parse(loadSponsorsResponse) as {
-      data: {
-        content: {
-          sponsors: SponsorInfo[]
-        }
-      }
+    const sponsorsContent = JSON.parse(loadSponsorsResponse) as SponsorApiResponse
+    if (!sponsorsContent.success) {
+      throw new Error(sponsorsContent.errmsg)
     }
     sponsors.value = sponsorsContent.data.content.sponsors
     mainCache.value.sponsor_nbbids = sponsors.value.flatMap(s => s.nbbid ? [s.nbbid] : [])
