@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import AboutApp from '../custom/general/AboutApp.vue'
+import AboutApp from '@/components/app/AboutApp.vue'
 import { InfoSharp } from '@vicons/material'
 
 const t = inject<(message: string, args?: any) => string>('t')!

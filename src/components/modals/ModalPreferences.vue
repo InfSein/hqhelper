@@ -17,8 +17,8 @@ import {
   ArchiveSharp, UnarchiveSharp,
   SaveOutlined
 } from '@vicons/material'
-import AboutApp from '../custom/general/AboutApp.vue'
-import SettingItem from '../custom/general/SettingItem.vue'
+import AboutApp from '@/components/app/AboutApp.vue'
+import SettingItem from '@/components/ui/SettingItem.vue'
 import ModalPreferencesImportExport from './ModalPreferencesImportExport.vue'
 import { useStore } from '@/store/index'
 import type { PreferenceGroup, SettingGroupKey } from '@/types/index.ts'

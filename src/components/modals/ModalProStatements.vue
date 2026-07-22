@@ -6,7 +6,7 @@ import ModalRecommProcesses from './ModalRecommProcesses.vue'
 import ModalPreferences from './ModalPreferences.vue'
 import { type ItemInfo } from '@/tools/item'
 import { useFufuCal } from '@/tools/use-fufu-cal'
-import CraftStatementsPro from '../custom/general/CraftStatementsPro.vue'
+import CraftStatementsPro from '@/components/craft/CraftStatementsPro.vue'
 import { useStore } from '@/store'
 
 const t = inject<(message: string, args?: any) => string>('t')!

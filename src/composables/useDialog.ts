@@ -1,6 +1,6 @@
 import type { VNodeChild } from "vue"
-import type DialogComponent from "@/components/custom/general/Dialog.vue"
-import type { InternalDialogOptions } from "@/components/custom/general/Dialog.vue"
+import type DialogComponent from "@/components/app/Dialog.vue"
+import type { InternalDialogOptions } from "@/components/app/Dialog.vue"
 type DialogProvider = InstanceType<typeof DialogComponent>
 
 type DialogType = "error" | "success" | "warning" | "info"

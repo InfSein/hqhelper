@@ -6,9 +6,9 @@ import {
   NLayout, NLayoutHeader,
   type GlobalThemeOverrides
 } from 'naive-ui'
-import AppHeader from './components/custom/general/AppHeader.vue'
-import AccountView from './components/custom/general/AccountView.vue'
-import Dialog from "@/components/custom/general/Dialog.vue"
+import AppHeader from './components/app/AppHeader.vue'
+import AccountView from './components/app/AccountView.vue'
+import Dialog from "@/components/app/Dialog.vue"
 import { useStore } from '@/store/index'
 import { useElectronSync } from '@/composables/electron-sync'
 import { useLocale } from './locales'

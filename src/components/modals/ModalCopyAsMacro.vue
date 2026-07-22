@@ -2,8 +2,8 @@
 import { 
   CodeSharp, ContentCopyRound
 } from '@vicons/material'
-import MacroViewer from '../custom/macro/MacroViewer.vue'
-import TooltipButton from '@/components/custom/general/TooltipButton.vue'
+import MacroViewer from '@/components/craft/MacroViewer.vue'
+import TooltipButton from '@/components/ui/TooltipButton.vue'
 // import ModalPreferences from './ModalPreferences.vue'
 import { CopyToClipboard } from '@/tools'
 import { useStore } from '@/store'
