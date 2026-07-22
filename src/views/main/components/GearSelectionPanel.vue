@@ -4,7 +4,7 @@ import {
   KeyboardArrowDownRound
 } from '@vicons/material'
 import Stepper from '@/components/ui/Stepper.vue'
-import GearSlot from '@/components/gear/GearSlot.vue'
+import GearSlot from '@/components/GearSlot.vue'
 import TooltipButton from '@/components/ui/TooltipButton.vue'
 import ModalSelectedGears from '@/views/main/components/ModalSelectedGears.vue'
 import {

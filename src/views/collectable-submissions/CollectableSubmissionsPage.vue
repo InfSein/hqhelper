@@ -3,8 +3,8 @@ import {
   TaskAltOutlined
 } from '@vicons/material'
 import RouterCard from '@/components/ui/RouterCard.vue'
-import ItemSelectionPanel from '@/components/selection-panel/cs/ItemSelectionPanel.vue'
-import StatisticsPanelShared from '@/components/statistics/StatisticsPanelShared.vue'
+import ItemSelectionPanel from '@/views/collectable-submissions/components/ItemSelectionPanel.vue'
+import StatisticsPanelShared from '@/components/StatisticsPanelShared.vue'
 import ModalJoinInWorkflow from '@/components/modals/ModalJoinInWorkflow.vue'
 import { useStore } from '@/store'
 import { XivUnpackedCollectableSubmissions } from '@/assets/data'

@@ -3,8 +3,8 @@ import {
   FastfoodOutlined
 } from '@vicons/material'
 import RouterCard from '@/components/ui/RouterCard.vue'
-import ItemSelectionPanel from '@/components/selection-panel/ft/ItemSelectionPanel.vue'
-import StatisticsPanelShared from '@/components/statistics/StatisticsPanelShared.vue'
+import ItemSelectionPanel from '@/views/food-and-tinc/components/ItemSelectionPanel.vue'
+import StatisticsPanelShared from '@/components/StatisticsPanelShared.vue'
 import ModalJoinInWorkflow from '@/components/modals/ModalJoinInWorkflow.vue'
 import { useStore } from '@/store'
 import { HqData } from '@/assets/data'

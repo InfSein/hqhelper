@@ -1,7 +1,7 @@
 <script setup lang='ts'>
 import ItemButton from '@/components/item/ItemButton.vue'
 import ItemList from '@/components/item/ItemList.vue'
-import TomeScriptButton from '@/components/other/TomeScriptButton.vue'
+import TomeScriptButton from '@/components/TomeScriptButton.vue'
 import ModalCraftStatements from '@/components/modals/ModalCraftStatements.vue'
 import ModalProStatements from '@/components/modals/ModalProStatements.vue'
 import ModalCostAndBenefit from '@/components/modals/ModalCostAndBenefit.vue'
