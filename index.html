@@ -34,17 +34,354 @@
   </noscript>
   <div id="drag-area"></div>
   <div id="app">
-    <style>#loading{height:100%;width:100%;position:fixed;z-index:1;margin-top:0px;top:0px}#loading-center{width:100%;height:100%;position:relative}#loading-center-absolute{position:absolute;left:50%;top:50%;height:60px;width:60px;margin-top:-30px;margin-left:-30px;-webkit-animation:loading-center-absolute 1s infinite;animation:loading-center-absolute 1s infinite}.object{width:20px;height:20px;background-color:black;float:left;-moz-border-radius:50%;-webkit-border-radius:50%;border-radius:50%;margin-right:20px;margin-bottom:20px}.object:nth-child(2n+0){margin-right:0px}#object_one{-webkit-animation:object_one 1s infinite;animation:object_one 1s infinite}#object_two{-webkit-animation:object_two 1s infinite;animation:object_two 1s infinite}#object_three{-webkit-animation:object_three 1s infinite;animation:object_three 1s infinite}#object_four{-webkit-animation:object_four 1s infinite;animation:object_four 1s infinite}@-webkit-keyframes loading-center-absolute{100%{-ms-transform:rotate(360deg);-webkit-transform:rotate(360deg);transform:rotate(360deg)}}@keyframes loading-center-absolute{100%{-ms-transform:rotate(360deg);-webkit-transform:rotate(360deg);transform:rotate(360deg)}}@-webkit-keyframes object_one{50%{-ms-transform:translate(20px,20px);-webkit-transform:translate(20px,20px);transform:translate(20px,20px)}}@keyframes object_one{50%{-ms-transform:translate(20px,20px);-webkit-transform:translate(20px,20px);transform:translate(20px,20px)}}@-webkit-keyframes object_two{50%{-ms-transform:translate(-20px,20px);-webkit-transform:translate(-20px,20px);transform:translate(-20px,20px)}}@keyframes object_two{50%{-ms-transform:translate(-20px,20px);-webkit-transform:translate(-20px,20px);transform:translate(-20px,20px)}}@-webkit-keyframes object_three{50%{-ms-transform:translate(20px,-20px);-webkit-transform:translate(20px,-20px);transform:translate(20px,-20px)}}@keyframes object_three{50%{-ms-transform:translate(20px,-20px);-webkit-transform:translate(20px,-20px);transform:translate(20px,-20px)}}@-webkit-keyframes object_four{50%{-ms-transform:translate(-20px,-20px);-webkit-transform:translate(-20px,-20px);transform:translate(-20px,-20px)}}@keyframes object_four{50%{-ms-transform:translate(-20px,-20px);-webkit-transform:translate(-20px,-20px);transform:translate(-20px,-20px)}}</style>
-    <div id="loading">
-      <div id="loading-center">
-        <div id="loading-center-absolute">
-          <div class="object" id="object_one"></div>
-          <div class="object" id="object_two"></div>
-          <div class="object" id="object_three"></div>
-          <div class="object" id="object_four"></div>
-        </div>
+    <style>
+      /* 加载页面基础样式 */
+      @import url('./src/assets/font/lato.css');
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+      #app-loader {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: #f8f9fb;
+        background-image:
+          radial-gradient(ellipse 80% 60% at 50% 0%, rgba(59, 130, 246, 0.05) 0%, transparent 60%),
+          radial-gradient(ellipse 60% 50% at 80% 100%, rgba(99, 102, 241, 0.04) 0%, transparent 50%);
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        overflow: hidden;
+      }
+
+      /* 背景装饰网格 */
+      #app-loader::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background-image:
+          linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+        background-size: 60px 60px;
+        mask-image: radial-gradient(ellipse 70% 50% at 50% 50%, black 20%, transparent 70%);
+        -webkit-mask-image: radial-gradient(ellipse 70% 50% at 50% 50%, black 20%, transparent 70%);
+      }
+
+      /* 品牌 Container */
+      .loader-brand {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 8px;
+        margin-left: -20px;
+        height: 80px;
+      }
+
+      /* Logo SVG 图标 */
+      .loader-logo {
+        width: 72px;
+        height: 72px;
+        fill: #1c1917;
+        opacity: 0;
+        flex-shrink: 0;
+        animation: loaderLogoFadeIn 0.6s ease-out 0.1s forwards;
+        filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.08));
+      }
+
+      /* 应用名称 HqHelper */
+      .loader-title {
+        font-family: 'Lato', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        font-size: 38px;
+        font-weight: 700;
+        color: #1c1917;
+        letter-spacing: -0.5px;
+        white-space: nowrap;
+        overflow: hidden;
+        max-width: 0;
+        opacity: 0;
+        margin-left: 0;
+        animation: loaderTitleReveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards;
+        user-select: none;
+      }
+
+      /* 进度条容器 */
+      .loader-progress-wrap {
+        width: 280px;
+        height: 3px;
+        background: rgba(0, 0, 0, 0.06);
+        border-radius: 4px;
+        overflow: hidden;
+        margin-bottom: 28px;
+        opacity: 0;
+        animation: loaderFadeIn 0.5s ease-out 0.9s forwards;
+      }
+
+      /* 进度条填充 */
+      .loader-progress-bar {
+        height: 100%;
+        width: 0%;
+        border-radius: 4px;
+        background: linear-gradient(90deg, #2B4458 0%, #364F7E 25%, #E2E1E1 50%, #AB9F8B 75%, #2B4458 100%);
+        background-size: 200% 100%;
+        animation: loaderProgressGrow 8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards,
+                   loaderProgressShimmer 4s linear infinite;
+        position: relative;
+        transition: background 0.3s ease;
+      }
+
+      /* 进度条光效 */
+      .loader-progress-bar::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: -1px;
+        width: 24px;
+        height: 5px;
+        background: radial-gradient(ellipse at right, rgba(226, 225, 225, 0.6), transparent);
+        border-radius: 50%;
+        filter: blur(2px);
+      }
+
+      /* 错误状态：进度条变红并停止动画 */
+      .loader-progress-bar.is-error {
+        background: #ef4444;
+        animation: none;
+      }
+      .loader-progress-bar.is-error::after {
+        background: radial-gradient(ellipse at right, rgba(239, 68, 68, 0.4), transparent);
+      }
+
+      /* 主提示文本 */
+      .loader-text-main {
+        font-size: 14px;
+        font-weight: 500;
+        color: rgba(0, 0, 0, 0.55);
+        letter-spacing: 0.5px;
+        margin-bottom: 12px;
+        opacity: 0;
+        animation: loaderFadeIn 0.5s ease-out 1.05s forwards;
+        transition: color 0.3s ease;
+      }
+
+      /* 错误状态：主文本变红 */
+      .loader-text-main.is-error {
+        color: #dc2626;
+      }
+
+      /* 副提示文本 */
+      .loader-text-sub {
+        font-size: 12px;
+        color: rgba(0, 0, 0, 0.3);
+        opacity: 0;
+        animation: loaderFadeIn 0.5s ease-out 2.5s forwards;
+        transition: color 0.2s ease;
+      }
+      .loader-text-sub a {
+        color: rgba(0, 0, 0, 0.35);
+        text-decoration: none;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+        padding-bottom: 1px;
+        transition: color 0.2s ease, border-color 0.2s ease;
+      }
+      .loader-text-sub a:hover {
+        color: #6366f1;
+        border-bottom-color: rgba(99, 102, 241, 0.4);
+      }
+
+      /* 错误详情（红色色调） */
+      .loader-error-detail {
+        margin-top: 8px;
+        margin-bottom: 16px;
+        padding: 12px 16px;
+        max-width: 480px;
+        font-size: 11px;
+        font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+        color: #991b1b;
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        border-radius: 6px;
+        word-break: break-all;
+        line-height: 1.6;
+        display: none;
+      }
+
+      /* 进度条增长动画 — 快速到 70%，然后缓慢爬升到 92% */
+      @keyframes loaderProgressGrow {
+        0%   { width: 0%; }
+        15%  { width: 25%; }
+        35%  { width: 50%; }
+        55%  { width: 68%; }
+        75%  { width: 80%; }
+        90%  { width: 88%; }
+        100% { width: 92%; }
+      }
+
+      /* 进度条渐变流动效果 */
+      @keyframes loaderProgressShimmer {
+        0%   { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+      }
+
+      /* Logo 初始居中淡入升起 */
+      @keyframes loaderLogoFadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(12px) scale(0.92);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      /* 应用名称平滑滑动展开，推动 Logo 自然左移 */
+      @keyframes loaderTitleReveal {
+        0% {
+          max-width: 0;
+          opacity: 0;
+          margin-left: 0;
+          transform: translateX(-12px);
+        }
+        30% {
+          opacity: 0.2;
+        }
+        100% {
+          max-width: 220px;
+          opacity: 1;
+          margin-left: 0;
+          transform: translateX(0);
+        }
+      }
+
+      /* 淡入 */
+      @keyframes loaderFadeIn {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+      }
+
+      /* 淡入 + 上移 */
+      @keyframes loaderFadeInUp {
+        from { opacity: 0; transform: translateY(12px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+    </style>
+
+    <div id="app-loader">
+      <div class="loader-brand">
+        <svg class="loader-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 -1380 1000 2000">
+          <path d="M616 720Q716 719 800 678Q885 638 944 567Q886 689 774 763Q662 837 518 839Q318 834 185 701Q52 568 47 368Q50 197 152 73Q253 -51 414 -90Q423 -94 433 -96Q443 -99 454 -101Q419 -75 399 -37Q378 2 378 47Q380 126 432 179Q485 232 564 234Q643 232 696 179Q748 126 750 47Q750 47 750 46Q763 72 769 101Q776 130 776 161Q773 276 697 351Q622 427 507 430Q393 427 318 351Q242 276 239 161Q239 129 246 98Q253 68 267 41Q229 94 208 157Q187 220 187 290Q192 473 313 594Q434 715 616 720Z" transform="scale(1,-1)" />
+        </svg>
+        <span class="loader-title">HqHelper</span>
       </div>
+      <div class="loader-progress-wrap">
+        <div class="loader-progress-bar" id="loader-progress-bar"></div>
+      </div>
+      <div class="loader-text-main" id="loader-text-main"></div>
+      <div class="loader-error-detail" id="loader-error-detail"></div>
+      <div class="loader-text-sub" id="loader-text-sub"></div>
     </div>
+
+    <script>
+      /* i18n：优先 localStorage，回退 navigator.language，默认 zh */
+      (function() {
+        var stored = '';
+        try { stored = localStorage.getItem('locale') || ''; } catch(e) {}
+        var nav = (navigator.language || '').slice(0, 2);
+        var lang = stored || nav || 'zh';
+
+        var texts = {
+          zh: {
+            main: '正在加载 …',
+            sub: '加载太慢了？',
+            link: '点此下载 HqHelper 客户端',
+            error: '加载失败'
+          },
+          en: {
+            main: 'Loading …',
+            sub: 'Loading too slowly? ',
+            link: 'Download the HqHelper client',
+            error: 'Failed to load'
+          },
+          ja: {
+            main: '読み込み中 …',
+            sub: '読み込みが遅い？',
+            link: 'HqHelper クライアントをダウンロード',
+            error: '読み込みに失敗しました'
+          }
+        };
+
+        var t = texts[lang] || texts['zh'];
+        /* 将 i18n 文本暴露给错误处理使用 */
+        window.__loaderTexts = t;
+
+        document.getElementById('loader-text-main').textContent = t.main;
+        document.getElementById('loader-text-sub').innerHTML =
+          t.sub + '<a href="https://download.hqhelper.com" target="_blank" rel="noopener noreferrer">' + t.link + '</a>';
+      })();
+
+      /* 收集所有控制台错误，用于获取完整的错误描述 */
+      window.__loaderErrors = [];
+
+      /* Vue / 模块加载失败时切换到错误状态 */
+      window.addEventListener('error', function(e) {
+        console.log('error', e)
+        /* 资源加载失败（SCRIPT / LINK 标签） */
+        if (e.target && (e.target.tagName === 'SCRIPT' || e.target.tagName === 'LINK')) {
+          /* 尽可能收集完整信息：message 可能为空，拼接 src/href */
+          var parts = [];
+          if (e.message) parts.push(e.message);
+          var url = e.target.src || e.target.href || '';
+          if (url) parts.push(`Failed to load ${url} .`);
+          window.__loaderErrors.push(parts.join('\n') || 'Resource load failed');
+          window.__showLoaderError();
+          return;
+        }
+        /* 运行时 JS 错误 */
+        if (e.message) {
+          var info = e.message;
+          if (e.filename) info += '\n  at ' + e.filename + (e.lineno ? ':' + e.lineno : '');
+          window.__loaderErrors.push(info);
+          window.__showLoaderError();
+        }
+      }, true);
+
+      window.addEventListener('unhandledrejection', function(e) {
+        console.log('unhandledrejection', e)
+        var msg = e.reason
+          ? (e.reason.stack || e.reason.message || String(e.reason))
+          : 'Unknown error';
+        window.__loaderErrors.push(msg);
+        window.__showLoaderError();
+      });
+
+      /* 显示错误状态的函数（合并所有已收集的错误） */
+      window.__showLoaderError = function() {
+        var bar = document.getElementById('loader-progress-bar');
+        var main = document.getElementById('loader-text-main');
+        var errEl = document.getElementById('loader-error-detail');
+        var subEl = document.getElementById('loader-text-sub');
+        var t = window.__loaderTexts || { error: '加载失败' };
+
+        if (bar) bar.classList.add('is-error');
+        if (main) {
+          main.classList.add('is-error');
+          main.textContent = t.error;
+        }
+        if (errEl && window.__loaderErrors.length) {
+          errEl.textContent = window.__loaderErrors.join('\n\n');
+          errEl.style.display = 'block';
+        }
+        /* 出错后立即显示副文本（取消延迟淡入） */
+        if (subEl) {
+          subEl.style.animation = 'none';
+          subEl.style.opacity = '1';
+        }
+      };
+    </script>
   </div>
   <script type="module" src="/src/main.ts"></script>
 </body>
