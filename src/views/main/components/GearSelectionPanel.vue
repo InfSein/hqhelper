@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import { 
-  JoinLeftOutlined,
-  KeyboardArrowDownRound
-} from '@vicons/material'
+import type { WritableComputedRef } from 'vue'
+import { JoinLeftOutlined } from '@vicons/material'
 import Stepper from '@/components/ui/Stepper.vue'
 import GearSlot from '@/components/GearSlot.vue'
 import TooltipButton from '@/components/ui/TooltipButton.vue'
+import DropdownActionMenu from '@/components/ui/DropdownActionMenu.vue'
 import ModalSelectedGears from '@/views/main/components/ModalSelectedGears.vue'
 import {
   XivGearAffixes,
@@ -13,7 +12,13 @@ import {
   XivRoles,
   type HqDataVer
 } from '@/assets/data'
-import { type AttireAffix, type AccessoryAffix, type GearSelections, fixGearSelections } from '@/types/game/gear'
+import {
+  type AttireAffix,
+  type AccessoryAffix,
+  type GearSelections,
+  type GearSlot as GearSlotType,
+  fixGearSelections
+} from '@/types/game/gear'
 import { useGearAdder } from '@/tools/game/gear'
 import { useStore } from '@/store'
 
@@ -28,27 +33,15 @@ export interface GearSelectionPanelProps {
   patchSelected: string | undefined
   jobId: number | undefined
   patchData?: HqDataVer
-  attireAffix: AttireAffix | ""
-  accessoryAffix: AccessoryAffix | ""
+  attireAffix: AttireAffix | ''
+  accessoryAffix: AccessoryAffix | ''
 }
 const props = defineProps<GearSelectionPanelProps>()
 const emits = defineEmits(['joinWorkflow'])
 
 const showSelectedGears = ref(false)
 
-const selectedAffixes = computed(() => {
-  const { jobName, attireName, accessoryName } = getAffixesName()
-  return `[${jobName}/${attireName}/${accessoryName}]`
-})
-const affixesTips = computed(() => {
-  const { jobName, attireName, accessoryName } = getAffixesName()
-  return [
-    t('main.select_gear.info.info_1'),
-    t('main.select_gear.info.info_2', jobName),
-    t('main.select_gear.info.info_3', attireName),
-    t('main.select_gear.info.info_4', accessoryName)
-  ]
-})
+// #region Affixes Information
 const getAffixesName = () => {
   const uiLanguage = store.userConfig?.language_ui ?? 'zh'
   const names = {
@@ -62,21 +55,29 @@ const getAffixesName = () => {
   return names
 }
 
-const jobNotSelected = computed(() => {
-  return !props.jobId || !XivJobs?.[props.jobId]
+const selectedAffixes = computed(() => {
+  const { jobName, attireName, accessoryName } = getAffixesName()
+  return `[${jobName}/${attireName}/${accessoryName}]`
 })
-const disableMainhand = computed(() => {
-  return !props.jobId || jobNotSelected.value || !props.patchData?.mainHand?.[props.jobId]
+
+const affixesTips = computed(() => {
+  const { jobName, attireName, accessoryName } = getAffixesName()
+  return [
+    t('main.select_gear.info.info_1'),
+    t('main.select_gear.info.info_2', jobName),
+    t('main.select_gear.info.info_3', attireName),
+    t('main.select_gear.info.info_4', accessoryName)
+  ]
 })
-const disableOffhand = computed(() => {
-  return !props.jobId || jobNotSelected.value || !props.patchData?.offHand?.[props.jobId]
-})
-const disableAttire = computed(() => {
-  return !props.attireAffix || !XivGearAffixes?.[props.attireAffix]
-})
-const disableAccessory = computed(() => {
-  return !props.accessoryAffix || !XivGearAffixes?.[props.accessoryAffix]
-})
+// #endregion
+
+// #region Disabled State Computeds
+const jobNotSelected = computed(() => !props.jobId || !XivJobs?.[props.jobId])
+const disableMainhand = computed(() => !props.jobId || jobNotSelected.value || !props.patchData?.mainHand?.[props.jobId])
+const disableOffhand = computed(() => !props.jobId || jobNotSelected.value || !props.patchData?.offHand?.[props.jobId])
+const disableAttire = computed(() => !props.attireAffix || !XivGearAffixes?.[props.attireAffix])
+const disableAccessory = computed(() => !props.accessoryAffix || !XivGearAffixes?.[props.accessoryAffix])
+
 const disableAllAttires = computed(() => {
   return !props.attireAffix || disableAttire.value || (
     !props.patchData?.headAttire?.[props.attireAffix]
@@ -94,27 +95,29 @@ const disableAllAccessories = computed(() => {
     && !props.patchData?.rings?.[props.accessoryAffix]
   )
 })
+// #endregion
 
-// #region Slot Computeds
-const createWeaponComputed = (key: "mainHand" | "offHand") => {
+// #region Slot Computeds Factory
+const createWeaponComputed = (key: 'mainHand' | 'offHand') => {
   return computed({
     get: () => {
       return gearSelections.value?.[key]?.[props.jobId ?? 0] || 0
     },
-    set: (value : number) => {
+    set: (value: number) => {
       if (!gearSelections.value) gearSelections.value = fixGearSelections()
       if (!gearSelections.value[key]) gearSelections.value[key] = {}
       gearSelections.value[key][props.jobId ?? 0] = value
     }
   })
 }
-const createAttireComputed = (key: "headAttire" | "bodyAttire" | "handsAttire" | "legsAttire" | "feetAttire") => {
+
+const createAttireComputed = (key: 'headAttire' | 'bodyAttire' | 'handsAttire' | 'legsAttire' | 'feetAttire') => {
   return computed({
     get: () => {
       if (!props.attireAffix) return 0
       return gearSelections.value?.[key]?.[props.attireAffix] || 0
     },
-    set: (value : number) => {
+    set: (value: number) => {
       if (!props.attireAffix) return
       if (!gearSelections.value) gearSelections.value = fixGearSelections()
       if (!gearSelections.value[key]) gearSelections.value[key] = {} as Record<AttireAffix, number>
@@ -122,13 +125,14 @@ const createAttireComputed = (key: "headAttire" | "bodyAttire" | "handsAttire" |
     }
   })
 }
-const createAccessoryComputed = (key: "earrings" | "necklace" | "wrist" | "rings") => {
+
+const createAccessoryComputed = (key: 'earrings' | 'necklace' | 'wrist' | 'rings') => {
   return computed({
     get: () => {
       if (!props.accessoryAffix) return 0
       return gearSelections.value?.[key]?.[props.accessoryAffix] || 0
     },
-    set: (value : number) => {
+    set: (value: number) => {
       if (!props.accessoryAffix) return
       if (!gearSelections.value) gearSelections.value = fixGearSelections()
       if (!gearSelections.value[key]) gearSelections.value[key] = {} as Record<AccessoryAffix, number>
@@ -136,20 +140,96 @@ const createAccessoryComputed = (key: "earrings" | "necklace" | "wrist" | "rings
     }
   })
 }
-const MainHand = createWeaponComputed('mainHand')
-const OffHand = createWeaponComputed('offHand')
-const HeadAttire = createAttireComputed('headAttire')
-const BodyAttire = createAttireComputed('bodyAttire')
-const HandsAttire = createAttireComputed('handsAttire')
-const LegsAttire = createAttireComputed('legsAttire')
-const FeetAttire = createAttireComputed('feetAttire')
-const Earrings = createAccessoryComputed('earrings')
-const Necklace = createAccessoryComputed('necklace')
-const Wrist = createAccessoryComputed('wrist')
-const Rings = createAccessoryComputed('rings')
+
+const slotComputeds: Record<GearSlotType, WritableComputedRef<number>> = {
+  mainHand: createWeaponComputed('mainHand'),
+  offHand: createWeaponComputed('offHand'),
+  headAttire: createAttireComputed('headAttire'),
+  bodyAttire: createAttireComputed('bodyAttire'),
+  handsAttire: createAttireComputed('handsAttire'),
+  legsAttire: createAttireComputed('legsAttire'),
+  feetAttire: createAttireComputed('feetAttire'),
+  earrings: createAccessoryComputed('earrings'),
+  necklace: createAccessoryComputed('necklace'),
+  wrist: createAccessoryComputed('wrist'),
+  rings: createAccessoryComputed('rings')
+}
 // #endregion
 
-// #region Button Functions
+// #region Slot Grid Configuration
+interface SlotConfig {
+  gearSlot: GearSlotType
+  slotDescription: string
+  relatedItem: number
+  computedValue: WritableComputedRef<number>
+  disabled: boolean
+}
+
+interface SlotRowConfig {
+  left: SlotConfig
+  right?: SlotConfig
+}
+
+const getRelatedItem = (gearSlot: GearSlotType): number => {
+  if (gearSlot === 'mainHand' || gearSlot === 'offHand') {
+    return props.patchData?.[gearSlot]?.[props.jobId ?? 0] ?? 0
+  }
+  if (['headAttire', 'bodyAttire', 'handsAttire', 'legsAttire', 'feetAttire'].includes(gearSlot)) {
+    const key = gearSlot as 'headAttire' | 'bodyAttire' | 'handsAttire' | 'legsAttire' | 'feetAttire'
+    return props.attireAffix ? (props.patchData?.[key]?.[props.attireAffix] ?? 0) : 0
+  }
+  const key = gearSlot as 'earrings' | 'necklace' | 'wrist' | 'rings'
+  return props.accessoryAffix ? (props.patchData?.[key]?.[props.accessoryAffix] ?? 0) : 0
+}
+
+const getSlotDisabled = (gearSlot: GearSlotType): boolean => {
+  if (gearSlot === 'mainHand') return disableMainhand.value
+  if (gearSlot === 'offHand') return disableOffhand.value
+  if (['headAttire', 'bodyAttire', 'handsAttire', 'legsAttire', 'feetAttire'].includes(gearSlot)) {
+    const key = gearSlot as 'headAttire' | 'bodyAttire' | 'handsAttire' | 'legsAttire' | 'feetAttire'
+    return !props.attireAffix || disableAttire.value || !props.patchData?.[key]?.[props.attireAffix]
+  }
+  const key = gearSlot as 'earrings' | 'necklace' | 'wrist' | 'rings'
+  return !props.accessoryAffix || disableAccessory.value || !props.patchData?.[key]?.[props.accessoryAffix]
+}
+
+const createSlotConfig = (gearSlot: GearSlotType, descKey: string): SlotConfig => ({
+  gearSlot,
+  slotDescription: t(descKey),
+  relatedItem: getRelatedItem(gearSlot),
+  computedValue: slotComputeds[gearSlot],
+  disabled: getSlotDisabled(gearSlot)
+})
+
+const weaponRow = computed<SlotRowConfig>(() => ({
+  left: createSlotConfig('mainHand', 'game.gear.tool.mainhand.detailed'),
+  right: createSlotConfig('offHand', 'game.gear.tool.offhand.detailed')
+}))
+
+const attireAccessoryRows = computed<SlotRowConfig[]>(() => [
+  {
+    left: createSlotConfig('headAttire', 'game.gear.attire.head.detailed'),
+    right: createSlotConfig('earrings', 'game.gear.accessory.earring.detailed')
+  },
+  {
+    left: createSlotConfig('bodyAttire', 'game.gear.attire.body.detailed'),
+    right: createSlotConfig('necklace', 'game.gear.accessory.necklace.detailed')
+  },
+  {
+    left: createSlotConfig('handsAttire', 'game.gear.attire.hands.detailed'),
+    right: createSlotConfig('wrist', 'game.gear.accessory.wrist.detailed')
+  },
+  {
+    left: createSlotConfig('legsAttire', 'game.gear.attire.legs.detailed'),
+    right: createSlotConfig('rings', 'game.gear.accessory.rings.detailed')
+  },
+  {
+    left: createSlotConfig('feetAttire', 'game.gear.attire.feet.detailed')
+  }
+])
+// #endregion
+
+// #region Button Functions & Gear Adder
 const clearAll = () => {
   gearSelections.value = fixGearSelections()
 }
@@ -157,24 +237,16 @@ const clearCurrent = () => {
   if (jobNotSelected.value) {
     NAIVE_UI_MESSAGE.error(t('main.select_gear.warn.select_job_first')); return
   }
-  MainHand.value = 0
-  OffHand.value = 0
-  HeadAttire.value = 0
-  BodyAttire.value = 0
-  HandsAttire.value = 0
-  LegsAttire.value = 0
-  FeetAttire.value = 0
-  Earrings.value = 0
-  Necklace.value = 0
-  Wrist.value = 0
-  Rings.value = 0
+  Object.values(slotComputeds).forEach(comp => { comp.value = 0 })
 }
+
 const {
   addMainHand, addOffHand,
   addMainOffHand,
   addAttire,
   addAccessory
 } = useGearAdder()
+
 const addCurrMainOffHand = () => {
   if (!props.jobId || jobNotSelected.value) {
     NAIVE_UI_MESSAGE.error(t('main.select_gear.warn.select_job_first')); return
@@ -212,7 +284,7 @@ const handleJoinWorkflow = () => {
 }
 // #endregion
 
-// #region Dropdown Options
+// #region Dropdown Options & Actions
 const displayQuickOperates = computed(() => {
   // * 简单算法，有刻木主手代表是有生产采集新装的版本
   return !!props.patchData?.mainHand?.[8]
@@ -257,114 +329,100 @@ const quickOperatesOptions = computed(() => {
   return [
     ...mainoffOptions,
     {
-      key: 'add-crafter-aaa', 
-      label: t('main.select_gear.quick_operate.add_crafter_suit.title'), 
-      description: t('main.select_gear.quick_operate.add_crafter_suit.tooltip.tooltip_1'),
+      key: 'add-crafter-aaa',
+      label: t('main.select_gear.quick_operate.add_crafter_suit.title'),
+      description: t('main.select_gear.quick_operate.add_crafter_suit.tooltip.tooltip_1')
     },
-    { 
-      key: 'add-gatherer-aaa', 
-      label: t('main.select_gear.quick_operate.add_gatherer_suit.title'), 
-      description: t('main.select_gear.quick_operate.add_gatherer_suit.tooltip.tooltip_1'),
+    {
+      key: 'add-gatherer-aaa',
+      label: t('main.select_gear.quick_operate.add_gatherer_suit.title'),
+      description: t('main.select_gear.quick_operate.add_gatherer_suit.tooltip.tooltip_1')
     },
   ]
 })
-const handleQuickOperatesSelect = (key: string) => {
-  if (jobNotSelected.value) {
-    NAIVE_UI_MESSAGE.error(t('main.select_gear.warn.select_job_first')); return
-  }
-  if (key === 'add-crafter-main') {
-    XivRoles.crafter.jobs.forEach(jobId => {
-      addMainHand(gearSelections, props.patchData, jobId)
-    })
-  } else if (key === 'add-crafter-off') {
-    XivRoles.crafter.jobs.forEach(jobId => {
-      addOffHand(gearSelections, props.patchData, jobId)
-    })
-  } else if (key === 'add-crafter-mainoff') {
-    XivRoles.crafter.jobs.forEach(jobId => {
-      addMainOffHand(gearSelections, props.patchData, jobId)
-    })
-  } else if (key === 'add-gatherer-main') {
-    XivRoles.gatherer.jobs.forEach(jobId => {
-      addMainHand(gearSelections, props.patchData, jobId)
-    })
-  } else if (key === 'add-gatherer-off') {
-    XivRoles.gatherer.jobs.forEach(jobId => {
-      addOffHand(gearSelections, props.patchData, jobId)
-    })
-  } else if (key === 'add-gatherer-mainoff') {
-    XivRoles.gatherer.jobs.forEach(jobId => {
-      addMainOffHand(gearSelections, props.patchData, jobId)
-    })
-  } else if (key === 'add-crafter-aaa') {
+
+const quickOperateHandlers: Record<string, () => void> = {
+  'add-crafter-main': () => XivRoles.crafter.jobs.forEach(j => addMainHand(gearSelections, props.patchData, j)),
+  'add-crafter-off': () => XivRoles.crafter.jobs.forEach(j => addOffHand(gearSelections, props.patchData, j)),
+  'add-crafter-mainoff': () => XivRoles.crafter.jobs.forEach(j => addMainOffHand(gearSelections, props.patchData, j)),
+  'add-gatherer-main': () => XivRoles.gatherer.jobs.forEach(j => addMainHand(gearSelections, props.patchData, j)),
+  'add-gatherer-off': () => XivRoles.gatherer.jobs.forEach(j => addOffHand(gearSelections, props.patchData, j)),
+  'add-gatherer-mainoff': () => XivRoles.gatherer.jobs.forEach(j => addMainOffHand(gearSelections, props.patchData, j)),
+  'add-crafter-aaa': () => {
     addAttire(gearSelections, props.patchData, XivRoles.crafter.attire as AttireAffix)
     addAccessory(gearSelections, props.patchData, XivRoles.crafter.accessory as AccessoryAffix)
-  } else if (key === 'add-gatherer-aaa') {
+  },
+  'add-gatherer-aaa': () => {
     addAttire(gearSelections, props.patchData, XivRoles.gatherer.attire as AttireAffix)
     addAccessory(gearSelections, props.patchData, XivRoles.gatherer.accessory as AccessoryAffix)
   }
 }
 
-const clearOptions = computed(() => {
-  return [
-    { key: 'clear-current', label: t('main.select_gear.clear.current.title'), description: t('main.select_gear.clear.current.tooltip.tooltip_1') },
-    { key: 'clear-all', label: t('main.select_gear.clear.all.title'), description: t('main.select_gear.clear.all.tooltip.tooltip_1') },
-  ]
-})
-const handleClearSelect = (key: string) => {
-  if (key === 'clear-current') {
-    clearCurrent()
-  } else if (key === 'clear-all') {
-    clearAll()
+const handleQuickOperatesSelect = (key: string) => {
+  if (jobNotSelected.value) {
+    NAIVE_UI_MESSAGE.error(t('main.select_gear.warn.select_job_first')); return
   }
+  quickOperateHandlers[key]?.()
 }
 
-const addsuitOptions = computed(() => {
-  return [
-    {
-      key: 'add-weapon',
-      label: t('main.select_gear.add.mainoff_hand'),
-      disabled: disableMainhand.value && disableOffhand.value
-    },
-    {
-      key: 'add-attire',
-      label: t('main.select_gear.add.attire'),
-      disabled: disableAllAttires.value
-    },
-    {
-      key: 'add-accessory',
-      label: t('main.select_gear.add.accessory'),
-      disabled: disableAllAccessories.value
-    },
-    {
-      key: 'add-attire-and-accessory',
-      label: t('main.select_gear.add.attire_and_accessory'),
-      disabled: disableAllAttires.value && disableAllAccessories.value
-    },
-    {
-      key: 'add-suit',
-      label: t('main.select_gear.add.whole_suit'),
-      disabled: disableMainhand.value && disableOffhand.value && disableAllAttires.value && disableAllAccessories.value
-    },
-  ]
-})
-const handleAddsuitSelect = (key: string) => {
-  if (key === 'add-weapon') {
-    addCurrMainOffHand()
-  } else if (key === 'add-attire') {
-    addCurrAttire()
-  } else if (key === 'add-accessory') {
-    addCurrAccessory()
-  } else if (key === 'add-attire-and-accessory') {
-    addAttireAndAccessory()
-  } else if (key === 'add-suit') {
-    addAll()
+const clearOptions = computed(() => [
+  { key: 'clear-current', label: t('main.select_gear.clear.current.title'), description: t('main.select_gear.clear.current.tooltip.tooltip_1') },
+  { key: 'clear-all', label: t('main.select_gear.clear.all.title'), description: t('main.select_gear.clear.all.tooltip.tooltip_1') }
+])
+
+const clearHandlers: Record<string, () => void> = {
+  'clear-current': clearCurrent,
+  'clear-all': clearAll
+}
+
+const handleClearSelect = (key: string) => {
+  clearHandlers[key]?.()
+}
+
+const addsuitOptions = computed(() => [
+  {
+    key: 'add-weapon',
+    label: t('main.select_gear.add.mainoff_hand'),
+    disabled: disableMainhand.value && disableOffhand.value
+  },
+  {
+    key: 'add-attire',
+    label: t('main.select_gear.add.attire'),
+    disabled: disableAllAttires.value
+  },
+  {
+    key: 'add-accessory',
+    label: t('main.select_gear.add.accessory'),
+    disabled: disableAllAccessories.value
+  },
+  {
+    key: 'add-attire-and-accessory',
+    label: t('main.select_gear.add.attire_and_accessory'),
+    disabled: disableAllAttires.value && disableAllAccessories.value
+  },
+  {
+    key: 'add-suit',
+    label: t('main.select_gear.add.whole_suit'),
+    disabled: disableMainhand.value && disableOffhand.value && disableAllAttires.value && disableAllAccessories.value
   }
+])
+
+const addsuitHandlers: Record<string, () => void> = {
+  'add-weapon': addCurrMainOffHand,
+  'add-attire': addCurrAttire,
+  'add-accessory': addCurrAccessory,
+  'add-attire-and-accessory': addAttireAndAccessory,
+  'add-suit': addAll
+}
+
+const handleAddsuitSelect = (key: string) => {
+  addsuitHandlers[key]?.()
 }
 
 defineExpose({
   addCurrMainOffHand
 })
+// #endregion
 </script>
 
 <template>
@@ -374,7 +432,7 @@ defineExpose({
       <span class="card-title-text">{{ t('main.select_gear.title') }}</span>
       <n-popover placement="bottom-start" :trigger="isMobile ? 'click' : 'hover'">
         <template #trigger>
-          <span class="card-title-desc">{{ selectedAffixes }}</span>
+          <span class="ml-2.5 text-[14px]">{{ selectedAffixes }}</span>
         </template>
         <div>
           <p v-for="(tip, index) in affixesTips" :key="'title-tip' + index">
@@ -383,135 +441,95 @@ defineExpose({
         </div>
       </n-popover>
     </template>
-    
-    <div class="gear-selection-containter">
+
+    <div class="h-full flex flex-col">
       <n-alert
         v-if="jobNotSelected"
         type="warning"
-        style="margin-bottom: 10px;"
+        class="mb-2.5"
       >
         {{ t('main.select_gear.warn.select_job_first') }}
       </n-alert>
 
-      <table>
+      <table class="w-full [&_td]:text-center [&_td]:min-w-10">
         <tbody>
           <tr>
             <td>
               <GearSlot
-                gear-slot="mainHand"
-                :slot-description="t('game.gear.tool.mainhand.detailed')"
-                :related-item="patchData?.mainHand?.[jobId ?? 0] ?? 0"
+                :gear-slot="weaponRow.left.gearSlot"
+                :slot-description="weaponRow.left.slotDescription"
+                :related-item="weaponRow.left.relatedItem"
               />
             </td>
-            <td><Stepper v-model:value="MainHand" :disabled="disableMainhand" /></td>
+            <td>
+              <Stepper
+                :value="weaponRow.left.computedValue.value"
+                @update:value="(val) => (weaponRow.left.computedValue.value = val)"
+                :disabled="weaponRow.left.disabled"
+              />
+            </td>
             <td>
               <GearSlot
-                gear-slot="offHand"
-                :slot-description="t('game.gear.tool.offhand.detailed')"
-                :related-item="patchData?.offHand?.[jobId ?? 0] ?? 0"
+                :gear-slot="weaponRow.right!.gearSlot"
+                :slot-description="weaponRow.right!.slotDescription"
+                :related-item="weaponRow.right!.relatedItem"
               />
             </td>
-            <td><Stepper v-model:value="OffHand" :disabled="disableOffhand" /></td>
+            <td>
+              <Stepper
+                :value="weaponRow.right!.computedValue.value"
+                @update:value="(val) => (weaponRow.right!.computedValue.value = val)"
+                :disabled="weaponRow.right!.disabled"
+              />
+            </td>
           </tr>
 
           <tr class="divider">
-            <td colspan="4"><n-divider dashed /></td>
+            <td colspan="4"><n-divider dashed class="my-0.75!" /></td>
           </tr>
 
-          <tr>
-            <td style="min-width: 40px;">
-              <GearSlot
-                gear-slot="headAttire"
-                :slot-description="t('game.gear.attire.head.detailed')"
-                :related-item="attireAffix ? (patchData?.headAttire?.[attireAffix] ?? 0) : 0"
-              />
-            </td>
-            <td><Stepper v-model:value="HeadAttire" :disabled="!attireAffix || disableAttire || !patchData?.headAttire?.[attireAffix]" /></td>
-            <td style="min-width: 40px;">
-              <GearSlot
-                gear-slot="earrings"
-                :slot-description="t('game.gear.accessory.earring.detailed')"
-                :related-item="accessoryAffix ? (patchData?.earrings?.[accessoryAffix] ?? 0) : 0"
-              />
-            </td>
-            <td><Stepper v-model:value="Earrings" :disabled="!accessoryAffix || disableAccessory || !patchData?.earrings?.[accessoryAffix]" /></td>
-          </tr>
-
-          <tr>
+          <tr v-for="(row, idx) in attireAccessoryRows" :key="idx">
             <td>
               <GearSlot
-                gear-slot="bodyAttire"
-                :slot-description="t('game.gear.attire.body.detailed')"
-                :related-item="attireAffix ? (patchData?.bodyAttire?.[attireAffix] ?? 0) : 0"
+                :gear-slot="row.left.gearSlot"
+                :slot-description="row.left.slotDescription"
+                :related-item="row.left.relatedItem"
               />
             </td>
-            <td><Stepper v-model:value="BodyAttire" :disabled="!attireAffix || disableAttire || !patchData?.bodyAttire?.[attireAffix]" /></td>
             <td>
-              <GearSlot
-                gear-slot="necklace"
-                :slot-description="t('game.gear.accessory.necklace.detailed')"
-                :related-item="accessoryAffix ? (patchData?.necklace?.[accessoryAffix] ?? 0) : 0"
+              <Stepper
+                :value="row.left.computedValue.value"
+                @update:value="(val) => (row.left.computedValue.value = val)"
+                :disabled="row.left.disabled"
               />
             </td>
-            <td><Stepper v-model:value="Necklace" :disabled="!accessoryAffix || disableAccessory || !patchData?.necklace?.[accessoryAffix]" /></td>
-          </tr>
-
-          <tr>
-            <td>
-              <GearSlot
-                gear-slot="handsAttire"
-                :slot-description="t('game.gear.attire.hands.detailed')"
-                :related-item="attireAffix ? (patchData?.handsAttire?.[attireAffix] ?? 0) : 0"
-              />
-            </td>
-            <td><Stepper v-model:value="HandsAttire" :disabled="!attireAffix || disableAttire || !patchData?.handsAttire?.[attireAffix]" /></td>
-            <td>
-              <GearSlot
-                gear-slot="wrist"
-                :slot-description="t('game.gear.accessory.wrist.detailed')"
-                :related-item="accessoryAffix ? (patchData?.wrist?.[accessoryAffix] ?? 0) : 0"
-              />
-            </td>
-            <td><Stepper v-model:value="Wrist" :disabled="!accessoryAffix || disableAccessory || !patchData?.wrist?.[accessoryAffix]" /></td>
-          </tr>
-
-          <tr>
-            <td>
-              <GearSlot
-                gear-slot="legsAttire"
-                :slot-description="t('game.gear.attire.legs.detailed')"
-                :related-item="attireAffix ? (patchData?.legsAttire?.[attireAffix] ?? 0) : 0"
-              />
-            </td>
-            <td><Stepper v-model:value="LegsAttire" :disabled="!attireAffix || disableAttire || !patchData?.legsAttire?.[attireAffix]" /></td>
-            <td>
-              <GearSlot
-                gear-slot="rings"
-                :slot-description="t('game.gear.accessory.rings.detailed')"
-                :related-item="accessoryAffix ? (patchData?.rings?.[accessoryAffix] ?? 0) : 0"
-              />
-            </td>
-            <td><Stepper v-model:value="Rings" :disabled="!accessoryAffix || disableAccessory || !patchData?.rings?.[accessoryAffix]" /></td>
-          </tr>
-
-          <tr>
-            <td>
-              <GearSlot
-                gear-slot="feetAttire"
-                :slot-description="t('game.gear.attire.feet.detailed')"
-                :related-item="attireAffix ? (patchData?.feetAttire?.[attireAffix] ?? 0) : 0"
-              />
-            </td>
-            <td><Stepper v-model:value="FeetAttire" :disabled="!attireAffix || disableAttire || !patchData?.feetAttire?.[attireAffix]" /></td>
-            <td></td>
-            <td></td>
+            <template v-if="row.right">
+              <td>
+                <GearSlot
+                  :gear-slot="row.right.gearSlot"
+                  :slot-description="row.right.slotDescription"
+                  :related-item="row.right.relatedItem"
+                />
+              </td>
+              <td>
+                <Stepper
+                  :value="row.right.computedValue.value"
+                  @update:value="(val) => (row.right!.computedValue.value = val)"
+                  :disabled="row.right.disabled"
+                />
+              </td>
+            </template>
+            <template v-else>
+              <td></td>
+              <td></td>
+            </template>
           </tr>
         </tbody>
       </table>
 
-      <div class="bottom-buttons">
-        <div class="content">
-          <n-button-group class="end">
+      <div class="mt-8 mr-0.75 max-md:mt-auto">
+        <div class="flex justify-end mb-1.5">
+          <n-button-group>
             <n-button
               :disabled="jobNotSelected"
               @click="showSelectedGears = true"
@@ -534,106 +552,60 @@ defineExpose({
             </n-popover>
           </n-button-group>
         </div>
-        <n-divider dashed />
-        <n-flex class="foot" justify="end">
-          <n-popover
+        <n-divider dashed class="my-0.75!" />
+        <div class="flex flex-wrap mt-1.5 justify-end gap-x-3 gap-y-2">
+          <DropdownActionMenu
             v-if="displayQuickOperates"
-            placement="bottom"
-            :trigger="isMobile ? 'click' : 'hover'"
-            :show-arrow="false"
-            class="select-none"
-            style="--n-padding: 4px;"
+            :label="t('main.select_gear.quick_operate.title')"
+            :disabled="jobNotSelected"
           >
-            <template #trigger>
-              <n-button
-                icon-placement="right"
-                :disabled="jobNotSelected"
-              >
-                <template #icon>
-                  <n-icon><KeyboardArrowDownRound /></n-icon>
-                </template>
-                {{ t('main.select_gear.quick_operate.title') }}
-              </n-button>
-            </template>
-            <div class="flex flex-col gap-0.5">
-              <TooltipButton
-                v-for="option in quickOperatesOptions"
-                :key="option.key"
-                quaternary
-                :text="option.label"
-                :tip="option.description"
-                tip-type="n-tooltip"
-                placement="right"
-                btn-style="justify-content: start; --n-padding: 8px 16px; --n-height: auto;"
-                pop-style="width: max-content;"
-                @click="handleQuickOperatesSelect(option.key)"
-              />
-            </div>
-          </n-popover>
-          <n-popover
-            placement="bottom"
-            :trigger="isMobile ? 'click' : 'hover'"
-            :show-arrow="false"
-            class="select-none"
-            style="--n-padding: 4px;"
+            <TooltipButton
+              v-for="option in quickOperatesOptions"
+              :key="option.key"
+              quaternary
+              :text="option.label"
+              :tip="option.description"
+              tip-type="n-tooltip"
+              placement="right"
+              btn-style="justify-content: start; --n-padding: 8px 16px; --n-height: auto;"
+              pop-style="width: max-content;"
+              @click="handleQuickOperatesSelect(option.key)"
+            />
+          </DropdownActionMenu>
+
+          <DropdownActionMenu
+            :label="t('common.clear')"
+            :disabled="jobNotSelected"
           >
-            <template #trigger>
-              <n-button
-                icon-placement="right"
-                :disabled="jobNotSelected"
-              >
-                <template #icon>
-                  <n-icon><KeyboardArrowDownRound /></n-icon>
-                </template>
-                {{ t('common.clear') }}
-              </n-button>
-            </template>
-            <div class="flex flex-col gap-0.5">
-              <TooltipButton
-                v-for="option in clearOptions"
-                :key="option.key"
-                quaternary
-                :text="option.label"
-                :tip="option.description"
-                tip-type="n-tooltip"
-                placement="right"
-                pop-style="width: max-content;"
-                @click="handleClearSelect(option.key)"
-              />
-            </div>
-          </n-popover>
-          <n-popover
-            placement="bottom"
-            :trigger="isMobile ? 'click' : 'hover'"
-            :show-arrow="false"
-            class="select-none"
-            style="--n-padding: 4px;"
+            <TooltipButton
+              v-for="option in clearOptions"
+              :key="option.key"
+              quaternary
+              :text="option.label"
+              :tip="option.description"
+              tip-type="n-tooltip"
+              placement="right"
+              pop-style="width: max-content;"
+              @click="handleClearSelect(option.key)"
+            />
+          </DropdownActionMenu>
+
+          <DropdownActionMenu
+            :label="t('common.add')"
+            :disabled="jobNotSelected"
           >
-            <template #trigger>
-              <n-button
-                icon-placement="right"
-                :disabled="jobNotSelected"
-              >
-                <template #icon>
-                  <n-icon><KeyboardArrowDownRound /></n-icon>
-                </template>
-                {{ t('common.add') }}
-              </n-button>
-            </template>
-            <div class="flex flex-col gap-0.5">
-              <n-button
-                v-for="option in addsuitOptions"
-                :key="option.key"
-                quaternary
-                :disabled="option.disabled"
-                style="justify-content: start;"
-                @click="handleAddsuitSelect(option.key)"
-              >
-                {{ option.label }}
-              </n-button>
-            </div>
-          </n-popover>
-        </n-flex>
+            <n-button
+              v-for="option in addsuitOptions"
+              :key="option.key"
+              quaternary
+              :disabled="option.disabled"
+              style="justify-content: start;"
+              @click="handleAddsuitSelect(option.key)"
+            >
+              {{ option.label }}
+            </n-button>
+          </DropdownActionMenu>
+        </div>
       </div>
     </div>
 
@@ -642,48 +614,8 @@ defineExpose({
       v-model:gear-selections="gearSelections"
       :patch-data="patchData"
     />
-
   </FoldableCard>
 </template>
 
 <style scoped>
-.gear-selection-containter {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-.card-title-desc {
-  margin-left: 10px;
-  font-size: 14px;
-}
-table {
-  width: 100%;
-
-  td {
-    text-align: center;
-  }
-}
-.n-divider {
-  margin: 3px 0;
-}
-.bottom-buttons {
-  margin-top: 1em;
-  margin-right: 3px;
-  
-  .content {
-    display: flex;
-    justify-content: end;
-    margin-bottom: 6px;
-  }
-  .foot {
-    margin-top: 6px;
-  }
-}
-
-/* Mobile */
-@media screen and (max-width: 767px) {
-  .bottom-buttons {
-    margin-top: auto;
-  }
-}
 </style>
