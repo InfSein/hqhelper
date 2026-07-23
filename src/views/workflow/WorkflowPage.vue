@@ -246,8 +246,8 @@ const notebookGroups = computed(() => {
   const groups: Record<number, NotebookGroup> = {}
   Object.values(XivUnpackedRecipes).forEach(recipe => {
     const item = getItemInfo(recipe.target)
-    const job = item.craftInfo?.jobId
-    if (!job) return
+    if (!recipe.job && recipe.job !== 0) return
+    const job = recipe.job + 8
 
     groups[job] ??= {
       job,
@@ -737,7 +737,6 @@ const handleNotebookItemContextMenu = (e: MouseEvent, item: ItemInfo) => {
                         :item-info="item"
                         :amount="0"
                         show-item-details
-                        hide-pop-icon
                       />
                     </n-button>
                     <n-button
