@@ -125,9 +125,9 @@ const handleCopyAsMacro = async () => {
     :style="{ maxWidth: isMobile ? 'unset' : '320px' }"
   >
     <template #trigger>
-      <n-button class="ts-btn" :style="btnStyle" :title="t('common.tomescript')">
+      <n-button class="w-full h-full p-1" :style="btnStyle" :title="t('common.tomescript')">
         <div class="flex w-full flex-col text-right">
-          <p class="text">{{ t('common.tomescript') }}</p>
+          <p class="truncate">{{ t('common.tomescript') }}</p>
           <div class="tome-scripts">
               <div class="tome-script" v-for="(totalAmount, scriptID) in tomeScripts" :key="'tome-script-' + scriptID">
                 <span class="amount">{{ getItemAmount(totalAmount) }}</span>
@@ -157,7 +157,7 @@ const handleCopyAsMacro = async () => {
           <div class="line">
             <ItemSpan :item-info="getItemInfo(scriptID)" :amount="tomeScripts[scriptID]" show-amount />
           </div>
-          <n-divider class="item-divider" />
+          <n-divider class="m-0! mx-0.5!" />
           <div class="content">
             <div class="line" v-for="(itemInfo, index) in itemInfos" :key="'popup-tome-' + scriptID + '-' + index">
               <ItemSpan :item-info="getItemInfo(itemInfo.id)" :amount="itemInfo.amount" show-amount />
@@ -186,25 +186,6 @@ const handleCopyAsMacro = async () => {
   width: 100%;
   height: 100%;
 }
-.item-divider {
-  margin: 0 2px;
-}
-.block-divider {
-  margin: 5px 0;
-}
-.ts-btn {
-  width: 100%;
-  height: 100%;
-  padding: 5px;
-}
-.text {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.tome-scripts-ellipsis {
-  flex-shrink: 0;
-}
 .tome-scripts {
   display: flex;
   align-items: center;
@@ -222,6 +203,9 @@ const handleCopyAsMacro = async () => {
   }
 }
 .pop-wrapper {
+  .block-divider {
+    margin: 4px 0;
+  }
   .pop-header {
     display: flex;
     align-items: center;

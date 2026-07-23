@@ -32,7 +32,7 @@ const itemInfo = computed(() => {
     </template>
     <div>
       <p class="font-bold">{{ slotDescription }}</p>
-      <n-divider class="block-divider" />
+      <n-divider class="mt-px! mb-1!" />
       <ItemButton
         v-if="itemInfo"
         :item-info="itemInfo"
@@ -49,7 +49,4 @@ const itemInfo = computed(() => {
 </template>
 
 <style scoped>
-.block-divider {
-  margin: 1px 0 5px !important;
-}
 </style>

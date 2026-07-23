@@ -3,14 +3,14 @@
 **重构**
 - [ ] `scripts` 中的文件应进行整理和精简
 - [ ] `src\assets` 结构调整
-- [ ] `src\components` 结构调整
-- [ ] `src\composables` 与 `src\tools` 总体性梳理
-- [ ] `src\data` 进行迁移/移除
+- [x] `src\components` 结构调整
+- [x] `src\composables` 与 `src\tools` 总体性梳理
+- [x] `src\data` 进行迁移/移除
 - [x] `src\models` 进行拆分迁移，丢进types
 - [x] `src\store` 进行代码重构。
 - [ ] 审查各个vue文件的inject，权衡是否真的需要它们。
 - [x] `src\variables` 进行迁移/移除
-- [ ] 使用 `feature` 模式重新设计项目结构
+- [x] 使用 `feature` 模式重新设计项目结构
 - [ ] `src\components\main\GearSelectionPanel.vue` 里面的逻辑写的太他妈啥比了，有空了就重写
 
 **功能**
