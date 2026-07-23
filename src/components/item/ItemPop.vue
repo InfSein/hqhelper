@@ -25,11 +25,15 @@ import { getItemPriceInfo } from '@/tools/item/price.ts'
 import type { ItemPriceType } from '@/types/config/func.ts'
 import ItemInfoHeader from './ItemInfoHeader.vue'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const currentET = inject<Ref<EorzeaTime>>('currentET')!
-// const appMode = inject<Ref<"overlay" | "" | undefined>>('appMode') ?? ref('')
-const showItemPriceDetail = inject<(items: ItemInfo[]) => void>('showItemPriceDetail')!
+import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
+import { useEorzeaTime } from '@/composables/useEorzeaTime'
+import { useAppModals } from '@/composables/useAppModals'
+
+const { t } = useLocale()
+const { isMobile } = useResponsive()
+const { currentET } = useEorzeaTime()
+const { showItemPriceDetail } = useAppModals()
 
 const store = useStore()
 const NAIVE_UI_MESSAGE = useMessage()

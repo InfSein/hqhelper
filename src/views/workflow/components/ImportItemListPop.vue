@@ -5,10 +5,14 @@ import {
 import { useDialog } from '@/composables/useDialog'
 import { getItemInfo, getItemNameRevertMap } from '@/tools/item'
 
+import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
+import { useAppModals } from '@/composables/useAppModals'
+
 const NAIVE_UI_MESSAGE = useMessage()
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const joinItemsToWorkflow = inject<(items: Record<number, number>) => void>('joinItemsToWorkflow')!
+const { t } = useLocale()
+const { isMobile } = useResponsive()
+const { joinItemsToWorkflow } = useAppModals()
 
 const { alertError } = useDialog()
 

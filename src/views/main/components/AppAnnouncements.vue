@@ -9,7 +9,9 @@ import {
   qGroupInfo, githubInfo, otherSocialInfo,
 } from '@/constants'
 
-const t = inject<(message: string, args?: any) => string>('t')!
+import { useLocale } from '@/composables/useLocale'
+
+const { t } = useLocale()
 
 const store = useStore()
 const NAIVE_UI_MESSAGE = useMessage()

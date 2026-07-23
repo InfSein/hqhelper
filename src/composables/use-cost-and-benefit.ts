@@ -9,8 +9,10 @@ import { getItemPriceInfo } from '@/tools/item/price'
 /**
  * 成本/收益分析
  */
+import { useLocale } from './useLocale'
+
 export function useCostAndBenefit(statementData: ComputedRef<StatementData>) {
-  const t = inject<(message: string, args?: any) => string>('t')!
+  const { t } = useLocale()
 
   const store = useStore()
   const { alertError } = useDialog()

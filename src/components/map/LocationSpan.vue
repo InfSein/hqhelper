@@ -3,8 +3,9 @@ import MapButton from './MapButton.vue'
 import { XivMaps } from '@/tools/game/map.ts'
 import { useStore } from '@/store'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-// const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+import { useLocale } from '@/composables/useLocale'
+
+const { t } = useLocale()
 
 const store = useStore()
 

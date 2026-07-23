@@ -9,9 +9,11 @@ interface UserSpecialTitle {
   desc: string
 }
 
+import { useLocale } from './useLocale'
+
 const useCloud = () => {
   const store = useStore()
-  const t = inject<(message: string, args?: any) => string>('t')!
+  const { t } = useLocale()
 
   const avatarUrl = computed(() => {
     if (store.cloudConfig.nbb_account_avatar_vip) {

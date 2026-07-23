@@ -14,7 +14,9 @@ import {
 import { useDialog } from '@/composables/useDialog'
 import useMacroHelper from '@/views/macro-manage/composables/useMacroHelper'
 
-const t = inject<(message: string, args?: any) => string>('t')!
+import { useLocale } from '@/composables/useLocale'
+
+const { t } = useLocale()
 
 const { confirm } = useDialog()
 const NAIVE_UI_MESSAGE = useMessage()

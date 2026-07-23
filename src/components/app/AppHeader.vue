@@ -42,21 +42,33 @@ import ModalDonate from '@/components/modals/ModalDonate.vue'
 import { useStore } from '@/store'
 import router from '@/router'
 import { checkAppUpdates, visitUrl } from '@/tools'
+import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
+import { useEorzeaTime } from '@/composables/useEorzeaTime'
+import { useAppModals } from '@/composables/useAppModals'
 import { useDialog } from '@/composables/useDialog.ts'
-import EorzeaTime from '@/utils/game.et.ts'
 import useUiTools from '@/composables/useUiTools.ts'
 import AppStatus from '@/constants/app.ts'
+import { useOsTheme } from 'naive-ui'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const locale = inject<Ref<"zh" | "en" | "ja">>('locale') ?? ref('zh')
+const { t, currentLocale: locale } = useLocale()
+const { isMobile } = useResponsive()
+const { currentET } = useEorzeaTime()
+const { displayCheckUpdatesModal } = useAppModals()
+
 const isChina = computed(() => locale.value === 'zh')
-const currentET = inject<Ref<EorzeaTime>>('currentET')!
-const theme = inject<Ref<"light" | "dark">>('theme') ?? ref('light')
-// const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
-const switchTheme = inject<() => void>('switchTheme')!
-const displayCheckUpdatesModal = inject<() => void>('displayCheckUpdatesModal')!
-// const displayFestivalEggModal = inject<() => void>('displayFestivalEggModal')!
+const osTheme = useOsTheme()
+const theme = computed(() => {
+  const _theme = store.userConfig.theme
+  if (_theme === 'system') {
+    return osTheme.value === 'dark' ? 'dark' : 'light'
+  }
+  return _theme
+})
+const switchTheme = () => {
+  store.userConfig.theme = theme.value === 'light' ? 'dark' : 'light'
+  store.setUserConfig(store.userConfig)
+}
 
 const useDesktopUi = computed(() => {
   return !isMobile.value || !!window.electronAPI

@@ -14,8 +14,11 @@ import type { ItemGroup } from '@/types/item/index.ts'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
 import type { AlarmMacroOptions } from '@/types/workstate/gatherclock.ts'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
+
+const { t } = useLocale()
+const { isMobile } = useResponsive()
 
 const {
   uiLanguage, itemLanguage,

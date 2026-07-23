@@ -14,8 +14,11 @@ import type EorzeaTime from '@/utils/game.et'
 import type { RecommItemGroup } from '@/types/item'
 import { useStore } from '@/store'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const currentET = inject<Ref<EorzeaTime>>('currentET')!
+import { useLocale } from '@/composables/useLocale'
+import { useEorzeaTime } from '@/composables/useEorzeaTime'
+
+const { t } = useLocale()
+const { currentET } = useEorzeaTime()
 
 const store = useStore()
 const {

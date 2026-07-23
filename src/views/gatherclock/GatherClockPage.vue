@@ -19,10 +19,15 @@ import UseConfig from '@/composables/useConfig'
 import EorzeaTime from '@/utils/game.et'
 import { fixAlarmMacroOptions, type WorkState } from '@/types/workstate/gatherclock'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const currentET = inject<Ref<EorzeaTime>>('currentET')!
-const appMode = inject<Ref<"overlay" | "" | undefined>>('appMode') ?? ref('')
+import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
+import { useEorzeaTime } from '@/composables/useEorzeaTime'
+import { useAppMode } from '@/composables/useAppMode'
+
+const { t } = useLocale()
+const { isMobile } = useResponsive()
+const { currentET } = useEorzeaTime()
+const { appMode } = useAppMode()
 
 const store = useStore()
 const { alertError } = useDialog()

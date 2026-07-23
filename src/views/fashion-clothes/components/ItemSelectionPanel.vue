@@ -10,7 +10,9 @@ import { XivUnpackedFashionClothes } from '@/assets/data'
 import { getItemInfo } from '@/tools/item'
 import { useStore } from '@/store'
 
-const t = inject<(message: string, args?: any) => string>('t')!
+import { useLocale } from '@/composables/useLocale'
+
+const { t } = useLocale()
 
 const store = useStore()
 

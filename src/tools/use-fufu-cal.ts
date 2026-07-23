@@ -22,9 +22,11 @@ export interface ProStatementBlock {
   preparedKey: ProStatementPreparedKey;
 }
 
+import { useLocale } from '@/composables/useLocale'
+
 export function useFufuCal() {
   const store = useStore()
-  const t = inject<(message: string, args?: any) => string>('t')!
+  const { t } = useLocale()
 
   const calItems = (selections: Record<number, number>) => {
     const { calItems } = useNbbCal()

@@ -15,8 +15,11 @@ import { deepCopy } from '@/tools'
 import UseConfig from '@/composables/useConfig.ts'
 import FoldableCard from '@/components/templates/FoldableCard.vue'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
+
+const { t } = useLocale()
+const { isMobile } = useResponsive()
 
 const {
   itemLanguage,

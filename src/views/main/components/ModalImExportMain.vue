@@ -18,7 +18,9 @@ import type { ItemInfo } from '@/tools/item'
 import type { ItemPriceInfo } from '@/types/item/price.ts'
 import { XivPatchVers, type XivPatchVer } from '@/assets/data'
 
-const t = inject<(message: string, args?: any) => string>('t')!
+import { useLocale } from '@/composables/useLocale'
+
+const { t } = useLocale()
 const updateItemPrices = inject<() => Promise<void>>('updateItemPrices')!
 
 const store = useStore()

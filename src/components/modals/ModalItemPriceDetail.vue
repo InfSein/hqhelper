@@ -14,8 +14,11 @@ import { ItemPriceApiVersion } from '@/types/item/price.ts'
 import { getItemPriceHistory, getItemPriceInfo } from '@/tools/item/price.ts'
 import { itemPriceTypes, type ItemPriceType } from '@/types/config/func.ts'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
+
+const { t } = useLocale()
+const { isMobile } = useResponsive()
 
 const store = useStore()
 const { alertError } = useDialog()

@@ -1,8 +1,9 @@
-import { h, type Component, type Ref, type VNode } from "vue"
+import { h, type Component, type VNode } from "vue"
 import { NIcon, NTooltip, type DropdownGroupOption, type DropdownOption, type SelectOption } from "naive-ui"
+import { useResponsive } from './useResponsive'
 
 const useUiTools = () => {
-  const isMobile = inject<Ref<boolean>>('isMobile')!
+  const { isMobile } = useResponsive()
 
   const renderIcon = (icon: Component, props?: any) => {
     return () => {

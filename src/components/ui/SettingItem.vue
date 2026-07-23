@@ -7,8 +7,11 @@ import type { AppTextUi, PreferenceItem } from '@/types/index.ts'
 import useUiTools from '@/composables/useUiTools.ts'
 import ImageSelector from './ImageSelector.vue'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
+
+const { t } = useLocale()
+const { isMobile } = useResponsive()
 
 const { optionsRenderer } = useUiTools()
 

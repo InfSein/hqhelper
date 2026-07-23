@@ -12,8 +12,9 @@ import { useNbbCal } from '@/tools/use-nbb-cal'
 import { XivJobRoleMap, type XivPatchVer } from '@/assets/data';
 import type { WorkState } from '@/types/workstate/hqworkbench'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-// const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+import { useLocale } from '@/composables/useLocale'
+
+const { t } = useLocale()
 
 const store = useStore()
 const NAIVE_UI_MESSAGE = useMessage()

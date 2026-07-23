@@ -6,7 +6,9 @@ import {
 } from '@vicons/material'
 import { useStore } from '@/store/index'
 
-const t = inject<(message: string, args?: any) => string>('t')!
+import { useLocale } from '@/composables/useLocale'
+
+const { t } = useLocale()
 
 const store = useStore()
 

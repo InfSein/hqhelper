@@ -8,7 +8,9 @@ import {
   ErrorOutlineRound
 } from '@vicons/material'
 
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+import { useResponsive } from '@/composables/useResponsive'
+
+const { isMobile } = useResponsive()
 
 interface HelpButtonProps {
   icon?: "info" | "question" | "warning"

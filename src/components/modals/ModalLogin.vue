@@ -14,8 +14,10 @@ import { deepCopy } from '@/tools'
 import { getImgCdnUrl } from '@/tools/game'
 import { useNbbCloud } from '@/composables/useNbbCloud.ts'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
+import { useLocale } from '@/composables/useLocale'
+
+const { t } = useLocale()
+const appForceUpdate = () => {}
 
 const store = useStore()
 const NAIVE_UI_MESSAGE = useMessage()

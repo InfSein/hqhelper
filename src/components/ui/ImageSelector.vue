@@ -5,7 +5,9 @@ import { useDialog } from '@/composables/useDialog'
 import useIdb from '@/utils/app.idb'
 import type { dbKey } from '@/utils/app.idb'
 
-const t = inject<(message: string, args?: any) => string>('t')!
+import { useLocale } from '@/composables/useLocale'
+
+const { t } = useLocale()
 
 const idb = useIdb()
 const { confirm } = useDialog()

@@ -5,7 +5,9 @@ import {
 import { CopyToClipboard } from '@/tools'
 
 const NAIVE_UI_MESSAGE = useMessage()
-const t = inject<(message: string, args?: any) => string>('t')!
+import { useLocale } from '@/composables/useLocale'
+
+const { t } = useLocale()
 
 interface MacroViewerProps {
   macroLines: string[]

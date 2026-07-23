@@ -12,11 +12,14 @@ import { useNbbCloud } from '@/composables/useNbbCloud'
 import useCloud from '@/composables/useCloud'
 import { fixCloudConfig } from '@/types/config/cloud'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile')!
-const displayLoginModal = inject<(action: "login" | "register" | "edituser") => void>('displayLoginModal')!
-const displayCloudSyncModal = inject<() => {}>('displayCloudSyncModal')!
-const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
+import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
+import { useAppModals } from '@/composables/useAppModals'
+
+const { t } = useLocale()
+const { isMobile } = useResponsive()
+const { displayLoginModal, displayCloudSyncModal } = useAppModals()
+const appForceUpdate = () => {}
 
 const store = useStore()
 const { confirmWarning } = useDialog()

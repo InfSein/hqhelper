@@ -8,7 +8,9 @@ import { type ItemInfo } from '@/tools/item'
 import UseConfig from '@/composables/useConfig.ts'
 import { useStore } from '@/store'
 
-const t = inject<(message: string, args?: any) => string>('t')!
+import { useLocale } from '@/composables/useLocale'
+
+const { t } = useLocale()
 
 const store = useStore()
 const {

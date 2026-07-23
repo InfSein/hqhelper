@@ -6,8 +6,11 @@ import {
 import { useStore } from '@/store'
 import { useDialog } from '@/composables/useDialog'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
+
+const { t } = useLocale()
+const { isMobile } = useResponsive()
 
 const store = useStore()
 const { alertInfo } = useDialog()

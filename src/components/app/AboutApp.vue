@@ -7,8 +7,9 @@ import ModalSponsorsList from '@/components/modals/ModalSponsorsList.vue'
 import AppStatus from '@/constants/app.ts'
 import useStaff from "@/composables/useStaff"
 
-const t = inject<(message: string, args?: any) => string>('t')!
-// const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+import { useLocale } from '@/composables/useLocale'
+
+const { t } = useLocale()
 
 const { staffMembers } = useStaff()
 

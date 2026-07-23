@@ -10,8 +10,9 @@ import { playAudio } from '@/tools'
 import useIdb from '@/utils/app.idb'
 import { useDialog } from '@/composables/useDialog'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-//const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+import { useLocale } from '@/composables/useLocale'
+
+const { t } = useLocale()
 
 const showModal = defineModel<boolean>('show', { required: true })
 const soundSelect = defineModel<'default' | 'custom' | undefined>('soundSelect')

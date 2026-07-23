@@ -9,9 +9,11 @@ import { useFufuCal } from '@/tools/use-fufu-cal'
 import CraftStatementsPro from '@/components/craft/CraftStatementsPro.vue'
 import { useStore } from '@/store'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-// const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
+import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
+
+const { t } = useLocale()
+const { isMobile } = useResponsive()
 
 const store = useStore()
 const { getProStatementData, calRecommProcessData } = useFufuCal()

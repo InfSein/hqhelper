@@ -12,8 +12,9 @@ import { useItemContextMenu } from '@/composables/useItemContextMenu'
 import { XivJobs } from '@/assets/data'
 import { useStore } from '@/store'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-// const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+import { useLocale } from '@/composables/useLocale'
+
+const { t } = useLocale()
 
 const store = useStore()
 

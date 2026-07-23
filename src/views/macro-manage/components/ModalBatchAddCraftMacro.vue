@@ -19,7 +19,9 @@ import HelpButton from '@/components/ui/HelpButton.vue'
 import CraftActionButton from '@/components/craft/CraftActionButton.vue'
 import { useDialog } from '@/composables/useDialog.ts'
 
-const t = inject<(message: string, args?: any) => string>('t')!
+import { useLocale } from '@/composables/useLocale'
+
+const { t } = useLocale()
 
 const { alertError } = useDialog()
 

@@ -6,7 +6,9 @@ import ItemSpan from '@/components/item/ItemSpan.vue'
 import { XivUnpackedItems } from '@/assets/data'
 import { getItemInfo, getMaterialItems } from '@/tools/item'
 
-const t = inject<(message: string, args?: any) => string>('t')!
+import { useLocale } from '@/composables/useLocale'
+
+const { t } = useLocale()
 
 interface ItemSelectorProps {
   /** 仅在 custom 模式有效 */

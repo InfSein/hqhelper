@@ -11,8 +11,11 @@ import { XivUnpackedCollectableSubmissions } from '@/assets/data'
 import { useNbbCal } from '@/tools/use-nbb-cal'
 import { fixWorkState } from '@/types/workstate/cshelper'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const appMode = inject<Ref<"overlay" | "" | undefined>>('appMode') ?? ref('')
+import { useLocale } from '@/composables/useLocale'
+import { useAppMode } from '@/composables/useAppMode'
+
+const { t } = useLocale()
+const { appMode } = useAppMode()
 
 const store = useStore()
 const NAIVE_UI_MESSAGE = useMessage()

@@ -33,9 +33,12 @@ import { dbKey } from '@/utils/app.idb.ts'
 import { fixUserConfig, type UserConfigModel } from '@/types/config/user.ts'
 import { fixFuncConfig, type FuncConfigModel } from '@/types/config/func.ts'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
+import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
+
+const { t } = useLocale()
+const { isMobile } = useResponsive()
+const appForceUpdate = () => {}
 
 const store = useStore()
 const { confirm } = useDialog()

@@ -15,8 +15,9 @@ import { checkUrlLag } from '@/tools/web-request'
 import type { AppVersionJson } from '@/types'
 import { checkAppUpdates, checkElectronUpdates } from '@/tools'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-// const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+import { useLocale } from '@/composables/useLocale'
+
+const { t } = useLocale()
 
 const store = useStore()
 const { alertError, confirm } = useDialog()

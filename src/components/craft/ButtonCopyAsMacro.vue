@@ -6,12 +6,12 @@ import UseConfig from '@/composables/useConfig'
 import type { ItemInfo } from '@/tools/item'
 import type { MacroGenerateMode } from '@/types/config/func'
 
+import { useLocale } from '@/composables/useLocale'
+import { useAppModals } from '@/composables/useAppModals'
+
 const NAIVE_UI_MESSAGE = useMessage()
-const t = inject<(message: string, args?: any) => string>('t')!
-const copyAsMacro = inject<(macroMap: Record<MacroGenerateMode, string>, container?: HTMLElement | undefined) => Promise<{
-  result: "success" | "info" | "error";
-  msg: string;
-} | undefined>>('copyAsMacro')!
+const { t } = useLocale()
+const { copyAsMacro } = useAppModals()
 
 const {
   itemLanguage,

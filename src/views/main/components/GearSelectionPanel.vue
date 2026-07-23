@@ -22,8 +22,11 @@ import {
 import { useGearAdder } from '@/tools/game/gear'
 import { useStore } from '@/store'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
+
+const { t } = useLocale()
+const { isMobile } = useResponsive()
 
 const store = useStore()
 const NAIVE_UI_MESSAGE = useMessage()

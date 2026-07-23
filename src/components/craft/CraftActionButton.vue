@@ -7,7 +7,9 @@ import type { XivCraftAction } from '@/assets/data'
 import { getImgCdnUrl } from '@/tools/game'
 import UseConfig from '@/composables/useConfig.ts'
 
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+import { useResponsive } from '@/composables/useResponsive'
+
+const { isMobile } = useResponsive()
 
 const {
   itemLanguage,

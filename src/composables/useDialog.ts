@@ -1,6 +1,7 @@
 import type { VNodeChild } from "vue"
 import type DialogComponent from "@/components/app/Dialog.vue"
 import type { InternalDialogOptions } from "@/components/app/Dialog.vue"
+import { useLocale } from './useLocale'
 type DialogProvider = InstanceType<typeof DialogComponent>
 
 type DialogType = "error" | "success" | "warning" | "info"
@@ -17,7 +18,8 @@ export function registerDialogProvider(instance: DialogProvider) {
 }
 
 export const useDialog = (_t?: (message: string, args?: any) => string) => {
-  const t = _t || inject<(message: string, args?: any) => string>('t')!
+  const { t: defaultT } = useLocale()
+  const t = _t || defaultT
 
   const buildDialogOptions = (
     input: string | DialogOptions,

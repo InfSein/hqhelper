@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { MapOutlined } from '@vicons/material'
 import XivFARImage from '@/components/ui/XivFARImage.vue'
 import ItemPop from '@/components/item/ItemPop.vue'
@@ -7,8 +7,11 @@ import type { ItemInfo } from '@/tools/item'
 import { XivMaps, type XivMapAetheryteInfo, type XivMapInfo } from '@/tools/game/map.ts'
 import UseConfig from '@/composables/useConfig.ts'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
+
+const { t } = useLocale()
+const { isMobile } = useResponsive()
 
 const {
   itemLanguage,

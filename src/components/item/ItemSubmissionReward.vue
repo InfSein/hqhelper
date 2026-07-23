@@ -2,7 +2,9 @@
 import ItemSpan from './ItemSpan.vue'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
 
-const t = inject<(message: string, args?: any) => string>('t')!
+import { useLocale } from '@/composables/useLocale'
+
+const { t } = useLocale()
 
 interface ItemSubmissionRewardProps {
   itemInfo: ItemInfo

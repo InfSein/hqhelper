@@ -3,8 +3,9 @@ import ItemSpan from './ItemSpan.vue'
 import LocationSpan from '@/components/map/LocationSpan.vue'
 import { getItemInfo } from '@/tools/item'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-// const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+import { useLocale } from '@/composables/useLocale'
+
+const { t } = useLocale()
 
 interface ItemRemarkProps {
   remarks: string[]

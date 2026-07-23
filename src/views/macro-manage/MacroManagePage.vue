@@ -30,8 +30,11 @@ import { useDialog } from '@/composables/useDialog'
 import useUiTools from '@/composables/useUiTools'
 import useMacroHelper from '@/views/macro-manage/composables/useMacroHelper'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
+
+const { t } = useLocale()
+const { isMobile } = useResponsive()
 
 const store = useStore()
 const route = useRoute()

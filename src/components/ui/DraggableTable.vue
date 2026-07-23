@@ -6,11 +6,10 @@ import {
 } from '@vicons/material'
 import { VueDraggable } from 'vue-draggable-plus'
 import { deepCopy } from '@/tools'
+import { useLocale } from '@/composables/useLocale'
 
 const NAIVE_UI_MESSAGE = useMessage()
-
-const t = inject<(message: string, args?: any) => string>('t')!
-// const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+const { t } = useLocale()
 
 const data = defineModel<DataRow[]>('data', { required: true })
 

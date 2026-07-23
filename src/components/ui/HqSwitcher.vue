@@ -4,7 +4,9 @@ import {
 } from '@vicons/material'
 import HqLogo from '@/components/app/HqLogo.vue'
 
-const t = inject<(message: string, args?: any) => string>('t')!
+import { useLocale } from '@/composables/useLocale'
+
+const { t } = useLocale()
 
 const hq = defineModel<boolean>('hq', { required: true })
 

@@ -10,10 +10,13 @@ import useItemPrice from '@/composables/useItemPrice.ts'
 import type { ItemInfo } from '@/tools/item'
 import { useStore } from '@/store'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-// const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
-const showItemPriceDetail = inject<(items: ItemInfo[]) => void>('showItemPriceDetail')!
+import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
+import { useAppModals } from '@/composables/useAppModals'
+
+const { t } = useLocale()
+const { isMobile } = useResponsive()
+const { showItemPriceDetail } = useAppModals()
 
 const store = useStore()
 const { calCostAndBenefit } = useItemPrice()

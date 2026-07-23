@@ -9,12 +9,13 @@ import { useStore } from '@/store'
 import UseConfig from '@/composables/useConfig.ts'
 import type { MacroGenerateMode } from '@/types/config/func.ts'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const copyAsMacro = inject<(macroMap: Record<MacroGenerateMode, string>, container?: HTMLElement | undefined) => Promise<{
-  result: "success" | "info" | "error";
-  msg: string;
-} | undefined>>('copyAsMacro')!
+import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
+import { useAppModals } from '@/composables/useAppModals'
+
+const { t } = useLocale()
+const { isMobile } = useResponsive()
+const { copyAsMacro } = useAppModals()
 
 const store = useStore()
 const NAIVE_UI_MESSAGE = useMessage()

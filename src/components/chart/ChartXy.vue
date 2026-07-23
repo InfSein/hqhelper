@@ -3,7 +3,9 @@ import { VueUiXy, type VueUiXyDatasetItem, type VueUiXyConfig } from "vue-data-u
 import "vue-data-ui/style.css"
 import { formatTimestamp } from "@/tools"
 
-const t = inject<(message: string, args?: any) => string>('t')!
+import { useLocale } from '@/composables/useLocale'
+
+const { t } = useLocale()
 
 interface ChartXyProps {
   width: number

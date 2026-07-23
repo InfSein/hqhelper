@@ -8,8 +8,11 @@ import { getChangelogs, type PatchChangeGroup } from '@/data/change-logs'
 import AppStatus from '@/constants/app'
 import { useStore } from '@/store'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
+
+const { t } = useLocale()
+const { isMobile } = useResponsive()
 const devMode = import.meta.env.DEV
 
 const store = useStore()

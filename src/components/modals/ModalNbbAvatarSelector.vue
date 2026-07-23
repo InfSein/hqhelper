@@ -5,7 +5,9 @@ import {
 import XivFARImage from '@/components/ui/XivFARImage.vue'
 import { getImgCdnUrl } from '@/tools/game'
 
-const t = inject<(message: string, args?: any) => string>('t')!
+import { useLocale } from '@/composables/useLocale'
+
+const { t } = useLocale()
 
 const showModal = defineModel<boolean>('show', { required: true })
 const avatarId = defineModel<number>('avatarId', { required: true })

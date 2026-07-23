@@ -9,8 +9,9 @@ import { _VAR_MAX_WORKFLOW, getDefaultWorkflow, type Workflow } from '@/types/wo
 
 const NAIVE_UI_MESSAGE = useMessage()
 
-const t = inject<(message: string, args?: any) => string>('t')!
-// const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+import { useLocale } from '@/composables/useLocale'
+
+const { t } = useLocale()
 
 const showModal = defineModel<boolean>('show', { required: true })
 const workflows = defineModel<Workflow[]>('workflows', { required: true })

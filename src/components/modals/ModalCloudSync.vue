@@ -20,9 +20,12 @@ import { deepCopy } from '@/tools'
 import { useDialog } from '@/composables/useDialog'
 import { useNbbCloud } from '@/composables/useNbbCloud'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile')!
-const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
+import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
+
+const { t } = useLocale()
+const { isMobile } = useResponsive()
+const appForceUpdate = () => {}
 
 const store = useStore()
 const { alertInfo, alertError, confirm } = useDialog()

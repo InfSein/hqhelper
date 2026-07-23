@@ -15,8 +15,10 @@ import { deepCopy } from '@/tools'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
 import { fixFuncConfig, type FuncConfigModel } from '@/types/config/func'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
+import { useLocale } from '@/composables/useLocale'
+
+const { t } = useLocale()
+const appForceUpdate = () => {}
 
 const store = useStore()
 const NAIVE_UI_MESSAGE = useMessage()

@@ -11,8 +11,11 @@ import { fixUserConfig } from '@/types/config/user.ts'
 import { fixFuncConfig, type WorkflowJoinMode } from '@/types/config/func.ts'
 import { _VAR_MAX_WORKFLOW, getDefaultWorkflow } from '@/types/workstate/workflow.ts'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
+
+const { t } = useLocale()
+const { isMobile } = useResponsive()
 
 const store = useStore()
 const NAIVE_UI_MESSAGE = useMessage()

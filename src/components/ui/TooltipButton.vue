@@ -6,7 +6,9 @@ import {
 } from 'naive-ui'
 import type { Type } from 'naive-ui/es/button/src/interface'
 
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+import { useResponsive } from '@/composables/useResponsive'
+
+const { isMobile } = useResponsive()
 
 interface TooltipButtonProps {
   size?: "tiny" | "small" | "medium" | "large",

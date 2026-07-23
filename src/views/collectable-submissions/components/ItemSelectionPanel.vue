@@ -15,7 +15,9 @@ import { ExpansionSpecialItems } from '@/constants/game'
 import ItemSubmissionReward from '@/components/item/ItemSubmissionReward.vue'
 import { useStore } from '@/store'
 
-const t = inject<(message: string, args?: any) => string>('t')!
+import { useLocale } from '@/composables/useLocale'
+
+const { t } = useLocale()
 
 const store = useStore()
 const {

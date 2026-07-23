@@ -13,9 +13,13 @@ import { type ItemInfo } from '@/tools/item'
 import UseConfig from '@/composables/useConfig'
 import EorzeaTime from '@/utils/game.et'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const currentET = inject<Ref<EorzeaTime>>('currentET')!
+import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
+import { useEorzeaTime } from '@/composables/useEorzeaTime'
+
+const { t } = useLocale()
+const { isMobile } = useResponsive()
+const { currentET } = useEorzeaTime()
 
 const {
   uiLanguage, itemLanguage,

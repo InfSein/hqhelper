@@ -7,8 +7,9 @@ import { useCostAndBenefit } from '@/composables/use-cost-and-benefit'
 import { useFufuCal } from '@/tools/use-fufu-cal'
 import { useStore } from '@/store'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-// const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+import { useLocale } from '@/composables/useLocale'
+
+const { t } = useLocale()
 
 const store = useStore()
 const { getStatementData } = useFufuCal()

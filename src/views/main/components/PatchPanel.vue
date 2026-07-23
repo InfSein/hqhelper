@@ -10,8 +10,11 @@ import { useDialog } from '@/composables/useDialog.ts'
 import { useStore } from '@/store'
 import { isGearEmpty } from '@/tools/game/gear.ts'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
+
+const { t } = useLocale()
+const { isMobile } = useResponsive()
 
 const store = useStore()
 const { confirm } = useDialog()

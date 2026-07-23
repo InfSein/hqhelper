@@ -8,9 +8,12 @@ import { CopyToClipboard, deepCopy } from '@/tools'
 import UseConfig from '@/composables/useConfig.ts'
 import { useStore } from '@/store'
 
+import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
+
 const NAIVE_UI_MESSAGE = useMessage()
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+const { t } = useLocale()
+const { isMobile } = useResponsive()
 
 const store = useStore()
 const {

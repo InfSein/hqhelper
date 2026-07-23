@@ -10,9 +10,9 @@ import { useFufuCal } from '@/tools/use-fufu-cal'
 import UseConfig from '@/composables/useConfig.ts'
 import { useStore } from '@/store'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-// const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-// const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
+import { useLocale } from '@/composables/useLocale'
+
+const { t } = useLocale()
 
 const store = useStore()
 const NAIVE_UI_MESSAGE = useMessage()

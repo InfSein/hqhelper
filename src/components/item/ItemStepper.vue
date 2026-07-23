@@ -3,7 +3,9 @@ import Stepper from '@/components/ui/Stepper.vue'
 import ItemButton from './ItemButton.vue'
 import type { ItemInfo } from '@/tools/item'
 
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+import { useResponsive } from '@/composables/useResponsive'
+
+const { isMobile } = useResponsive()
 
 const value = defineModel<number>('value', { required: true })
 defineProps({

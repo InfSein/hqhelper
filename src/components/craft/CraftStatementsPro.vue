@@ -8,9 +8,10 @@ import { deepCopy } from '@/tools'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
 import type { ProStatementBlock } from '@/tools/use-fufu-cal'
 
-// const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
+import { useResponsive } from '@/composables/useResponsive'
+
+const { isMobile } = useResponsive()
+const appForceUpdate = () => {}
 
 const store = useStore()
 

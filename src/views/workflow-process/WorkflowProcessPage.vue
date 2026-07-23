@@ -14,8 +14,9 @@ import CraftRecommProcess from '@/components/craft/CraftRecommProcess.vue'
 import { deepCopy } from '@/tools'
 import type { UserConfigModel } from '@/types/config/user'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-// const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+import { useLocale } from '@/composables/useLocale'
+
+const { t } = useLocale()
 
 const store = useStore()
 // const NAIVE_UI_MESSAGE = useMessage()
