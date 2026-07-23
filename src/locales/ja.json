@@ -1393,9 +1393,29 @@
     "message": {
       "following_items_can_be_gathered": "現在採集可能になったアイテム：",
       "system_notice_denied": "リマインド権限が拒否されました。ブラウザのサイト権限設定を確認してください。",
-      "system_notice_not_supported": "現在使用中のブラウザまたはクライアントがシステム通知機能をサポートしていません。"
+      "system_notice_not_supported": "現在使用中のブラウザまたはクライアントがシステム通知機能をサポートしていません。",
+      "invalid_audio_format": "サポートされていない音声形式です。一般的な音声ファイル（mp3、wav、oggなど）をアップロードしてください。",
+      "audio_file_too_large": "ファイルサイズが大きすぎます。10MB未満の音声ファイルをアップロードしてください。",
+      "confirm_clear_custom_audio": "アップロードしたカスタム通知音を削除してもよろしいですか？"
     },
     "preference": {
+      "custom_audio": {
+        "title": "カスタム通知音",
+        "modal_title": "通知音の設定",
+        "sound_select": {
+          "title": "通知音の種類",
+          "option": {
+            "default": "デフォルト通知音",
+            "custom": "カスタム通知音"
+          }
+        },
+        "upload": "音声のアップロード",
+        "reupload": "再アップロード",
+        "test": "試聴",
+        "clear": "音声を削除",
+        "status_uploaded": "読み込み済み：{name}",
+        "status_not_uploaded": "カスタム音声がありません。デフォルト通知音を使用します。"
+      },
       "disable_item_pop": "アイテムボタンのツールチップを隠す",
       "mention_way": {
         "option": {

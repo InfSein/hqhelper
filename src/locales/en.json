@@ -1393,9 +1393,29 @@
     "message": {
       "following_items_can_be_gathered": "Following items can be gathered:",
       "system_notice_denied": "Notification permission denied. Please check browser settings.",
-      "system_notice_not_supported": "Your browser/device does not support system notifications."
+      "system_notice_not_supported": "Your browser/device does not support system notifications.",
+      "invalid_audio_format": "Unsupported audio format. Please upload common audio files (e.g. mp3, wav, ogg).",
+      "audio_file_too_large": "Audio file is too large. Please upload a file smaller than 10MB.",
+      "confirm_clear_custom_audio": "Are you sure you want to clear the uploaded custom sound?"
     },
     "preference": {
+      "custom_audio": {
+        "title": "Custom Sound",
+        "modal_title": "Ringtone Settings",
+        "sound_select": {
+          "title": "Sound Type",
+          "option": {
+            "default": "Default Sound",
+            "custom": "Custom Sound"
+          }
+        },
+        "upload": "Upload Audio",
+        "reupload": "Re-upload",
+        "test": "Preview Sound",
+        "clear": "Clear Audio",
+        "status_uploaded": "Loaded audio: {name}",
+        "status_not_uploaded": "No custom audio loaded. Default sound will be used."
+      },
       "disable_item_pop": "Disable Item Popups",
       "mention_way": {
         "option": {

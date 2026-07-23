@@ -146,6 +146,9 @@
     "src/views/gatherclock/components/ModalAlarmMacroExport.vue": {
         "description": "导出闹钟宏"
     },
+    "src/views/gatherclock/components/ModalAudioConfig.vue": {
+        "description": "提示音设置"
+    },
     "src/views/macro-manage": {
         "description": "宏管理"
     },

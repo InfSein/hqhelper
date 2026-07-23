@@ -27,6 +27,10 @@ export interface WorkState {
   pinWindow: boolean
   /** 通知方式 */
   notifyMode: "none" | "system_noti" | "audio"
+  /** 提示音类型 */
+  soundSelect?: "default" | "custom"
+  /** 已上传的自定义提示音文件名 */
+  customAudioName?: string
   /** 排序依据 */
   orderBy: "itemId" | "gatherStartTimeAsc" | "remainingTimeAsc"
   /** 是否将目前可以采集的道具置顶 */
@@ -46,6 +50,8 @@ const defaultWorkState: WorkState = {
   patch: '',
   pinWindow: false,
   notifyMode: "none",
+  soundSelect: "default",
+  customAudioName: "",
   orderBy: "remainingTimeAsc",
   pinGatherableItems: false,
   banItemPop: false,
@@ -58,5 +64,7 @@ const defaultWorkState: WorkState = {
 export const fixWorkState = (state?: WorkState): WorkState => {
   const _state = assignDefaults(defaultWorkState, state || {}) as WorkState
   _state.alarmMacroOptions = fixAlarmMacroOptions(_state.alarmMacroOptions)
+  _state.soundSelect ??= 'default'
+  _state.customAudioName ??= ''
   return _state
 }

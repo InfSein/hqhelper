@@ -1409,9 +1409,29 @@
     "message": {
       "following_items_can_be_gathered": "以下物品已可采集：",
       "system_notice_denied": "通知权限被拒绝，请检查浏览器的网站权限设置。",
-      "system_notice_not_supported": "当前使用的浏览器或客户端不支持系统通知功能。"
+      "system_notice_not_supported": "当前使用的浏览器或客户端不支持系统通知功能。",
+      "invalid_audio_format": "不支持的音频格式，请上传常见音频文件（如 mp3、wav、ogg 等）。",
+      "audio_file_too_large": "音频文件过大，请上传小于 10MB 的音频文件。",
+      "confirm_clear_custom_audio": "确定要清除已上传的自定义提示音吗？"
     },
     "preference": {
+      "custom_audio": {
+        "title": "自定义提示音",
+        "modal_title": "提示音设置",
+        "sound_select": {
+          "title": "提示音类型",
+          "option": {
+            "default": "默认提示音",
+            "custom": "自定义提示音"
+          }
+        },
+        "upload": "上传音频",
+        "reupload": "重新上传",
+        "test": "试听",
+        "clear": "清除音频",
+        "status_uploaded": "已导入音频：{name}",
+        "status_not_uploaded": "未导入音频文件，将使用默认提示音。"
+      },
       "disable_item_pop": "禁用物品按钮悬浮窗",
       "mention_way": {
         "option": {

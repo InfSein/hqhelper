@@ -5,10 +5,12 @@ import {
 import RouterCard from '@/components/ui/RouterCard.vue'
 import GatherItemCard from '@/views/gatherclock/components/GatherItemCard.vue'
 import ModalAlarmMacroExport from '@/views/gatherclock/components/ModalAlarmMacroExport.vue'
+import ModalAudioConfig from '@/views/gatherclock/components/ModalAudioConfig.vue'
 import { XivJobs, type XivJob } from '@/assets/data'
 import { useStore } from '@/store'
 import type { ItemGroup } from '@/types/item'
 import { playAudio } from '@/tools'
+import useIdb from '@/utils/app.idb'
 import { useDialog } from '@/composables/useDialog'
 import useUiTools from '@/composables/useUiTools'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
@@ -98,6 +100,10 @@ const workState = ref<WorkState>({
   pinWindow: false,
   /** 通知方式 */
   notifyMode: 'none' as "none" | "system_noti" | "audio",
+  /** 提示音类型 */
+  soundSelect: 'default' as "default" | "custom",
+  /** 自定义提示音文件名 */
+  customAudioName: '',
   /** 排序依据 */
   orderBy: 'remainingTimeAsc' as "itemId" | "gatherStartTimeAsc" | "remainingTimeAsc",
   /** 是否将目前可以采集的道具置顶 */
@@ -111,6 +117,25 @@ const workState = ref<WorkState>({
   subscribedItems: [] as number[]
 })
 const showAlarmMacroExportModal = ref(false)
+const showAudioConfigModal = ref(false)
+const idb = useIdb()
+const customAudioUrl = ref<string>('')
+
+const playClockAudio = async () => {
+  if (workState.value.soundSelect === 'custom') {
+    const audioBlob = await idb.gatherClockAudio.get()
+    if (audioBlob) {
+      if (customAudioUrl.value) {
+        URL.revokeObjectURL(customAudioUrl.value)
+      }
+      customAudioUrl.value = URL.createObjectURL(audioBlob)
+      playAudio(customAudioUrl.value)
+      return
+    }
+  }
+  playAudio('./audio/FFXIV_Incoming_Tell_2.mp3')
+}
+
 const notifyModeOptions = computed(() => {
   return [
     {
@@ -192,6 +217,9 @@ onBeforeUnmount(() => {
   if (alarmInterval.value !== undefined) {
     clearInterval(alarmInterval.value)
   }
+  if (customAudioUrl.value) {
+    URL.revokeObjectURL(customAudioUrl.value)
+  }
 })
 
 const handleCheckNotificationPermission = async () => {
@@ -203,8 +231,6 @@ const handleCheckNotificationPermission = async () => {
     } else if (Notification.permission !== 'granted') {
       await Notification.requestPermission()
     }
-  } else if (workState.value.notifyMode === 'audio') {
-    playAudio('./audio/FFXIV_Incoming_Tell_2.mp3')
   }
 }
 const handleNotify = (itemsNeedAlarm: ItemInfo[]) => {
@@ -221,7 +247,7 @@ const handleNotify = (itemsNeedAlarm: ItemInfo[]) => {
       icon: itemsNeedAlarm[0].iconUrl
     })
   } else if (workState.value.notifyMode === 'audio') {
-    playAudio('./audio/FFXIV_Incoming_Tell_2.mp3')
+    playClockAudio()
   }
 }
 
@@ -232,6 +258,8 @@ if (!disable_workstate_cache) {
     workState.value = cachedWorkState
     // 在这里处理后续添加的成员默认值
     workState.value.notifyMode ??= 'none'
+    workState.value.soundSelect ??= 'default'
+    workState.value.customAudioName ??= ''
     workState.value.orderBy ??= 'itemId'
     workState.value.subscribedItems ??= []
     workState.value.alarmMacroOptions = fixAlarmMacroOptions(workState.value.alarmMacroOptions)
@@ -556,6 +584,9 @@ const handleShowAlarmMacroExportModal = () => {
           <n-form-item :label="t('gather_clock.preference.mention_way.title')" style="min-width: 150px;">
             <n-select v-model:value="workState.notifyMode" :options="notifyModeOptions" @update:value="handleCheckNotificationPermission" />
           </n-form-item>
+          <n-form-item v-if="workState.notifyMode === 'audio'" :label="t('gather_clock.preference.custom_audio.title')">
+            <n-button @click="showAudioConfigModal = true">{{ t('common.click_here') }}</n-button>
+          </n-form-item>
           <n-form-item :label="t('gather_clock.preference.sort_by.title')" style="min-width: 200px;">
             <n-select v-model:value="workState.orderBy" :options="itemSortOptions" :render-option="optionsRenderer" />
           </n-form-item>
@@ -644,6 +675,12 @@ const handleShowAlarmMacroExportModal = () => {
       v-model:show="showAlarmMacroExportModal"
       v-model:options="workState.alarmMacroOptions"
       :item-groups="gatherData"
+    />
+
+    <ModalAudioConfig
+      v-model:show="showAudioConfigModal"
+      v-model:sound-select="workState.soundSelect"
+      v-model:custom-audio-name="workState.customAudioName"
     />
 
     <n-back-top />
