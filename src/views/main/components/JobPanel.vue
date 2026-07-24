@@ -1,17 +1,11 @@
 <script setup lang="ts">
-import XivFARImage from '@/components/ui/XivFARImage.vue'
 import JobButton from '@/components/job/JobButton.vue'
-import {
-  XivJobs,
-  XivRoles,
-  type HqDataVer,
-  type XivPatchVer
-}from '@/assets/data'
-import type { GearSelections } from '@/types/game/gear'
+import XivFARImage from '@/components/ui/XivFARImage.vue'
 import { useStore } from '@/store'
-
 import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
+import { XivJobs, XivRoles, type HqDataVer, type XivPatchVer }from '@/assets/data'
+import type { GearSelections } from '@/types/game/gear'
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()

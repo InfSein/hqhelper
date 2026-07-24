@@ -1,26 +1,23 @@
 <script setup lang="ts">
 import {
-  darkTheme, lightTheme, useOsTheme,
-  zhCN, enUS, jaJP, dateZhCN, dateEnUS, dateJaJP,
-  NConfigProvider, NDialogProvider, NGlobalStyle, NMessageProvider,
-  NLayout, NLayoutHeader,
-  type GlobalThemeOverrides
+  type GlobalThemeOverrides,
+  darkTheme, dateEnUS, dateJaJP, dateZhCN, enUS, jaJP, lightTheme, zhCN,
 } from 'naive-ui'
+import Dialog from "@/components/app/Dialog.vue"
 import AppHeader from './components/app/AppHeader.vue'
 import AccountView from './components/app/AccountView.vue'
-import Dialog from "@/components/app/Dialog.vue"
 import { useStore } from '@/store/index'
-import useConfig from '@/composables/useConfig.ts'
-import { registerDialogProvider, useDialog } from '@/composables/useDialog.ts'
-import { useElectronSync } from '@/composables/electron-sync'
 import { useLocale } from './locales'
-import { useResponsive } from '@/composables/useResponsive'
 import { useAppMode } from '@/composables/useAppMode'
+import useConfig from '@/composables/useConfig.ts'
 import { useAppModals } from '@/composables/useAppModals'
+import { registerDialogProvider, useDialog } from '@/composables/useDialog.ts'
+import { useResponsive } from '@/composables/useResponsive'
+import { useElectronSync } from '@/composables/electron-sync'
 import AppStatus from './constants/app.ts'
 import { checkAppUpdates, checkElectronUpdates, deepCopy, getAppBackground, sleep } from './tools'
-import { fixUserConfig, type UserConfigModel } from './types/config/user.ts'
 import { fixFuncConfig, type FuncConfigModel } from './types/config/func.ts'
+import { fixUserConfig, type UserConfigModel } from './types/config/user.ts'
 import { fixCloudConfig, type CloudConfigModel } from './types/config/cloud.ts'
 import { fixMainCache, type MainCacheModel } from './types/config/cache-main.ts'
 

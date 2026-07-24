@@ -1,15 +1,10 @@
 <script setup lang="ts">
 import ModalDonate from '@/components/modals/ModalDonate.vue'
 import { useStore } from '@/store'
-import {
-  visitUrl,
-} from '@/tools'
 import { useDialog } from '@/composables/useDialog'
-import {
-  qGroupInfo, githubInfo, otherSocialInfo,
-} from '@/constants'
-
 import { useLocale } from '@/composables/useLocale'
+import { qGroupInfo, githubInfo, otherSocialInfo } from '@/constants'
+import { visitUrl } from '@/tools'
 
 const { t } = useLocale()
 

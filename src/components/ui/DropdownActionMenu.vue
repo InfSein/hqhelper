@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { KeyboardArrowDownRound } from '@vicons/material'
-
+import {
+  KeyboardArrowDownRound,
+} from '@vicons/material'
 import { useResponsive } from '@/composables/useResponsive'
 
 const { isMobile } = useResponsive()

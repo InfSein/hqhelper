@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import {
-  type SelectOption, type SelectRenderLabel
+  type SelectOption, type SelectRenderLabel,
 } from 'naive-ui'
 import ItemSpan from '@/components/item/ItemSpan.vue'
+import { useLocale } from '@/composables/useLocale'
 import { XivUnpackedItems } from '@/assets/data'
 import { getItemInfo, getMaterialItems } from '@/tools/item'
-
-import { useLocale } from '@/composables/useLocale'
 
 const { t } = useLocale()
 

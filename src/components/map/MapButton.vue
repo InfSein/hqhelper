@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import {
-  OpenInNewFilled
+  OpenInNewFilled,
 } from '@vicons/material'
-import XivFARImage from '@/components/ui/XivFARImage.vue'
 import XivMap from './XivMap.vue'
-import UseConfig from '@/composables/useConfig.ts'
-import { getNearestAetheryte, type XivMapInfo } from '@/tools/game/map.ts'
-
+import XivFARImage from '@/components/ui/XivFARImage.vue'
 import { useLocale } from '@/composables/useLocale'
+import UseConfig from '@/composables/useConfig.ts'
 import { useResponsive } from '@/composables/useResponsive'
+import { getNearestAetheryte, type XivMapInfo } from '@/tools/game/map.ts'
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()

@@ -1,18 +1,17 @@
 <script setup lang="ts" name="Fashion Clothes">
 import {
-  CheckroomFilled
+  CheckroomFilled,
 } from '@vicons/material'
 import RouterCard from '@/components/ui/RouterCard.vue'
-import ItemSelectionPanel from '@/views/fashion-clothes/components/ItemSelectionPanel.vue'
 import StatisticsPanelShared from '@/components/StatisticsPanelShared.vue'
 import ModalJoinInWorkflow from '@/components/modals/ModalJoinInWorkflow.vue'
+import ItemSelectionPanel from '@/views/fashion-clothes/components/ItemSelectionPanel.vue'
 import { useStore } from '@/store'
+import { useLocale } from '@/composables/useLocale'
+import { useAppMode } from '@/composables/useAppMode'
 import { XivUnpackedFashionClothes } from '@/assets/data'
 import { useNbbCal } from '@/tools/use-nbb-cal'
 import { fixWorkState } from '@/types/workstate/fchelper'
-
-import { useLocale } from '@/composables/useLocale'
-import { useAppMode } from '@/composables/useAppMode'
 
 const { t } = useLocale()
 const { appMode } = useAppMode()

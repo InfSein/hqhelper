@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import {
-  ViewListSharp, CopyAllOutlined
+  CopyAllOutlined,
+  ViewListSharp,
 } from '@vicons/material'
 import ButtonCopyAsMacro from '@/components/craft/ButtonCopyAsMacro.vue'
-import type { ItemInfo, StatementRow } from '@/tools/item'
-import { CopyToClipboard, deepCopy } from '@/tools'
-import UseConfig from '@/composables/useConfig.ts'
 import { useStore } from '@/store'
-
 import { useLocale } from '@/composables/useLocale'
+import UseConfig from '@/composables/useConfig.ts'
 import { useResponsive } from '@/composables/useResponsive'
+import { CopyToClipboard, deepCopy } from '@/tools'
+import type { ItemInfo, StatementRow } from '@/tools/item'
 
 const NAIVE_UI_MESSAGE = useMessage()
 const { t } = useLocale()

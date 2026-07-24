@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import type { DataTableColumns } from 'naive-ui'
 import ItemCell from './ItemCell.vue'
-import type { ItemInfo } from '@/tools/item'
 import { useStore } from '@/store'
-
 import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
+import type { ItemInfo } from '@/tools/item'
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()

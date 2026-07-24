@@ -1,20 +1,19 @@
 <script setup lang='ts'>
-import ItemButton from '@/components/item/ItemButton.vue'
 import ItemList from '@/components/item/ItemList.vue'
+import ItemButton from '@/components/item/ItemButton.vue'
 import TomeScriptButton from '@/components/TomeScriptButton.vue'
-import ModalCraftStatements from '@/components/modals/ModalCraftStatements.vue'
 import ModalProStatements from '@/components/modals/ModalProStatements.vue'
 import ModalCostAndBenefit from '@/components/modals/ModalCostAndBenefit.vue'
+import ModalCraftStatements from '@/components/modals/ModalCraftStatements.vue'
 import ModalImExportMain from '@/views/main/components/ModalImExportMain.vue'
-import { useCostAndBenefit } from '@/composables/useCostAndBenefit'
-import { XivUnpackedTradeMap, type XivPatchVer } from '@/assets/data'
-import type { GearSelections } from '@/types/game/gear'
-import { useFufuCal } from '@/tools/use-fufu-cal'
-import { getItemInfo, type ItemInfo } from '@/tools/item'
 import { useStore } from '@/store'
-
 import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
+import { useCostAndBenefit } from '@/composables/useCostAndBenefit'
+import { XivUnpackedTradeMap, type XivPatchVer } from '@/assets/data'
+import { getItemInfo, type ItemInfo } from '@/tools/item'
+import { useFufuCal } from '@/tools/use-fufu-cal'
+import type { GearSelections } from '@/types/game/gear'
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()

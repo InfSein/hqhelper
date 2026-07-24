@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { type Component } from 'vue'
 import {
-  SettingsSharp
+  SettingsSharp,
 } from '@vicons/material'
-
 import { useLocale } from '@/composables/useLocale'
 
 const { t } = useLocale()

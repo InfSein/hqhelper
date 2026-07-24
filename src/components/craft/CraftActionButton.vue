@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {
-  type PopoverTrigger
+  type PopoverTrigger,
 } from 'naive-ui'
 import XivFARImage from '@/components/ui/XivFARImage.vue'
 import useConfig from '@/composables/useConfig.ts'

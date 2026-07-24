@@ -1,18 +1,17 @@
 <script lang="ts" setup>
-import AppAnnouncements from '@/views/main/components/AppAnnouncements.vue'
-import PatchPanel from '@/views/main/components/PatchPanel.vue'
-import JobPanel from '@/views/main/components/JobPanel.vue'
-import GearSelectionPanel from '@/views/main/components/GearSelectionPanel.vue'
 import StatisticsPanel from './components/StatisticsPanel.vue'
+import JobPanel from '@/views/main/components/JobPanel.vue'
+import PatchPanel from '@/views/main/components/PatchPanel.vue'
 import ModalJoinInWorkflow from '@/components/modals/ModalJoinInWorkflow.vue'
-import type { AttireAffix, AccessoryAffix, GearSelections } from '@/types/game/gear'
-import { fixGearSelections } from '@/types/game/gear'
+import AppAnnouncements from '@/views/main/components/AppAnnouncements.vue'
+import GearSelectionPanel from '@/views/main/components/GearSelectionPanel.vue'
 import { useStore } from '@/store'
-import { useNbbCal } from '@/tools/use-nbb-cal'
-import { XivJobRoleMap, type XivPatchVer } from '@/assets/data';
-import type { WorkState } from '@/types/workstate/hqworkbench'
-
 import { useLocale } from '@/composables/useLocale'
+import { XivJobRoleMap, type XivPatchVer } from '@/assets/data';
+import { useNbbCal } from '@/tools/use-nbb-cal'
+import { fixGearSelections } from '@/types/game/gear'
+import type { AttireAffix, AccessoryAffix, GearSelections } from '@/types/game/gear'
+import type { WorkState } from '@/types/workstate/hqworkbench'
 
 const { t } = useLocale()
 

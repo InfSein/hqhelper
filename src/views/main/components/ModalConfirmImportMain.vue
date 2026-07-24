@@ -1,16 +1,15 @@
 <script setup lang="ts">
-import { 
+import {
+  DoneOutlined,
   UnarchiveOutlined,
-  DoneOutlined
 } from '@vicons/material'
-import { XivGearAffixes, XivJobs, XivPatches, type XivPatchVer } from '@/assets/data'
-import UseConfig from '@/composables/useConfig'
-import { accessoryAffixes, attireAffixes, fixGearSelections, type AccessoryAffix, type AttireAffix, type GearSelections } from '@/types/game/gear'
-import { getGearIcon } from '@/tools/game/gear'
 import { useStore } from '@/store'
-
+import UseConfig from '@/composables/useConfig'
 import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
+import { XivGearAffixes, XivJobs, XivPatches, type XivPatchVer } from '@/assets/data'
+import { getGearIcon } from '@/tools/game/gear'
+import { accessoryAffixes, attireAffixes, fixGearSelections, type AccessoryAffix, type AttireAffix, type GearSelections } from '@/types/game/gear'
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()

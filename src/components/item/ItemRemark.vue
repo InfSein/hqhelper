@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import ItemSpan from './ItemSpan.vue'
 import LocationSpan from '@/components/map/LocationSpan.vue'
-import { getItemInfo } from '@/tools/item'
-
 import { useLocale } from '@/composables/useLocale'
+import { getItemInfo } from '@/tools/item'
 
 const { t } = useLocale()
 

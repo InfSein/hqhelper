@@ -1,16 +1,18 @@
 <script setup lang="ts">
-import { 
-  ArchiveSharp, UnarchiveSharp,
-  ContentCopyRound, FileDownloadOutlined
+import {
+  ArchiveSharp,
+  ContentCopyRound,
+  FileDownloadOutlined,
+  UnarchiveSharp,
 } from '@vicons/material'
+import { useLocale } from '@/composables/useLocale'
 import { CopyToClipboard, deepCopy } from '@/tools'
 import { exportPreferences, importPreferences } from '@/tools/preferences'
-import { fixUserConfig, type UserConfigModel } from '@/types/config/user'
 import { fixFuncConfig, type FuncConfigModel } from '@/types/config/func'
+import { fixUserConfig, type UserConfigModel } from '@/types/config/user'
 
 const NAIVE_UI_MESSAGE = useMessage()
 
-import { useLocale } from '@/composables/useLocale'
 
 const { t } = useLocale()
 

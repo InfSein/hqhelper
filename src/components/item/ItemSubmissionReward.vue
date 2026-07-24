@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import ItemSpan from './ItemSpan.vue'
-import { getItemInfo, type ItemInfo } from '@/tools/item'
-
 import { useLocale } from '@/composables/useLocale'
+import { getItemInfo, type ItemInfo } from '@/tools/item'
 
 const { t } = useLocale()
 

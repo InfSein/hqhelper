@@ -1,37 +1,35 @@
 <script setup lang="ts">
 import {
-  NButton, NDivider, NTag, // 这些组件在函数中进行了引用，不能依赖自动引入
   type DataTableColumns,
 } from 'naive-ui'
 import {
+  AddTaskOutlined,
+  ArchiveSharp,
+  ChecklistOutlined,
+  DeleteFilled,
+  EditNoteOutlined,
+  KeyboardArrowDownRound,
+  PlaylistAddCheckOutlined,
   SearchOutlined,
   SettingsSuggestFilled,
-  KeyboardArrowDownRound,
-  ArchiveSharp, UnarchiveSharp,
-  AddTaskOutlined, PlaylistAddCheckOutlined,
-  ShareOutlined, EditNoteOutlined, DeleteFilled,
-  ChecklistOutlined,
+  ShareOutlined,
+  UnarchiveSharp,
 } from '@vicons/material'
-import { compress, decompress } from 'xiv-cac-utils'
 import ItemSpan from '@/components/item/ItemSpan.vue'
-import ModalCraftMacroEdit from '@/views/macro-manage/components/ModalCraftMacroEdit.vue'
 import ModalPreferences from '@/components/modals/ModalPreferences.vue'
-import ModalImExportCraftMacro from '@/views/macro-manage/components/ModalImExportCraftMacro.vue'
+import ModalCraftMacroEdit from '@/views/macro-manage/components/ModalCraftMacroEdit.vue'
 import ModalBatchAddCraftMacro from '@/views/macro-manage/components/ModalBatchAddCraftMacro.vue'
-import { XivCraftActions, XivUnpackedItems } from '@/assets/data'
+import ModalImExportCraftMacro from '@/views/macro-manage/components/ModalImExportCraftMacro.vue'
 import { useStore } from '@/store'
-import {
-  _VAR_MACRO_MAXAMOUNT,
-  fixWorkState, getDefaultCraftMacro,
-  type WorkState, type RecordedCraftMacro, type CraftMacroRow,
-} from '@/types/workstate/macromanage'
-import { CopyToClipboard, deepCopy } from '@/tools'
 import { useDialog } from '@/composables/useDialog'
-import useUiTools from '@/composables/useUiTools'
-import useMacroHelper from '@/views/macro-manage/composables/useMacroHelper'
-
 import { useLocale } from '@/composables/useLocale'
+import useUiTools from '@/composables/useUiTools'
 import { useResponsive } from '@/composables/useResponsive'
+import useMacroHelper from '@/views/macro-manage/composables/useMacroHelper'
+import { XivCraftActions, XivUnpackedItems } from '@/assets/data'
+import { CopyToClipboard, deepCopy } from '@/tools'
+import { compress, decompress } from 'xiv-cac-utils'
+import { _VAR_MACRO_MAXAMOUNT, fixWorkState, getDefaultCraftMacro, type WorkState, type RecordedCraftMacro, type CraftMacroRow } from '@/types/workstate/macromanage'
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()

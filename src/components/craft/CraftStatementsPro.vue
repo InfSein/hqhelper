@@ -1,14 +1,15 @@
 <script setup lang="ts">
-// import { 
-//   TableViewOutlined
-// } from '@vicons/material'
 import ItemStatementTable from '@/components/item/ItemStatementTable.vue'
 import { useStore } from '@/store'
+import { useResponsive } from '@/composables/useResponsive'
 import { deepCopy } from '@/tools'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
 import type { ProStatementBlock } from '@/tools/use-fufu-cal'
 
-import { useResponsive } from '@/composables/useResponsive'
+// import { 
+//   TableViewOutlined
+// } from '@vicons/material'
+
 
 const { isMobile } = useResponsive()
 const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})

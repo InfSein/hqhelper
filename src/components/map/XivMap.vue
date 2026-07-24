@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import XivFARImage from '@/components/ui/XivFARImage.vue'
-import { type XivMapAetheryteInfo, type XivMapInfo } from '@/tools/game/map.ts'
 import UseConfig from '@/composables/useConfig.ts'
-
 import { useResponsive } from '@/composables/useResponsive'
+import { type XivMapAetheryteInfo, type XivMapInfo } from '@/tools/game/map.ts'
 
 const { isMobile } = useResponsive()
 

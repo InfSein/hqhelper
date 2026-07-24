@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { type Component } from 'vue'
 import {
-  KeyboardArrowUpRound, KeyboardArrowDownRound,
-  KeyboardArrowLeftRound, KeyboardArrowRightRound
+  KeyboardArrowDownRound,
+  KeyboardArrowLeftRound,
+  KeyboardArrowRightRound,
+  KeyboardArrowUpRound,
 } from '@vicons/material'
 import { useStore } from '@/store/index'
-
 import { useLocale } from '@/composables/useLocale'
 
 const { t } = useLocale()

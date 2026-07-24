@@ -1,17 +1,18 @@
 <script setup lang="ts">
+import HelpButton from '@/components/ui/HelpButton.vue'
+import FoldableCard from '@/components/templates/FoldableCard.vue'
+import { useStore } from '@/store'
+import { useLocale } from '@/composables/useLocale'
+import { useDialog } from '@/composables/useDialog.ts'
+import { useResponsive } from '@/composables/useResponsive'
+import { XivPatches, type XivPatch, type XivPatchVer } from "@/assets/data"
+import { isGearEmpty } from '@/tools/game/gear.ts'
+import { fixGearSelections, type GearSelections } from '@/types/game/gear'
+
 // import {
 //   InfoOutlined,
 // } from '@vicons/material'
-import FoldableCard from '@/components/templates/FoldableCard.vue'
-import { XivPatches, type XivPatch, type XivPatchVer } from "@/assets/data"
-import { fixGearSelections, type GearSelections } from '@/types/game/gear'
-import HelpButton from '@/components/ui/HelpButton.vue'
-import { useDialog } from '@/composables/useDialog.ts'
-import { useStore } from '@/store'
-import { isGearEmpty } from '@/tools/game/gear.ts'
 
-import { useLocale } from '@/composables/useLocale'
-import { useResponsive } from '@/composables/useResponsive'
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()

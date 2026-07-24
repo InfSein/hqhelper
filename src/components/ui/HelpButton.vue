@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import {
-  type PopoverTrigger
+  type PopoverTrigger,
 } from 'naive-ui'
 import {
-  InfoOutlined,
+  ErrorOutlineRound,
   HelpOutlineRound,
-  ErrorOutlineRound
+  InfoOutlined,
 } from '@vicons/material'
-
 import { useResponsive } from '@/composables/useResponsive'
 
 const { isMobile } = useResponsive()

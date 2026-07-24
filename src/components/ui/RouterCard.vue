@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import {
-  HomeOutlined
+  HomeOutlined,
 } from '@vicons/material'
 import { useStore } from '@/store'
-
 import { useLocale } from '@/composables/useLocale'
 
 const { t } = useLocale()

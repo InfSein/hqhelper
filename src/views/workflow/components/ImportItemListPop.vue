@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import {
-  ArchiveSharp, DoneOutlined,
+  ArchiveSharp,
+  DoneOutlined,
 } from '@vicons/material'
 import { useDialog } from '@/composables/useDialog'
-import { getItemInfo, getItemNameRevertMap } from '@/tools/item'
-
 import { useLocale } from '@/composables/useLocale'
-import { useResponsive } from '@/composables/useResponsive'
 import { useAppModals } from '@/composables/useAppModals'
+import { useResponsive } from '@/composables/useResponsive'
+import { getItemInfo, getItemNameRevertMap } from '@/tools/item'
 
 const NAIVE_UI_MESSAGE = useMessage()
 const { t } = useLocale()

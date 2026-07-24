@@ -1,39 +1,38 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import {
-  AddSharp, SettingsSharp,
-  DeleteSweepRound,
-  QueryStatsFilled,
-  TableViewOutlined,
+  AddSharp,
   AllInclusiveSharp,
+  ChevronLeftOutlined,
+  ChevronRightOutlined,
+  DeleteSweepRound,
   OpenInNewOutlined,
-  UnfoldMoreSharp, UnfoldLessSharp,
-  ChevronLeftOutlined, ChevronRightOutlined,
+  QueryStatsFilled,
+  SettingsSharp,
+  TableViewOutlined,
+  UnfoldLessSharp,
+  UnfoldMoreSharp,
 } from '@vicons/material'
-
-import ImportItemListPop from '@/views/workflow/components/ImportItemListPop.vue'
+import TooltipButton from '@/components/ui/TooltipButton.vue'
 import ItemSelector from '@/components/item/ItemSelector.vue'
 import ItemSelectTable from '@/components/item/ItemSelectTable.vue'
-import CraftStatistics from '@/components/craft/CraftStatistics.vue'
 import CraftStatements from '@/components/craft/CraftStatements.vue'
-import CraftStatementsPro from '@/components/craft/CraftStatementsPro.vue'
-import CraftRecommProcess from '@/components/craft/CraftRecommProcess.vue'
-import TooltipButton from '@/components/ui/TooltipButton.vue'
-import ModalWorkflowsManage from '@/views/workflow/components/ModalWorkflowsManage.vue'
-import ModalCostAndBenefit from '@/components/modals/ModalCostAndBenefit.vue'
+import CraftStatistics from '@/components/craft/CraftStatistics.vue'
 import ModalPreferences from '@/components/modals/ModalPreferences.vue'
+import CraftRecommProcess from '@/components/craft/CraftRecommProcess.vue'
+import CraftStatementsPro from '@/components/craft/CraftStatementsPro.vue'
+import ModalCostAndBenefit from '@/components/modals/ModalCostAndBenefit.vue'
 import NotebookPanel from '@/views/workflow/components/NotebookPanel.vue'
-
+import ImportItemListPop from '@/views/workflow/components/ImportItemListPop.vue'
+import ModalWorkflowsManage from '@/views/workflow/components/ModalWorkflowsManage.vue'
 import { useStore } from '@/store'
-import {
-  getDefaultWorkflow, _VAR_MAX_WORKFLOW
-} from '@/types/workstate/workflow'
-import { useWorkflowState } from '@/composables/useWorkflowState'
-import { useWorkflowStatistics } from '@/composables/useWorkflowStatistics'
-import { useCostAndBenefit } from '@/composables/useCostAndBenefit'
-import { type SettingGroupKey } from '@/types'
 import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
+import { useWorkflowState } from '@/composables/useWorkflowState'
+import { useCostAndBenefit } from '@/composables/useCostAndBenefit'
+import { useWorkflowStatistics } from '@/composables/useWorkflowStatistics'
+import { type SettingGroupKey } from '@/types'
+import { getDefaultWorkflow, _VAR_MAX_WORKFLOW } from '@/types/workstate/workflow'
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()

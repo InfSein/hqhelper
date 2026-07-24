@@ -4,27 +4,22 @@ import {
   OpenInNewFilled,
   PlaylistAddOutlined,
 } from '@vicons/material'
-import {
-  XivJobs,
-  XivSrbMap,
-  XivUnpackedRecipes,
-} from '@/assets/data'
-import CommonGroupIcon from '@/assets/icons/game-ui/recipe-notebook/group-common.svg'
-import SpecialGroupIcon from '@/assets/icons/game-ui/recipe-notebook/group-special.svg'
-import MasterGroupIcon from '@/assets/icons/game-ui/recipe-notebook/group-master.svg'
-import XivFARImage from '@/components/ui/XivFARImage.vue'
-import ItemSpan from '@/components/item/ItemSpan.vue'
 import ItemCell from '@/components/item/ItemCell.vue'
-import ItemInfoHeader from '@/components/item/ItemInfoHeader.vue'
+import ItemSpan from '@/components/item/ItemSpan.vue'
+import XivFARImage from '@/components/ui/XivFARImage.vue'
 import TooltipButton from '@/components/ui/TooltipButton.vue'
+import ItemInfoHeader from '@/components/item/ItemInfoHeader.vue'
 import ItemRecipeTree from '@/components/item/ItemRecipeTree.vue'
-
-import { sortRecord } from '@/tools'
-import { getItemInfo, sortItems, type ItemInfo } from '@/tools/item'
 import useConfig from '@/composables/useConfig'
-import { useItemContextMenu } from '@/composables/useItemContextMenu'
 import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
+import { useItemContextMenu } from '@/composables/useItemContextMenu'
+import CommonGroupIcon from '@/assets/icons/game-ui/recipe-notebook/group-common.svg'
+import MasterGroupIcon from '@/assets/icons/game-ui/recipe-notebook/group-master.svg'
+import SpecialGroupIcon from '@/assets/icons/game-ui/recipe-notebook/group-special.svg'
+import { XivJobs, XivSrbMap, XivUnpackedRecipes } from '@/assets/data'
+import { sortRecord } from '@/tools'
+import { getItemInfo, sortItems, type ItemInfo } from '@/tools/item'
 
 const props = defineProps<{
   selectedJob: number

@@ -1,55 +1,59 @@
 <script setup lang="ts">
 import {
-  NButton, NIcon, NTooltip, // 这些组件在函数中进行了引用，不能依赖自动引入
   type DropdownOption, type MenuOption,
   useOsTheme,
 } from 'naive-ui'
 import {
-  ArrowCircleLeftOutlined,
-  FileCopyFilled, FilePresentOutlined,
-  OpenInNewOutlined,
-  CasesRound, CasesOutlined,
-  HomeOutlined,
   AccessAlarmsOutlined,
-  FastfoodOutlined,
-  TaskAltOutlined,
+  ArrowCircleLeftOutlined,
+  BackpackFilled,
+  CasesOutlined,
+  CasesRound,
   CheckroomFilled,
-  WavesOutlined,
   CodeOutlined,
+  ContactlessOutlined,
+  DarkModeTwotone,
+  DevicesOtherOutlined,
+  DevicesOutlined,
+  EventNoteFilled,
+  FastfoodOutlined,
+  FileCopyFilled,
+  FilePresentOutlined,
+  HandshakeOutlined,
   HelpOutlineOutlined,
+  HomeOutlined,
+  InfoFilled,
+  InfoOutlined,
+  LightModeTwotone,
   MenuFilled,
-  UpdateOutlined,
+  OpenInNewOutlined,
   SettingsSharp,
   SettingsSuggestFilled,
-  BackpackFilled,
-  EventNoteFilled,
-  InfoFilled, InfoOutlined,
-  DevicesOtherOutlined,
-  ContactlessOutlined,
-  HandshakeOutlined,
-  DevicesOutlined,
-  DarkModeTwotone, LightModeTwotone,
-  UpdateSharp
+  TaskAltOutlined,
+  UpdateOutlined,
+  UpdateSharp,
+  WavesOutlined,
 } from '@vicons/material'
-import AccountView from './AccountView.vue'
 import HqLogo from './HqLogo.vue'
-import ModalPreferences from '@/components/modals/ModalPreferences.vue'
-import ModalInventory from '@/components/modals/ModalInventory.vue'
-import ModalContactUs from '@/components/modals/ModalContactUs.vue'
-import ModalChangeLogs from '@/components/modals/ModalChangeLogs.vue'
-import ModalAboutApp from '@/components/modals/ModalAboutApp.vue'
+import AccountView from './AccountView.vue'
 import ModalDonate from '@/components/modals/ModalDonate.vue'
-// import ChristmasTree from '@/assets/icons/ChristmasTree.vue'
+import ModalAboutApp from '@/components/modals/ModalAboutApp.vue'
+import ModalContactUs from '@/components/modals/ModalContactUs.vue'
+import ModalInventory from '@/components/modals/ModalInventory.vue'
+import ModalChangeLogs from '@/components/modals/ModalChangeLogs.vue'
+import ModalPreferences from '@/components/modals/ModalPreferences.vue'
 import router from '@/router'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
-import { useResponsive } from '@/composables/useResponsive'
-import { useEorzeaTime } from '@/composables/useEorzeaTime'
-import { useAppModals } from '@/composables/useAppModals'
 import { useDialog } from '@/composables/useDialog.ts'
+import { useAppModals } from '@/composables/useAppModals'
 import useUiTools from '@/composables/useUiTools.ts'
+import { useEorzeaTime } from '@/composables/useEorzeaTime'
+import { useResponsive } from '@/composables/useResponsive'
 import AppStatus from '@/constants/app.ts'
 import { checkAppUpdates, visitUrl } from '@/tools'
+
+// import ChristmasTree from '@/assets/icons/ChristmasTree.vue'
 
 const store = useStore()
 const osTheme = useOsTheme()

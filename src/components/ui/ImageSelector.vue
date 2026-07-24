@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import { type PreferenceItemImageSelectOption } from '@/types'
-import { deepCopy } from '@/tools'
 import { useDialog } from '@/composables/useDialog'
+import { useLocale } from '@/composables/useLocale'
+import { deepCopy } from '@/tools'
+import { type PreferenceItemImageSelectOption } from '@/types'
 import useIdb from '@/utils/app.idb'
 import type { dbKey } from '@/utils/app.idb'
-
-import { useLocale } from '@/composables/useLocale'
 
 const { t } = useLocale()
 

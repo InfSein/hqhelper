@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import CraftRecommProcess from '@/components/craft/CraftRecommProcess.vue'
 import { useWorkflowState } from '@/composables/useWorkflowState'
 import { useWorkflowStatistics } from '@/composables/useWorkflowStatistics'
-import CraftRecommProcess from '@/components/craft/CraftRecommProcess.vue'
 
 const { currentWorkflow } = useWorkflowState()
 const { recommProcessGroups } = useWorkflowStatistics(currentWorkflow)

@@ -1,15 +1,17 @@
 <script setup lang="ts">
-import { 
-  CodeSharp, ContentCopyRound
+import {
+  CodeSharp,
+  ContentCopyRound,
 } from '@vicons/material'
-import MacroViewer from '@/components/craft/MacroViewer.vue'
 import TooltipButton from '@/components/ui/TooltipButton.vue'
-// import ModalPreferences from './ModalPreferences.vue'
-import { CopyToClipboard } from '@/tools'
+import MacroViewer from '@/components/craft/MacroViewer.vue'
 import { useStore } from '@/store'
+import { useLocale } from '@/composables/useLocale'
+import { CopyToClipboard } from '@/tools'
 import type { MacroGenerateMode } from '@/types/config/func.ts'
 
-import { useLocale } from '@/composables/useLocale'
+// import ModalPreferences from './ModalPreferences.vue'
+
 
 const { t } = useLocale()
 

@@ -1,16 +1,15 @@
 <script setup lang="ts">
 import {
-  VolumeUpRound,
-  UploadFileRound,
   DeleteOutlineRound,
-  PlayArrowRound
+  PlayArrowRound,
+  UploadFileRound,
+  VolumeUpRound,
 } from '@vicons/material'
 import MyModal from '@/components/templates/MyModal.vue'
+import { useDialog } from '@/composables/useDialog'
+import { useLocale } from '@/composables/useLocale'
 import { playAudio } from '@/tools'
 import useIdb from '@/utils/app.idb'
-import { useDialog } from '@/composables/useDialog'
-
-import { useLocale } from '@/composables/useLocale'
 
 const { t } = useLocale()
 

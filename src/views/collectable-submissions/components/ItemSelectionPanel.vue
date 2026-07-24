@@ -1,21 +1,20 @@
 <script setup lang="ts">
 import {
+  DeleteSweepRound,
   JoinLeftOutlined,
-  DeleteSweepRound
 } from '@vicons/material'
-import ItemSelector from '@/components/item/ItemSelector.vue'
 import XivFARImage from '@/components/ui/XivFARImage.vue'
 import ItemStepper from '@/components/item/ItemStepper.vue'
 import TooltipButton from '@/components/ui/TooltipButton.vue'
-import { XivJobs, XivUnpackedCollectableSubmissions } from '@/assets/data'
-import { type WorkState } from '@/types/workstate/cshelper.ts'
-import UseConfig from '@/composables/useConfig.ts'
-import { getItemInfo } from '@/tools/item'
-import { ExpansionSpecialItems } from '@/constants/game'
+import ItemSelector from '@/components/item/ItemSelector.vue'
 import ItemSubmissionReward from '@/components/item/ItemSubmissionReward.vue'
 import { useStore } from '@/store'
-
 import { useLocale } from '@/composables/useLocale'
+import UseConfig from '@/composables/useConfig.ts'
+import { ExpansionSpecialItems } from '@/constants/game'
+import { XivJobs, XivUnpackedCollectableSubmissions } from '@/assets/data'
+import { getItemInfo } from '@/tools/item'
+import { type WorkState } from '@/types/workstate/cshelper.ts'
 
 const { t } = useLocale()
 

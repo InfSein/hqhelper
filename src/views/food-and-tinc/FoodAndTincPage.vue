@@ -1,17 +1,16 @@
 <script setup lang="ts" name="FT Helper">
 import {
-  FastfoodOutlined
+  FastfoodOutlined,
 } from '@vicons/material'
 import RouterCard from '@/components/ui/RouterCard.vue'
-import ItemSelectionPanel from '@/views/food-and-tinc/components/ItemSelectionPanel.vue'
 import StatisticsPanelShared from '@/components/StatisticsPanelShared.vue'
 import ModalJoinInWorkflow from '@/components/modals/ModalJoinInWorkflow.vue'
+import ItemSelectionPanel from '@/views/food-and-tinc/components/ItemSelectionPanel.vue'
 import { useStore } from '@/store'
-import { HqData } from '@/assets/data'
-import { useNbbCal } from '@/tools/use-nbb-cal'
-
 import { useLocale } from '@/composables/useLocale'
 import { useAppMode } from '@/composables/useAppMode'
+import { HqData } from '@/assets/data'
+import { useNbbCal } from '@/tools/use-nbb-cal'
 
 const { t } = useLocale()
 const { appMode } = useAppMode()

@@ -1,16 +1,15 @@
 <script setup lang="ts">
 import {
-  InfoOutlined
+  InfoOutlined,
 } from '@vicons/material'
 import ItemPop from './ItemPop.vue'
 import XivFARImage from '@/components/ui/XivFARImage.vue'
-import { type ItemInfo } from '@/tools/item'
-import { useItemContextMenu } from '@/composables/useItemContextMenu'
-import UseConfig from '@/composables/useConfig.ts'
 import { useStore } from '@/store'
-
 import { useLocale } from '@/composables/useLocale'
+import UseConfig from '@/composables/useConfig.ts'
 import { useResponsive } from '@/composables/useResponsive'
+import { useItemContextMenu } from '@/composables/useItemContextMenu'
+import { type ItemInfo } from '@/tools/item'
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()

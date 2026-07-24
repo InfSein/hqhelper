@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import {
-  CodeSharp
+  CodeSharp,
 } from '@vicons/material'
 import ItemSpan from '@/components/item/ItemSpan.vue'
 import { useStore } from '@/store'
-import useConfig from '@/composables/useConfig.ts'
 import { useLocale } from '@/composables/useLocale'
-import { useResponsive } from '@/composables/useResponsive'
+import useConfig from '@/composables/useConfig.ts'
 import { useAppModals } from '@/composables/useAppModals'
+import { useResponsive } from '@/composables/useResponsive'
 import { XivUnpackedTradeMap } from '@/assets/data'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
 import type { MacroGenerateMode } from '@/types/config/func.ts'

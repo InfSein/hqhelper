@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { 
-  FaceRetouchingNaturalFilled, DoneOutlined,
+import {
+  DoneOutlined,
+  FaceRetouchingNaturalFilled,
 } from '@vicons/material'
 import XivFARImage from '@/components/ui/XivFARImage.vue'
-import { getImgCdnUrl } from '@/tools/game'
-
 import { useLocale } from '@/composables/useLocale'
+import { getImgCdnUrl } from '@/tools/game'
 
 const { t } = useLocale()
 

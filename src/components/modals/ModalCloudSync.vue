@@ -1,27 +1,28 @@
 <script setup lang="ts">
+import {
+  ChecklistRtlOutlined,
+  CloudDownloadRound,
+  CloudOutlined,
+  CloudSyncOutlined,
+  CloudUploadRound,
+} from '@vicons/material'
+import { useStore } from '@/store'
+import { useDialog } from '@/composables/useDialog'
+import { useLocale } from '@/composables/useLocale'
+import { useNbbCloud } from '@/composables/useNbbCloud'
+import { useResponsive } from '@/composables/useResponsive'
+import { deepCopy } from '@/tools'
+import { fixFuncConfig } from '@/types/config/func'
+import { fixUserConfig } from '@/types/config/user'
+import { HqList, type NbbResponse } from '@/types/api/nbb-cloud'
+import { fixWorkState as fixCsHelperWorkState } from '@/types/workstate/cshelper'
+import { fixWorkState as fixWorkflowWorkState } from '@/types/workstate/workflow'
+import { fixWorkState as fixFashionclothWorkState } from '@/types/workstate/fchelper'
+import { fixWorkState as fixMacromanageWorkState } from '@/types/workstate/macromanage'
 
 // todo 记得处理兼容性问题
 
-import { 
-  CloudSyncOutlined,
-  ChecklistRtlOutlined,
-  CloudOutlined,
-  CloudDownloadRound, CloudUploadRound,
-} from '@vicons/material'
-import { useStore } from '@/store'
-import { fixUserConfig } from '@/types/config/user'
-import { fixFuncConfig } from '@/types/config/func'
-import { fixWorkState as fixWorkflowWorkState } from '@/types/workstate/workflow'
-import { fixWorkState as fixMacromanageWorkState } from '@/types/workstate/macromanage'
-import { fixWorkState as fixFashionclothWorkState } from '@/types/workstate/fchelper'
-import { fixWorkState as fixCsHelperWorkState } from '@/types/workstate/cshelper'
-import { HqList, type NbbResponse } from '@/types/api/nbb-cloud'
-import { deepCopy } from '@/tools'
-import { useDialog } from '@/composables/useDialog'
-import { useNbbCloud } from '@/composables/useNbbCloud'
 
-import { useLocale } from '@/composables/useLocale'
-import { useResponsive } from '@/composables/useResponsive'
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()

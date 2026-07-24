@@ -1,44 +1,37 @@
 <script setup lang="ts">
+import { VueDraggable } from 'vue-draggable-plus'
 import {
+  AddCircleOutlined,
   BuildFilled,
   CodeSharp,
-  AddCircleOutlined,
-  RemoveCircleOutlined,
-  LocalOfferFilled,
-  ListFilled,
   DeleteFilled,
   DoneOutlined,
+  EditRound,
+  ListFilled,
+  LocalOfferFilled,
+  OpenInNewOutlined,
+  RemoveCircleOutlined,
   SaveOutlined,
   SettingsRound,
-  EditRound,
-  OpenInNewOutlined,
 } from '@vicons/material'
-import { VueDraggable } from 'vue-draggable-plus'
-import { decompress } from 'xiv-cac-utils'
-import HelpButton from '@/components/ui/HelpButton.vue'
-import ItemSelector from '@/components/item/ItemSelector.vue'
-import ItemSpan from '@/components/item/ItemSpan.vue'
-import CraftActionButton from '@/components/craft/CraftActionButton.vue'
-import MacroViewer from '@/components/craft/MacroViewer.vue'
+import ModalCraftActionsEdit from './ModalCraftActionsEdit.vue'
 import ModalPresetTagsManage from './ModalPresetTagsManage.vue'
 import ModalPresetCReqsManage from './ModalPresetCReqsManage.vue'
-import ModalCraftActionsEdit from './ModalCraftActionsEdit.vue'
-import { XivCraftActions } from '@/assets/data'
-import {
-  _VAR_TAG_MAXLEN, _VAR_REMARK_MAXLINE,
-  _VAR_RELATEITEM_MAXLEN, _VAR_TABLESHOW_RELATEITEM_MAXLEN,
-  getDefaultCraftMacro, prepareMacroForSave,
-  type RecordedCraftMacro,
-  type StrictCraftRequirements,
-} from '@/types/workstate/macromanage.ts'
-import { deepCopy, findDuplicatesFromArray } from '@/tools'
-import { useDialog } from '@/composables/useDialog.ts'
-import { getItemInfo } from '@/tools/item'
-import UseConfig from '@/composables/useConfig.ts'
-import useMacroHelper from '@/views/macro-manage/composables/useMacroHelper.ts'
+import ItemSpan from '@/components/item/ItemSpan.vue'
+import HelpButton from '@/components/ui/HelpButton.vue'
+import MacroViewer from '@/components/craft/MacroViewer.vue'
+import ItemSelector from '@/components/item/ItemSelector.vue'
+import CraftActionButton from '@/components/craft/CraftActionButton.vue'
 import { useStore } from '@/store'
-
 import { useLocale } from '@/composables/useLocale'
+import UseConfig from '@/composables/useConfig.ts'
+import { useDialog } from '@/composables/useDialog.ts'
+import useMacroHelper from '@/views/macro-manage/composables/useMacroHelper.ts'
+import { XivCraftActions } from '@/assets/data'
+import { deepCopy, findDuplicatesFromArray } from '@/tools'
+import { getItemInfo } from '@/tools/item'
+import { decompress } from 'xiv-cac-utils'
+import { _VAR_TAG_MAXLEN, _VAR_REMARK_MAXLINE, _VAR_RELATEITEM_MAXLEN, _VAR_TABLESHOW_RELATEITEM_MAXLEN, getDefaultCraftMacro, prepareMacroForSave, type RecordedCraftMacro, type StrictCraftRequirements } from '@/types/workstate/macromanage.ts'
 
 const { t } = useLocale()
 

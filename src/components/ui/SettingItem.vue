@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import {
-  KeyboardArrowRightOutlined
+  KeyboardArrowRightOutlined,
 } from '@vicons/material'
 import HelpButton from './HelpButton.vue'
-import type { AppTextUi, PreferenceItem } from '@/types/index.ts'
-import useUiTools from '@/composables/useUiTools.ts'
 import ImageSelector from './ImageSelector.vue'
-
 import { useLocale } from '@/composables/useLocale'
+import useUiTools from '@/composables/useUiTools.ts'
 import { useResponsive } from '@/composables/useResponsive'
+import type { AppTextUi, PreferenceItem } from '@/types/index.ts'
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()

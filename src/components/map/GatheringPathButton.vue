@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import { MapOutlined } from '@vicons/material'
-import XivFARImage from '@/components/ui/XivFARImage.vue'
+import {
+  MapOutlined,
+} from '@vicons/material'
 import ItemPop from '@/components/item/ItemPop.vue'
+import XivFARImage from '@/components/ui/XivFARImage.vue'
+import { useLocale } from '@/composables/useLocale'
+import UseConfig from '@/composables/useConfig.ts'
+import { useResponsive } from '@/composables/useResponsive'
 import { XivJobs } from '@/assets/data'
 import type { ItemInfo } from '@/tools/item'
 import { XivMaps, type XivMapAetheryteInfo, type XivMapInfo } from '@/tools/game/map.ts'
-import UseConfig from '@/composables/useConfig.ts'
-
-import { useLocale } from '@/composables/useLocale'
-import { useResponsive } from '@/composables/useResponsive'
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()

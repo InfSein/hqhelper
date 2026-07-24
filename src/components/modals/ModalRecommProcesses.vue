@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { 
-  AllInclusiveSharp, CopyAllOutlined
+import {
+  AllInclusiveSharp,
+  CopyAllOutlined,
 } from '@vicons/material'
-import CraftRecommProcess from '@/components/craft/CraftRecommProcess.vue'
 import ModalPreferences from './ModalPreferences.vue'
-import { type ItemInfo } from '@/tools/item'
-import { CopyToClipboard } from '@/tools'
-import { useFufuCal } from '@/tools/use-fufu-cal'
-import UseConfig from '@/composables/useConfig.ts'
+import CraftRecommProcess from '@/components/craft/CraftRecommProcess.vue'
 import { useStore } from '@/store'
-
 import { useLocale } from '@/composables/useLocale'
+import UseConfig from '@/composables/useConfig.ts'
+import { CopyToClipboard } from '@/tools'
+import { type ItemInfo } from '@/tools/item'
+import { useFufuCal } from '@/tools/use-fufu-cal'
 
 const { t } = useLocale()
 

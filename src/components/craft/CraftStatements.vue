@@ -1,12 +1,13 @@
 <script setup lang="ts">
-// import { 
-//   TableViewOutlined
-// } from '@vicons/material'
 import ItemList from '@/components/item/ItemList.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
 import type { ItemInfo } from '@/tools/item'
+
+// import { 
+//   TableViewOutlined
+// } from '@vicons/material'
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()

@@ -3,8 +3,8 @@
 -->
 
 <script setup lang="ts">
-import type { ItemInfo } from '@/tools/item'
 import useConfig from '@/composables/useConfig'
+import type { ItemInfo } from '@/tools/item'
 
 const { itemLanguage } = useConfig()
 

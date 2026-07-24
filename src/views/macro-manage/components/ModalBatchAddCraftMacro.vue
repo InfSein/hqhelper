@@ -1,25 +1,19 @@
 <script setup lang="ts">
 import {
-  NInput, NInputNumber, NInputGroup, NScrollbar,
   type DataTableColumns,
 } from 'naive-ui'
 import {
   CodeSharp,
-  DoneOutlined,
   ContentPasteSearchOutlined,
+  DoneOutlined,
 } from '@vicons/material'
-import { decompress } from 'xiv-cac-utils'
-import { XivCraftActions } from '@/assets/data'
-import {
-  _VAR_MACRO_MAXAMOUNT,
-  getDefaultCraftMacro, prepareMacroForSave,
-  type RecordedCraftMacro,
-} from '@/types/workstate/macromanage.ts'
 import HelpButton from '@/components/ui/HelpButton.vue'
 import CraftActionButton from '@/components/craft/CraftActionButton.vue'
-import { useDialog } from '@/composables/useDialog.ts'
-
 import { useLocale } from '@/composables/useLocale'
+import { useDialog } from '@/composables/useDialog.ts'
+import { XivCraftActions } from '@/assets/data'
+import { decompress } from 'xiv-cac-utils'
+import { _VAR_MACRO_MAXAMOUNT, getDefaultCraftMacro, prepareMacroForSave, type RecordedCraftMacro } from '@/types/workstate/macromanage.ts'
 
 const { t } = useLocale()
 

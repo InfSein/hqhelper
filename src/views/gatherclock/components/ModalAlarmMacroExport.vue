@@ -1,21 +1,20 @@
 <script setup lang="ts">
 import {
-  type TreeOption
+  type TreeOption,
 } from 'naive-ui'
-import { 
+import {
   CodeSharp,
-  HelpOutlineRound
+  HelpOutlineRound,
 } from '@vicons/material'
 import ItemSpan from '@/components/item/ItemSpan.vue'
 import MacroViewer from '@/components/craft/MacroViewer.vue'
-import { XivJobs, type XivJob } from '@/assets/data'
-import UseConfig from '@/composables/useConfig.ts'
-import type { ItemGroup } from '@/types/item/index.ts'
-import { getItemInfo, type ItemInfo } from '@/tools/item'
-import type { AlarmMacroOptions } from '@/types/workstate/gatherclock.ts'
-
 import { useLocale } from '@/composables/useLocale'
+import UseConfig from '@/composables/useConfig.ts'
 import { useResponsive } from '@/composables/useResponsive'
+import { XivJobs, type XivJob } from '@/assets/data'
+import { getItemInfo, type ItemInfo } from '@/tools/item'
+import type { ItemGroup } from '@/types/item/index.ts'
+import type { AlarmMacroOptions } from '@/types/workstate/gatherclock.ts'
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()

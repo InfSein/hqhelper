@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { 
-  FestivalOutlined
+import {
+  FestivalOutlined,
 } from '@vicons/material'
-
 import { useLocale } from '@/composables/useLocale'
 
 const { t } = useLocale()

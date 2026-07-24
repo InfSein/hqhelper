@@ -1,17 +1,19 @@
 <script setup lang="ts">
 import {
-  LogInOutlined, LogOutOutlined, PersonAddAlt1Filled,
-  ContentCopyRound,
   CloudSyncOutlined,
+  ContentCopyRound,
   EditNoteOutlined,
+  LogInOutlined,
+  LogOutOutlined,
+  PersonAddAlt1Filled,
 } from '@vicons/material'
 import { useStore } from '@/store'
-import { useLocale } from '@/composables/useLocale'
-import { useResponsive } from '@/composables/useResponsive'
-import { useAppModals } from '@/composables/useAppModals'
-import { useDialog } from '@/composables/useDialog'
-import { useNbbCloud } from '@/composables/useNbbCloud'
 import useCloud from '@/composables/useCloud'
+import { useDialog } from '@/composables/useDialog'
+import { useLocale } from '@/composables/useLocale'
+import { useNbbCloud } from '@/composables/useNbbCloud'
+import { useAppModals } from '@/composables/useAppModals'
+import { useResponsive } from '@/composables/useResponsive'
 import { CopyToClipboard } from '@/tools'
 import { fixCloudConfig } from '@/types/config/cloud'
 

@@ -1,13 +1,12 @@
 <script setup lang="ts">
-import { 
-  TableViewOutlined
+import {
+  TableViewOutlined,
 } from '@vicons/material'
-import CraftStatements from '@/components/craft/CraftStatements.vue'
 import ModalPreferences from './ModalPreferences.vue'
-import type { ItemInfo } from '@/tools/item'
-
+import CraftStatements from '@/components/craft/CraftStatements.vue'
 import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
+import type { ItemInfo } from '@/tools/item'
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()

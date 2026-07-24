@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import { 
+import {
+  SaveOutlined,
   SettingsSharp,
-  SaveOutlined
 } from '@vicons/material'
 import DraggableTable from '@/components/ui/DraggableTable.vue'
 import { useStore } from '@/store'
-import { _VAR_PRESET_CREQ_MAXAMOUNT, type StrictCraftRequirements } from '@/types/workstate/macromanage.ts'
-import { deepCopy } from '@/tools'
-
 import { useLocale } from '@/composables/useLocale'
+import { deepCopy } from '@/tools'
+import { _VAR_PRESET_CREQ_MAXAMOUNT, type StrictCraftRequirements } from '@/types/workstate/macromanage.ts'
 
 const { t } = useLocale()
 const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})

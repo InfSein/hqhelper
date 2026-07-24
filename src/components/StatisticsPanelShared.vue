@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import CraftStatistics from '@/components/craft/CraftStatistics.vue'
-import ModalCraftStatements from '@/components/modals/ModalCraftStatements.vue'
 import ModalProStatements from '@/components/modals/ModalProStatements.vue'
 import ModalCostAndBenefit from '@/components/modals/ModalCostAndBenefit.vue'
+import ModalCraftStatements from '@/components/modals/ModalCraftStatements.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
 import { useCostAndBenefit } from '@/composables/useCostAndBenefit'

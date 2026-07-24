@@ -1,16 +1,15 @@
 <script setup lang="ts">
-import { 
-  TableViewOutlined
+import {
+  TableViewOutlined,
 } from '@vicons/material'
-import ModalRecommProcesses from './ModalRecommProcesses.vue'
 import ModalPreferences from './ModalPreferences.vue'
-import { type ItemInfo } from '@/tools/item'
-import { useFufuCal } from '@/tools/use-fufu-cal'
+import ModalRecommProcesses from './ModalRecommProcesses.vue'
 import CraftStatementsPro from '@/components/craft/CraftStatementsPro.vue'
 import { useStore } from '@/store'
-
 import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
+import { type ItemInfo } from '@/tools/item'
+import { useFufuCal } from '@/tools/use-fufu-cal'
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()

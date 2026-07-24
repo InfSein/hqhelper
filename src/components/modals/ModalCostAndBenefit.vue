@@ -1,18 +1,17 @@
 <script setup lang='ts'>
-import { 
-  AttachMoneyOutlined
+import {
+  AttachMoneyOutlined,
 } from '@vicons/material'
-import ItemPriceTable from '@/components/item/ItemPriceTable.vue'
-import TooltipText from '@/components/ui/TooltipText.vue'
-import HelpButton from '@/components/ui/HelpButton.vue'
 import ModalPreferences from './ModalPreferences.vue'
+import HelpButton from '@/components/ui/HelpButton.vue'
+import TooltipText from '@/components/ui/TooltipText.vue'
+import ItemPriceTable from '@/components/item/ItemPriceTable.vue'
+import { useStore } from '@/store'
+import { useLocale } from '@/composables/useLocale'
+import { useAppModals } from '@/composables/useAppModals'
+import { useResponsive } from '@/composables/useResponsive'
 import useItemPrice from '@/composables/useItemPrice.ts'
 import type { ItemInfo } from '@/tools/item'
-import { useStore } from '@/store'
-
-import { useLocale } from '@/composables/useLocale'
-import { useResponsive } from '@/composables/useResponsive'
-import { useAppModals } from '@/composables/useAppModals'
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()

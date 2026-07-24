@@ -5,7 +5,6 @@ import {
 } from '@vicons/material'
 import { useStore } from '@/store'
 import { useDialog } from '@/composables/useDialog'
-
 import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
 

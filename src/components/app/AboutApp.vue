@@ -1,12 +1,13 @@
 <script setup lang="ts">
+import StaffGroup from './StaffGroup.vue'
+import ModalSponsorsList from '@/components/modals/ModalSponsorsList.vue'
+import useStaff from "@/composables/useStaff"
+import { useLocale } from '@/composables/useLocale'
+import AppStatus from '@/constants/app.ts'
+
 // import {
 //   RefreshOutlined
 // } from '@vicons/material'
-import StaffGroup from './StaffGroup.vue'
-import ModalSponsorsList from '@/components/modals/ModalSponsorsList.vue'
-import { useLocale } from '@/composables/useLocale'
-import AppStatus from '@/constants/app.ts'
-import useStaff from "@/composables/useStaff"
 
 const { t } = useLocale()
 const { staffMembers } = useStaff()

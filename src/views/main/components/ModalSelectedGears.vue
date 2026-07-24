@@ -1,22 +1,17 @@
 <script setup lang="ts">
-import { 
-  CheckroomSharp, SaveOutlined
+import {
+  CheckroomSharp,
+  SaveOutlined,
 } from '@vicons/material'
 import XivFARImage from '@/components/ui/XivFARImage.vue'
-import {
-  XivGearAffixes,
-  XivRoles, type XivRole,
-  XivJobs,
-  type HqDataVer
-} from '@/assets/data'
-import type { GearSelections, AttireAffix, AccessoryAffix } from '@/types/game/gear'
-import { attireAffixes, accessoryAffixes } from '@/types/game/gear'
+import { useLocale } from '@/composables/useLocale'
+import useConfig from '@/composables/useConfig.ts'
+import { useResponsive } from '@/composables/useResponsive'
+import { XivGearAffixes, XivRoles, type XivRole, XivJobs, type HqDataVer } from '@/assets/data'
 import { deepCopy } from '@/tools'
 import { getGearIcon } from '@/tools/game/gear'
-import useConfig from '@/composables/useConfig.ts'
-
-import { useLocale } from '@/composables/useLocale'
-import { useResponsive } from '@/composables/useResponsive'
+import { attireAffixes, accessoryAffixes } from '@/types/game/gear'
+import type { GearSelections, AttireAffix, AccessoryAffix } from '@/types/game/gear'
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()

@@ -1,20 +1,20 @@
 <script lang="ts" setup>
 import {
-  FileDownloadDoneOutlined,
   AccessibilityNewOutlined,
-  AddCircleOutlineOutlined, AddCircleOutlined, ClearAllOutlined
+  AddCircleOutlined,
+  AddCircleOutlineOutlined,
+  ClearAllOutlined,
+  FileDownloadDoneOutlined,
 } from '@vicons/material'
 import XivFARImage from '@/components/ui/XivFARImage.vue'
-import { XivJobs, XivRoles, type XivRole, type HqDataVer, type XivPatchVer } from '@/assets/data'
-import type { GearSelections } from '@/types/game/gear'
-import { getGearIcon, getGearRecomm, useGearAdder } from '@/tools/game/gear'
-import useUiTools from '@/composables/useUiTools.ts'
-import { visitUrl } from '@/tools'
-import UseConfig from '@/composables/useConfig.ts'
-import { NIcon } from 'naive-ui'
-
 import { useLocale } from '@/composables/useLocale'
+import UseConfig from '@/composables/useConfig.ts'
+import useUiTools from '@/composables/useUiTools.ts'
 import { useResponsive } from '@/composables/useResponsive'
+import { XivJobs, XivRoles, type XivRole, type HqDataVer, type XivPatchVer } from '@/assets/data'
+import { visitUrl } from '@/tools'
+import { getGearIcon, getGearRecomm, useGearAdder } from '@/tools/game/gear'
+import type { GearSelections } from '@/types/game/gear'
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()

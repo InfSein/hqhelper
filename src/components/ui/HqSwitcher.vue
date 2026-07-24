@@ -3,7 +3,6 @@ import {
   WifiProtectedSetupFilled,
 } from '@vicons/material'
 import HqLogo from '@/components/app/HqLogo.vue'
-
 import { useLocale } from '@/composables/useLocale'
 
 const { t } = useLocale()

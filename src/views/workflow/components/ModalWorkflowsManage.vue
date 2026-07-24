@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { 
+import {
+  SaveOutlined,
   SettingsSharp,
-  SaveOutlined
 } from '@vicons/material'
-import DraggableTable from '@/components/ui/DraggableTable.vue'
 import HelpButton from '@/components/ui/HelpButton.vue'
+import DraggableTable from '@/components/ui/DraggableTable.vue'
+import { useLocale } from '@/composables/useLocale'
 import { _VAR_MAX_WORKFLOW, getDefaultWorkflow, type Workflow } from '@/types/workstate/workflow.ts'
 
 const NAIVE_UI_MESSAGE = useMessage()
 
-import { useLocale } from '@/composables/useLocale'
 
 const { t } = useLocale()
 

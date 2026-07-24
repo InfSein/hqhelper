@@ -1,7 +1,8 @@
 <script setup lang="ts">
+import {
+  InfoSharp,
+} from '@vicons/material'
 import AboutApp from '@/components/app/AboutApp.vue'
-import { InfoSharp } from '@vicons/material'
-
 import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
 

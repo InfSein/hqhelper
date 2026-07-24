@@ -1,18 +1,19 @@
 <script lang="ts" setup>
+import ItemPop from './ItemPop.vue'
+import XivFARImage from '@/components/ui/XivFARImage.vue'
+import { useStore } from '@/store'
+import { useLocale } from '@/composables/useLocale'
+import useConfig from '@/composables/useConfig.ts'
+import { useItemContextMenu } from '@/composables/useItemContextMenu'
+import { XivJobs } from '@/assets/data'
+import { type ItemInfo } from '@/tools/item'
+
 // import {
 //   FileCopyOutlined,
 //   LanguageOutlined,
 //   OpenInNewFilled
 // } from '@vicons/material'
-import XivFARImage from '@/components/ui/XivFARImage.vue'
-import ItemPop from './ItemPop.vue'
-import { type ItemInfo } from '@/tools/item'
-import useConfig from '@/composables/useConfig.ts'
-import { useItemContextMenu } from '@/composables/useItemContextMenu'
-import { XivJobs } from '@/assets/data'
-import { useStore } from '@/store'
 
-import { useLocale } from '@/composables/useLocale'
 
 const { t } = useLocale()
 

@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import Stepper from '@/components/ui/Stepper.vue'
 import ItemButton from './ItemButton.vue'
-import type { ItemInfo } from '@/tools/item'
-
+import Stepper from '@/components/ui/Stepper.vue'
 import { useResponsive } from '@/composables/useResponsive'
+import type { ItemInfo } from '@/tools/item'
 
 const { isMobile } = useResponsive()
 

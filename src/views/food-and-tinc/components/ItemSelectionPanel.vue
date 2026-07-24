@@ -1,16 +1,15 @@
 <script setup lang="ts">
 import {
+  DeleteSweepRound,
   JoinLeftOutlined,
-  DeleteSweepRound
 } from '@vicons/material'
 import XivFARImage from '@/components/ui/XivFARImage.vue'
 import ItemStepper from '@/components/item/ItemStepper.vue'
 import TooltipButton from '@/components/ui/TooltipButton.vue'
-import { useNbbCal } from '@/tools/use-nbb-cal'
-import { getItemInfo, type ItemInfo } from '@/tools/item'
 import { useStore } from '@/store'
-
 import { useLocale } from '@/composables/useLocale'
+import { getItemInfo, type ItemInfo } from '@/tools/item'
+import { useNbbCal } from '@/tools/use-nbb-cal'
 
 const { t } = useLocale()
 

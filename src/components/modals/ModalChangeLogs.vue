@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import {
-  EventNoteFilled,
   CopyAllOutlined,
-  HistoryOutlined, StickyNote2Outlined,
+  EventNoteFilled,
+  HistoryOutlined,
+  StickyNote2Outlined,
 } from '@vicons/material'
-import { getChangelogs, type PatchChangeGroup } from '@/data/change-logs'
-import AppStatus from '@/constants/app'
 import { useStore } from '@/store'
-
 import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
+import AppStatus from '@/constants/app'
+import { getChangelogs, type PatchChangeGroup } from '@/data/change-logs'
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {
-  CodeSharp
+  CodeSharp,
 } from '@vicons/material'
 import UseConfig from '@/composables/useConfig'
 import { useLocale } from '@/composables/useLocale'

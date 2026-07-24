@@ -1,18 +1,16 @@
 <script setup lang="ts">
-import { 
-  HandshakeOutlined,
+import {
   ChecklistRtlSharp,
-  DoneOutlined, SettingsBackupRestoreSharp,
+  DoneOutlined,
+  HandshakeOutlined,
+  SettingsBackupRestoreSharp,
 } from '@vicons/material'
+import ModalSponsorsList from './ModalSponsorsList.vue'
 import HelpButton from '@/components/ui/HelpButton.vue'
 import StaffGroup from '@/components/app/StaffGroup.vue'
-import ModalSponsorsList from './ModalSponsorsList.vue'
-import {
-  qGroupInfo,
-} from '@/constants'
 import useStaff from "@/composables/useStaff"
-
 import { useLocale } from '@/composables/useLocale'
+import { qGroupInfo } from '@/constants'
 
 const { t } = useLocale()
 

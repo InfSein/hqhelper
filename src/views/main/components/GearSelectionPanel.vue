@@ -1,29 +1,19 @@
 <script setup lang="ts">
 import type { WritableComputedRef } from 'vue'
-import { JoinLeftOutlined } from '@vicons/material'
-import Stepper from '@/components/ui/Stepper.vue'
+import {
+  JoinLeftOutlined,
+} from '@vicons/material'
 import GearSlot from '@/components/GearSlot.vue'
+import Stepper from '@/components/ui/Stepper.vue'
 import TooltipButton from '@/components/ui/TooltipButton.vue'
 import DropdownActionMenu from '@/components/ui/DropdownActionMenu.vue'
 import ModalSelectedGears from '@/views/main/components/ModalSelectedGears.vue'
-import {
-  XivGearAffixes,
-  XivJobs,
-  XivRoles,
-  type HqDataVer
-} from '@/assets/data'
-import {
-  type AttireAffix,
-  type AccessoryAffix,
-  type GearSelections,
-  type GearSlot as GearSlotType,
-  fixGearSelections
-} from '@/types/game/gear'
-import { useGearAdder } from '@/tools/game/gear'
 import { useStore } from '@/store'
-
 import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
+import { XivGearAffixes, XivJobs, XivRoles, type HqDataVer } from '@/assets/data'
+import { useGearAdder } from '@/tools/game/gear'
+import { type AttireAffix, type AccessoryAffix, type GearSelections, type GearSlot as GearSlotType, fixGearSelections } from '@/types/game/gear'
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()

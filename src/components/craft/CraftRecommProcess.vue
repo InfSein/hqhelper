@@ -1,19 +1,20 @@
 <script setup lang="ts">
+import ItemSpan from '@/components/item/ItemSpan.vue'
+import XivFARImage from '@/components/ui/XivFARImage.vue'
+import LocationSpan from '@/components/map/LocationSpan.vue'
+import GatheringPathButton from '@/components/map/GatheringPathButton.vue'
+import { useStore } from '@/store'
+import UseConfig from '@/composables/useConfig'
+import { useLocale } from '@/composables/useLocale'
+import { useEorzeaTime } from '@/composables/useEorzeaTime'
+import { XivJobs, type XivJob } from '@/assets/data'
+import { getItemInfo, type ItemInfo } from '@/tools/item'
+import type { RecommItemGroup } from '@/types/item'
+
 // import { 
 //   SettingsSharp,
 //   UnfoldMoreSharp, UnfoldLessSharp,
 // } from '@vicons/material'
-import XivFARImage from '@/components/ui/XivFARImage.vue'
-import ItemSpan from '@/components/item/ItemSpan.vue'
-import LocationSpan from '@/components/map/LocationSpan.vue'
-import GatheringPathButton from '@/components/map/GatheringPathButton.vue'
-import { useStore } from '@/store'
-import { useLocale } from '@/composables/useLocale'
-import { useEorzeaTime } from '@/composables/useEorzeaTime'
-import UseConfig from '@/composables/useConfig'
-import { XivJobs, type XivJob } from '@/assets/data'
-import { getItemInfo, type ItemInfo } from '@/tools/item'
-import type { RecommItemGroup } from '@/types/item'
 
 const store = useStore()
 const { t } = useLocale()

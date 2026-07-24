@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import MapButton from './MapButton.vue'
-import { XivMaps } from '@/tools/game/map.ts'
 import { useStore } from '@/store'
-
 import { useLocale } from '@/composables/useLocale'
+import { XivMaps } from '@/tools/game/map.ts'
 
 const { t } = useLocale()
 

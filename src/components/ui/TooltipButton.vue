@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { type Component } from 'vue'
 import {
-  NPopover, NTooltip, // 这些组件在函数中进行了引用，不能依赖自动引入
-  type PopoverTrigger
+  type PopoverTrigger,
 } from 'naive-ui'
 import type { Type } from 'naive-ui/es/button/src/interface'
-
 import { useResponsive } from '@/composables/useResponsive'
 
 const { isMobile } = useResponsive()

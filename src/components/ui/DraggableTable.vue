@@ -1,12 +1,12 @@
 <script setup lang="ts" generic="DataRow">
-import { 
-  ListFilled,
-  DeleteFilled,
-  AddSharp,
-} from '@vicons/material'
 import { VueDraggable } from 'vue-draggable-plus'
-import { deepCopy } from '@/tools'
+import {
+  AddSharp,
+  DeleteFilled,
+  ListFilled,
+} from '@vicons/material'
 import { useLocale } from '@/composables/useLocale'
+import { deepCopy } from '@/tools'
 
 const NAIVE_UI_MESSAGE = useMessage()
 const { t } = useLocale()
