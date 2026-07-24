@@ -2,6 +2,7 @@
 import {
   NButton, NIcon, NTooltip, // 这些组件在函数中进行了引用，不能依赖自动引入
   type DropdownOption, type MenuOption,
+  useOsTheme,
 } from 'naive-ui'
 import {
   ArrowCircleLeftOutlined,
@@ -39,9 +40,8 @@ import ModalChangeLogs from '@/components/modals/ModalChangeLogs.vue'
 import ModalAboutApp from '@/components/modals/ModalAboutApp.vue'
 import ModalDonate from '@/components/modals/ModalDonate.vue'
 // import ChristmasTree from '@/assets/icons/ChristmasTree.vue'
-import { useStore } from '@/store'
 import router from '@/router'
-import { checkAppUpdates, visitUrl } from '@/tools'
+import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
 import { useEorzeaTime } from '@/composables/useEorzeaTime'
@@ -49,15 +49,20 @@ import { useAppModals } from '@/composables/useAppModals'
 import { useDialog } from '@/composables/useDialog.ts'
 import useUiTools from '@/composables/useUiTools.ts'
 import AppStatus from '@/constants/app.ts'
-import { useOsTheme } from 'naive-ui'
+import { checkAppUpdates, visitUrl } from '@/tools'
 
+
+const store = useStore()
+const osTheme = useOsTheme()
+const { confirm } = useDialog()
+const NAIVE_UI_MESSAGE = useMessage()
+const { renderIcon, optionsRenderer } = useUiTools()
 const { t, currentLocale: locale } = useLocale()
 const { isMobile } = useResponsive()
 const { currentET } = useEorzeaTime()
 const { displayCheckUpdatesModal } = useAppModals()
 
 const isChina = computed(() => locale.value === 'zh')
-const osTheme = useOsTheme()
 const theme = computed(() => {
   const _theme = store.userConfig.theme
   if (_theme === 'system') {
@@ -76,11 +81,6 @@ const useDesktopUi = computed(() => {
 const canOpenDevTools = computed(() => {
   return !!window.electronAPI?.openDevTools && store.userConfig.enable_dev_mode
 })
-
-const store = useStore()
-const { confirm } = useDialog()
-const NAIVE_UI_MESSAGE = useMessage()
-const { renderIcon, optionsRenderer } = useUiTools()
 
 onMounted(() => {
   if (store.userConfig.cache_lasttime_version !== AppStatus.Version) {

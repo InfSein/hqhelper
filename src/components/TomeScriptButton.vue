@@ -3,25 +3,23 @@ import {
   CodeSharp
 } from '@vicons/material'
 import ItemSpan from '@/components/item/ItemSpan.vue'
-import { XivUnpackedTradeMap } from '@/assets/data'
-import { getItemInfo, type ItemInfo } from '@/tools/item'
 import { useStore } from '@/store'
-import UseConfig from '@/composables/useConfig.ts'
-import type { MacroGenerateMode } from '@/types/config/func.ts'
-
+import useConfig from '@/composables/useConfig.ts'
 import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
 import { useAppModals } from '@/composables/useAppModals'
+import { XivUnpackedTradeMap } from '@/assets/data'
+import { getItemInfo, type ItemInfo } from '@/tools/item'
+import type { MacroGenerateMode } from '@/types/config/func.ts'
 
+const store = useStore()
+const {
+  itemLanguage,
+} = useConfig()
 const { t } = useLocale()
 const { isMobile } = useResponsive()
 const { copyAsMacro } = useAppModals()
-
-const store = useStore()
 const NAIVE_UI_MESSAGE = useMessage()
-const {
-  itemLanguage,
-} = UseConfig()
 
 interface TomeScriptButtonProps {
   /**

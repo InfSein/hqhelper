@@ -6,24 +6,23 @@ import {
   EditNoteOutlined,
 } from '@vicons/material'
 import { useStore } from '@/store'
-import { CopyToClipboard } from '@/tools'
-import { useDialog } from '@/composables/useDialog'
-import { useNbbCloud } from '@/composables/useNbbCloud'
-import useCloud from '@/composables/useCloud'
-import { fixCloudConfig } from '@/types/config/cloud'
-
 import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
 import { useAppModals } from '@/composables/useAppModals'
+import { useDialog } from '@/composables/useDialog'
+import { useNbbCloud } from '@/composables/useNbbCloud'
+import useCloud from '@/composables/useCloud'
+import { CopyToClipboard } from '@/tools'
+import { fixCloudConfig } from '@/types/config/cloud'
 
-const { t } = useLocale()
-const { isMobile } = useResponsive()
-const { displayLoginModal, displayCloudSyncModal } = useAppModals()
 const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
 
+const { t } = useLocale()
 const store = useStore()
-const { confirmWarning } = useDialog()
 const NAIVE_UI_MESSAGE = useMessage()
+const { confirmWarning } = useDialog()
+const { isMobile } = useResponsive()
+const { displayLoginModal, displayCloudSyncModal } = useAppModals()
 const {
   updateUserInfo,
   resolveUserInfo,

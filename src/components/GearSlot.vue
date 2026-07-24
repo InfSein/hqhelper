@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import type { GearSlot } from '@/types/game/gear'
 import ItemButton from '@/components/item/ItemButton.vue'
-import { getItemInfo } from '@/tools/item'
-import { getGearIcon } from '@/tools/game/gear'
-
 import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
+import { getItemInfo } from '@/tools/item'
+import { getGearIcon } from '@/tools/game/gear'
+import type { GearSlot } from '@/types/game/gear'
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()
