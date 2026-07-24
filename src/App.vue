@@ -15,13 +15,11 @@ import { useLocale } from './locales'
 import { useResponsive } from '@/composables/useResponsive'
 import { useAppMode } from '@/composables/useAppMode'
 import { useAppModals } from '@/composables/useAppModals'
-import { checkAppUpdates, checkElectronUpdates, CopyToClipboard, deepCopy, getAppBackground, sleep } from './tools'
-import EorzeaTime from './utils/game.et.ts'
-import { type ItemInfo } from './tools/item'
+import { checkAppUpdates, checkElectronUpdates, getAppBackground, sleep } from './tools'
 import AppStatus from './constants/app.ts'
 import { registerDialogProvider, useDialog } from './composables/useDialog.ts'
 import { fixUserConfig, type UserConfigModel } from './types/config/user.ts'
-import { fixFuncConfig, type FuncConfigModel, type MacroGenerateMode } from './types/config/func.ts'
+import { fixFuncConfig, type FuncConfigModel } from './types/config/func.ts'
 import { fixCloudConfig, type CloudConfigModel } from './types/config/cloud.ts'
 import { fixMainCache, type MainCacheModel } from './types/config/cache-main.ts'
 
@@ -33,25 +31,21 @@ const ModalCloudSync = defineAsyncComponent(() => import('@/components/modals/Mo
 const ModalFestivalEgg = defineAsyncComponent(() => import('@/components/modals/ModalFestivalEgg.vue'))
 const ModalItemPriceDetail = defineAsyncComponent(() => import('@/components/modals/ModalItemPriceDetail.vue'))
 
-const route = useRoute()
 const store = useStore()
 const { t, setLocale } = useLocale()
+const { confirm } = useDialog(t)
 const { isMobile } = useResponsive()
 const { appMode } = useAppMode()
-const { emitSync, onSync } = useElectronSync()
+const { onSync } = useElectronSync()
 const {
   showCopyMacroModal, macroMapValue,
   showModalJoinInWorkflow, itemsToJoinInWorkflow,
   showCheckUpdatesModal, displayCheckUpdatesModal,
-  loginAction, showModalLogin,
+  showModalLogin, loginAction,
   showModalCloudSync,
   showModalItemPriceDetail, modalItemPriceDetailItems
 } = useAppModals()
 
-const userConfig = ref<UserConfigModel>(fixUserConfig(store.userConfig))
-const funcConfig = ref<FuncConfigModel>(fixFuncConfig(store.funcConfig))
-const cloudConfig = ref<CloudConfigModel>(fixCloudConfig(store.cloudConfig))
-const mainCache = ref<MainCacheModel>(fixMainCache(store.mainCache))
 const locale = computed(() => {
   return store.userConfig?.language_ui ?? 'zh'
 })
@@ -90,32 +84,11 @@ const naiveUiMessagePlacement = computed(() => {
   return isMobile.value ? 'bottom' : 'top'
 })
 
-const appForceUpdate = () => {
-  // update app
-  handleAppUpdate(
-    store.userConfig,
-    store.funcConfig,
-    store.cloudConfig,
-    store.mainCache
-  )
-  // Update electron settings
-  emitSync('update-setting', deepCopy({
-    userConfig: store.userConfig,
-    funcConfig: funcConfig.value,
-    cloudConfig: cloudConfig.value,
-    mainCache: mainCache.value,
-  }))
-}
 onSync('update-setting', (value) => {
-  console.log('on-sync was called', value)
   const {
     userConfig: _userConfig, funcConfig: _funcConfig, cloudConfig: _cloudConfig, mainCache: _mainCache
   } = value
   handleAppUpdate(_userConfig, _funcConfig, _cloudConfig, _mainCache)
-  store.setUserConfig(store.userConfig)
-  store.setFuncConfig(funcConfig.value)
-  store.setCloudConfig(cloudConfig.value)
-  store.setMainCache(mainCache.value)
 })
 const handleAppUpdate = (
   _userConfig: UserConfigModel | undefined,
@@ -123,16 +96,21 @@ const handleAppUpdate = (
   _cloudConfig: CloudConfigModel | undefined,
   _mainCache: MainCacheModel | undefined
 ) => {
+  // Update store
   store.userConfig = fixUserConfig(_userConfig)
-  funcConfig.value = fixFuncConfig(_funcConfig)
-  cloudConfig.value = fixCloudConfig(_cloudConfig)
-  mainCache.value = fixMainCache(_mainCache)
+  store.updateUserConfig()
+  store.funcConfig = fixFuncConfig(_funcConfig)
+  store.updateFuncConfig()
+  store.cloudConfig = fixCloudConfig(_cloudConfig)
+  store.updateCloudConfig()
+  store.mainCache = fixMainCache(_mainCache)
+  store.updateMainCache()
   // Update i18n
   setLocale(locale.value)
   // Update vue
   const instance = getCurrentInstance()
   instance?.proxy?.$forceUpdate()
-  // 加载背景
+  // Load app background
   getAppBackground(store.userConfig.custom_background).then(val => appBg.value = val)
 }
 
@@ -155,7 +133,6 @@ const appStyle = computed(() => {
 
 const showFestivalEgg = ref(false)
 const dialogRef = ref<InstanceType<typeof Dialog> | null>(null)
-const { alertError, confirm } = useDialog(t)
 
 const appBg = ref('')
 
