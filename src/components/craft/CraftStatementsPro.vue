@@ -11,7 +11,7 @@ import type { ProStatementBlock } from '@/tools/use-fufu-cal'
 import { useResponsive } from '@/composables/useResponsive'
 
 const { isMobile } = useResponsive()
-const appForceUpdate = () => {}
+const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
 
 const store = useStore()
 

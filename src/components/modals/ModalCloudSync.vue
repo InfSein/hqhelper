@@ -25,7 +25,7 @@ import { useResponsive } from '@/composables/useResponsive'
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()
-const appForceUpdate = () => {}
+const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
 
 const store = useStore()
 const { alertInfo, alertError, confirm } = useDialog()

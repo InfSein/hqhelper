@@ -15,7 +15,7 @@ import { useLocale } from './locales'
 import { useResponsive } from '@/composables/useResponsive'
 import { useAppMode } from '@/composables/useAppMode'
 import { useAppModals } from '@/composables/useAppModals'
-import { checkAppUpdates, checkElectronUpdates, getAppBackground, sleep } from './tools'
+import { checkAppUpdates, checkElectronUpdates, deepCopy, getAppBackground, sleep } from './tools'
 import AppStatus from './constants/app.ts'
 import { registerDialogProvider, useDialog } from './composables/useDialog.ts'
 import { fixUserConfig, type UserConfigModel } from './types/config/user.ts'
@@ -36,7 +36,7 @@ const { t, setLocale } = useLocale()
 const { confirm } = useDialog(t)
 const { isMobile } = useResponsive()
 const { appMode } = useAppMode()
-const { onSync } = useElectronSync()
+const { emitSync, onSync } = useElectronSync()
 const {
   showCopyMacroModal, macroMapValue,
   showModalJoinInWorkflow, itemsToJoinInWorkflow,
@@ -84,12 +84,6 @@ const naiveUiMessagePlacement = computed(() => {
   return isMobile.value ? 'bottom' : 'top'
 })
 
-onSync('update-setting', (value) => {
-  const {
-    userConfig: _userConfig, funcConfig: _funcConfig, cloudConfig: _cloudConfig, mainCache: _mainCache
-  } = value
-  handleAppUpdate(_userConfig, _funcConfig, _cloudConfig, _mainCache)
-})
 const handleAppUpdate = (
   _userConfig: UserConfigModel | undefined,
   _funcConfig: FuncConfigModel | undefined,
@@ -113,6 +107,29 @@ const handleAppUpdate = (
   // Load app background
   getAppBackground(store.userConfig.custom_background).then(val => appBg.value = val)
 }
+const appForceUpdate = () => {
+  // update app
+  handleAppUpdate(
+    store.userConfig,
+    store.funcConfig,
+    store.cloudConfig,
+    store.mainCache
+  )
+  // Update electron settings
+  emitSync('update-setting', deepCopy({
+    userConfig: store.userConfig,
+    funcConfig: store.funcConfig,
+    cloudConfig: store.cloudConfig,
+    mainCache: store.mainCache,
+  }))
+}
+provide('appForceUpdate', appForceUpdate)
+onSync('update-setting', (value) => {
+  const {
+    userConfig: _userConfig, funcConfig: _funcConfig, cloudConfig: _cloudConfig, mainCache: _mainCache
+  } = value
+  handleAppUpdate(_userConfig, _funcConfig, _cloudConfig, _mainCache)
+})
 
 const appClass = computed(() => {
   const classes = [

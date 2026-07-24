@@ -18,7 +18,7 @@ import { fixFuncConfig, type FuncConfigModel } from '@/types/config/func'
 import { useLocale } from '@/composables/useLocale'
 
 const { t } = useLocale()
-const appForceUpdate = () => {}
+const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
 
 const store = useStore()
 const NAIVE_UI_MESSAGE = useMessage()

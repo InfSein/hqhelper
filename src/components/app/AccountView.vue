@@ -19,7 +19,7 @@ import { useAppModals } from '@/composables/useAppModals'
 const { t } = useLocale()
 const { isMobile } = useResponsive()
 const { displayLoginModal, displayCloudSyncModal } = useAppModals()
-const appForceUpdate = () => {}
+const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
 
 const store = useStore()
 const { confirmWarning } = useDialog()
