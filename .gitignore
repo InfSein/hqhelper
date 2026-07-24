@@ -7,6 +7,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+.venv
 node_modules
 .DS_Store
 dist
@@ -27,7 +28,9 @@ private-folder-alias.json
 
 # Ai
 .agent
+.agents
 AGENTS.md
+skills-lock.json
 
 # Editor directories and files
 .vscode/*
