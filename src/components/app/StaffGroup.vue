@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import type { StaffMember } from '@/types/staff'
-
 import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
+import type { StaffMember } from '@/types/staff'
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()

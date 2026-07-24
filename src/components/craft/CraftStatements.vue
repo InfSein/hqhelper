@@ -3,11 +3,10 @@
 //   TableViewOutlined
 // } from '@vicons/material'
 import ItemList from '@/components/item/ItemList.vue'
-import type { ItemInfo } from '@/tools/item'
 import { useStore } from '@/store'
-
 import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
+import type { ItemInfo } from '@/tools/item'
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()

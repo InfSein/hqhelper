@@ -51,7 +51,6 @@ import useUiTools from '@/composables/useUiTools.ts'
 import AppStatus from '@/constants/app.ts'
 import { checkAppUpdates, visitUrl } from '@/tools'
 
-
 const store = useStore()
 const osTheme = useOsTheme()
 const { confirm } = useDialog()

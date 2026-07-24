@@ -10,14 +10,15 @@ import AppHeader from './components/app/AppHeader.vue'
 import AccountView from './components/app/AccountView.vue'
 import Dialog from "@/components/app/Dialog.vue"
 import { useStore } from '@/store/index'
+import useConfig from '@/composables/useConfig.ts'
+import { registerDialogProvider, useDialog } from '@/composables/useDialog.ts'
 import { useElectronSync } from '@/composables/electron-sync'
 import { useLocale } from './locales'
 import { useResponsive } from '@/composables/useResponsive'
 import { useAppMode } from '@/composables/useAppMode'
 import { useAppModals } from '@/composables/useAppModals'
-import { checkAppUpdates, checkElectronUpdates, deepCopy, getAppBackground, sleep } from './tools'
 import AppStatus from './constants/app.ts'
-import { registerDialogProvider, useDialog } from './composables/useDialog.ts'
+import { checkAppUpdates, checkElectronUpdates, deepCopy, getAppBackground, sleep } from './tools'
 import { fixUserConfig, type UserConfigModel } from './types/config/user.ts'
 import { fixFuncConfig, type FuncConfigModel } from './types/config/func.ts'
 import { fixCloudConfig, type CloudConfigModel } from './types/config/cloud.ts'
@@ -33,6 +34,7 @@ const ModalItemPriceDetail = defineAsyncComponent(() => import('@/components/mod
 
 const store = useStore()
 const { t, setLocale } = useLocale()
+const { theme } = useConfig()
 const { confirm } = useDialog(t)
 const { isMobile } = useResponsive()
 const { appMode } = useAppMode()
@@ -51,19 +53,14 @@ const locale = computed(() => {
 })
 setLocale(locale.value)
 
-const osTheme = useOsTheme()
-const theme = computed(() => {
-  const _theme = store.userConfig.theme
-  if (_theme === 'system') {
-    return osTheme.value === 'dark' ? 'dark' : 'light'
-  }
-  return _theme
-})
-const naiveUiTheme = computed(() => {
+watch(theme, () => {
+  console.log('theme changed:', theme.value)
   const isDarkMode = theme.value !== 'light'
   if (window.electronAPI?.updateTitleBarTheme) {
     window.electronAPI.updateTitleBarTheme(isDarkMode)
   }
+}, { immediate: true })
+const naiveUiTheme = computed(() => {
   return theme.value === 'light' ? lightTheme : darkTheme
 })
 const naiveUiLocale = computed(() => {

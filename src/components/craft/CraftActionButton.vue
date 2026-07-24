@@ -3,17 +3,13 @@ import {
   type PopoverTrigger
 } from 'naive-ui'
 import XivFARImage from '@/components/ui/XivFARImage.vue'
+import useConfig from '@/composables/useConfig.ts'
+import { useResponsive } from '@/composables/useResponsive'
 import type { XivCraftAction } from '@/assets/data'
 import { getImgCdnUrl } from '@/tools/game'
-import UseConfig from '@/composables/useConfig.ts'
 
-import { useResponsive } from '@/composables/useResponsive'
-
+const { itemLanguage } = useConfig()
 const { isMobile } = useResponsive()
-
-const {
-  itemLanguage,
-} = UseConfig()
 
 interface CraftActionButtonProps {
   craftAction: XivCraftAction,

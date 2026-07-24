@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { VueUiXy, type VueUiXyDatasetItem, type VueUiXyConfig } from "vue-data-ui/vue-ui-xy"
 import "vue-data-ui/style.css"
-import { formatTimestamp } from "@/tools"
-
+import { VueUiXy, type VueUiXyDatasetItem, type VueUiXyConfig } from "vue-data-ui/vue-ui-xy"
 import { useLocale } from '@/composables/useLocale'
+import { formatTimestamp } from "@/tools"
 
 const { t } = useLocale()
 
