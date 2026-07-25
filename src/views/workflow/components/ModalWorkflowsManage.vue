@@ -1,16 +1,15 @@
 <script setup lang="ts">
-import { 
+import {
+  SaveOutlined,
   SettingsSharp,
-  SaveOutlined
 } from '@vicons/material'
-import DraggableTable from '@/components/ui/DraggableTable.vue'
 import HelpButton from '@/components/ui/HelpButton.vue'
+import DraggableTable from '@/components/ui/DraggableTable.vue'
+import { useLocale } from '@/composables/useLocale'
 import { _VAR_MAX_WORKFLOW, getDefaultWorkflow, type Workflow } from '@/types/workstate/workflow.ts'
 
+const { t } = useLocale()
 const NAIVE_UI_MESSAGE = useMessage()
-
-const t = inject<(message: string, args?: any) => string>('t')!
-// const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
 
 const showModal = defineModel<boolean>('show', { required: true })
 const workflows = defineModel<Workflow[]>('workflows', { required: true })

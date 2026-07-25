@@ -1,30 +1,30 @@
 <script lang="ts" setup>
 import {
-  FileDownloadDoneOutlined,
   AccessibilityNewOutlined,
-  AddCircleOutlineOutlined, AddCircleOutlined, ClearAllOutlined
+  AddCircleOutlined,
+  AddCircleOutlineOutlined,
+  ClearAllOutlined,
+  FileDownloadDoneOutlined,
 } from '@vicons/material'
 import XivFARImage from '@/components/ui/XivFARImage.vue'
-import { XivJobs, XivRoles, type XivRole, type HqDataVer, type XivPatchVer } from '@/assets/data'
-import type { GearSelections } from '@/types/game/gear'
-import { getGearIcon, getGearRecomm, useGearAdder } from '@/tools/game/gear'
-import useUiTools from '@/composables/useUiTools.ts'
-import { visitUrl } from '@/tools'
+import { useLocale } from '@/composables/useLocale'
 import UseConfig from '@/composables/useConfig.ts'
-import { NIcon } from 'naive-ui'
+import useUiTools from '@/composables/useUiTools.ts'
+import { useResponsive } from '@/composables/useResponsive'
+import { XivJobs, XivRoles, type XivRole, type HqDataVer, type XivPatchVer } from '@/assets/data'
+import { visitUrl } from '@/tools'
+import { getGearIcon, getGearRecomm, useGearAdder } from '@/tools/game/gear'
+import type { GearSelections } from '@/types/game/gear'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-
+const { t } = useLocale()
+const { uiLanguage } = UseConfig()
+const { isMobile } = useResponsive()
+const { renderIcon, optionsRenderer } = useUiTools()
 const {
   addMainOffHand,
   addAttire,
-  addAccessory
+  addAccessory,
 } = useGearAdder()
-const { renderIcon, optionsRenderer } = useUiTools()
-const {
-  uiLanguage,
-} = UseConfig()
 
 const gearsSelected = defineModel<GearSelections>('gearsSelected', { required: true })
 interface JobButtonProps {

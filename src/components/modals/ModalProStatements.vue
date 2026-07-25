@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import { 
-  TableViewOutlined
+import {
+  TableViewOutlined,
 } from '@vicons/material'
-import ModalRecommProcesses from './ModalRecommProcesses.vue'
 import ModalPreferences from './ModalPreferences.vue'
-import { type ItemInfo } from '@/tools/item'
-import { useFufuCal } from '@/tools/use-fufu-cal'
+import ModalRecommProcesses from './ModalRecommProcesses.vue'
 import CraftStatementsPro from '@/components/craft/CraftStatementsPro.vue'
 import { useStore } from '@/store'
-
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-// const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
+import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
+import { type ItemInfo } from '@/tools/item'
+import { useFufuCal } from '@/tools/use-fufu-cal'
 
 const store = useStore()
+const { t } = useLocale()
+const { isMobile } = useResponsive()
 const { getProStatementData, calRecommProcessData } = useFufuCal()
 
 const showModal = defineModel<boolean>('show', { required: true })

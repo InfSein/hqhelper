@@ -1,9 +1,13 @@
 <script setup lang="ts">
+import {
+  InfoSharp,
+} from '@vicons/material'
 import AboutApp from '@/components/app/AboutApp.vue'
-import { InfoSharp } from '@vicons/material'
+import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+const { t } = useLocale()
+const { isMobile } = useResponsive()
 
 const showModal = defineModel<boolean>('show', { required: true })
 </script>

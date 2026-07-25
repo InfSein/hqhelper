@@ -4,30 +4,33 @@ import {
 } from '@vicons/material'
 import RouterCard from '@/components/ui/RouterCard.vue'
 import GatherItemCard from '@/views/gatherclock/components/GatherItemCard.vue'
-import ModalAlarmMacroExport from '@/views/gatherclock/components/ModalAlarmMacroExport.vue'
 import ModalAudioConfig from '@/views/gatherclock/components/ModalAudioConfig.vue'
-import { XivJobs, type XivJob } from '@/assets/data'
+import ModalAlarmMacroExport from '@/views/gatherclock/components/ModalAlarmMacroExport.vue'
 import { useStore } from '@/store'
-import type { ItemGroup } from '@/types/item'
-import { playAudio } from '@/tools'
-import useIdb from '@/utils/app.idb'
+import UseConfig from '@/composables/useConfig'
 import { useDialog } from '@/composables/useDialog'
+import { useLocale } from '@/composables/useLocale'
 import useUiTools from '@/composables/useUiTools'
+import { useAppMode } from '@/composables/useAppMode'
+import { useEorzeaTime } from '@/composables/useEorzeaTime'
+import { useResponsive } from '@/composables/useResponsive'
+import { XivJobs, type XivJob } from '@/assets/data'
+import { playAudio } from '@/tools'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
 import { useNbbCal } from '@/tools/use-nbb-cal'
-import UseConfig from '@/composables/useConfig'
-import EorzeaTime from '@/utils/game.et'
+import type { ItemGroup } from '@/types/item'
 import { fixAlarmMacroOptions, type WorkState } from '@/types/workstate/gatherclock'
-
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const currentET = inject<Ref<EorzeaTime>>('currentET')!
-const appMode = inject<Ref<"overlay" | "" | undefined>>('appMode') ?? ref('')
+import useIdb from '@/utils/app.idb'
+import EorzeaTime from '@/utils/game.et'
 
 const store = useStore()
+const { t } = useLocale()
+const { appMode } = useAppMode()
 const { alertError } = useDialog()
-const { getLimitedGatherings } = useNbbCal()
+const { isMobile } = useResponsive()
+const { currentET } = useEorzeaTime()
 const { optionsRenderer } = useUiTools()
+const { getLimitedGatherings } = useNbbCal()
 const {
   uiLanguage, itemLanguage,
 } = UseConfig()

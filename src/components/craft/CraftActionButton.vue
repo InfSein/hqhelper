@@ -1,17 +1,15 @@
 <script setup lang="ts">
 import {
-  type PopoverTrigger
+  type PopoverTrigger,
 } from 'naive-ui'
 import XivFARImage from '@/components/ui/XivFARImage.vue'
+import useConfig from '@/composables/useConfig.ts'
+import { useResponsive } from '@/composables/useResponsive'
 import type { XivCraftAction } from '@/assets/data'
 import { getImgCdnUrl } from '@/tools/game'
-import UseConfig from '@/composables/useConfig.ts'
 
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-
-const {
-  itemLanguage,
-} = UseConfig()
+const { itemLanguage } = useConfig()
+const { isMobile } = useResponsive()
 
 interface CraftActionButtonProps {
   craftAction: XivCraftAction,

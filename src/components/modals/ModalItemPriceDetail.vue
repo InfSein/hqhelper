@@ -3,22 +3,23 @@ import {
   TableViewFilled,
 } from '@vicons/material'
 import ChartXy from '../chart/ChartXy.vue'
+import ItemSelector from '@/components/item/ItemSelector.vue'
 import GroupBox from '@/components/templates/GroupBox.vue'
 import ItemPriceLogCell from '@/components/item/ItemPriceLogCell.vue'
-import ItemSelector from '@/components/item/ItemSelector.vue'
 import { useStore } from '@/store'
+import { useLocale } from '@/composables/useLocale'
 import { useDialog } from '@/composables/useDialog.ts'
-import { handleGetPriceError } from '@/tools/error'
+import { useResponsive } from '@/composables/useResponsive'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
-import { ItemPriceApiVersion } from '@/types/item/price.ts'
+import { handleGetPriceError } from '@/tools/error'
 import { getItemPriceHistory, getItemPriceInfo } from '@/tools/item/price.ts'
+import { ItemPriceApiVersion } from '@/types/item/price.ts'
 import { itemPriceTypes, type ItemPriceType } from '@/types/config/func.ts'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-
 const store = useStore()
+const { t } = useLocale()
 const { alertError } = useDialog()
+const { isMobile } = useResponsive()
 
 const showModal = defineModel<boolean>('show', { required: true })
 

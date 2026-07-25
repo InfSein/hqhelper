@@ -1,23 +1,31 @@
 <script setup lang="ts">
 import {
-  LogInOutlined, PersonAddAlt1Filled, LockResetOutlined,
-  AccountCircleOutlined, KeyOutlined,
-  EmailOutlined, VerifiedUserFilled,
-  PersonOutlineOutlined, BadgeFilled,
-  EditNoteOutlined, LabelImportantFilled, FaceRetouchingNaturalFilled,
+  AccountCircleOutlined,
+  BadgeFilled,
   DoneOutlined,
+  EditNoteOutlined,
+  EmailOutlined,
+  FaceRetouchingNaturalFilled,
+  KeyOutlined,
+  LabelImportantFilled,
+  LockResetOutlined,
+  LogInOutlined,
+  PersonAddAlt1Filled,
+  PersonOutlineOutlined,
+  VerifiedUserFilled,
 } from '@vicons/material'
 import ModalNbbAvatarSelector from './ModalNbbAvatarSelector.vue'
 import { useStore } from '@/store'
-import type { NbbResponse, ResdataRegisterAndLogin } from '@/types/api/nbb-cloud.ts'
+import { useLocale } from '@/composables/useLocale'
+import { useNbbCloud } from '@/composables/useNbbCloud.ts'
 import { deepCopy } from '@/tools'
 import { getImgCdnUrl } from '@/tools/game'
-import { useNbbCloud } from '@/composables/useNbbCloud.ts'
+import type { NbbResponse, ResdataRegisterAndLogin } from '@/types/api/nbb-cloud.ts'
 
-const t = inject<(message: string, args?: any) => string>('t')!
 const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
 
 const store = useStore()
+const { t } = useLocale()
 const NAIVE_UI_MESSAGE = useMessage()
 const {
   sendVerify, sendVerifyForResetPassword,

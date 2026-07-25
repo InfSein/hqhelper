@@ -2,10 +2,12 @@
 import { useTemplateRef } from 'vue'
 import type { ScrollbarInst } from 'naive-ui'
 import ItemCell from './ItemCell.vue'
+import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+const { t } = useLocale()
+const { isMobile } = useResponsive()
 
 const items = defineModel<Record<number, number>>('items', { required: true })
 interface ItemSelectTableProps {

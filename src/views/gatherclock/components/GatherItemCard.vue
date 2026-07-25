@@ -1,22 +1,26 @@
 <script setup lang="ts">
 import {
-  NotificationsRound, NotificationsNoneRound,
-  StarBorderRound, StarRound,
+  NotificationsNoneRound,
+  NotificationsRound,
+  StarBorderRound,
+  StarRound,
 } from '@vicons/material'
+import XivMap from '@/components/map/XivMap.vue'
 import XivFARImage from '@/components/ui/XivFARImage.vue'
 import ItemButton from '@/components/item/ItemButton.vue'
-import XivMap from '@/components/map/XivMap.vue'
 import LocationSpan from '@/components/map/LocationSpan.vue'
-import { XivJobs, type XivJob } from '@/assets/data'
-import { XivMaps } from '@/tools/game/map'
-import { type ItemInfo } from '@/tools/item'
 import UseConfig from '@/composables/useConfig'
+import { useLocale } from '@/composables/useLocale'
+import { useEorzeaTime } from '@/composables/useEorzeaTime'
+import { useResponsive } from '@/composables/useResponsive'
+import { XivJobs, type XivJob } from '@/assets/data'
+import { type ItemInfo } from '@/tools/item'
+import { XivMaps } from '@/tools/game/map'
 import EorzeaTime from '@/utils/game.et'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const currentET = inject<Ref<EorzeaTime>>('currentET')!
-
+const { t } = useLocale()
+const { isMobile } = useResponsive()
+const { currentET } = useEorzeaTime()
 const {
   uiLanguage, itemLanguage,
 } = UseConfig()

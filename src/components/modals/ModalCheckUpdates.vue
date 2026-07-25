@@ -1,24 +1,24 @@
 <script setup lang="ts">
 import {
+  BrowserUpdatedRound,
+  RefreshRound,
+  SpeedRound,
+  SystemUpdateAltRound,
   UpdateSharp,
   VpnLockRound,
-  SystemUpdateAltRound,
-  BrowserUpdatedRound,
-  SpeedRound, RefreshRound
 } from '@vicons/material'
 import ModalPreferences from './ModalPreferences.vue'
-import type { ProcessStage, ProgressData } from 'env.electron'
 import { useStore } from '@/store'
-import AppStatus from '@/constants/app.ts'
+import { useLocale } from '@/composables/useLocale'
 import { useDialog } from '@/composables/useDialog.ts'
+import AppStatus from '@/constants/app.ts'
+import { checkAppUpdates, checkElectronUpdates } from '@/tools'
+import type { ProcessStage, ProgressData } from 'env.electron'
 import { checkUrlLag } from '@/tools/web-request'
 import type { AppVersionJson } from '@/types'
-import { checkAppUpdates, checkElectronUpdates } from '@/tools'
-
-const t = inject<(message: string, args?: any) => string>('t')!
-// const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
 
 const store = useStore()
+const { t } = useLocale()
 const { alertError, confirm } = useDialog()
 
 const showModal = defineModel<boolean>('show', { required: true })

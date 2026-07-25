@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import {
-  VolumeUpRound,
-  UploadFileRound,
   DeleteOutlineRound,
-  PlayArrowRound
+  PlayArrowRound,
+  UploadFileRound,
+  VolumeUpRound,
 } from '@vicons/material'
 import MyModal from '@/components/templates/MyModal.vue'
+import { useDialog } from '@/composables/useDialog'
+import { useLocale } from '@/composables/useLocale'
 import { playAudio } from '@/tools'
 import useIdb from '@/utils/app.idb'
-import { useDialog } from '@/composables/useDialog'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-//const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+const { t } = useLocale()
 
 const showModal = defineModel<boolean>('show', { required: true })
 const soundSelect = defineModel<'default' | 'custom' | undefined>('soundSelect')

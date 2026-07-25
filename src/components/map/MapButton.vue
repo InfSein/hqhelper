@@ -1,18 +1,17 @@
 <script setup lang="ts">
 import {
-  OpenInNewFilled
+  OpenInNewFilled,
 } from '@vicons/material'
-import XivFARImage from '@/components/ui/XivFARImage.vue'
 import XivMap from './XivMap.vue'
+import XivFARImage from '@/components/ui/XivFARImage.vue'
+import { useLocale } from '@/composables/useLocale'
 import UseConfig from '@/composables/useConfig.ts'
+import { useResponsive } from '@/composables/useResponsive'
 import { getNearestAetheryte, type XivMapInfo } from '@/tools/game/map.ts'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-
-const {
-  itemLanguage,
-} = UseConfig()
+const { t } = useLocale()
+const { isMobile } = useResponsive()
+const { itemLanguage } = UseConfig()
 
 interface MapButtonProps {
   size: number,

@@ -1,5 +1,7 @@
 <script setup lang="ts" name="ErrorPage404">
-const t = inject<(message: string, args?: any) => string>('t')!
+import { useLocale } from '@/composables/useLocale'
+
+const { t } = useLocale()
 
 const descriptions = computed(() => {
   return [

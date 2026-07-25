@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import type { DataTableColumns } from 'naive-ui'
 import ItemCell from './ItemCell.vue'
-import type { ItemInfo } from '@/tools/item'
 import { useStore } from '@/store'
-
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
+import type { ItemInfo } from '@/tools/item'
 
 const store = useStore()
+const { t } = useLocale()
+const { isMobile } = useResponsive()
 
 interface ItemPriceTableProps {
   items: ItemInfo[],

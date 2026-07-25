@@ -1,7 +1,10 @@
 <script setup lang="ts">
-import { KeyboardArrowDownRound } from '@vicons/material'
+import {
+  KeyboardArrowDownRound,
+} from '@vicons/material'
+import { useResponsive } from '@/composables/useResponsive'
 
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+const { isMobile } = useResponsive()
 
 interface DropdownActionMenuProps {
   label: string

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, type VNodeChild } from "vue"
-import { NButton, NDialog } from "naive-ui"
 
 export interface InternalDialogOptions {
   id: number

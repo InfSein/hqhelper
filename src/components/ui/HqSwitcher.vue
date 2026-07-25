@@ -3,8 +3,9 @@ import {
   WifiProtectedSetupFilled,
 } from '@vicons/material'
 import HqLogo from '@/components/app/HqLogo.vue'
+import { useLocale } from '@/composables/useLocale'
 
-const t = inject<(message: string, args?: any) => string>('t')!
+const { t } = useLocale()
 
 const hq = defineModel<boolean>('hq', { required: true })
 

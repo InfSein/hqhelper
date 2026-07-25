@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { 
-  FestivalOutlined
+import {
+  FestivalOutlined,
 } from '@vicons/material'
+import { useLocale } from '@/composables/useLocale'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-// const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+const { t } = useLocale()
 
 const showModal = defineModel<boolean>('show', { required: true })
 interface ModalFestivalEggProps {

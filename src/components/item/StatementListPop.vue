@@ -1,30 +1,21 @@
 <script setup lang="ts">
 import {
-  ViewListSharp, CopyAllOutlined
+  CopyAllOutlined,
+  ViewListSharp,
 } from '@vicons/material'
 import ButtonCopyAsMacro from '@/components/craft/ButtonCopyAsMacro.vue'
-import type { ItemInfo, StatementRow } from '@/tools/item'
-import { CopyToClipboard, deepCopy } from '@/tools'
-import UseConfig from '@/composables/useConfig.ts'
 import { useStore } from '@/store'
-
-const NAIVE_UI_MESSAGE = useMessage()
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+import { useLocale } from '@/composables/useLocale'
+import UseConfig from '@/composables/useConfig.ts'
+import { useResponsive } from '@/composables/useResponsive'
+import { CopyToClipboard, deepCopy } from '@/tools'
+import type { ItemInfo, StatementRow } from '@/tools/item'
 
 const store = useStore()
-const {
-  itemLanguage,
-} = UseConfig()
-
-const getItemName = (itemInfo: ItemInfo) => {
-  switch (itemLanguage.value) {
-    case 'zh':
-      return itemInfo.name_zh || '未翻译的物品'
-    default:
-      return itemInfo[`name_${itemLanguage.value}`]
-  }
-}
+const { t } = useLocale()
+const { isMobile } = useResponsive()
+const { itemLanguage } = UseConfig()
+const NAIVE_UI_MESSAGE = useMessage()
 
 interface ItemListPopProps {
   rows: StatementRow[]
@@ -71,6 +62,15 @@ const listValue = computed(() => {
   })
   return result.join('\n')
 })
+
+const getItemName = (itemInfo: ItemInfo) => {
+  switch (itemLanguage.value) {
+    case 'zh':
+      return itemInfo.name_zh || '未翻译的物品'
+    default:
+      return itemInfo[`name_${itemLanguage.value}`]
+  }
+}
 
 const handleCopyList = async () => {
   if (!listValue?.value?.length) {

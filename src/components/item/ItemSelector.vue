@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import {
-  type SelectOption, type SelectRenderLabel
+  type SelectOption, type SelectRenderLabel,
 } from 'naive-ui'
 import ItemSpan from '@/components/item/ItemSpan.vue'
+import { useLocale } from '@/composables/useLocale'
 import { XivUnpackedItems } from '@/assets/data'
 import { getItemInfo, getMaterialItems } from '@/tools/item'
 
-const t = inject<(message: string, args?: any) => string>('t')!
+const { t } = useLocale()
 
 interface ItemSelectorProps {
   /** 仅在 custom 模式有效 */

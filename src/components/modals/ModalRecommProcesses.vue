@@ -1,26 +1,23 @@
 <script setup lang="ts">
-import { 
-  AllInclusiveSharp, CopyAllOutlined
+import {
+  AllInclusiveSharp,
+  CopyAllOutlined,
 } from '@vicons/material'
-import CraftRecommProcess from '@/components/craft/CraftRecommProcess.vue'
 import ModalPreferences from './ModalPreferences.vue'
-import { type ItemInfo } from '@/tools/item'
-import { CopyToClipboard } from '@/tools'
-import { useFufuCal } from '@/tools/use-fufu-cal'
-import UseConfig from '@/composables/useConfig.ts'
+import CraftRecommProcess from '@/components/craft/CraftRecommProcess.vue'
 import { useStore } from '@/store'
-
-const t = inject<(message: string, args?: any) => string>('t')!
-// const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-// const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
+import { useLocale } from '@/composables/useLocale'
+import UseConfig from '@/composables/useConfig.ts'
+import { CopyToClipboard } from '@/tools'
+import { type ItemInfo } from '@/tools/item'
+import { useFufuCal } from '@/tools/use-fufu-cal'
 
 const store = useStore()
+const { t } = useLocale()
+const { itemLanguage } = UseConfig()
 const NAIVE_UI_MESSAGE = useMessage()
 const { calRecommProcessGroups } = useFufuCal()
-const {
-  itemLanguage,
-} = UseConfig()
-  
+
 const showModal = defineModel<boolean>('show', { required: true })
 const expandedBlocks = ref<Record<number, string[]>>({})
 /** (groupId, (itemId, checked)) */

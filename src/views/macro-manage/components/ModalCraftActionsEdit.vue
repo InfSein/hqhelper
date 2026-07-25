@@ -1,26 +1,21 @@
 <script setup lang="ts">
-import {
-  EditRound,
-  DoneOutlined,
-  CloseRound,
-} from '@vicons/material'
 import { VueDraggable } from 'vue-draggable-plus'
-import CraftActionButton from '@/components/craft/CraftActionButton.vue'
 import {
-  XivCraftActions,
-  XivCraftActionGroups,
-  type XivCraftActionGroupKey,
-} from '@/assets/data'
-import { deepCopy } from '@/tools'
-import UseConfig from '@/composables/useConfig.ts'
+  CloseRound,
+  DoneOutlined,
+  EditRound,
+} from '@vicons/material'
 import FoldableCard from '@/components/templates/FoldableCard.vue'
+import CraftActionButton from '@/components/craft/CraftActionButton.vue'
+import { useLocale } from '@/composables/useLocale'
+import UseConfig from '@/composables/useConfig.ts'
+import { useResponsive } from '@/composables/useResponsive'
+import { XivCraftActions, XivCraftActionGroups, type XivCraftActionGroupKey } from '@/assets/data'
+import { deepCopy } from '@/tools'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-
-const {
-  itemLanguage,
-} = UseConfig()
+const { t } = useLocale()
+const { isMobile } = useResponsive()
+const { itemLanguage } = UseConfig()
 
 const showModal = defineModel<boolean>('show', { required: true })
 

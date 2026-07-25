@@ -1,22 +1,23 @@
 <script setup lang='ts'>
-import { 
-  AttachMoneyOutlined
+import {
+  AttachMoneyOutlined,
 } from '@vicons/material'
-import ItemPriceTable from '@/components/item/ItemPriceTable.vue'
-import TooltipText from '@/components/ui/TooltipText.vue'
-import HelpButton from '@/components/ui/HelpButton.vue'
 import ModalPreferences from './ModalPreferences.vue'
+import HelpButton from '@/components/ui/HelpButton.vue'
+import TooltipText from '@/components/ui/TooltipText.vue'
+import ItemPriceTable from '@/components/item/ItemPriceTable.vue'
+import { useStore } from '@/store'
+import { useLocale } from '@/composables/useLocale'
+import { useAppModals } from '@/composables/useAppModals'
+import { useResponsive } from '@/composables/useResponsive'
 import useItemPrice from '@/composables/useItemPrice.ts'
 import type { ItemInfo } from '@/tools/item'
-import { useStore } from '@/store'
-
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-// const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
-const showItemPriceDetail = inject<(items: ItemInfo[]) => void>('showItemPriceDetail')!
 
 const store = useStore()
+const { t } = useLocale()
+const { isMobile } = useResponsive()
 const { calCostAndBenefit } = useItemPrice()
+const { showItemPriceDetail } = useAppModals()
 
 const modalId = 'modal-cost-and-benefits'
 

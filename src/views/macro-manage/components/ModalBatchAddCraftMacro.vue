@@ -1,26 +1,25 @@
 <script setup lang="ts">
 import {
-  NInput, NInputNumber, NInputGroup, NScrollbar,
   type DataTableColumns,
 } from 'naive-ui'
 import {
   CodeSharp,
-  DoneOutlined,
   ContentPasteSearchOutlined,
+  DoneOutlined,
 } from '@vicons/material'
+import HelpButton from '@/components/ui/HelpButton.vue'
+import CraftActionButton from '@/components/craft/CraftActionButton.vue'
 import { decompress } from 'xiv-cac-utils'
+import { useLocale } from '@/composables/useLocale'
+import { useDialog } from '@/composables/useDialog.ts'
 import { XivCraftActions } from '@/assets/data'
 import {
   _VAR_MACRO_MAXAMOUNT,
   getDefaultCraftMacro, prepareMacroForSave,
-  type RecordedCraftMacro,
+  type RecordedCraftMacro
 } from '@/types/workstate/macromanage.ts'
-import HelpButton from '@/components/ui/HelpButton.vue'
-import CraftActionButton from '@/components/craft/CraftActionButton.vue'
-import { useDialog } from '@/composables/useDialog.ts'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-
+const { t } = useLocale()
 const { alertError } = useDialog()
 
 const showModal = defineModel<boolean>('show', { required: true })

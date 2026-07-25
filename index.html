@@ -318,8 +318,9 @@
         window.__loaderTexts = t;
 
         document.getElementById('loader-text-main').textContent = t.main;
-        document.getElementById('loader-text-sub').innerHTML =
-          t.sub + '<a href="https://download.hqhelper.com" target="_blank" rel="noopener noreferrer">' + t.link + '</a>';
+        document.getElementById('loader-text-sub').innerHTML = !!window?.electronAPI
+          ? ''
+          : t.sub + '<a href="https://download.hqhelper.com" target="_blank" rel="noopener noreferrer">' + t.link + '</a>';
       })();
 
       /* 收集所有控制台错误，用于获取完整的错误描述 */

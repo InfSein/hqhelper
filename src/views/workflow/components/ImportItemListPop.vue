@@ -1,16 +1,19 @@
 <script setup lang="ts">
 import {
-  ArchiveSharp, DoneOutlined,
+  ArchiveSharp,
+  DoneOutlined,
 } from '@vicons/material'
 import { useDialog } from '@/composables/useDialog'
+import { useLocale } from '@/composables/useLocale'
+import { useAppModals } from '@/composables/useAppModals'
+import { useResponsive } from '@/composables/useResponsive'
 import { getItemInfo, getItemNameRevertMap } from '@/tools/item'
 
-const NAIVE_UI_MESSAGE = useMessage()
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const joinItemsToWorkflow = inject<(items: Record<number, number>) => void>('joinItemsToWorkflow')!
-
+const { t } = useLocale()
 const { alertError } = useDialog()
+const { isMobile } = useResponsive()
+const NAIVE_UI_MESSAGE = useMessage()
+const { joinItemsToWorkflow } = useAppModals()
 
 const showPop = ref(false)
 const importStr = ref('')

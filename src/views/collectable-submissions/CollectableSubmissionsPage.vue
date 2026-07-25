@@ -1,22 +1,23 @@
 <script setup lang="ts" name="Collectable Submissions">
 import {
-  TaskAltOutlined
+  TaskAltOutlined,
 } from '@vicons/material'
 import RouterCard from '@/components/ui/RouterCard.vue'
-import ItemSelectionPanel from '@/views/collectable-submissions/components/ItemSelectionPanel.vue'
 import StatisticsPanelShared from '@/components/StatisticsPanelShared.vue'
 import ModalJoinInWorkflow from '@/components/modals/ModalJoinInWorkflow.vue'
+import ItemSelectionPanel from '@/views/collectable-submissions/components/ItemSelectionPanel.vue'
 import { useStore } from '@/store'
+import { useLocale } from '@/composables/useLocale'
+import { useAppMode } from '@/composables/useAppMode'
 import { XivUnpackedCollectableSubmissions } from '@/assets/data'
 import { useNbbCal } from '@/tools/use-nbb-cal'
 import { fixWorkState } from '@/types/workstate/cshelper'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const appMode = inject<Ref<"overlay" | "" | undefined>>('appMode') ?? ref('')
-
 const store = useStore()
-const NAIVE_UI_MESSAGE = useMessage()
+const { t } = useLocale()
+const { appMode } = useAppMode()
 const { calItems } = useNbbCal()
+const NAIVE_UI_MESSAGE = useMessage()
 
 const workState = ref(fixWorkState())
 

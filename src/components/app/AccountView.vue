@@ -1,26 +1,30 @@
 <script setup lang="ts">
 import {
-  LogInOutlined, LogOutOutlined, PersonAddAlt1Filled,
-  ContentCopyRound,
   CloudSyncOutlined,
+  ContentCopyRound,
   EditNoteOutlined,
+  LogInOutlined,
+  LogOutOutlined,
+  PersonAddAlt1Filled,
 } from '@vicons/material'
 import { useStore } from '@/store'
-import { CopyToClipboard } from '@/tools'
-import { useDialog } from '@/composables/useDialog'
-import { useNbbCloud } from '@/composables/useNbbCloud'
 import useCloud from '@/composables/useCloud'
+import { useDialog } from '@/composables/useDialog'
+import { useLocale } from '@/composables/useLocale'
+import { useNbbCloud } from '@/composables/useNbbCloud'
+import { useAppModals } from '@/composables/useAppModals'
+import { useResponsive } from '@/composables/useResponsive'
+import { CopyToClipboard } from '@/tools'
 import { fixCloudConfig } from '@/types/config/cloud'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile')!
-const displayLoginModal = inject<(action: "login" | "register" | "edituser") => void>('displayLoginModal')!
-const displayCloudSyncModal = inject<() => {}>('displayCloudSyncModal')!
 const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
 
+const { t } = useLocale()
 const store = useStore()
-const { confirmWarning } = useDialog()
 const NAIVE_UI_MESSAGE = useMessage()
+const { confirmWarning } = useDialog()
+const { isMobile } = useResponsive()
+const { displayLoginModal, displayCloudSyncModal } = useAppModals()
 const {
   updateUserInfo,
   resolveUserInfo,

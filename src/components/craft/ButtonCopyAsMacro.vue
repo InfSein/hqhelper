@@ -1,21 +1,17 @@
 <script setup lang="ts">
 import {
-  CodeSharp
+  CodeSharp,
 } from '@vicons/material'
 import UseConfig from '@/composables/useConfig'
+import { useLocale } from '@/composables/useLocale'
+import { useAppModals } from '@/composables/useAppModals'
 import type { ItemInfo } from '@/tools/item'
 import type { MacroGenerateMode } from '@/types/config/func'
 
 const NAIVE_UI_MESSAGE = useMessage()
-const t = inject<(message: string, args?: any) => string>('t')!
-const copyAsMacro = inject<(macroMap: Record<MacroGenerateMode, string>, container?: HTMLElement | undefined) => Promise<{
-  result: "success" | "info" | "error";
-  msg: string;
-} | undefined>>('copyAsMacro')!
-
-const {
-  itemLanguage,
-} = UseConfig()
+const { t } = useLocale()
+const { itemLanguage } = UseConfig()
+const { copyAsMacro } = useAppModals()
 
 interface ButtonCopyAsMacroProps {
   items: ItemInfo[],

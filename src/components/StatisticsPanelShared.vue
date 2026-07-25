@@ -1,16 +1,15 @@
 <script setup lang="ts">
 import CraftStatistics from '@/components/craft/CraftStatistics.vue'
-import ModalCraftStatements from '@/components/modals/ModalCraftStatements.vue'
 import ModalProStatements from '@/components/modals/ModalProStatements.vue'
 import ModalCostAndBenefit from '@/components/modals/ModalCostAndBenefit.vue'
-import { useCostAndBenefit } from '@/composables/use-cost-and-benefit'
-import { useFufuCal } from '@/tools/use-fufu-cal'
+import ModalCraftStatements from '@/components/modals/ModalCraftStatements.vue'
 import { useStore } from '@/store'
-
-const t = inject<(message: string, args?: any) => string>('t')!
-// const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+import { useLocale } from '@/composables/useLocale'
+import { useCostAndBenefit } from '@/composables/useCostAndBenefit'
+import { useFufuCal } from '@/tools/use-fufu-cal'
 
 const store = useStore()
+const { t } = useLocale()
 const { getStatementData } = useFufuCal()
 
 interface StatisticsPanelProps {

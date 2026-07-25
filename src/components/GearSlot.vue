@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import type { GearSlot } from '@/types/game/gear'
 import ItemButton from '@/components/item/ItemButton.vue'
+import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
 import { getItemInfo } from '@/tools/item'
 import { getGearIcon } from '@/tools/game/gear'
+import type { GearSlot } from '@/types/game/gear'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+const { t } = useLocale()
+const { isMobile } = useResponsive()
 
 interface GearSlotProps {
   gearSlot: GearSlot

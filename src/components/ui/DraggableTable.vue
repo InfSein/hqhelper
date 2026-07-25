@@ -1,16 +1,15 @@
 <script setup lang="ts" generic="DataRow">
-import { 
-  ListFilled,
-  DeleteFilled,
-  AddSharp,
-} from '@vicons/material'
 import { VueDraggable } from 'vue-draggable-plus'
+import {
+  AddSharp,
+  DeleteFilled,
+  ListFilled,
+} from '@vicons/material'
+import { useLocale } from '@/composables/useLocale'
 import { deepCopy } from '@/tools'
 
+const { t } = useLocale()
 const NAIVE_UI_MESSAGE = useMessage()
-
-const t = inject<(message: string, args?: any) => string>('t')!
-// const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
 
 const data = defineModel<DataRow[]>('data', { required: true })
 

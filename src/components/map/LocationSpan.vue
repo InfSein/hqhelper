@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import MapButton from './MapButton.vue'
-import { XivMaps } from '@/tools/game/map.ts'
 import { useStore } from '@/store'
-
-const t = inject<(message: string, args?: any) => string>('t')!
-// const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+import { useLocale } from '@/composables/useLocale'
+import { XivMaps } from '@/tools/game/map.ts'
 
 const store = useStore()
+const { t } = useLocale()
 
 interface LocationSpanProps {
   placeId: number,

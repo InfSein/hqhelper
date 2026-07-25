@@ -1,46 +1,48 @@
 <script setup lang="ts">
 import {
+  AllInclusiveSharp,
+  ArchiveSharp,
+  AttachMoneyOutlined,
+  CodeSharp,
+  ColorLensRound,
+  DiscountOutlined,
+  InfoOutlined,
+  MemoryRound,
+  SaveOutlined,
   SettingsSharp,
   SettingsSuggestFilled,
+  TableViewOutlined,
   TravelExploreRound,
   TrendingUpRound,
-  ColorLensRound,
-  MemoryRound,
+  UnarchiveSharp,
   UpdateRound,
-  CodeSharp,
-  DiscountOutlined,
-  TableViewOutlined,
-  AllInclusiveSharp,
-  AttachMoneyOutlined,
-  InfoOutlined,
-  // WifiRound,
-  ArchiveSharp, UnarchiveSharp,
-  SaveOutlined
 } from '@vicons/material'
 import AboutApp from '@/components/app/AboutApp.vue'
 import SettingItem from '@/components/ui/SettingItem.vue'
 import ModalPreferencesImportExport from './ModalPreferencesImportExport.vue'
 import { useStore } from '@/store/index'
-import type { PreferenceGroup, SettingGroupKey } from '@/types/index.ts'
-import { fixWorkState as fixHqwbWorkState } from '@/types/workstate/hqworkbench'
-import { fixWorkState as fixMmHelperWorkState } from '@/types/workstate/mmhelper'
-import { fixWorkState as fixGatherclockWorkState } from '@/types/workstate/gatherclock'
-import { fixWorkState as fixWorkflowWorkState } from '@/types/workstate/workflow'
-import { deepCopy } from '@/tools'
+import { useLocale } from '@/composables/useLocale'
 import { useDialog } from '@/composables/useDialog.ts'
 import useUiTools from '@/composables/useUiTools.ts'
-import { dbKey } from '@/utils/app.idb.ts'
-import { fixUserConfig, type UserConfigModel } from '@/types/config/user.ts'
+import { useResponsive } from '@/composables/useResponsive'
+import { deepCopy } from '@/tools'
+import type { PreferenceGroup, SettingGroupKey } from '@/types/index.ts'
 import { fixFuncConfig, type FuncConfigModel } from '@/types/config/func.ts'
+import { fixUserConfig, type UserConfigModel } from '@/types/config/user.ts'
+import { fixWorkState as fixMmHelperWorkState } from '@/types/workstate/mmhelper'
+import { fixWorkState as fixWorkflowWorkState } from '@/types/workstate/workflow'
+import { fixWorkState as fixHqwbWorkState } from '@/types/workstate/hqworkbench'
+import { fixWorkState as fixGatherclockWorkState } from '@/types/workstate/gatherclock'
+import { dbKey } from '@/utils/app.idb.ts'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
 const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
 
 const store = useStore()
+const { t } = useLocale()
 const { confirm } = useDialog()
-const NAIVE_UI_MESSAGE = useMessage()
 const { renderIcon } = useUiTools()
+const { isMobile } = useResponsive()
+const NAIVE_UI_MESSAGE = useMessage()
 
 const showModal = defineModel<boolean>('show', { required: true })
 const emit = defineEmits(['close', 'afterSubmit'])

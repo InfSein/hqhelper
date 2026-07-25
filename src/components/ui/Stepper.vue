@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {
-  AddSharp, MinusSharp
+  AddSharp,
+  MinusSharp,
 } from '@vicons/material'
 
 const modelValue = defineModel<number>('value', { required: true })

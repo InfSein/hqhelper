@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { 
+import {
+  SaveOutlined,
   SettingsSharp,
-  SaveOutlined
 } from '@vicons/material'
 import DraggableTable from '@/components/ui/DraggableTable.vue'
 import { useStore } from '@/store'
-import { _VAR_PRESET_CREQ_MAXAMOUNT, type StrictCraftRequirements } from '@/types/workstate/macromanage.ts'
+import { useLocale } from '@/composables/useLocale'
 import { deepCopy } from '@/tools'
+import { _VAR_PRESET_CREQ_MAXAMOUNT, type StrictCraftRequirements } from '@/types/workstate/macromanage.ts'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-// const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
 const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
 
 const store = useStore()
+const { t } = useLocale()
 const NAIVE_UI_MESSAGE = useMessage()
 
 const showModal = defineModel<boolean>('show', { required: true })

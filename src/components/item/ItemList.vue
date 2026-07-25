@@ -1,19 +1,18 @@
 <script setup lang='ts'>
 import {
-  ViewListSharp, SettingsBackupRestoreSharp
+  SettingsBackupRestoreSharp,
+  ViewListSharp,
 } from '@vicons/material'
 import ItemButton from './ItemButton.vue'
 import ButtonCopyAsMacro from '@/components/craft/ButtonCopyAsMacro.vue'
-import { type ItemInfo } from '@/tools/item'
-import UseConfig from '@/composables/useConfig.ts'
 import { useStore } from '@/store'
-
-const t = inject<(message: string, args?: any) => string>('t')!
+import { useLocale } from '@/composables/useLocale'
+import UseConfig from '@/composables/useConfig.ts'
+import { type ItemInfo } from '@/tools/item'
 
 const store = useStore()
-const {
-  itemLanguage,
-} = UseConfig()
+const { t } = useLocale()
+const { itemLanguage } = UseConfig()
 
 const getItemName = (itemInfo: ItemInfo) => {
   switch (itemLanguage.value) {

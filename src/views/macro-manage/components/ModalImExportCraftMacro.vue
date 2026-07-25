@@ -2,20 +2,19 @@
 import {
   type UploadFileInfo,
 } from 'naive-ui'
-import { 
-  ImportExportOutlined,
-  ArchiveSharp, UnarchiveSharp,
-  DoneOutlined,
-  ArchiveOutlined,
-} from '@vicons/material'
 import {
-  type RecordedCraftMacro,
-} from '@/types/workstate/macromanage'
+  ArchiveOutlined,
+  ArchiveSharp,
+  DoneOutlined,
+  ImportExportOutlined,
+  UnarchiveSharp,
+} from '@vicons/material'
 import { useDialog } from '@/composables/useDialog'
+import { useLocale } from '@/composables/useLocale'
 import useMacroHelper from '@/views/macro-manage/composables/useMacroHelper'
+import { type RecordedCraftMacro } from '@/types/workstate/macromanage'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-
+const { t } = useLocale()
 const { confirm } = useDialog()
 const NAIVE_UI_MESSAGE = useMessage()
 const {

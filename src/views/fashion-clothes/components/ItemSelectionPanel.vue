@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import {
+  DeleteSweepRound,
   JoinLeftOutlined,
-  DeleteSweepRound
 } from '@vicons/material'
 import XivFARImage from '@/components/ui/XivFARImage.vue'
 import ItemStepper from '@/components/item/ItemStepper.vue'
 import TooltipButton from '@/components/ui/TooltipButton.vue'
+import { useStore } from '@/store'
+import { useLocale } from '@/composables/useLocale'
 import { XivUnpackedFashionClothes } from '@/assets/data'
 import { getItemInfo } from '@/tools/item'
-import { useStore } from '@/store'
-
-const t = inject<(message: string, args?: any) => string>('t')!
 
 const store = useStore()
+const { t } = useLocale()
 
 const patchModel = defineModel<string>('patch', { required: true })
 const itemSelected = defineModel<Record<number, number>>('itemSelected', { required: true })

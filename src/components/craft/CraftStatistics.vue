@@ -1,15 +1,14 @@
 <script setup lang="ts">
 import ItemList from '@/components/item/ItemList.vue'
+import { useStore } from '@/store'
+import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
 import { useNbbCal } from '@/tools/use-nbb-cal'
-import { useStore } from '@/store'
 
-// const store = useStore()
-// const NAIVE_UI_MESSAGE = useMessage()
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-
+const { t } = useLocale()
 const store = useStore()
+const { isMobile } = useResponsive()
 
 interface CraftStatisticsProps {
   itemSelected: Record<number, number>

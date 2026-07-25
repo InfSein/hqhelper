@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import {
-  CopyAllOutlined
+  CopyAllOutlined,
 } from '@vicons/material'
+import { useLocale } from '@/composables/useLocale'
 import { CopyToClipboard } from '@/tools'
 
+const { t } = useLocale()
 const NAIVE_UI_MESSAGE = useMessage()
-const t = inject<(message: string, args?: any) => string>('t')!
 
 interface MacroViewerProps {
   macroLines: string[]

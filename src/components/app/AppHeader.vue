@@ -1,74 +1,75 @@
 <script setup lang="ts">
 import {
-  NButton, NIcon, NTooltip, // 这些组件在函数中进行了引用，不能依赖自动引入
   type DropdownOption, type MenuOption,
 } from 'naive-ui'
 import {
-  ArrowCircleLeftOutlined,
-  FileCopyFilled, FilePresentOutlined,
-  OpenInNewOutlined,
-  CasesRound, CasesOutlined,
-  HomeOutlined,
   AccessAlarmsOutlined,
-  FastfoodOutlined,
-  TaskAltOutlined,
+  ArrowCircleLeftOutlined,
+  BackpackFilled,
+  CasesOutlined,
+  CasesRound,
   CheckroomFilled,
-  WavesOutlined,
   CodeOutlined,
+  ContactlessOutlined,
+  DarkModeTwotone,
+  DevicesOtherOutlined,
+  DevicesOutlined,
+  EventNoteFilled,
+  FastfoodOutlined,
+  FileCopyFilled,
+  FilePresentOutlined,
+  HandshakeOutlined,
   HelpOutlineOutlined,
+  HomeOutlined,
+  InfoFilled,
+  InfoOutlined,
+  LightModeTwotone,
   MenuFilled,
-  UpdateOutlined,
+  OpenInNewOutlined,
   SettingsSharp,
   SettingsSuggestFilled,
-  BackpackFilled,
-  EventNoteFilled,
-  InfoFilled, InfoOutlined,
-  DevicesOtherOutlined,
-  ContactlessOutlined,
-  HandshakeOutlined,
-  DevicesOutlined,
-  DarkModeTwotone, LightModeTwotone,
-  UpdateSharp
+  TaskAltOutlined,
+  UpdateOutlined,
+  UpdateSharp,
+  WavesOutlined,
 } from '@vicons/material'
-import AccountView from './AccountView.vue'
 import HqLogo from './HqLogo.vue'
-import ModalPreferences from '@/components/modals/ModalPreferences.vue'
-import ModalInventory from '@/components/modals/ModalInventory.vue'
-import ModalContactUs from '@/components/modals/ModalContactUs.vue'
-import ModalChangeLogs from '@/components/modals/ModalChangeLogs.vue'
-import ModalAboutApp from '@/components/modals/ModalAboutApp.vue'
+import AccountView from './AccountView.vue'
 import ModalDonate from '@/components/modals/ModalDonate.vue'
-// import ChristmasTree from '@/assets/icons/ChristmasTree.vue'
-import { useStore } from '@/store'
+import ModalAboutApp from '@/components/modals/ModalAboutApp.vue'
+import ModalContactUs from '@/components/modals/ModalContactUs.vue'
+import ModalInventory from '@/components/modals/ModalInventory.vue'
+import ModalChangeLogs from '@/components/modals/ModalChangeLogs.vue'
+import ModalPreferences from '@/components/modals/ModalPreferences.vue'
 import router from '@/router'
+import { useStore } from '@/store'
+import useConfig from '@/composables/useConfig'
+import { useLocale } from '@/composables/useLocale'
+import { useDialog } from '@/composables/useDialog'
+import { useAppModals } from '@/composables/useAppModals'
+import useUiTools from '@/composables/useUiTools'
+import { useEorzeaTime } from '@/composables/useEorzeaTime'
+import { useResponsive } from '@/composables/useResponsive'
+import AppStatus from '@/constants/app'
 import { checkAppUpdates, visitUrl } from '@/tools'
-import { useDialog } from '@/composables/useDialog.ts'
-import EorzeaTime from '@/utils/game.et.ts'
-import useUiTools from '@/composables/useUiTools.ts'
-import AppStatus from '@/constants/app.ts'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const locale = inject<Ref<"zh" | "en" | "ja">>('locale') ?? ref('zh')
+const store = useStore()
+const { theme, switchTheme } = useConfig()
+const { confirm } = useDialog()
+const NAIVE_UI_MESSAGE = useMessage()
+const { renderIcon, optionsRenderer } = useUiTools()
+const { t, currentLocale: locale } = useLocale()
+const { isMobile } = useResponsive()
+const { currentET } = useEorzeaTime()
+const { displayCheckUpdatesModal } = useAppModals()
+
 const isChina = computed(() => locale.value === 'zh')
-const currentET = inject<Ref<EorzeaTime>>('currentET')!
-const theme = inject<Ref<"light" | "dark">>('theme') ?? ref('light')
-// const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
-const switchTheme = inject<() => void>('switchTheme')!
-const displayCheckUpdatesModal = inject<() => void>('displayCheckUpdatesModal')!
-// const displayFestivalEggModal = inject<() => void>('displayFestivalEggModal')!
-
 const useDesktopUi = computed(() => {
   return !isMobile.value || !!window.electronAPI
 })
 const canOpenDevTools = computed(() => {
   return !!window.electronAPI?.openDevTools && store.userConfig.enable_dev_mode
 })
-
-const store = useStore()
-const { confirm } = useDialog()
-const NAIVE_UI_MESSAGE = useMessage()
-const { renderIcon, optionsRenderer } = useUiTools()
 
 onMounted(() => {
   if (store.userConfig.cache_lasttime_version !== AppStatus.Version) {

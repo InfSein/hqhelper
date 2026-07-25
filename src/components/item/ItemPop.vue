@@ -4,35 +4,32 @@ import {
   RefreshOutlined,
   TableViewFilled,
 } from '@vicons/material'
-import HqSwitcher from '@/components/ui/HqSwitcher.vue'
 import ItemSpan from './ItemSpan.vue'
 import ItemRemark from './ItemRemark.vue'
-import XivFARImage from '@/components/ui/XivFARImage.vue'
-import LocationSpan from '@/components/map/LocationSpan.vue'
+import ItemInfoHeader from './ItemInfoHeader.vue'
 import ItemSubmissionReward from './ItemSubmissionReward.vue'
 import HelpButton from '@/components/ui/HelpButton.vue'
-import {
-  XivItemRemarks,
-  XivJobs, type XivJob,
-  XivAttributes
-} from '@/assets/data'
+import HqSwitcher from '@/components/ui/HqSwitcher.vue'
+import XivFARImage from '@/components/ui/XivFARImage.vue'
+import LocationSpan from '@/components/map/LocationSpan.vue'
 import { useStore } from '@/store'
-import type EorzeaTime from '@/utils/game.et.ts'
-import { handleGetPriceError } from '@/tools/error'
-import { getItemInfo, type ItemInfo } from '@/tools/item'
+import { useLocale } from '@/composables/useLocale'
 import useConfig from '@/composables/useConfig.ts'
+import { useAppModals } from '@/composables/useAppModals'
+import { useEorzeaTime } from '@/composables/useEorzeaTime'
+import { useResponsive } from '@/composables/useResponsive'
+import { XivItemRemarks, XivJobs, type XivJob, XivAttributes } from '@/assets/data'
+import { getItemInfo, type ItemInfo } from '@/tools/item'
+import { handleGetPriceError } from '@/tools/error'
 import { getItemPriceInfo } from '@/tools/item/price.ts'
 import type { ItemPriceType } from '@/types/config/func.ts'
-import ItemInfoHeader from './ItemInfoHeader.vue'
-
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const currentET = inject<Ref<EorzeaTime>>('currentET')!
-// const appMode = inject<Ref<"overlay" | "" | undefined>>('appMode') ?? ref('')
-const showItemPriceDetail = inject<(items: ItemInfo[]) => void>('showItemPriceDetail')!
 
 const store = useStore()
+const { t } = useLocale()
 const NAIVE_UI_MESSAGE = useMessage()
+const { isMobile } = useResponsive()
+const { currentET } = useEorzeaTime()
+const { showItemPriceDetail } = useAppModals()
 const {
   uiLanguage, itemLanguage,
 } = useConfig()

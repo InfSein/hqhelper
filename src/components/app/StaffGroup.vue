@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
 import type { StaffMember } from '@/types/staff'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+const { t } = useLocale()
+const { isMobile } = useResponsive()
 
 interface StaffGroupProps {
   groupMembers: StaffMember[]

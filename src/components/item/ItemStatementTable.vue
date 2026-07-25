@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import ItemCell from './ItemCell.vue'
 import StatementListPop from './StatementListPop.vue'
-import { getItemInfo, type ItemInfo, type StatementRow } from '@/tools/item'
-import { objectEqual } from '@/tools'
 import { useStore } from '@/store'
-
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
+import { objectEqual } from '@/tools'
+import { getItemInfo, type ItemInfo, type StatementRow } from '@/tools/item'
 
 const store = useStore()
+const { t } = useLocale()
+const { isMobile } = useResponsive()
 
 const itemsPrepared = defineModel<Record<number, number>>('itemsPrepared', { required: true })
 const selectedItem = defineModel<ItemInfo | undefined>('selectedItem', { required: true })

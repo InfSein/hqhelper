@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { inject, ref, type Ref } from "vue";
+import { useResponsive } from '@/composables/useResponsive'
 
-const isMobile = inject<Ref<boolean>>("isMobile") ?? ref(false);
+const { isMobile } = useResponsive()
 
 interface TooltipTextProps {
   text: string;

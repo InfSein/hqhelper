@@ -1,19 +1,15 @@
 <script setup lang="ts">
-import XivFARImage from '@/components/ui/XivFARImage.vue'
 import JobButton from '@/components/job/JobButton.vue'
-import {
-  XivJobs,
-  XivRoles,
-  type HqDataVer,
-  type XivPatchVer
-}from '@/assets/data'
-import type { GearSelections } from '@/types/game/gear'
+import XivFARImage from '@/components/ui/XivFARImage.vue'
 import { useStore } from '@/store'
-
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
+import { XivJobs, XivRoles, type HqDataVer, type XivPatchVer }from '@/assets/data'
+import type { GearSelections } from '@/types/game/gear'
 
 const store = useStore()
+const { t } = useLocale()
+const { isMobile } = useResponsive()
 
 const jobSelected = defineModel<number | undefined>('jobSelected', { required: true })
 const gearsSelected = defineModel<GearSelections>('gearsSelected', { required: true })

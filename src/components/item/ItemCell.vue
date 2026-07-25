@@ -1,15 +1,13 @@
 <script setup lang="ts">
-import XivFARImage from '@/components/ui/XivFARImage.vue'
 import ItemSpan from './ItemSpan.vue'
+import XivFARImage from '@/components/ui/XivFARImage.vue'
+import { useStore } from '@/store'
+import { useLocale } from '@/composables/useLocale'
 import { XivJobs, type XivJob } from '@/assets/data'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
-import { useStore } from '@/store'
-// import UseConfig from '@/tools/use-config'
-
-const t = inject<(message: string, args?: any) => string>('t')!
-// const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
 
 const store = useStore()
+const { t } = useLocale()
 
 interface ItemCellProps {
   itemInfo: ItemInfo

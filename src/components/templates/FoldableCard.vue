@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import { type Component } from 'vue'
 import {
-  KeyboardArrowUpRound, KeyboardArrowDownRound,
-  KeyboardArrowLeftRound, KeyboardArrowRightRound
+  KeyboardArrowDownRound,
+  KeyboardArrowLeftRound,
+  KeyboardArrowRightRound,
+  KeyboardArrowUpRound,
 } from '@vicons/material'
 import { useStore } from '@/store/index'
-
-const t = inject<(message: string, args?: any) => string>('t')!
+import { useLocale } from '@/composables/useLocale'
 
 const store = useStore()
+const { t } = useLocale()
 
 interface FoldableCardProps {
   cardKey: string

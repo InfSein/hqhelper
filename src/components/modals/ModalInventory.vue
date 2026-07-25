@@ -1,24 +1,25 @@
 <script setup lang="ts">
 import { useTemplateRef } from 'vue'
-import { 
+import {
   BackpackFilled,
   DeleteSweepRound,
   SaveOutlined,
 } from '@vicons/material'
-import TooltipButton from '@/components/ui/TooltipButton.vue'
 import SettingItem from '@/components/ui/SettingItem.vue'
+import TooltipButton from '@/components/ui/TooltipButton.vue'
 import ItemSelector from '@/components/item/ItemSelector.vue'
 import ItemSelectTable from '@/components/item/ItemSelectTable.vue'
 import { useStore } from '@/store'
-import { type PreferenceItem as Setting } from '@/types'
+import { useLocale } from '@/composables/useLocale'
 import { deepCopy } from '@/tools'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
+import { type PreferenceItem as Setting } from '@/types'
 import { fixFuncConfig, type FuncConfigModel } from '@/types/config/func'
 
-const t = inject<(message: string, args?: any) => string>('t')!
 const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
 
 const store = useStore()
+const { t } = useLocale()
 const NAIVE_UI_MESSAGE = useMessage()
 
 const showModal = defineModel<boolean>('show', { required: true })

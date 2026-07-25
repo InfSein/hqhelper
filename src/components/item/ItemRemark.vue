@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import ItemSpan from './ItemSpan.vue'
 import LocationSpan from '@/components/map/LocationSpan.vue'
+import { useLocale } from '@/composables/useLocale'
 import { getItemInfo } from '@/tools/item'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-// const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+const { t } = useLocale()
 
 interface ItemRemarkProps {
   remarks: string[]

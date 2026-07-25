@@ -1,26 +1,25 @@
 <script lang="ts" setup>
 import {
-  CodeSharp
+  CodeSharp,
 } from '@vicons/material'
 import ItemSpan from '@/components/item/ItemSpan.vue'
+import { useStore } from '@/store'
+import { useLocale } from '@/composables/useLocale'
+import useConfig from '@/composables/useConfig.ts'
+import { useAppModals } from '@/composables/useAppModals'
+import { useResponsive } from '@/composables/useResponsive'
 import { XivUnpackedTradeMap } from '@/assets/data'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
-import { useStore } from '@/store'
-import UseConfig from '@/composables/useConfig.ts'
 import type { MacroGenerateMode } from '@/types/config/func.ts'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const copyAsMacro = inject<(macroMap: Record<MacroGenerateMode, string>, container?: HTMLElement | undefined) => Promise<{
-  result: "success" | "info" | "error";
-  msg: string;
-} | undefined>>('copyAsMacro')!
-
 const store = useStore()
-const NAIVE_UI_MESSAGE = useMessage()
 const {
   itemLanguage,
-} = UseConfig()
+} = useConfig()
+const { t } = useLocale()
+const { isMobile } = useResponsive()
+const { copyAsMacro } = useAppModals()
+const NAIVE_UI_MESSAGE = useMessage()
 
 interface TomeScriptButtonProps {
   /**

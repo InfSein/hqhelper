@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import {
-  HomeOutlined
+  HomeOutlined,
 } from '@vicons/material'
 import { useStore } from '@/store'
-
-const t = inject<(message: string, args?: any) => string>('t')!
+import { useLocale } from '@/composables/useLocale'
 
 const store = useStore()
+const { t } = useLocale()
 
 defineProps({
   pageName: {

@@ -1,31 +1,23 @@
 <script setup lang="ts">
 import type { WritableComputedRef } from 'vue'
-import { JoinLeftOutlined } from '@vicons/material'
-import Stepper from '@/components/ui/Stepper.vue'
+import {
+  JoinLeftOutlined,
+} from '@vicons/material'
 import GearSlot from '@/components/GearSlot.vue'
+import Stepper from '@/components/ui/Stepper.vue'
 import TooltipButton from '@/components/ui/TooltipButton.vue'
 import DropdownActionMenu from '@/components/ui/DropdownActionMenu.vue'
 import ModalSelectedGears from '@/views/main/components/ModalSelectedGears.vue'
-import {
-  XivGearAffixes,
-  XivJobs,
-  XivRoles,
-  type HqDataVer
-} from '@/assets/data'
-import {
-  type AttireAffix,
-  type AccessoryAffix,
-  type GearSelections,
-  type GearSlot as GearSlotType,
-  fixGearSelections
-} from '@/types/game/gear'
-import { useGearAdder } from '@/tools/game/gear'
 import { useStore } from '@/store'
-
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
+import { XivGearAffixes, XivJobs, XivRoles, type HqDataVer } from '@/assets/data'
+import { useGearAdder } from '@/tools/game/gear'
+import { type AttireAffix, type AccessoryAffix, type GearSelections, type GearSlot as GearSlotType, fixGearSelections } from '@/types/game/gear'
 
 const store = useStore()
+const { t } = useLocale()
+const { isMobile } = useResponsive()
 const NAIVE_UI_MESSAGE = useMessage()
 
 const gearSelections = defineModel<GearSelections>('gearSelections', { required: true })

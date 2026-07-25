@@ -2,19 +2,20 @@
 // import {
 //   InfoOutlined,
 // } from '@vicons/material'
-import FoldableCard from '@/components/templates/FoldableCard.vue'
-import { XivPatches, type XivPatch, type XivPatchVer } from "@/assets/data"
-import { fixGearSelections, type GearSelections } from '@/types/game/gear'
 import HelpButton from '@/components/ui/HelpButton.vue'
-import { useDialog } from '@/composables/useDialog.ts'
+import FoldableCard from '@/components/templates/FoldableCard.vue'
 import { useStore } from '@/store'
+import { useLocale } from '@/composables/useLocale'
+import { useDialog } from '@/composables/useDialog.ts'
+import { useResponsive } from '@/composables/useResponsive'
+import { XivPatches, type XivPatch, type XivPatchVer } from "@/assets/data"
 import { isGearEmpty } from '@/tools/game/gear.ts'
-
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+import { fixGearSelections, type GearSelections } from '@/types/game/gear'
 
 const store = useStore()
+const { t } = useLocale()
 const { confirm } = useDialog()
+const { isMobile } = useResponsive()
 
 const patchSelected = defineModel<XivPatchVer | undefined>('patchSelected', { required: true })
 const gearsSelected = defineModel<GearSelections>('gearsSelected', { required: true })

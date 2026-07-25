@@ -1,18 +1,19 @@
 <script setup lang="ts">
 import {
-  EventNoteFilled,
   CopyAllOutlined,
-  HistoryOutlined, StickyNote2Outlined,
+  EventNoteFilled,
+  HistoryOutlined,
+  StickyNote2Outlined,
 } from '@vicons/material'
-import { getChangelogs, type PatchChangeGroup } from '@/data/change-logs'
-import AppStatus from '@/constants/app'
 import { useStore } from '@/store'
-
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const devMode = import.meta.env.DEV
+import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
+import AppStatus from '@/constants/app'
+import { getChangelogs, type PatchChangeGroup } from '@/data/change-logs'
 
 const store = useStore()
+const { t } = useLocale()
+const { isMobile } = useResponsive()
 
 const showModal = defineModel<boolean>('show', { required: true })
 
@@ -190,19 +191,19 @@ const handleSwitchShowHistory = () => {
 
     <template #action>
       <div class="modal-submit-container">
-        <n-button v-if="!showHistory && !isMobile && devMode" type="info" @click="handleCopyLatestPatchNode">
+        <n-button v-if="!showHistory && !isMobile && AppStatus.IsDev" type="info" @click="handleCopyLatestPatchNode">
           <template #icon>
             <n-icon :component="CopyAllOutlined" />
           </template>
           复制
         </n-button>
-        <n-button v-if="!showHistory && !isMobile && devMode" type="info" ghost @click="handleCopyLatestPatchNodeMarkdown">
+        <n-button v-if="!showHistory && !isMobile && AppStatus.IsDev" type="info" ghost @click="handleCopyLatestPatchNodeMarkdown">
           <template #icon>
             <n-icon :component="CopyAllOutlined" />
           </template>
           复制(Markdown)
         </n-button>
-        <!-- <n-button v-if="!showHistory && !isMobile && devMode" type="warning" ghost @click="handleCopyAllPatchNodeMarkdown">
+        <!-- <n-button v-if="!showHistory && !isMobile && AppStatus.IsDev" type="warning" ghost @click="handleCopyAllPatchNodeMarkdown">
           <template #icon>
             <n-icon :component="CopyAllOutlined" />
           </template>
