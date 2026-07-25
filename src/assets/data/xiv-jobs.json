@@ -254,5 +254,13 @@
     "job_name_zh": "绘灵法师",
     "job_name_ja": "ピクトマンサー",
     "job_icon_url": "./image/game-job/companion/pictomancer.png"
+  },
+  "44": {
+    "job_id": 44,
+    "short_name": "BAS",
+    "job_name_en": "Bastion",
+    "job_name_zh": "坚城卫",
+    "job_name_ja": "バスティオン",
+    "job_icon_url": "./image/game-job/companion/bastion.png"
   }
 }

@@ -7,7 +7,7 @@
     "role_icon_url": "./image/game-job/misc/clear_tank.png",
     "attire": "fending",
     "accessory": "fending",
-    "jobs": [19,21,32,37]
+    "jobs": [19,21,32,37,44]
   },
   "healer": {
     "role_name_en": "Healer",
