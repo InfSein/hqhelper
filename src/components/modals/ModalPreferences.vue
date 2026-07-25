@@ -35,14 +35,14 @@ import { fixWorkState as fixHqwbWorkState } from '@/types/workstate/hqworkbench'
 import { fixWorkState as fixGatherclockWorkState } from '@/types/workstate/gatherclock'
 import { dbKey } from '@/utils/app.idb.ts'
 
-const { t } = useLocale()
-const { isMobile } = useResponsive()
 const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
 
 const store = useStore()
+const { t } = useLocale()
 const { confirm } = useDialog()
-const NAIVE_UI_MESSAGE = useMessage()
 const { renderIcon } = useUiTools()
+const { isMobile } = useResponsive()
+const NAIVE_UI_MESSAGE = useMessage()
 
 const showModal = defineModel<boolean>('show', { required: true })
 const emit = defineEmits(['close', 'afterSubmit'])

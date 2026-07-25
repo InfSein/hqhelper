@@ -8,10 +8,8 @@ import DraggableTable from '@/components/ui/DraggableTable.vue'
 import { useLocale } from '@/composables/useLocale'
 import { _VAR_MAX_WORKFLOW, getDefaultWorkflow, type Workflow } from '@/types/workstate/workflow.ts'
 
-const NAIVE_UI_MESSAGE = useMessage()
-
-
 const { t } = useLocale()
+const NAIVE_UI_MESSAGE = useMessage()
 
 const showModal = defineModel<boolean>('show', { required: true })
 const workflows = defineModel<Workflow[]>('workflows', { required: true })

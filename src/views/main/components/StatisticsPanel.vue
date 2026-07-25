@@ -15,10 +15,9 @@ import { getItemInfo, type ItemInfo } from '@/tools/item'
 import { useFufuCal } from '@/tools/use-fufu-cal'
 import type { GearSelections } from '@/types/game/gear'
 
+const store = useStore()
 const { t } = useLocale()
 const { isMobile } = useResponsive()
-
-const store = useStore()
 const { getStatementData } = useFufuCal()
 
 interface StatisticsPanelProps {

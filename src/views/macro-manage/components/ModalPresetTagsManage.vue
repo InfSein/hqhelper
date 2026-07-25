@@ -9,10 +9,10 @@ import { useLocale } from '@/composables/useLocale'
 import { deepCopy } from '@/tools'
 import { _VAR_PRESET_TAG_MAXAMOUNT } from '@/types/workstate/macromanage.ts'
 
-const { t } = useLocale()
 const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
 
 const store = useStore()
+const { t } = useLocale()
 const NAIVE_UI_MESSAGE = useMessage()
 
 const showModal = defineModel<boolean>('show', { required: true })

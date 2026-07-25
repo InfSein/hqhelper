@@ -11,10 +11,7 @@ import { getNearestAetheryte, type XivMapInfo } from '@/tools/game/map.ts'
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()
-
-const {
-  itemLanguage,
-} = UseConfig()
+const { itemLanguage } = UseConfig()
 
 interface MapButtonProps {
   size: number,

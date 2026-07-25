@@ -9,14 +9,17 @@ import {
 } from '@vicons/material'
 import HelpButton from '@/components/ui/HelpButton.vue'
 import CraftActionButton from '@/components/craft/CraftActionButton.vue'
+import { decompress } from 'xiv-cac-utils'
 import { useLocale } from '@/composables/useLocale'
 import { useDialog } from '@/composables/useDialog.ts'
 import { XivCraftActions } from '@/assets/data'
-import { decompress } from 'xiv-cac-utils'
-import { _VAR_MACRO_MAXAMOUNT, getDefaultCraftMacro, prepareMacroForSave, type RecordedCraftMacro } from '@/types/workstate/macromanage.ts'
+import {
+  _VAR_MACRO_MAXAMOUNT,
+  getDefaultCraftMacro, prepareMacroForSave,
+  type RecordedCraftMacro
+} from '@/types/workstate/macromanage.ts'
 
 const { t } = useLocale()
-
 const { alertError } = useDialog()
 
 const showModal = defineModel<boolean>('show', { required: true })

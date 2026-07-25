@@ -6,11 +6,10 @@ import { useLocale } from '@/composables/useLocale'
 import { qGroupInfo, githubInfo, otherSocialInfo } from '@/constants'
 import { visitUrl } from '@/tools'
 
-const { t } = useLocale()
-
 const store = useStore()
-const NAIVE_UI_MESSAGE = useMessage()
+const { t } = useLocale()
 const { confirm } = useDialog()
+const NAIVE_UI_MESSAGE = useMessage()
 
 const showDonateModal = ref(false)
 const hiddenAnnouncements = ref<AnnouncementId[]>([])

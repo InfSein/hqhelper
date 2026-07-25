@@ -21,7 +21,6 @@ import EorzeaTime from '@/utils/game.et'
 const { t } = useLocale()
 const { isMobile } = useResponsive()
 const { currentET } = useEorzeaTime()
-
 const {
   uiLanguage, itemLanguage,
 } = UseConfig()

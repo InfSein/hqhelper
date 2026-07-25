@@ -20,10 +20,10 @@ import { useFufuCal } from '@/tools/use-fufu-cal'
 import type { GearSelections } from '@/types/game/gear'
 import type { ItemPriceInfo } from '@/types/item/price.ts'
 
-const { t } = useLocale()
 const updateItemPrices = inject<() => Promise<void>>('updateItemPrices')!
 
 const store = useStore()
+const { t } = useLocale()
 const NAIVE_UI_MESSAGE = useMessage()
 const { getStatementData } = useFufuCal()
 

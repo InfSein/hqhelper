@@ -15,10 +15,7 @@ import { deepCopy } from '@/tools'
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()
-
-const {
-  itemLanguage,
-} = UseConfig()
+const { itemLanguage } = UseConfig()
 
 const showModal = defineModel<boolean>('show', { required: true })
 

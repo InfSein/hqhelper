@@ -11,14 +11,12 @@ import { XivGearAffixes, XivJobs, XivPatches, type XivPatchVer } from '@/assets/
 import { getGearIcon } from '@/tools/game/gear'
 import { accessoryAffixes, attireAffixes, fixGearSelections, type AccessoryAffix, type AttireAffix, type GearSelections } from '@/types/game/gear'
 
-const { t } = useLocale()
-const { isMobile } = useResponsive()
 const handleImportState = inject<(patch: string, gearSelections?: GearSelections) => void>('handleImportState')!
 
 const store = useStore()
-const {
-  uiLanguage,
-} = UseConfig()
+const { t } = useLocale()
+const { uiLanguage } = UseConfig()
+const { isMobile } = useResponsive()
 
 const modalMaxWidth = computed(() => {
   switch (store.userConfig.language_ui) {

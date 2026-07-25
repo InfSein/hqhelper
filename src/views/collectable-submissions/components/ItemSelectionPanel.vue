@@ -16,9 +16,8 @@ import { XivJobs, XivUnpackedCollectableSubmissions } from '@/assets/data'
 import { getItemInfo } from '@/tools/item'
 import { type WorkState } from '@/types/workstate/cshelper.ts'
 
-const { t } = useLocale()
-
 const store = useStore()
+const { t } = useLocale()
 const {
   uiLanguage,
   itemLanguage,

@@ -1,4 +1,5 @@
 import { computed } from "vue"
+import { useLocale } from './useLocale'
 import { getImgCdnUrl } from '@/tools/game'
 import { useStore } from "@/store"
 
@@ -8,8 +9,6 @@ interface UserSpecialTitle {
   tagColor: string
   desc: string
 }
-
-import { useLocale } from './useLocale'
 
 const useCloud = () => {
   const store = useStore()

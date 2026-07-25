@@ -9,12 +9,11 @@ import { useAppModals } from '@/composables/useAppModals'
 import { useResponsive } from '@/composables/useResponsive'
 import { getItemInfo, getItemNameRevertMap } from '@/tools/item'
 
-const NAIVE_UI_MESSAGE = useMessage()
 const { t } = useLocale()
-const { isMobile } = useResponsive()
-const { joinItemsToWorkflow } = useAppModals()
-
 const { alertError } = useDialog()
+const { isMobile } = useResponsive()
+const NAIVE_UI_MESSAGE = useMessage()
+const { joinItemsToWorkflow } = useAppModals()
 
 const showPop = ref(false)
 const importStr = ref('')

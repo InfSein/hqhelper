@@ -18,7 +18,6 @@ import type { AlarmMacroOptions } from '@/types/workstate/gatherclock.ts'
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()
-
 const {
   uiLanguage, itemLanguage,
 } = UseConfig()

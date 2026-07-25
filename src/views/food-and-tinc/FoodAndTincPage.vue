@@ -12,12 +12,11 @@ import { useAppMode } from '@/composables/useAppMode'
 import { HqData } from '@/assets/data'
 import { useNbbCal } from '@/tools/use-nbb-cal'
 
+const store = useStore()
 const { t } = useLocale()
 const { appMode } = useAppMode()
-
-const store = useStore()
-const NAIVE_UI_MESSAGE = useMessage()
 const { calItems } = useNbbCal()
+const NAIVE_UI_MESSAGE = useMessage()
 
 const workState = ref({
   patch: '7.4',

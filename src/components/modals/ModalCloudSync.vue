@@ -1,4 +1,6 @@
 <script setup lang="ts">
+// todo 记得处理兼容性问题
+
 import {
   ChecklistRtlOutlined,
   CloudDownloadRound,
@@ -20,17 +22,13 @@ import { fixWorkState as fixWorkflowWorkState } from '@/types/workstate/workflow
 import { fixWorkState as fixFashionclothWorkState } from '@/types/workstate/fchelper'
 import { fixWorkState as fixMacromanageWorkState } from '@/types/workstate/macromanage'
 
-// todo 记得处理兼容性问题
-
-
-
-const { t } = useLocale()
-const { isMobile } = useResponsive()
 const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
 
 const store = useStore()
-const { alertInfo, alertError, confirm } = useDialog()
+const { t } = useLocale()
+const { isMobile } = useResponsive()
 const NAIVE_UI_MESSAGE = useMessage()
+const { alertInfo, alertError, confirm } = useDialog()
 const {
   getListBatch, addList, editList,
   resolveListTitle,

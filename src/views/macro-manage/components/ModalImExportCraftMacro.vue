@@ -15,7 +15,6 @@ import useMacroHelper from '@/views/macro-manage/composables/useMacroHelper'
 import { type RecordedCraftMacro } from '@/types/workstate/macromanage'
 
 const { t } = useLocale()
-
 const { confirm } = useDialog()
 const NAIVE_UI_MESSAGE = useMessage()
 const {

@@ -11,9 +11,8 @@ import { useLocale } from '@/composables/useLocale'
 import { XivUnpackedFashionClothes } from '@/assets/data'
 import { getItemInfo } from '@/tools/item'
 
-const { t } = useLocale()
-
 const store = useStore()
+const { t } = useLocale()
 
 const patchModel = defineModel<string>('patch', { required: true })
 const itemSelected = defineModel<Record<number, number>>('itemSelected', { required: true })

@@ -14,11 +14,8 @@ import { attireAffixes, accessoryAffixes } from '@/types/game/gear'
 import type { GearSelections, AttireAffix, AccessoryAffix } from '@/types/game/gear'
 
 const { t } = useLocale()
+const { uiLanguage } = useConfig()
 const { isMobile } = useResponsive()
-
-const {
-  uiLanguage,
-} = useConfig()
   
 const props = defineProps({
   patchData: {

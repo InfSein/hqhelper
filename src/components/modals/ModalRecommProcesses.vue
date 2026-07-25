@@ -12,15 +12,12 @@ import { CopyToClipboard } from '@/tools'
 import { type ItemInfo } from '@/tools/item'
 import { useFufuCal } from '@/tools/use-fufu-cal'
 
-const { t } = useLocale()
-
 const store = useStore()
+const { t } = useLocale()
+const { itemLanguage } = UseConfig()
 const NAIVE_UI_MESSAGE = useMessage()
 const { calRecommProcessGroups } = useFufuCal()
-const {
-  itemLanguage,
-} = UseConfig()
-  
+
 const showModal = defineModel<boolean>('show', { required: true })
 const expandedBlocks = ref<Record<number, string[]>>({})
 /** (groupId, (itemId, checked)) */

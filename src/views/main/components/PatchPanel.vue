@@ -1,4 +1,7 @@
 <script setup lang="ts">
+// import {
+//   InfoOutlined,
+// } from '@vicons/material'
 import HelpButton from '@/components/ui/HelpButton.vue'
 import FoldableCard from '@/components/templates/FoldableCard.vue'
 import { useStore } from '@/store'
@@ -9,16 +12,10 @@ import { XivPatches, type XivPatch, type XivPatchVer } from "@/assets/data"
 import { isGearEmpty } from '@/tools/game/gear.ts'
 import { fixGearSelections, type GearSelections } from '@/types/game/gear'
 
-// import {
-//   InfoOutlined,
-// } from '@vicons/material'
-
-
-const { t } = useLocale()
-const { isMobile } = useResponsive()
-
 const store = useStore()
+const { t } = useLocale()
 const { confirm } = useDialog()
+const { isMobile } = useResponsive()
 
 const patchSelected = defineModel<XivPatchVer | undefined>('patchSelected', { required: true })
 const gearsSelected = defineModel<GearSelections>('gearsSelected', { required: true })

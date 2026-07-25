@@ -15,10 +15,9 @@ import { XivGearAffixes, XivJobs, XivRoles, type HqDataVer } from '@/assets/data
 import { useGearAdder } from '@/tools/game/gear'
 import { type AttireAffix, type AccessoryAffix, type GearSelections, type GearSlot as GearSlotType, fixGearSelections } from '@/types/game/gear'
 
+const store = useStore()
 const { t } = useLocale()
 const { isMobile } = useResponsive()
-
-const store = useStore()
 const NAIVE_UI_MESSAGE = useMessage()
 
 const gearSelections = defineModel<GearSelections>('gearSelections', { required: true })

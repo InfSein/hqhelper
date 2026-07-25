@@ -5,10 +5,7 @@ import { useResponsive } from '@/composables/useResponsive'
 import { type XivMapAetheryteInfo, type XivMapInfo } from '@/tools/game/map.ts'
 
 const { isMobile } = useResponsive()
-
-const {
-  itemLanguage,
-} = UseConfig()
+const { itemLanguage } = UseConfig()
 
 interface MapButtonProps {
   mapData: XivMapInfo,

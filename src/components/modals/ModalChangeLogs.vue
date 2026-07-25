@@ -11,11 +11,9 @@ import { useResponsive } from '@/composables/useResponsive'
 import AppStatus from '@/constants/app'
 import { getChangelogs, type PatchChangeGroup } from '@/data/change-logs'
 
+const store = useStore()
 const { t } = useLocale()
 const { isMobile } = useResponsive()
-const devMode = import.meta.env.DEV
-
-const store = useStore()
 
 const showModal = defineModel<boolean>('show', { required: true })
 
@@ -193,19 +191,19 @@ const handleSwitchShowHistory = () => {
 
     <template #action>
       <div class="modal-submit-container">
-        <n-button v-if="!showHistory && !isMobile && devMode" type="info" @click="handleCopyLatestPatchNode">
+        <n-button v-if="!showHistory && !isMobile && AppStatus.IsDev" type="info" @click="handleCopyLatestPatchNode">
           <template #icon>
             <n-icon :component="CopyAllOutlined" />
           </template>
           复制
         </n-button>
-        <n-button v-if="!showHistory && !isMobile && devMode" type="info" ghost @click="handleCopyLatestPatchNodeMarkdown">
+        <n-button v-if="!showHistory && !isMobile && AppStatus.IsDev" type="info" ghost @click="handleCopyLatestPatchNodeMarkdown">
           <template #icon>
             <n-icon :component="CopyAllOutlined" />
           </template>
           复制(Markdown)
         </n-button>
-        <!-- <n-button v-if="!showHistory && !isMobile && devMode" type="warning" ghost @click="handleCopyAllPatchNodeMarkdown">
+        <!-- <n-button v-if="!showHistory && !isMobile && AppStatus.IsDev" type="warning" ghost @click="handleCopyAllPatchNodeMarkdown">
           <template #icon>
             <n-icon :component="CopyAllOutlined" />
           </template>

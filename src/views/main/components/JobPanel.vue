@@ -7,10 +7,9 @@ import { useResponsive } from '@/composables/useResponsive'
 import { XivJobs, XivRoles, type HqDataVer, type XivPatchVer }from '@/assets/data'
 import type { GearSelections } from '@/types/game/gear'
 
+const store = useStore()
 const { t } = useLocale()
 const { isMobile } = useResponsive()
-
-const store = useStore()
 
 const jobSelected = defineModel<number | undefined>('jobSelected', { required: true })
 const gearsSelected = defineModel<GearSelections>('gearsSelected', { required: true })

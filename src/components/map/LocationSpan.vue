@@ -4,9 +4,8 @@ import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
 import { XivMaps } from '@/tools/game/map.ts'
 
-const { t } = useLocale()
-
 const store = useStore()
+const { t } = useLocale()
 
 interface LocationSpanProps {
   placeId: number,

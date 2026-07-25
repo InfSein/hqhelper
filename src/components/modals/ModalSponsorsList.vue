@@ -8,11 +8,10 @@ import { useDialog } from '@/composables/useDialog'
 import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
 
-const { t } = useLocale()
-const { isMobile } = useResponsive()
-
 const store = useStore()
+const { t } = useLocale()
 const { alertInfo } = useDialog()
+const { isMobile } = useResponsive()
 
 const showModal = defineModel<boolean>('show', { required: true })
 

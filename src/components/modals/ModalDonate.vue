@@ -13,7 +13,6 @@ import { useLocale } from '@/composables/useLocale'
 import { qGroupInfo } from '@/constants'
 
 const { t } = useLocale()
-
 const { staffMembers } = useStaff()
 
 const showModal = defineModel<boolean>('show', { required: true })

@@ -9,9 +9,8 @@ import {
 import { useStore } from '@/store/index'
 import { useLocale } from '@/composables/useLocale'
 
-const { t } = useLocale()
-
 const store = useStore()
+const { t } = useLocale()
 
 interface FoldableCardProps {
   cardKey: string

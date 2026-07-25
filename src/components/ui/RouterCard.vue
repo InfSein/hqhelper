@@ -5,9 +5,8 @@ import {
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
 
-const { t } = useLocale()
-
 const store = useStore()
+const { t } = useLocale()
 
 defineProps({
   pageName: {

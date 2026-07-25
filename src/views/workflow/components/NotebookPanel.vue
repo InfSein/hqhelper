@@ -21,6 +21,10 @@ import { XivJobs, XivSrbMap, XivUnpackedRecipes } from '@/assets/data'
 import { sortRecord } from '@/tools'
 import { getItemInfo, sortItems, type ItemInfo } from '@/tools/item'
 
+const { t } = useLocale()
+const { isMobile } = useResponsive()
+const { itemLanguage } = useConfig()
+
 const props = defineProps<{
   selectedJob: number
   selectedMenu: 'common' | 'special' | 'master'
@@ -36,10 +40,6 @@ const emit = defineEmits<{
   'update:selectedItem': [value: number]
   'add-item': [itemId: number]
 }>()
-
-const { t } = useLocale()
-const { isMobile } = useResponsive()
-const { itemLanguage } = useConfig()
 
 // #region notebook data structure
 interface NotebookGroup {

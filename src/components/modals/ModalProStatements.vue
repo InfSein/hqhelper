@@ -11,10 +11,9 @@ import { useResponsive } from '@/composables/useResponsive'
 import { type ItemInfo } from '@/tools/item'
 import { useFufuCal } from '@/tools/use-fufu-cal'
 
+const store = useStore()
 const { t } = useLocale()
 const { isMobile } = useResponsive()
-
-const store = useStore()
 const { getProStatementData, calRecommProcessData } = useFufuCal()
 
 const showModal = defineModel<boolean>('show', { required: true })

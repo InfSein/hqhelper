@@ -13,10 +13,7 @@ import { XivMaps, type XivMapAetheryteInfo, type XivMapInfo } from '@/tools/game
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()
-
-const {
-  itemLanguage,
-} = UseConfig()
+const { itemLanguage } = UseConfig()
 
 interface GatheringPathButtonProps {
   targetItems: ItemInfo[]

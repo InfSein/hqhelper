@@ -17,9 +17,8 @@ import type { ProcessStage, ProgressData } from 'env.electron'
 import { checkUrlLag } from '@/tools/web-request'
 import type { AppVersionJson } from '@/types'
 
-const { t } = useLocale()
-
 const store = useStore()
+const { t } = useLocale()
 const { alertError, confirm } = useDialog()
 
 const showModal = defineModel<boolean>('show', { required: true })

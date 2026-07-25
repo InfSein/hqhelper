@@ -16,10 +16,10 @@ import { getItemInfo, type ItemInfo } from '@/tools/item'
 import { type PreferenceItem as Setting } from '@/types'
 import { fixFuncConfig, type FuncConfigModel } from '@/types/config/func'
 
-const { t } = useLocale()
 const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
 
 const store = useStore()
+const { t } = useLocale()
 const NAIVE_UI_MESSAGE = useMessage()
 
 const showModal = defineModel<boolean>('show', { required: true })

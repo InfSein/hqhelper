@@ -10,12 +10,8 @@ import { useLocale } from '@/composables/useLocale'
 import { CopyToClipboard } from '@/tools'
 import type { MacroGenerateMode } from '@/types/config/func.ts'
 
-// import ModalPreferences from './ModalPreferences.vue'
-
-
-const { t } = useLocale()
-
 const store = useStore()
+const { t } = useLocale()
 const NAIVE_UI_MESSAGE = useMessage()
 
 const showModal = defineModel<boolean>('show', { required: true })

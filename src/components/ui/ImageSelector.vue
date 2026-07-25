@@ -6,9 +6,8 @@ import { type PreferenceItemImageSelectOption } from '@/types'
 import useIdb from '@/utils/app.idb'
 import type { dbKey } from '@/utils/app.idb'
 
-const { t } = useLocale()
-
 const idb = useIdb()
+const { t } = useLocale()
 const { confirm } = useDialog()
 
 const selectedImage = defineModel<string>('selectedImage', { required: true })

@@ -23,15 +23,14 @@ import { fixAlarmMacroOptions, type WorkState } from '@/types/workstate/gathercl
 import useIdb from '@/utils/app.idb'
 import EorzeaTime from '@/utils/game.et'
 
+const store = useStore()
 const { t } = useLocale()
+const { appMode } = useAppMode()
+const { alertError } = useDialog()
 const { isMobile } = useResponsive()
 const { currentET } = useEorzeaTime()
-const { appMode } = useAppMode()
-
-const store = useStore()
-const { alertError } = useDialog()
-const { getLimitedGatherings } = useNbbCal()
 const { optionsRenderer } = useUiTools()
+const { getLimitedGatherings } = useNbbCal()
 const {
   uiLanguage, itemLanguage,
 } = UseConfig()

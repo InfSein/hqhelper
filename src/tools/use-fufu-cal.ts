@@ -1,9 +1,10 @@
+import { useStore } from '@/store'
+import { useLocale } from '@/composables/useLocale'
 import { XivJobs } from '@/assets/data'
 import type { RecommItemGroup } from '@/types/item'
 import { deepCopy } from '.'
 import { getItemInfo, sortItems, type ItemInfo } from "./item"
 import { useNbbCal } from "./use-nbb-cal"
-import { useStore } from '@/store'
 
 export interface StatementData {
   craftTargets: ItemInfo[];
@@ -21,8 +22,6 @@ export interface ProStatementBlock {
   items: Record<number, number>;
   preparedKey: ProStatementPreparedKey;
 }
-
-import { useLocale } from '@/composables/useLocale'
 
 export function useFufuCal() {
   const store = useStore()

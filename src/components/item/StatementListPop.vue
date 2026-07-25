@@ -11,23 +11,11 @@ import { useResponsive } from '@/composables/useResponsive'
 import { CopyToClipboard, deepCopy } from '@/tools'
 import type { ItemInfo, StatementRow } from '@/tools/item'
 
-const NAIVE_UI_MESSAGE = useMessage()
+const store = useStore()
 const { t } = useLocale()
 const { isMobile } = useResponsive()
-
-const store = useStore()
-const {
-  itemLanguage,
-} = UseConfig()
-
-const getItemName = (itemInfo: ItemInfo) => {
-  switch (itemLanguage.value) {
-    case 'zh':
-      return itemInfo.name_zh || '未翻译的物品'
-    default:
-      return itemInfo[`name_${itemLanguage.value}`]
-  }
-}
+const { itemLanguage } = UseConfig()
+const NAIVE_UI_MESSAGE = useMessage()
 
 interface ItemListPopProps {
   rows: StatementRow[]
@@ -74,6 +62,15 @@ const listValue = computed(() => {
   })
   return result.join('\n')
 })
+
+const getItemName = (itemInfo: ItemInfo) => {
+  switch (itemLanguage.value) {
+    case 'zh':
+      return itemInfo.name_zh || '未翻译的物品'
+    default:
+      return itemInfo[`name_${itemLanguage.value}`]
+  }
+}
 
 const handleCopyList = async () => {
   if (!listValue?.value?.length) {

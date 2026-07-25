@@ -33,14 +33,11 @@ import { getItemInfo } from '@/tools/item'
 import { decompress } from 'xiv-cac-utils'
 import { _VAR_TAG_MAXLEN, _VAR_REMARK_MAXLINE, _VAR_RELATEITEM_MAXLEN, _VAR_TABLESHOW_RELATEITEM_MAXLEN, getDefaultCraftMacro, prepareMacroForSave, type RecordedCraftMacro, type StrictCraftRequirements } from '@/types/workstate/macromanage.ts'
 
-const { t } = useLocale()
-
 const store = useStore()
+const { t } = useLocale()
 const { confirm } = useDialog()
 const NAIVE_UI_MESSAGE = useMessage()
-const {
-  itemLanguage,
-} = UseConfig()
+const { itemLanguage } = UseConfig()
 const {
   parseCraftMacroText, parseCraftProcedure, exportCraftMacroText,
 } = useMacroHelper()

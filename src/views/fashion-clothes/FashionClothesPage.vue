@@ -13,12 +13,11 @@ import { XivUnpackedFashionClothes } from '@/assets/data'
 import { useNbbCal } from '@/tools/use-nbb-cal'
 import { fixWorkState } from '@/types/workstate/fchelper'
 
+const store = useStore()
 const { t } = useLocale()
 const { appMode } = useAppMode()
-
-const store = useStore()
-const NAIVE_UI_MESSAGE = useMessage()
 const { calItems } = useNbbCal()
+const NAIVE_UI_MESSAGE = useMessage()
 
 const workState = ref(fixWorkState())
 

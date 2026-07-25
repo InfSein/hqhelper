@@ -13,12 +13,11 @@ import { useResponsive } from '@/composables/useResponsive'
 import useItemPrice from '@/composables/useItemPrice.ts'
 import type { ItemInfo } from '@/tools/item'
 
+const store = useStore()
 const { t } = useLocale()
 const { isMobile } = useResponsive()
-const { showItemPriceDetail } = useAppModals()
-
-const store = useStore()
 const { calCostAndBenefit } = useItemPrice()
+const { showItemPriceDetail } = useAppModals()
 
 const modalId = 'modal-cost-and-benefits'
 

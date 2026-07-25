@@ -11,10 +11,8 @@ import { exportPreferences, importPreferences } from '@/tools/preferences'
 import { fixFuncConfig, type FuncConfigModel } from '@/types/config/func'
 import { fixUserConfig, type UserConfigModel } from '@/types/config/user'
 
-const NAIVE_UI_MESSAGE = useMessage()
-
-
 const { t } = useLocale()
+const NAIVE_UI_MESSAGE = useMessage()
 
 const showModal = defineModel<boolean>('show', { required: true })
 const userConfigModel = defineModel<UserConfigModel>('userConfig', { required: true })

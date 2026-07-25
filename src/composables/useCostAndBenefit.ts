@@ -1,5 +1,6 @@
 import type { ComputedRef } from 'vue'
 import { useStore } from '@/store'
+import { useLocale } from '@/composables/useLocale'
 import { useDialog } from '@/composables/useDialog'
 import { handleGetPriceError } from '@/tools/error'
 import type { StatementData } from '@/tools/use-fufu-cal'
@@ -9,12 +10,9 @@ import { getItemPriceInfo } from '@/tools/item/price'
 /**
  * 成本/收益分析
  */
-import { useLocale } from './useLocale'
-
 export function useCostAndBenefit(statementData: ComputedRef<StatementData>) {
-  const { t } = useLocale()
-
   const store = useStore()
+  const { t } = useLocale()
   const { alertError } = useDialog()
   const NAIVE_UI_MESSAGE = useMessage()
   const { calCostAndBenefit } = useItemPrice()

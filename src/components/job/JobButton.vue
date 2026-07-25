@@ -17,17 +17,14 @@ import { getGearIcon, getGearRecomm, useGearAdder } from '@/tools/game/gear'
 import type { GearSelections } from '@/types/game/gear'
 
 const { t } = useLocale()
+const { uiLanguage } = UseConfig()
 const { isMobile } = useResponsive()
-
+const { renderIcon, optionsRenderer } = useUiTools()
 const {
   addMainOffHand,
   addAttire,
-  addAccessory
+  addAccessory,
 } = useGearAdder()
-const { renderIcon, optionsRenderer } = useUiTools()
-const {
-  uiLanguage,
-} = UseConfig()
 
 const gearsSelected = defineModel<GearSelections>('gearsSelected', { required: true })
 interface JobButtonProps {

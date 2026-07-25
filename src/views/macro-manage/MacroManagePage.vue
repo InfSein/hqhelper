@@ -20,26 +20,27 @@ import ModalPreferences from '@/components/modals/ModalPreferences.vue'
 import ModalCraftMacroEdit from '@/views/macro-manage/components/ModalCraftMacroEdit.vue'
 import ModalBatchAddCraftMacro from '@/views/macro-manage/components/ModalBatchAddCraftMacro.vue'
 import ModalImExportCraftMacro from '@/views/macro-manage/components/ModalImExportCraftMacro.vue'
+import { compress, decompress } from 'xiv-cac-utils'
 import { useStore } from '@/store'
 import { useDialog } from '@/composables/useDialog'
 import { useLocale } from '@/composables/useLocale'
 import useUiTools from '@/composables/useUiTools'
-import { useResponsive } from '@/composables/useResponsive'
 import useMacroHelper from '@/views/macro-manage/composables/useMacroHelper'
 import { XivCraftActions, XivUnpackedItems } from '@/assets/data'
 import { CopyToClipboard, deepCopy } from '@/tools'
-import { compress, decompress } from 'xiv-cac-utils'
-import { _VAR_MACRO_MAXAMOUNT, fixWorkState, getDefaultCraftMacro, type WorkState, type RecordedCraftMacro, type CraftMacroRow } from '@/types/workstate/macromanage'
-
-const { t } = useLocale()
-const { isMobile } = useResponsive()
+import {
+  _VAR_MACRO_MAXAMOUNT,
+  fixWorkState, getDefaultCraftMacro,
+  type WorkState, type RecordedCraftMacro, type CraftMacroRow
+} from '@/types/workstate/macromanage'
 
 const store = useStore()
 const route = useRoute()
+const { t } = useLocale()
 const router = useRouter()
-const { confirmWarning } = useDialog()
-const NAIVE_UI_MESSAGE = useMessage()
 const { renderIcon } = useUiTools()
+const NAIVE_UI_MESSAGE = useMessage()
+const { confirmWarning } = useDialog()
 const {
   exportCraftMacroText, unarchiveMacroRow,
 } = useMacroHelper()

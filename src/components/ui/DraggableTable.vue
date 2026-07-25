@@ -8,8 +8,8 @@ import {
 import { useLocale } from '@/composables/useLocale'
 import { deepCopy } from '@/tools'
 
-const NAIVE_UI_MESSAGE = useMessage()
 const { t } = useLocale()
+const NAIVE_UI_MESSAGE = useMessage()
 
 const data = defineModel<DataRow[]>('data', { required: true })
 

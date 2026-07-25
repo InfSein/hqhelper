@@ -7,10 +7,9 @@ import { useResponsive } from '@/composables/useResponsive'
 import { objectEqual } from '@/tools'
 import { getItemInfo, type ItemInfo, type StatementRow } from '@/tools/item'
 
+const store = useStore()
 const { t } = useLocale()
 const { isMobile } = useResponsive()
-
-const store = useStore()
 
 const itemsPrepared = defineModel<Record<number, number>>('itemsPrepared', { required: true })
 const selectedItem = defineModel<ItemInfo | undefined>('selectedItem', { required: true })

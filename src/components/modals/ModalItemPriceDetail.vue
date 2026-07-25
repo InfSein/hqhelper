@@ -16,11 +16,10 @@ import { getItemPriceHistory, getItemPriceInfo } from '@/tools/item/price.ts'
 import { ItemPriceApiVersion } from '@/types/item/price.ts'
 import { itemPriceTypes, type ItemPriceType } from '@/types/config/func.ts'
 
-const { t } = useLocale()
-const { isMobile } = useResponsive()
-
 const store = useStore()
+const { t } = useLocale()
 const { alertError } = useDialog()
+const { isMobile } = useResponsive()
 
 const showModal = defineModel<boolean>('show', { required: true })
 

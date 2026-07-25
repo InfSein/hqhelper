@@ -13,9 +13,8 @@ import { fixGearSelections } from '@/types/game/gear'
 import type { AttireAffix, AccessoryAffix, GearSelections } from '@/types/game/gear'
 import type { WorkState } from '@/types/workstate/hqworkbench'
 
-const { t } = useLocale()
-
 const store = useStore()
+const { t } = useLocale()
 const NAIVE_UI_MESSAGE = useMessage()
 const { calGearSelections, getSpecialItems, getPatchData } = useNbbCal()
 

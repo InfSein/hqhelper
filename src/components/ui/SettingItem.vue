@@ -11,7 +11,6 @@ import type { AppTextUi, PreferenceItem } from '@/types/index.ts'
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()
-
 const { optionsRenderer } = useUiTools()
 
 const formData = defineModel<any>('formData', { required: true })

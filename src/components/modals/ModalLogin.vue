@@ -22,10 +22,10 @@ import { deepCopy } from '@/tools'
 import { getImgCdnUrl } from '@/tools/game'
 import type { NbbResponse, ResdataRegisterAndLogin } from '@/types/api/nbb-cloud.ts'
 
-const { t } = useLocale()
 const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
 
 const store = useStore()
+const { t } = useLocale()
 const NAIVE_UI_MESSAGE = useMessage()
 const {
   sendVerify, sendVerifyForResetPassword,

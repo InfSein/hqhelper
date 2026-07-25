@@ -34,10 +34,9 @@ import { useWorkflowStatistics } from '@/composables/useWorkflowStatistics'
 import { type SettingGroupKey } from '@/types'
 import { getDefaultWorkflow, _VAR_MAX_WORKFLOW } from '@/types/workstate/workflow'
 
+const store = useStore()
 const { t } = useLocale()
 const { isMobile } = useResponsive()
-
-const store = useStore()
 const NAIVE_UI_MESSAGE = useMessage()
 
 // #region workflow state & statistics
