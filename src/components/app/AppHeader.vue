@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import {
   type DropdownOption, type MenuOption,
-  useOsTheme,
 } from 'naive-ui'
 import {
   AccessAlarmsOutlined,
@@ -44,19 +43,18 @@ import ModalChangeLogs from '@/components/modals/ModalChangeLogs.vue'
 import ModalPreferences from '@/components/modals/ModalPreferences.vue'
 import router from '@/router'
 import { useStore } from '@/store'
+import useConfig from '@/composables/useConfig'
 import { useLocale } from '@/composables/useLocale'
-import { useDialog } from '@/composables/useDialog.ts'
+import { useDialog } from '@/composables/useDialog'
 import { useAppModals } from '@/composables/useAppModals'
-import useUiTools from '@/composables/useUiTools.ts'
+import useUiTools from '@/composables/useUiTools'
 import { useEorzeaTime } from '@/composables/useEorzeaTime'
 import { useResponsive } from '@/composables/useResponsive'
-import AppStatus from '@/constants/app.ts'
+import AppStatus from '@/constants/app'
 import { checkAppUpdates, visitUrl } from '@/tools'
 
-// import ChristmasTree from '@/assets/icons/ChristmasTree.vue'
-
 const store = useStore()
-const osTheme = useOsTheme()
+const { theme, switchTheme } = useConfig()
 const { confirm } = useDialog()
 const NAIVE_UI_MESSAGE = useMessage()
 const { renderIcon, optionsRenderer } = useUiTools()
@@ -66,18 +64,6 @@ const { currentET } = useEorzeaTime()
 const { displayCheckUpdatesModal } = useAppModals()
 
 const isChina = computed(() => locale.value === 'zh')
-const theme = computed(() => {
-  const _theme = store.userConfig.theme
-  if (_theme === 'system') {
-    return osTheme.value === 'dark' ? 'dark' : 'light'
-  }
-  return _theme
-})
-const switchTheme = () => {
-  store.userConfig.theme = theme.value === 'light' ? 'dark' : 'light'
-  store.setUserConfig(store.userConfig)
-}
-
 const useDesktopUi = computed(() => {
   return !isMobile.value || !!window.electronAPI
 })
