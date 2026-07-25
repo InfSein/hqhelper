@@ -23,15 +23,13 @@ import { getItemInfo, type ItemInfo } from '@/tools/item'
 import { handleGetPriceError } from '@/tools/error'
 import { getItemPriceInfo } from '@/tools/item/price.ts'
 import type { ItemPriceType } from '@/types/config/func.ts'
-import type EorzeaTime from '@/utils/game.et.ts'
 
+const store = useStore()
 const { t } = useLocale()
+const NAIVE_UI_MESSAGE = useMessage()
 const { isMobile } = useResponsive()
 const { currentET } = useEorzeaTime()
 const { showItemPriceDetail } = useAppModals()
-
-const store = useStore()
-const NAIVE_UI_MESSAGE = useMessage()
 const {
   uiLanguage, itemLanguage,
 } = useConfig()

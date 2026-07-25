@@ -6,10 +6,9 @@ import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
 import type { ItemInfo } from '@/tools/item'
 
+const store = useStore()
 const { t } = useLocale()
 const { isMobile } = useResponsive()
-
-const store = useStore()
 
 interface ItemPriceTableProps {
   items: ItemInfo[],

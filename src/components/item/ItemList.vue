@@ -10,12 +10,9 @@ import { useLocale } from '@/composables/useLocale'
 import UseConfig from '@/composables/useConfig.ts'
 import { type ItemInfo } from '@/tools/item'
 
-const { t } = useLocale()
-
 const store = useStore()
-const {
-  itemLanguage,
-} = UseConfig()
+const { t } = useLocale()
+const { itemLanguage } = UseConfig()
 
 const getItemName = (itemInfo: ItemInfo) => {
   switch (itemLanguage.value) {

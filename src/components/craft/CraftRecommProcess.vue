@@ -1,4 +1,8 @@
 <script setup lang="ts">
+// import { 
+//   SettingsSharp,
+//   UnfoldMoreSharp, UnfoldLessSharp,
+// } from '@vicons/material'
 import ItemSpan from '@/components/item/ItemSpan.vue'
 import XivFARImage from '@/components/ui/XivFARImage.vue'
 import LocationSpan from '@/components/map/LocationSpan.vue'
@@ -10,11 +14,6 @@ import { useEorzeaTime } from '@/composables/useEorzeaTime'
 import { XivJobs, type XivJob } from '@/assets/data'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
 import type { RecommItemGroup } from '@/types/item'
-
-// import { 
-//   SettingsSharp,
-//   UnfoldMoreSharp, UnfoldLessSharp,
-// } from '@vicons/material'
 
 const store = useStore()
 const { t } = useLocale()

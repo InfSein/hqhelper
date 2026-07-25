@@ -1,4 +1,9 @@
 <script lang="ts" setup>
+// import {
+//   FileCopyOutlined,
+//   LanguageOutlined,
+//   OpenInNewFilled
+// } from '@vicons/material'
 import ItemPop from './ItemPop.vue'
 import XivFARImage from '@/components/ui/XivFARImage.vue'
 import { useStore } from '@/store'
@@ -8,20 +13,9 @@ import { useItemContextMenu } from '@/composables/useItemContextMenu'
 import { XivJobs } from '@/assets/data'
 import { type ItemInfo } from '@/tools/item'
 
-// import {
-//   FileCopyOutlined,
-//   LanguageOutlined,
-//   OpenInNewFilled
-// } from '@vicons/material'
-
-
-const { t } = useLocale()
-
 const store = useStore()
-
-const {
-  itemLanguage,
-} = useConfig()
+const { t } = useLocale()
+const { itemLanguage } = useConfig()
 
 interface ItemButtonProps {
   /** 道具信息 */

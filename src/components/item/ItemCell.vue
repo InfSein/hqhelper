@@ -6,12 +6,8 @@ import { useLocale } from '@/composables/useLocale'
 import { XivJobs, type XivJob } from '@/assets/data'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
 
-// import UseConfig from '@/tools/use-config'
-
-
-const { t } = useLocale()
-
 const store = useStore()
+const { t } = useLocale()
 
 interface ItemCellProps {
   itemInfo: ItemInfo

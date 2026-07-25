@@ -5,9 +5,8 @@ import {
 import { useLocale } from '@/composables/useLocale'
 import { CopyToClipboard } from '@/tools'
 
-const NAIVE_UI_MESSAGE = useMessage()
-
 const { t } = useLocale()
+const NAIVE_UI_MESSAGE = useMessage()
 
 interface MacroViewerProps {
   macroLines: string[]

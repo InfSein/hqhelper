@@ -6,13 +6,9 @@ import { useResponsive } from '@/composables/useResponsive'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
 import { useNbbCal } from '@/tools/use-nbb-cal'
 
-// const store = useStore()
-// const NAIVE_UI_MESSAGE = useMessage()
-
 const { t } = useLocale()
-const { isMobile } = useResponsive()
-
 const store = useStore()
+const { isMobile } = useResponsive()
 
 interface CraftStatisticsProps {
   itemSelected: Record<number, number>
