@@ -5,10 +5,6 @@ import useStaff from "@/composables/useStaff"
 import { useLocale } from '@/composables/useLocale'
 import AppStatus from '@/constants/app.ts'
 
-// import {
-//   RefreshOutlined
-// } from '@vicons/material'
-
 const { t } = useLocale()
 const { staffMembers } = useStaff()
 
