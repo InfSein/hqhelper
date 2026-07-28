@@ -97,7 +97,7 @@ const handleSettingButtonClick = () => {
     @on-setting-button-clicked="handleSettingButtonClick"
   >
     <template #header>
-      <div class="card-title no-select">
+      <div class="card-title select-none">
         <n-icon><TableViewOutlined /></n-icon>
         <span class="title">
           {{ t('common.appfunc.craft_statement') }}

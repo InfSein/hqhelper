@@ -1,9 +1,9 @@
 {
   "name": "hqhelper-dawntrail",
-  "version": "2.5.0",
+  "version": "2.5.1",
   "gamever": {
-    "cn": "7.51",
-    "global": "7.51"
+    "cn": "7.55",
+    "global": "7.55"
   },
   "private": true,
   "type": "module",
@@ -24,11 +24,15 @@
   },
   "dependencies": {
     "alova": "^3.3.4",
+    "clsx": "^2.1.1",
     "idb": "^8.0.3",
     "lz-string": "^1.5.0",
     "pinia": "^3.0.4",
+    "tailwind-merge": "^3.6.0",
+    "tailwindcss": "~4.2.4",
     "vue": "^3.5.28",
     "vue-clipboard3": "^2.0.0",
+    "vue-data-ui": "^3.21.0",
     "vue-draggable-plus": "^0.6.1",
     "vue-gtag": "^3.6.3",
     "vue-i18n": "^11.1.12",
@@ -38,6 +42,7 @@
   },
   "devDependencies": {
     "@crowdin/cli": "^4.13.0",
+    "@tailwindcss/vite": "~4.2.4",
     "@tsconfig/node22": "^22.0.5",
     "@types/node": "^22.16.5",
     "@vicons/material": "^0.13.0",

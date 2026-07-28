@@ -1,6 +1,6 @@
 import clipBoard from "vue-clipboard3"
 import * as LzString from 'lz-string'
-import type { AppVersionJson, CallResult } from "@/models"
+import type { AppVersionJson, CallResult, DownloadVersionJson } from "@/models"
 import useIdb from "./idb"
 
 const Clip = clipBoard
@@ -32,6 +32,24 @@ export const assignDefaults = (defaultVal: any, currentVal: any) => {
 }
 export const objectEqual = <T>(obj1: T, obj2: T): boolean => {
   return JSON.stringify(obj1) === JSON.stringify(obj2)
+}
+
+export const formatDate = (ts: number) => {
+  const date = new Date(ts)
+  const pad = (n: number) => n.toString().padStart(2, '0')
+
+  const year = date.getFullYear()
+  const month = pad(date.getMonth() + 1)
+  const day = pad(date.getDate())
+
+  return `${year}-${month}-${day}`
+}
+export const formatTime = (ts: number) => new Date(ts).toTimeString().slice(0, 8)
+export const formatTimestamp = (ts: number) => {
+  if (!ts) return '????-??-?? ??:??:??'
+  const date = formatDate(ts)
+  const time = formatTime(ts)
+  return `${date} ${time}`
 }
 
 /** 压缩字符串 */
@@ -79,6 +97,28 @@ export const checkAppUpdates = async () : Promise<CallResult<AppVersionJson>> =>
       versionResponse = await fetch(url).then(response => response.text())
     }
     const versionContent = JSON.parse(versionResponse) as AppVersionJson
+    return {
+      success: true, message: '',
+      data: versionContent
+    }
+  } catch (e: any) {
+    console.error(e)
+    return {
+      success: false, message: e?.message || 'UNKNOWN ERROR' + e
+    }
+  }
+}
+export const checkElectronUpdates = async () : Promise<CallResult<DownloadVersionJson>> => {
+  try {
+    const url = `https://download.hqhelper.com/version.json?t=${new Date().getTime()}`
+
+    let versionResponse = ''
+    if (window.electronAPI?.httpGet) {
+      versionResponse = await window.electronAPI.httpGet(url)
+    } else {
+      versionResponse = await fetch(url).then(response => response.text())
+    }
+    const versionContent = JSON.parse(versionResponse) as DownloadVersionJson
     return {
       success: true, message: '',
       data: versionContent

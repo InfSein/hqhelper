@@ -280,12 +280,12 @@ const handleSave = async () => {
                     </template>
 
                     <div class="pop-wrapper">
-                      <div class="flex-vac font-big gap-4">
+                      <div class="flex items-center gap-1 font-big">
                         <n-icon :size="16"><LocalOfferFilled /></n-icon>
                         <span>{{ t('macro_manage.text.preset_tags') }}</span>
                       </div>
                       <n-divider style="margin: 0 0 3px;" />
-                      <div v-if="userConfig.macromanage_cache_work_state.presetTags.length" class="flex-wrap gap-2">
+                      <div v-if="userConfig.macromanage_cache_work_state.presetTags.length" class="flex flex-wrap gap-0.5">
                         <n-tag
                           v-for="(tag, tagIndex) in userConfig.macromanage_cache_work_state.presetTags"
                           :key="`tag-${tagIndex}`"
@@ -349,12 +349,12 @@ const handleSave = async () => {
                     </template>
 
                     <div>
-                      <div class="flex-vac font-big gap-4">
+                      <div class="flex items-center gap-1 font-big">
                         <n-icon :size="16"><BuildFilled /></n-icon>
                         <span>{{ t('macro_manage.text.preset_creqs') }}</span>
                       </div>
                       <n-divider style="margin: 0 0 3px;" />
-                      <div v-if="userConfig.macromanage_cache_work_state.presetCReqs.length" class="flex-col gap-2">
+                      <div v-if="userConfig.macromanage_cache_work_state.presetCReqs.length" class="flex flex-col gap-0.5">
                         <n-button
                           v-for="(creq, creqIndex) in userConfig.macromanage_cache_work_state.presetCReqs"
                           :key="`creq-${creqIndex}`"
@@ -392,8 +392,8 @@ const handleSave = async () => {
                       <th>{{ t('common.craft.craftsmanship') }}</th>
                       <th>{{ t('common.craft.control') }}</th>
                       <th>
-                        <div class="flex-center">
-                          <div class="bold">{{ t('common.craft.cp') }}</div>
+                        <div class="flex items-center justify-center">
+                          <div class="font-bold">{{ t('common.craft.cp') }}</div>
                           <div>
                             <HelpButton
                               icon="info"
@@ -512,7 +512,7 @@ const handleSave = async () => {
                       </tr>
                       <tr v-if="!formRelateItems.length">
                         <td colspan="2">
-                          <div class="flex-center">
+                          <div class="flex items-center justify-center">
                             <n-empty :description="t('macro_manage.text.no_relate_item_set')" />
                           </div>
                         </td>
@@ -532,9 +532,9 @@ const handleSave = async () => {
               </div>
               <div class="form-tip">
                 <p>{{ t('macro_manage.text.drag_to_sort') }}</p>
-                <div class="flex-vac flex-wrap">
+                <div class="flex items-center flex-wrap">
                   {{ t('macro_manage.text.click_to_edit_pre') }}
-                  <a href="javascript:void(0)" class="flex-vac" style="padding: 0 3px;" @click="showCraftActionsEditModal = true">
+                  <a href="javascript:void(0)" class="flex items-center" style="padding: 0 3px;" @click="showCraftActionsEditModal = true">
                     <n-icon :size="14" :component="EditRound" />
                     <span>{{ t('common.click_to_edit') }}</span>
                   </a>
@@ -567,8 +567,8 @@ const handleSave = async () => {
             </div>
             <div class="form-block">
               <div class="form-title">{{ t('common.import') }}</div>
-              <div class="form-input flex-col gap-4">
-                <div class="flex-vac gap-4">
+              <div class="form-input flex flex-col gap-1">
+                <div class="flex items-center gap-1">
                   <p>{{ t('macro_manage.text.import_source') }}</p>
                   <n-radio-group
                     v-model:value="formCraftActionsImportType"
@@ -592,7 +592,7 @@ const handleSave = async () => {
                     />
                   </n-radio-group>
                 </div>
-                <div class="lh-120" style="margin-bottom: 4px;">
+                <div class="leading-[1.2] mb-1">
                   <div v-if="formCraftActionsImportType === 'gamemacro'">
                     <p>{{ t('macro_manage.text.import_action.text_1') }}</p>
                     <p>{{ t('macro_manage.text.import_action.text_2') }}</p>
@@ -603,9 +603,9 @@ const handleSave = async () => {
                     <p>{{ t('macro_manage.text.import_action.text_5') }}</p>
                   </div>
                   <div v-else-if="formCraftActionsImportType === 'cac'">
-                    <div class="flex-vac">
+                    <div class="flex items-center">
                       {{ t('macro_manage.text.import_action.text_6') }}
-                      <a href="https://cac.nbb.fan/" target="_blank" class="flex-vac">
+                      <a href="https://cac.nbb.fan/" target="_blank" class="flex items-center">
                         <n-icon :size="14" :component="OpenInNewOutlined" />
                         {{ t('common.learn_more') }}
                       </a>
@@ -640,8 +640,8 @@ const handleSave = async () => {
             </div>
             <div class="form-block">
               <div class="form-title">{{ t('common.export') }}</div>
-              <div class="form-input flex-col gap-4">
-                <div class="flex-vac gap-4">
+              <div class="form-input flex flex-col gap-1">
+                <div class="flex items-center gap-1">
                   <p>{{ t('macro_manage.text.macro_lang_with_colon') }}</p>
                   <n-radio-group
                     v-model:value="formCraftActionsExportLang"

@@ -126,7 +126,7 @@ const handleSave = () => {
               size="small"
               :show-icon="false"
               :description="t('macro_manage.text.no_macro_content_set')"
-              class="flex-hac"
+              class="flex justify-center"
               style="height: 46px;"
             />
           </n-scrollbar>

@@ -117,7 +117,7 @@ const handleJoinWorkflow = () => {
                   <div class="card-title">
                     <XivFARImage
                       :size="16"
-                      :src="pageData.scripGreater.iconUrl"
+                      :src="pageData.scripGreater"
                     />
                     <span class="title">{{ pageData.scripGreater[`name_${itemLanguage}`] }}</span>
                   </div>
@@ -167,7 +167,7 @@ const handleJoinWorkflow = () => {
                   <div class="card-title">
                     <XivFARImage
                       :size="16"
-                      :src="pageData.scripLesser.iconUrl"
+                      :src="pageData.scripLesser"
                     />
                     <span class="title">{{ pageData.scripLesser[`name_${itemLanguage}`] }}</span>
                   </div>
@@ -239,7 +239,7 @@ const handleJoinWorkflow = () => {
                   :disabled="!group.totalCount"
                 >
                   <template #tab>
-                    <div class="flex-vac gap-2">
+                    <div class="flex items-center gap-0.5">
                       <XivFARImage
                         :size="14"
                         :src="group.job.job_icon_url"

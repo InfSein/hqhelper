@@ -393,7 +393,7 @@ const setInventoryByStatementPrepared = () => {
       <div class="block" ref="headerBlock">
         <div class="action">
           <p>{{ t('workflow.text.switch_workflows') }}</p>
-          <div class="flex-wrap" style="gap: 5px;">
+          <div class="flex flex-wrap gap-1">
             <!-- <n-button-group
             >
               <n-button v-show="false" size="tiny" class="n-square-button" :title="t('workflow.text.rename_this_workflow')" @click="handleEditWorkflow(flowIndex)">

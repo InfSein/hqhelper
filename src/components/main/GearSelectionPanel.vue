@@ -532,7 +532,7 @@ defineExpose({
             placement="bottom"
             :trigger="isMobile ? 'click' : 'hover'"
             :show-arrow="false"
-            class="no-select"
+            class="select-none"
             style="--n-padding: 4px;"
           >
             <template #trigger>
@@ -546,7 +546,7 @@ defineExpose({
                 {{ t('main.select_gear.quick_operate.title') }}
               </n-button>
             </template>
-            <div class="flex-col gap-2">
+            <div class="flex flex-col gap-0.5">
               <TooltipButton
                 v-for="option in quickOperatesOptions"
                 :key="option.key"
@@ -565,7 +565,7 @@ defineExpose({
             placement="bottom"
             :trigger="isMobile ? 'click' : 'hover'"
             :show-arrow="false"
-            class="no-select"
+            class="select-none"
             style="--n-padding: 4px;"
           >
             <template #trigger>
@@ -579,7 +579,7 @@ defineExpose({
                 {{ t('common.clear') }}
               </n-button>
             </template>
-            <div class="flex-col gap-2">
+            <div class="flex flex-col gap-0.5">
               <TooltipButton
                 v-for="option in clearOptions"
                 :key="option.key"
@@ -597,7 +597,7 @@ defineExpose({
             placement="bottom"
             :trigger="isMobile ? 'click' : 'hover'"
             :show-arrow="false"
-            class="no-select"
+            class="select-none"
             style="--n-padding: 4px;"
           >
             <template #trigger>
@@ -611,7 +611,7 @@ defineExpose({
                 {{ t('common.add') }}
               </n-button>
             </template>
-            <div class="flex-col gap-2">
+            <div class="flex flex-col gap-0.5">
               <n-button
                 v-for="option in addsuitOptions"
                 :key="option.key"

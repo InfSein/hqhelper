@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import {
   OpenInNewFilled,
-  RefreshOutlined
+  RefreshOutlined,
+  TableViewFilled,
 } from '@vicons/material'
 import HqSwitcher from '../general/HqSwitcher.vue'
 import ItemSpan from './ItemSpan.vue'
@@ -20,8 +21,9 @@ import type { UserConfigModel } from '@/models/config-user'
 import { fixFuncConfig, type FuncConfigModel, type ItemPriceType } from '@/models/config-func'
 import type EorzeaTime from '@/tools/eorzea-time'
 import { handleGetPriceError } from '@/tools/error'
-import { getItemInfo, getItemPriceInfo, type ItemInfo } from '@/tools/item'
+import { getItemInfo, type ItemInfo } from '@/tools/item'
 import UseConfig from '@/tools/use-config'
+import { getItemPriceInfo } from '@/tools/item.price.ts'
 
 const store = useStore()
 const NAIVE_UI_MESSAGE = useMessage()
@@ -31,6 +33,7 @@ const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
 const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
 const currentET = inject<Ref<EorzeaTime>>('currentET')!
 // const appMode = inject<Ref<"overlay" | "" | undefined>>('appMode') ?? ref('')
+const showItemPriceDetail = inject<(items: ItemInfo[]) => void>('showItemPriceDetail')!
 
 const {
   uiLanguage, itemLanguage,
@@ -436,6 +439,9 @@ const refreshItemPrice = async () => {
   }
   refreshingItemPrice.value = false
 }
+const showPriceDetailModal = () => {
+  showItemPriceDetail([props.itemInfo])
+}
 
 const innerPopTrigger = computed(() => {
   if (!isMobile.value && userConfig.value.click_to_show_pop_in_span) {
@@ -466,7 +472,7 @@ const innerPopTrigger = computed(() => {
       <div class="base-info">
         <XivFARImage
           class="item-icon"
-          :src="itemInfo.iconUrl"
+          :src="itemInfo"
           :size="35"
         />
         <div class="item-names">
@@ -612,7 +618,7 @@ const innerPopTrigger = computed(() => {
                 style="padding: 0;"
               >
                 <div>
-                  <div class="bold">{{ t('item.gather_threshold.title.gather_threshold') }}</div>
+                  <div class="font-bold">{{ t('item.gather_threshold.title.gather_threshold') }}</div>
                   <n-table size="small" class="content-table tiny-table w-full">
                     <thead>
                       <tr>
@@ -631,7 +637,7 @@ const innerPopTrigger = computed(() => {
                     </tbody>
                   </n-table>
                   <div style="height: 4px;" />
-                  <div class="bold">{{ t('item.gather_threshold.title.perception_threshold') }}</div>
+                  <div class="font-bold">{{ t('item.gather_threshold.title.perception_threshold') }}</div>
                   <n-table size="small" class="content-table tiny-table w-full">
                     <thead>
                       <tr>
@@ -677,7 +683,7 @@ const innerPopTrigger = computed(() => {
               :key="'time-limit-' + timeLimitIndex"
             >
               <div>{{ timeLimit.start }} ~ {{ timeLimit.end }}</div>
-              <div class="green">{{ timeCanGather(timeLimit) }}</div>
+              <div class="color-success">{{ timeCanGather(timeLimit) }}</div>
             </div>
           </div>
           <div class="content" v-if="itemInfo.gatherInfo?.folkloreId || itemInfo?.gatherInfo?.requirement">
@@ -870,10 +876,10 @@ const innerPopTrigger = computed(() => {
             {{ t('common.price') }}
             <div class="extra flex">
               <div>
-                {{ t('common.last_update_with_val', itemPriceInfo.lastUpdate) }}
-              </div>
-              <div v-if="itemPriceInfo.priceExpired" style="color: var(--color-error);">
-                ({{ t('common.expired') }})
+                <span>{{ t('common.last_update_with_val', '') }}</span>
+                <span :style="{ color: itemPriceInfo.priceExpired ? 'var(--color-error)' : undefined }">
+                  {{ itemPriceInfo.lastUpdate }}
+                </span>
               </div>
               <a
                 :disabled="refreshingItemPrice"
@@ -883,6 +889,13 @@ const innerPopTrigger = computed(() => {
               >
                 <n-icon :size="12"><RefreshOutlined /></n-icon>
                 {{ refreshingItemPrice ? t('common.refreshing') : t('common.refresh') }}
+              </a>
+              <a
+                style="padding: 0; margin-left: 3px; display: flex; line-height: 1;"
+                @click="showPriceDetailModal"
+              >
+                <n-icon :size="12"><TableViewFilled /></n-icon>
+                {{ t('item.price.detail_table.intro_short') }}
               </a>
             </div>
           </div>

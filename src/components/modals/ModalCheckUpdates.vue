@@ -14,7 +14,7 @@ import { useDialog } from '@/tools/dialog'
 import { checkUrlLag } from '@/tools/web-request'
 import type { AppVersionJson } from '@/models'
 import { fixUserConfig, type UserConfigModel } from '@/models/config-user'
-import { checkAppUpdates } from '@/tools'
+import { checkAppUpdates, checkElectronUpdates } from '@/tools'
 
 const t = inject<(message: string, args?: any) => string>('t')!
 // const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
@@ -157,13 +157,22 @@ const handleCheckUpdates = async () => {
   latestHqHelperVersion.value = ''
   latestElectronVersion.value = ''
   try {
-    const checkUpdateResponse = await checkAppUpdates()
-    if (checkUpdateResponse.success) {
-      versionContent.value = checkUpdateResponse.data!
+    // HqHelper
+    const checkWebUpdateResponse = await checkAppUpdates()
+    if (checkWebUpdateResponse.success) {
+      versionContent.value = checkWebUpdateResponse.data!
       latestHqHelperVersion.value = versionContent.value.hqhelper
-      latestElectronVersion.value = versionContent.value.electron
     } else {
-      await dealFailure(checkUpdateResponse.message, checkUpdateResponse)
+      await dealFailure(checkWebUpdateResponse.message, checkWebUpdateResponse)
+      latestHqHelperVersion.value = null
+    }
+    // Electron
+    const checkElectronUpdateResponse = await checkElectronUpdates()
+    if (checkElectronUpdateResponse.success) {
+      latestElectronVersion.value = checkElectronUpdateResponse.data!.electron
+    } else {
+      await dealFailure(checkElectronUpdateResponse.message, checkElectronUpdateResponse)
+      latestElectronVersion.value = null
     }
   } catch (e: any) {
     await dealFailure(e?.message || 'UNKNOWN ERROR', e)
@@ -174,8 +183,6 @@ const handleCheckUpdates = async () => {
   async function dealFailure(msg: string, errdata: any) {
     console.error(errdata)
     await alertError(t('update.message.check_update_failed_with_error', msg))
-    latestHqHelperVersion.value = null
-    latestElectronVersion.value = null
   }
 }
 

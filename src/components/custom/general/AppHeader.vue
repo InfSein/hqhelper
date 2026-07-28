@@ -422,13 +422,14 @@ const menuData = computed(() => {
           hide: !!window.electronAPI || isMobile.value,
         },
         {
-          type: 'router',
+          type: 'common',
           icon: DevicesOutlined,
           label: t('common.appfunc.download_client'),
           hide: !!window.electronAPI || !!window.androidAPI,
           description: t('appheader.menu.tooltip.download_client'),
-          routerKey: 'download',
-          allowNewWindow: false,
+          click: () => {
+            window.open('https://download.hqhelper.com', '_blank')
+          }
         },
       ],
     },
@@ -503,7 +504,7 @@ const buildMenuOption = (menuOption : MyMenuOption) : DropdownOption => {
       disabled: menuOption.disabled,
       children: menuOption.children,
       props: {
-        class: 'no-select',
+        class: 'select-none',
       },
       click: menuOption.click,
       customRenderer: menuOption.customRenderer
@@ -523,7 +524,7 @@ const buildOuterlinkOptions = (
       icon: renderIcon(icon ?? OpenInNewOutlined),
       label: option.label,
       props: {
-        class: 'no-select',
+        class: 'select-none',
       },
       click: () => {
         visitUrl(option.url)
@@ -546,13 +547,13 @@ const buildOuterlinkGroups = (
     return () => h(
       'div',
       {
-        class: 'no-select',
+        class: 'select-none',
         style: {
           padding: groupIndex ? '0 0.8em' : '0.2em 0.8em 0',
         }
       },
       [
-        h('p', { class: 'bold' }, title),
+        h('p', { class: 'font-bold' }, title),
       ]
     )
   }
@@ -627,7 +628,7 @@ const resolveRouterMenuOption = (menuOption: RouterMenuOption) => {
         trigger: () => h(
           'div',
           {
-            class: 'w-full flex-vac gap-2',
+            class: 'w-full flex items-center gap-0.5',
             style: `
               padding: 0 4px;
             `,
@@ -639,7 +640,7 @@ const resolveRouterMenuOption = (menuOption: RouterMenuOption) => {
                 quaternary: true,
                 size: 'small',
                 disabled: currentlyOnPage || menuOption.disabled,
-                class: 'appheader-menu-button no-select',
+                class: 'appheader-menu-button select-none',
                 style: menuOption.allowNewWindow ? 'flex: 1;' : 'width: 100%;',
                 onClick: redirectToPage,
               },
@@ -774,7 +775,7 @@ const handleCheckUpdates = async () => {
             </n-icon>
           </n-button>
         </template>
-        <div class="flex-col">
+        <div class="flex flex-col">
           <p>{{ t('appheader.tooltip.back_to_index') }}</p>
           <p v-if="!canRouteBack">{{ t('appheader.tooltip.already_in_index') }}</p>
         </div>
@@ -789,7 +790,7 @@ const handleCheckUpdates = async () => {
           <template #trigger>
             <p>{{ AppStatus.Version }}</p>
           </template>
-          <div class="flex-col">
+          <div class="flex flex-col">
             <p v-for="(tt, ttIndex) in versionTooltip" :key="`version-tooltip-${ttIndex}`">{{ tt }}</p>
           </div>
         </n-popover>
@@ -806,8 +807,8 @@ const handleCheckUpdates = async () => {
               <span class="time-text">{{ currentET.gameTime }}</span>
             </p>
           </template>
-          <div class="flex-col flex-center">
-            <p class="font-center">{{ t('game.eorzea_time') }}</p>
+          <div class="flex flex-col items-center justify-center">
+            <p class="text-center">{{ t('game.eorzea_time') }}</p>
           </div>
         </n-popover>
 
@@ -836,7 +837,7 @@ const handleCheckUpdates = async () => {
             size="tiny" tertiary
             v-show="!item?.hide"
             :disabled="item.disabled"
-            class="no-select"
+            class="select-none"
             @click="item.click ?? defaultClickEvent"
           >
             <template #icon>

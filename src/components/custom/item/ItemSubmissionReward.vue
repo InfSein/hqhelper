@@ -18,7 +18,7 @@ defineProps<ItemSubmissionRewardProps>()
       <div style="text-align: left;">
         {{ reward.collectabilityMin }}～{{ reward.collectabilityMax ?? '' }}
       </div>
-      <div class="flex-vac" style="justify-content: flex-end;">
+      <div class="flex items-center justify-end">
         <div>{{ reward.scripAmount }}</div>
         <ItemSpan :item-info="getItemInfo(itemInfo.collectInfo.rewardScrip)" hide-name hide-pop-icon />
       </div>

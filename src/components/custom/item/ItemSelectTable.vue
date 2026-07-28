@@ -10,12 +10,13 @@ const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
 
 const items = defineModel<Record<number, number>>('items', { required: true })
 interface ItemSelectTableProps {
-  showItemDetails: boolean,
+  showItemDetails: boolean
+  filterStr?: string
   itemSpanMaxWidth?: string
   containerId?: string
   contentHeight?: string
 }
-defineProps<ItemSelectTableProps>()
+const props = defineProps<ItemSelectTableProps>()
 
 const tableContainer = ref<HTMLElement>()
 const scrollbarRef = useTemplateRef<ScrollbarInst>('scrollbarRef')
@@ -23,7 +24,8 @@ const highlightedItemId = ref<number | null>(null)
 let highlightTimer: number | null = null
 
 interface ItemSelectRow {
-  info: ItemInfo,
+  show: boolean
+  info: ItemInfo
   amount: number
 }
 
@@ -32,15 +34,42 @@ const rows = computed(() => {
   for (const itemId in items.value) {
     const id = Number(itemId)
     const itemInfo = getItemInfo(id)
+
+    let show = true
+    if (props.filterStr) {
+      show = filterItem(props.filterStr, itemInfo)
+    }
+
     const amount = items.value[id]
     itemInfo.amount = amount
     const item : ItemSelectRow = {
+      show: show,
       info: itemInfo,
       amount: amount
     }
     rowsAll.push(item)
   }
   return rowsAll
+
+  function filterItem(filterStr: string, itemInfo: ItemInfo) {
+    const filter = filterStr.toLowerCase()
+      let itemMatched = false
+      const availableKeywords = [
+        itemInfo.name_zh, itemInfo.name_en, itemInfo.name_ja
+      ]
+      availableKeywords.forEach(keyword => {
+        if (keyword?.toLowerCase().includes(filter.toLowerCase())) {
+          itemMatched = true
+        }
+      })
+      if (itemMatched) return true
+
+      if (itemInfo.id.toString() === filter) return true
+      if (itemInfo.itemLevel.toString() === filter) return true
+      if (itemInfo.patch === filter) return true
+
+      return false
+  }
 })
 
 const handleDealNumInputEdge = (row: ItemSelectRow) => {
@@ -87,6 +116,7 @@ defineExpose({
           <tr 
             v-for="item in rows" 
             :key="'item-' + item.info.id" 
+            v-show="item.show"
             :id="'item-row-' + item.info.id"
             :class="{ 'highlighted-row': highlightedItemId === item.info.id }"
           >

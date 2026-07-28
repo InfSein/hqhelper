@@ -766,6 +766,19 @@
       "release_date_with_val": "更新时间：{date}",
       "view_history": "查看历史日志",
       "view_latest": "查看最新日志"
+    },
+    "2_5_1": {
+      "breaking": {
+        "text_1": "现可点击“成本/收益分析”和物品悬浮窗中的“详表”按钮来查看这个物品的价格详表。",
+        "text_2": "正式启用全新域名 {0} 。",
+        "text_3": "现可通过顶级域名访问和使用HqHelper。",
+        "text_4": "旧域名仍将保持维护。"
+      },
+      "feat": {
+        "text_1": "“背包库存”中增加了筛选输入框。",
+        "text_2": "重新制作了客户端下载页面。",
+        "text_3": "优化了赞助者名单在移动端的显示效果。"
+      }
     }
   },
   "cloud": {
@@ -1035,7 +1048,8 @@
       "please_input_item_name": "请输入物品名",
       "please_input_val": "请输入{val}",
       "please_wait_for_a_while": "请稍等片刻。",
-      "sync_succeed": "同步成功"
+      "sync_succeed": "同步成功",
+      "cannot_open_same_modal": "无法重复打开弹窗"
     },
     "mode": "模式",
     "mquoted_view_statement": "[查看报表]",
@@ -1152,7 +1166,9 @@
     "warn": "警告",
     "weibo": "微博",
     "will_be_named_with_time_when_empty": "不填则默认以时间命名",
-    "work_state": "工作状态"
+    "work_state": "工作状态",
+    "filter_item": "筛选物品",
+    "item_filter_input_placeholder": "支持按物品名/ID/品级/版本筛选"
   },
   "contact_us": {
     "feedback": {
@@ -1283,30 +1299,6 @@
       "placeholder": "请选择赞助方式",
       "title": "赞助方式",
       "wechat_admire": "微信支付(赞赏码)"
-    }
-  },
-  "download_page": {
-    "link": {
-      "cn_with_index": "国内下载链接{index}",
-      "global": "国际下载链接"
-    },
-    "text": {
-      "text_1": "HqHelper 的大多数功能在网页端即可完成。",
-      "text_10": "※ 需要 Windows 7 或更高版本的系统",
-      "text_11": "{platform} 客户端",
-      "text_12": "※ 需要 10.13 或更高版本的 Mac OS，并且仅限M系列芯片的设备使用",
-      "text_13": "※仅适用于搭载了M系列芯片的设备",
-      "text_14": "我们暂时没有能力提供 Apple 开发者签名，安装时可能会提示「“HqHelper”已损坏，无法打开。你应该将它移到废纸篓」。",
-      "text_15": "你需要解除安全检查限制或是将 HqHelper 添加到白名单方可成功安装。",
-      "text_16": "客户端还可以用新窗口打开工作流的推荐流程。",
-      "text_2": "不过，为了满足部分用户的习惯和实现一些浏览器无法完成的功能，我们也提供客户端服务。",
-      "text_3": "有什么特别功能吗？",
-      "text_4": "即使网络不佳或远程服务器崩溃，客户端也能正常提供基础的计算服务。",
-      "text_5": "客户端允许你在使用新窗口打开采集时钟期间将其置顶，从而达成类似悬浮窗的效果。",
-      "text_6": "您可以收藏此页面，从而在未来方便地下载到最新版本的客户端。",
-      "text_7": "客户端仅是搭载 HqHelper 的“容器”，下载最新版本的客户端后可能仍需要更新一次 HqHelper 的版本。",
-      "text_8": "当前最新版本：{ver}",
-      "text_9": "点击下方按钮来进行下载。"
     }
   },
   "err_404": {
@@ -1546,6 +1538,24 @@
       "yield_plus": "高产II/丰收II +{0}"
     },
     "price": {
+      "detail_table": {
+        "empty": {
+          "no_data": "暂无数据",
+          "no_item_selected": "请选择物品"
+        },
+        "group_marketboard": "当前价格",
+        "group_purchasehistory": "历史交易",
+        "intro": "查看详表",
+        "loading": "正在获取物品价格……",
+        "title": "物品价格详表",
+        "show_all": "全部",
+        "show_hq": "只看HQ",
+        "show_nq": "只看NQ",
+        "group_selectitem": "选择道具",
+        "table_show_type": "显示：",
+        "group_totaltable": "价格总表",
+        "intro_short": "详表"
+      },
       "no_price": "没有价格。",
       "no_price_reason": "可能原因：未获取过价格/物品未实装或不存在此品质/交易数据不足",
       "no_price_received": "没有获取到价格。",

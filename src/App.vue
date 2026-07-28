@@ -12,8 +12,9 @@ import Dialog from "@/components/custom/general/Dialog.vue"
 import { useStore } from '@/store/index'
 import { useElectronSync } from '@/composables/electron-sync'
 import { useLocale } from './locales'
-import { checkAppUpdates, CopyToClipboard, deepCopy, getAppBackground, sleep } from './tools'
+import { checkAppUpdates, checkElectronUpdates, CopyToClipboard, deepCopy, getAppBackground, sleep } from './tools'
 import EorzeaTime from './tools/eorzea-time'
+import { type ItemInfo } from './tools/item'
 import { fixUserConfig , type UserConfigModel } from '@/models/config-user'
 import { fixFuncConfig, type FuncConfigModel, type MacroGenerateMode } from './models/config-func'
 import { fixCloudConfig, type CloudConfigModel } from '@/models/config-cloud'
@@ -27,6 +28,7 @@ const ModalCheckUpdates = defineAsyncComponent(() => import('@/components/modals
 const ModalLogin = defineAsyncComponent(() => import('@/components/modals/ModalLogin.vue'))
 const ModalCloudSync = defineAsyncComponent(() => import('@/components/modals/ModalCloudSync.vue'))
 const ModalFestivalEgg = defineAsyncComponent(() => import('@/components/modals/ModalFestivalEgg.vue'))
+const ModalItemPriceDetail = defineAsyncComponent(() => import('@/components/modals/ModalItemPriceDetail.vue'))
 
 const route = useRoute()
 const store = useStore()
@@ -235,6 +237,17 @@ const displayCloudSyncModal = () => {
 }
 provide('displayCloudSyncModal', displayCloudSyncModal)
 
+const showModalItemPriceDetail = ref(false)
+const modalItemPriceDetailItems = ref<ItemInfo[]>([])
+const showItemPriceDetail = (items: ItemInfo[]) => {
+  if (showModalItemPriceDetail.value) {
+    alertError(t('common.message.cannot_open_same_modal')); return
+  }
+  modalItemPriceDetailItems.value = items
+  showModalItemPriceDetail.value = true
+}
+provide('showItemPriceDetail', showItemPriceDetail)
+
 const appClass = computed(() => {
   const classes = [
     'lang-' + locale.value,
@@ -257,7 +270,7 @@ provide('displayFestivalEggModal', () => {
   showFestivalEgg.value = true
 })
 const dialogRef = ref<InstanceType<typeof Dialog> | null>(null)
-const { confirm } = useDialog(t)
+const { alertError, confirm } = useDialog(t)
 
 const appBg = ref('')
 
@@ -272,50 +285,7 @@ onMounted(async () => {
   // 处理全局页面参数
   appMode.value = route.query.mode as typeof appMode.value
   // 处理自动更新
-  if (!userConfig.value.disable_auto_update && appMode.value !== 'overlay' && !window.androidAPI?.checkUpdate) {
-    try {
-      const checkUpdateResponse = await checkAppUpdates()
-      if (checkUpdateResponse.success) {
-        const versionContent = checkUpdateResponse.data!
-        
-        let needUpdateElectron = false, needUpdateHqHelper = false
-        if (window.electronAPI) {
-          const currentElectronVersion = await window.electronAPI.clientVersion
-          needUpdateElectron = currentElectronVersion !== versionContent.electron
-        }
-        needUpdateHqHelper = AppStatus.Version !== versionContent.hqhelper
-
-        if (needUpdateElectron) {
-          if (await confirm(
-            t('update.message.checked_new_client', versionContent.electron)
-            + (needUpdateHqHelper ? ('\n' + t('update.message.checked_new_hqhelper', versionContent.hqhelper)) : '')
-            + '\n' + t('update.message.ask_update_now')
-          )) {
-            displayCheckUpdatesModal()
-          }
-        } else if (needUpdateHqHelper) {
-          if (await confirm(
-            t('update.message.checked_new_hqhelper', versionContent.hqhelper)
-            + '\n' + t('update.message.ask_update_now')
-          )) {
-            if (window.electronAPI) {
-              displayCheckUpdatesModal()
-            } else {
-              const cacheKeys = await caches.keys()
-              for (const name of cacheKeys) {
-                await caches.delete(name)
-              }
-              location.reload()    
-            }
-          }
-        }
-      } else {
-        console.error('自动更新失败:', checkUpdateResponse.message, '\n', checkUpdateResponse)
-      }
-    } catch (err) {
-      console.error('自动更新发生错误', err)
-    }
-  }
+  await handleAutoUpdate()
   // 处理彩蛋
   const now = new Date()
   const date = now.getDate()
@@ -348,7 +318,54 @@ watch(
     updateIsMobile()
   }
 )
-
+const handleAutoUpdate = async () => {
+  if (!userConfig.value.disable_auto_update && appMode.value !== 'overlay' && !window.androidAPI?.checkUpdate) {
+    try {
+      if (window.electronAPI) {
+        const checkElectronUpdateResponse = await checkElectronUpdates()
+        if (checkElectronUpdateResponse.success) {
+          const latest = checkElectronUpdateResponse.data!.electron
+          const currentElectronVersion = await window.electronAPI.clientVersion
+          if (currentElectronVersion !== latest) {
+            if (await confirm(
+              t('update.message.checked_new_client', latest)
+              + '\n' + t('update.message.ask_update_now')
+            )) {
+              displayCheckUpdatesModal()
+            }
+            return
+          }
+        } else {
+          console.error('检查客户端更新失败:', checkElectronUpdateResponse.message, '\n', checkElectronUpdateResponse)
+        }
+      }
+      const checkAppUpdateResponse = await checkAppUpdates()
+      if (checkAppUpdateResponse.success) {
+        const versionContent = checkAppUpdateResponse.data!
+        if (AppStatus.Version !== versionContent.hqhelper) {
+          if (await confirm(
+            t('update.message.checked_new_hqhelper', versionContent.hqhelper)
+            + '\n' + t('update.message.ask_update_now')
+          )) {
+            if (window.electronAPI) {
+              displayCheckUpdatesModal()
+            } else {
+              const cacheKeys = await caches.keys()
+              for (const name of cacheKeys) {
+                await caches.delete(name)
+              }
+              location.reload()    
+            }
+          }
+        }
+      } else {
+        console.error('检查HqHelper更新失败:', checkAppUpdateResponse.message, '\n', checkAppUpdateResponse)
+      }
+    } catch (err) {
+      console.error('自动更新发生错误', err)
+    }
+  }
+}
 const updateDraggableArea = () => {
   const dragArea = document.getElementById('drag-area')
   const appLayoutHeader = document.getElementById('app-layout-header')
@@ -447,6 +464,10 @@ const naiveUIThemeOverrides = computed(() : GlobalThemeOverrides => {
           v-model:show="showModalCloudSync"
         />
         <ModalFestivalEgg v-model:show="showFestivalEgg" />
+        <ModalItemPriceDetail
+          v-model:show="showModalItemPriceDetail"
+          :items="modalItemPriceDetailItems"
+        />
       </div>
     </n-message-provider>
     </n-dialog-provider>

@@ -277,7 +277,7 @@ const dealTimeLimit = (start: string, end: string) => {
       remainET = e - c
       ls = Math.floor(EorzeaTime.EorzeaMinute2LocalSecond(remainET))
       if (ls < 30) {
-        ltClass += ' red'
+        ltClass += ' color-error'
       } else if (ls < 60) {
         ltClass += ' color-warning'
       }
@@ -622,7 +622,7 @@ const handleShowAlarmMacroExportModal = () => {
         :key="patch.key"
         v-show="workState.patch === patch.key"
       >
-        <div v-if="!patch.items?.length" class="flex-center w-full" :style="isMobile ? 'min-height: 300px;' : ''">
+        <div v-if="!patch.items?.length" class="flex items-center justify-center w-full" :style="isMobile ? 'min-height: 300px;' : ''">
           <n-empty size="large" :description="t('gather_clock.text.no_items')" />
         </div>
         <n-grid cols="1 600:2 900:3 1200:4 1500:5 1900:6" :x-gap="5" :y-gap="5">

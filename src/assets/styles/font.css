@@ -1,0 +1,8 @@
+@import '../font/lato.css';
+@import '../font/xiv-axis-font.css';
+
+@font-face {
+  font-family: 'FFXIV';
+  src: url('../font/FFXIV_Lodestone_SSF.woff') format('woff');
+  unicode-range: U+E020-E0DB;
+}

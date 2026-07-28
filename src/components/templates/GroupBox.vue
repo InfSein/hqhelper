@@ -63,7 +63,7 @@ defineProps({
     align-items: center;
     font-size: 14px;
     width: fit-content;
-    color: var(--n-text-color);
+    color: var(--color-text);
     white-space: nowrap;       /* 防止文本换行 */
     overflow: hidden;          /* 隐藏溢出的内容 */
     text-overflow: ellipsis;
