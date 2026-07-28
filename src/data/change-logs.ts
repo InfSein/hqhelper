@@ -90,10 +90,13 @@ export const getChangelogs = (
         {
           name: groupName.breaking,
           changes: [
+            t('changelog.shared.game_db_update', {
+              ver: '7.55'
+            }),
             t('changelog.shared.add_new_func', t('item.price.detail_table.title'))
               + br + t('changelog.2_5_1.breaking.text_1')
               + br + getNoteImage('2.5.1', '1.png'),
-            t('changelog.2_5_1.breaking.text_2', renderLink('https://hqhelper.com', 'hqhelper.com'))
+            t('changelog.2_5_1.breaking.text_2', [renderLink('https://hqhelper.com', 'hqhelper.com')])
               + br + t('changelog.2_5_1.breaking.text_3')
               + tipper + t('changelog.2_5_1.breaking.text_4')
           ]
