@@ -766,6 +766,19 @@
       "release_date_with_val": "更新日：{date}",
       "view_history": "過去の更新履歴を確認",
       "view_latest": "最新更新履歴を確認"
+    },
+    "2_5_1": {
+      "breaking": {
+        "text_1": "現在、「コスト/利益分析」およびアイテムのフローティングウィンドウ内の「詳細」ボタンをクリックすることで、そのアイテムの価格詳細を確認できます。",
+        "text_2": "正式に全新ドメイン {0} を启用しました。",
+        "text_3": "現在、トップレベルドメインからHqHelperにアクセスし、ご利用いただけます。",
+        "text_4": "旧ドメインも引き続きメンテナンスを行います。"
+      },
+      "feat": {
+        "text_1": "「在庫」にフィルタ入力ボックスを追加しました。",
+        "text_2": "クライアントダウンロードページを再作成しました。",
+        "text_3": "スポンサーリストのモバイル端末での表示を最適化しました。"
+      }
     }
   },
   "cloud": {
@@ -1035,7 +1048,8 @@
       "please_input_item_name": "アイテム名を入力してください",
       "please_input_val": "{val}を入力してください",
       "please_wait_for_a_while": "しばらくお待ちください。",
-      "sync_succeed": "同期しました"
+      "sync_succeed": "同期しました",
+      "cannot_open_same_modal": "ポップアップを重複して開くことはできません"
     },
     "mode": "モード",
     "mquoted_view_statement": "[素材リストを表示する]",
@@ -1152,7 +1166,9 @@
     "warn": "注意",
     "weibo": "Weibo",
     "will_be_named_with_time_when_empty": "入力しない場合はデフォルトで時間で命名されます",
-    "work_state": "作業状態"
+    "work_state": "作業状態",
+    "filter_item": "アイテムをフィルタリング",
+    "item_filter_input_placeholder": "アイテム名/ID/IL/パッチでフィルタリングに対応"
   },
   "contact_us": {
     "feedback": {
@@ -1522,6 +1538,24 @@
       "yield_plus": "バウンティフルイールドII/バウンティフルハーベストII +{0}"
     },
     "price": {
+      "detail_table": {
+        "empty": {
+          "no_data": "データがありません",
+          "no_item_selected": "アイテムを選択してください"
+        },
+        "group_marketboard": "現在の価格",
+        "group_purchasehistory": "取引履歴",
+        "intro": "詳細を表示する",
+        "loading": "アイテム価格を取得中……",
+        "title": "アイテムの価格詳細",
+        "show_all": "すべて",
+        "show_hq": "HQのみ",
+        "show_nq": "NQのみ",
+        "group_selectitem": "アイテム選択",
+        "table_show_type": "表示：",
+        "group_totaltable": "価格の詳細",
+        "intro_short": "詳細"
+      },
       "no_price": "価格がありません。",
       "no_price_reason": "予想の原因：価格が取得されていない/アイテムが実装されていない、またはその品質が存在しない/取引データが不足している",
       "no_price_received": "価格を取得できませんでした。",
