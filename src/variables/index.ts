@@ -10,7 +10,7 @@ export const qGroupInfo = {
   groupUrl: 'https://jq.qq.com/?_wv=1027&k=LIfWPbZg',
 }
 export const githubInfo = {
-  newIssueUrl: 'https://github.com/InfSein/hqhelper-dawntrail/issues/new/choose'
+  newIssueUrl: 'https://github.com/InfSein/hqhelper/issues/new/choose'
 }
 export const otherSocialInfo = {
   weiboUrl: 'https://weibo.com/u/7870808507',
