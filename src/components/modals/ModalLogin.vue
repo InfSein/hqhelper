@@ -480,7 +480,7 @@ const handleSubmit = async () => {
     </div>
 
     <template #action>
-      <div class="modal-submit-container">
+      <div class="app-modal-footer">
         <n-button
           type="primary"
           size="large"

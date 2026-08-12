@@ -21,7 +21,7 @@ defineProps({
 
 const cardClasses = computed(() => {
   return [
-    store.userConfig.custom_background ? 'glasscard' : ''
+    store.userConfig.custom_background ? 'app-glass-card' : ''
   ].join(' ')
 })
 </script>

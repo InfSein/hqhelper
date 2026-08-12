@@ -421,7 +421,7 @@ defineExpose({
   <FoldableCard card-key="game-gear-selection">
     <template #header>
       <i class="xiv square-3"></i>
-      <span class="card-title-text">{{ t('main.select_gear.title') }}</span>
+      <span class="app-card-title__text">{{ t('main.select_gear.title') }}</span>
       <n-popover placement="bottom-start" :trigger="isMobile ? 'click' : 'hover'">
         <template #trigger>
           <span class="ml-2.5 text-[14px]">{{ selectedAffixes }}</span>

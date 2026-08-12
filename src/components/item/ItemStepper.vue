@@ -16,9 +16,9 @@ defineProps({
 </script>
 
 <template>
-  <div class="item-selector">
+  <div class="grid gap-x-2.5 gap-y-1.25 grid-cols-[minmax(0,4fr)_minmax(0,3fr)] md:grid-cols-[minmax(0,8fr)_minmax(0,6fr)]">
     <ItemButton
-      class="item-button"
+      class="w-full"
       :item-info="itemInfo"
       show-icon show-name
       :btn-height="30"
@@ -33,26 +33,4 @@ defineProps({
 </template>
 
 <style scoped>
-/* All */
-.item-selector {
-  display: grid;
-  gap: 5px 10px;
-  grid-template-columns: minmax(0, 4fr) minmax(0, 3fr);
-
-  .item-button {
-    width: 100%;
-  }
-}
-
-/* Desktop */
-@media screen and (min-width: 768px) {
-  .item-selector {
-    display: grid;
-    grid-template-columns: minmax(0, 8fr) minmax(0, 6fr);
-  }
-}
-
-/* Mobile */
-@media screen and (max-width: 767px) {
-}
 </style>

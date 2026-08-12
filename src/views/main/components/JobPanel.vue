@@ -83,7 +83,7 @@ const isJobGroupAvailable = (group: number[]) => {
   <FoldableCard card-key="select-job" :description="cardDescription">
     <template #header>
       <i class="xiv square-2"></i>
-      <span class="card-title-text">{{ t('main.select_job.title') }}</span>
+      <span class="app-card-title__text">{{ t('main.select_job.title') }}</span>
     </template>
     <n-alert
       v-if="!patchSelected"

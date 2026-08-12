@@ -42,13 +42,13 @@ const dealRemarkContent = (str: string) => {
 </script>
 
 <template>
-  <div class="remark-container">
+  <div>
     <template
       v-for="(remark, index) in remarks"
       :key="index"
     >
       <span v-if="remark.startsWith('~REQUIRE')">
-        <div class="item small-font">
+        <div class="ml-[1em] flex flex-wrap items-center gap-[3px] font-small">
           {{ t('item.text.need_learn') }}
           <ItemSpan hide-pop-icon span-max-width="180px" :img-size="12" :item-info="getItemInfo(Number(remark.replace('~REQUIRE:', '')))" />
         </div>
@@ -80,23 +80,4 @@ const dealRemarkContent = (str: string) => {
 </template>
 
 <style scoped>
-/* All */
-.small-font {
-  font-size: calc(var(--n-font-size) - 2px);
-}
-.item {
-  margin-left: 1em;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 3px;
-}
-
-/* Desktop */
-@media screen and (min-width: 768px) {
-}
-
-/* Mobile */
-@media screen and (max-width: 767px) {
-}
 </style>

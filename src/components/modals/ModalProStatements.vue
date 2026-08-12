@@ -95,15 +95,16 @@ const handleSettingButtonClick = () => {
     @on-setting-button-clicked="handleSettingButtonClick"
   >
     <template #header>
-      <div class="card-title select-none">
+      <div class="app-card-title select-none">
         <n-icon><TableViewOutlined /></n-icon>
         <span class="title">
-          {{ t('common.appfunc.craft_statement') }}
+          {{ t('common.mquoted_view_statement') }}
         </span>
-        <span class="card-title-extra">
-          <n-tag type="info" size="small" round>PRO</n-tag>
+        <span class="app-card-title__extra">
+          <i class="xiv diaem-nm font-normal"></i>
+          {{ t('statement.text.pro_statement_intro') }}
         </span>
-        <div class="card-title-actions">
+        <div class="app-card-title__actions">
           <a href="javascript:void(0);" @click="handleResetPreparedItems">[{{ t('statement.text.reset_prepared') }}]</a>
           <a href="javascript:void(0);" @click="handleShowRecommendedProcesses">[{{ t('common.appfunc.recomm_process') }}]</a>
         </div>

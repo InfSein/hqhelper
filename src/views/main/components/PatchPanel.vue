@@ -91,9 +91,9 @@ const patchPatterns = computed(() => {
 <template>
   <FoldableCard card-key="game-patches" ref="containerCard" class="game-patches-panel">
     <template #header>
-      <div class="card-title">
+      <div class="app-card-title">
         <i class="xiv square-1"></i>
-        <span class="card-title-text">{{ t('main.select_patch.title') }}</span>
+        <span class="app-card-title__text">{{ t('main.select_patch.title') }}</span>
         <div style="margin-left: 1px;">
           <HelpButton
             icon="info"
@@ -112,7 +112,7 @@ const patchPatterns = computed(() => {
             </div>
           </HelpButton>
         </div>
-        <span class="card-title-extra">{{ cardDescription }}</span>
+        <span class="app-card-title__extra">{{ cardDescription }}</span>
       </div>
     </template>
     <n-flex justify="center">

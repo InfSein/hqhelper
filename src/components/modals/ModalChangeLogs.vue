@@ -190,7 +190,7 @@ const handleSwitchShowHistory = () => {
     </div>
 
     <template #action>
-      <div class="modal-submit-container">
+      <div class="app-modal-footer">
         <n-button v-if="!showHistory && !isMobile && AppStatus.IsDev" type="info" @click="handleCopyLatestPatchNode">
           <template #icon>
             <n-icon :component="CopyAllOutlined" />

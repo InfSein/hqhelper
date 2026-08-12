@@ -150,7 +150,7 @@ defineExpose({
       :name="block.id"
       :tab="block.name"
     >
-      <div class="container">
+      <div class="select-text">
         <ItemStatementTable
           v-model:items-prepared="itemsPrepared[block.preparedKey]"
           v-model:selected-item="selectedItem"
@@ -164,15 +164,14 @@ defineExpose({
       </div>
     </n-tab-pane>
   </n-tabs>
-  <div v-else ref="cspWrapper" class="csp-wrapper desktop" :style="`grid-template-columns: repeat(${statementBlocks.length}, minmax(0, 1fr));`">
+  <div v-else ref="cspWrapper" class="select-text grid gap-2.5" :style="`grid-template-columns: repeat(${statementBlocks.length}, minmax(0, 1fr));`">
     <GroupBox
       v-for="block in statementBlocks"
       :key="block.id"
       :id="block.id"
-      class="group"
     >
       <template #title>{{ block.name }}</template>
-      <div class="container">
+      <div class="flex flex-col gap-[5px] h-full select-text">
         <ItemStatementTable
           v-model:items-prepared="itemsPrepared[block.preparedKey]"
           v-model:selected-item="selectedItem"
@@ -189,30 +188,4 @@ defineExpose({
 </template>
 
 <style scoped>
-/* All */
-.csp-wrapper {
-  user-select: text;
-}
-.csp-wrapper.desktop {
-  display: grid;
-  gap: 10px;
-}
-.group .container {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  height: 100%;
-  user-select: text;
-}
-
-/* Desktop */
-@media screen and (min-width: 768px) {
-}
-
-/* Mobile */
-@media screen and (max-width: 767px) {
-  .card-title-actions {
-    flex-basis: 100%;
-  }
-}
 </style>

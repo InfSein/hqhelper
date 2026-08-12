@@ -55,7 +55,7 @@ const getJobName = () => {
 </script>
 
 <template>
-  <div class="container">
+  <div class="flex items-center">
     <XivFARImage
       v-show="!hideIcon"
       class="img"
@@ -69,8 +69,4 @@ const getJobName = () => {
 </template>
 
 <style scoped>
-.container {
-  display: flex;
-  align-items: center;
-}
 </style>

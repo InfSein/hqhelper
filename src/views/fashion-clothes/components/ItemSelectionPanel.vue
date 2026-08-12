@@ -35,7 +35,7 @@ const handleJoinWorkflow = () => {
     <FoldableCard card-key="ft-item-selection">
       <template #header>
         <i class="xiv square-1"></i>
-        <span class="card-title-text">{{ t('fchelper.select_fashion_cloth') }}</span>
+        <span class="app-card-title__text">{{ t('fchelper.select_fashion_cloth') }}</span>
       </template>
 
       <n-tabs v-model:value="patchModel" type="line" animated>

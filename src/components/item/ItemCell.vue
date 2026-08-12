@@ -42,19 +42,19 @@ const getTradeCost = (itemInfo: ItemInfo, amount: number) => {
 </script>
 
 <template>
-  <div v-if="showItemDetails" class="item-detail-container">
-    <div class="item-icon">
+  <div v-if="showItemDetails" class="flex gap-[5px] leading-[1.2]">
+    <div class="flex items-center">
       <XivFARImage
         :size="26"
         :src="itemInfo"
       />
     </div>
-    <div class="item-info">
-      <div class="item-name">
+    <div>
+      <div>
         <ItemSpan hide-icon :hide-pop-icon="hidePopIcon" :item-info="itemInfo" :span-max-width="itemSpanMaxWidth" :container-id="containerId" />
       </div>
-      <div class="item-details">
-        <div v-if="itemInfo.craftInfo?.jobId" class="cell crafter">
+      <div class="font-small flex gap-x-[3px]">
+        <div v-if="itemInfo.craftInfo?.jobId" class="flex items-center gap-[2px] crafter">
           <XivFARImage
             :src="XivJobs[itemInfo.craftInfo.jobId].job_icon_url"
             :size="12"
@@ -63,7 +63,7 @@ const getTradeCost = (itemInfo: ItemInfo, amount: number) => {
             {{ getJobName(XivJobs[itemInfo.craftInfo.jobId]) + ' ' + t('common.val_level', itemInfo.craftInfo.craftLevel) + '★'.repeat(itemInfo.craftInfo?.starCount || 0) }}
           </span>
         </div>
-        <div v-else-if="itemInfo.gatherInfo?.jobId" class="cell gatherer">
+        <div v-else-if="itemInfo.gatherInfo?.jobId" class="flex items-center gap-[2px] gatherer">
           <XivFARImage
             :src="XivJobs[itemInfo.gatherInfo.jobId].job_icon_url"
             :size="12"
@@ -72,7 +72,7 @@ const getTradeCost = (itemInfo: ItemInfo, amount: number) => {
             {{ getJobName(XivJobs[itemInfo.gatherInfo.jobId]) + ' ' + t('common.val_level', itemInfo.gatherInfo.level) + '★'.repeat(itemInfo.gatherInfo?.star || 0) }}
           </span>
         </div>
-        <div v-else-if="itemInfo.canReduceFrom?.length" class="cell reduce">
+        <div v-else-if="itemInfo.canReduceFrom?.length" class="flex items-center gap-[2px] reduce">
           <XivFARImage
             src="./ui/reduce.png"
             :size="12"
@@ -88,14 +88,14 @@ const getTradeCost = (itemInfo: ItemInfo, amount: number) => {
             container-style="gap: 0;"
           />
         </div>
-        <div v-else-if="itemInfo.isFishingItem" class="cell fishing">
+        <div v-else-if="itemInfo.isFishingItem" class="flex items-center gap-[2px] fishing">
           <XivFARImage
             :src="XivJobs[18].job_icon_url"
             :size="12"
           />
           <span>{{ getJobName(XivJobs[18]) }}</span>
         </div>
-        <div v-else-if="itemInfo.isCrystal" class="cell crystal">
+        <div v-else-if="itemInfo.isCrystal" class="flex items-center gap-[2px] crystal">
           <XivFARImage
             src="https://icon.nbbjack.com/060000/060151.png"
             :size="12"
@@ -115,34 +115,4 @@ const getTradeCost = (itemInfo: ItemInfo, amount: number) => {
 </template>
 
 <style scoped>
-/* All */
-.item-detail-container {
-  display: flex;
-  gap: 5px;
-  line-height: 1.2;
-
-  .item-icon {
-    display: flex;
-    align-items: center;
-  }
-  .item-details {
-    font-size: calc(var(--n-font-size) - 2px);
-    display: flex;
-    gap: 0 3px;
-    
-    .cell {
-      display: flex;
-      align-items: center;
-      gap: 2px;
-    }
-  }
-}
-
-/* Desktop */
-@media screen and (min-width: 768px) {
-}
-
-/* Mobile */
-@media screen and (max-width: 767px) {
-}
 </style>

@@ -4,6 +4,22 @@
 /* @import 'tailwindcss/utilities.css' layer(utilities); */
 @import 'tailwindcss/utilities.css';
 
+@theme {
+  --color-primary: var(--color-primary);
+  --color-info: var(--color-info);
+  --color-warning: var(--color-warning);
+  --color-error: var(--color-error);
+  --color-sub: var(--color-text-sub);
+  --color-bg: var(--color-background);
+  --color-bg-embedded: var(--color-background-embedded);
+  --color-bg-modal: var(--color-background-modal);
+  --color-bg-action: var(--color-background-action);
+  --color-bg-popover: var(--color-background-popover);
+  --color-bg-hover: var(--color-background-hover);
+  --color-base: var(--color-base);
+  --color-border: var(--color-border);
+}
+
 @utility container {
   width: auto;
 }

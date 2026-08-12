@@ -842,21 +842,9 @@ const handleSettingButtonClick = () => {
   }
 }
 
-/* Mobile */
-@media screen and (max-width: 767px) {
-  .query-options {
-    flex-direction: column;
-
-    #querier-search {
-      width: 100%;
-    }
-    #querier-itemlang {
-      width: 100%;
-    }
-    #querier-actions {
-      flex-wrap: wrap;
-      justify-content: end;
-    }
-  }
+.macro-name-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 </style>

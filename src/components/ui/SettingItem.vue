@@ -44,7 +44,7 @@ const warnings = computed(() => {
     <n-collapse arrow-placement="right">
       <n-collapse-item>
         <template #header>
-          <div class="item-title">{{ settingItem.label }}</div>
+          <div class="font-bold">{{ settingItem.label }}</div>
           <HelpButton
             v-if="settingItem.require_reload"
             icon="warning"
@@ -57,7 +57,7 @@ const warnings = computed(() => {
           <n-icon v-else></n-icon>
         </template>
 
-        <div class="item-descriptions">
+        <div class="select-text">
           <p
             v-for="(description, index) in descriptions"
             :key="settingItem.key + '-description-' + index"
@@ -69,7 +69,7 @@ const warnings = computed(() => {
         </div>
       </n-collapse-item>
     </n-collapse>
-    <div class="item-descriptions">
+    <div class="select-text">
       <p
         v-for="(warning, index) in warnings"
         :key="settingItem.key + '-warning-' + index"
@@ -79,7 +79,7 @@ const warnings = computed(() => {
         {{ warning.value }}
       </p>
     </div>
-    <div class="item-input">
+    <div class="mt-1.5">
       <n-switch
         v-if="settingItem.type ==='switch'"
         v-model:value="formData[settingItem.key]"
@@ -147,17 +147,5 @@ const warnings = computed(() => {
 <style scoped>
 :deep(.n-collapse-item__content-inner) {
   padding-top: 0 !important;
-}
-
-.setting-item {
-  .item-title {
-    font-weight: bold;
-  }
-  .item-descriptions {
-    user-select: text;
-  }
-  .item-input {
-    margin-top: 5px;
-  }
 }
 </style>

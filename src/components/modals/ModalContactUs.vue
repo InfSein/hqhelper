@@ -123,7 +123,7 @@ const handleClose = () => {
     </n-tabs>
     
     <template #action>
-      <div class="modal-submit-container">
+      <div class="app-modal-footer">
         <n-button type="error" size="large" @click="handleClose">
           <template #icon>
             <n-icon><CloseSharp /></n-icon>

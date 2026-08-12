@@ -153,7 +153,7 @@ const handleItemIconClick = async () => {
 </script>
 
 <template>
-  <div ref="itemSpanNode" class="container" :style="containerStyle">
+  <div ref="itemSpanNode" class="flex items-center gap-[3px]" :style="containerStyle">
     <div v-if="!itemInfo?.valid" class="item-text-container">未知物品({{itemInfo?.id}})</div>
     <template v-else>
       <XivFARImage
@@ -179,7 +179,7 @@ const handleItemIconClick = async () => {
         :pop-custom-width="275"
         :pop-trigger="popTrigger"
       >
-        <n-icon v-if="!hidePopIcon" class="item-popicon" size="14" color="#3b7fef"
+        <n-icon v-if="!hidePopIcon" class="item-popicon cursor-pointer" size="14" color="#3b7fef"
           @contextmenu="handleContextMenu"
           @touchstart.passive="handleTouchStart"
           @touchmove.passive="handleTouchMove"
@@ -206,10 +206,6 @@ const handleItemIconClick = async () => {
 
 <style scoped>
 .container {
-  display: flex;
-  align-items: center;
-  gap: 3px;
-
   .item-text-container {
     white-space: nowrap;
     overflow: hidden;
@@ -229,10 +225,6 @@ const handleItemIconClick = async () => {
       vertical-align: top;
       white-space: nowrap;
     }
-  }
-
-  .item-popicon {
-    cursor: pointer;
   }
 }
 </style>

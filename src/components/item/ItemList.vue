@@ -96,8 +96,8 @@ const listContainer = ref<HTMLElement>()
 </script>
 
 <template>
-  <div v-if="items.length" class="list-container" ref="listContainer" :style="getContainerStyles()">
-    <div v-if="!hideActions" class="actions">
+  <div v-if="items.length" class="flex flex-col gap-[3px]" ref="listContainer" :style="getContainerStyles()">
+    <div v-if="!hideActions" class="flex justify-end gap-[2px]">
       <ButtonCopyAsMacro
         :items="items"
         :container="listContainer"
@@ -115,8 +115,8 @@ const listContainer = ref<HTMLElement>()
         {{ t('common.go_back') }}
       </n-button>
     </div>
-    <div v-if="mode === 'default'" class="scroll-container" :style="getScrollbarStyles()">
-      <div class="items-container" :style="displayStyle">
+    <div v-if="mode === 'default'" class="scroll-container overflow-y-scroll" :style="getScrollbarStyles()">
+      <div class="flex flex-col gap-[5px]" :style="displayStyle">
         <ItemButton
           v-for="(item, index) in items"
           :key="'item-' + index"
@@ -142,7 +142,7 @@ const listContainer = ref<HTMLElement>()
       style="max-height: calc(100% - 25px);"
     />
   </div>
-  <div v-else-if="!hideEmpty" class="empty-container" :style="getContainerStyles()">
+  <div v-else-if="!hideEmpty" class="flex h-full justify-center items-center" :style="getContainerStyles()">
     <n-empty :description="t('common.no_required_items')" />
   </div>
 </template>
@@ -150,32 +150,6 @@ const listContainer = ref<HTMLElement>()
 <style scoped>
 :deep(.n-empty__description) {
   text-align: center;
-}
-.scroll-container {
-  overflow-y: scroll;
-
-  .items-container {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-}
-.list-container {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-
-  .actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 2px;
-  }
-}
-.empty-container {
-  display: flex;
-  height: 100%;
-  justify-content: center;
-  align-items: center;
 }
 
 /* Desktop only */

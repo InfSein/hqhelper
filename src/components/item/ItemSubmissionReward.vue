@@ -12,11 +12,11 @@ defineProps<ItemSubmissionRewardProps>()
 </script>
 
 <template>
-  <div v-if="itemInfo.collectInfo" class="isr-container">
-    <div style="text-align: left;">{{ t('common.collectability') }}</div>
-    <div style="text-align: right;">{{ t('common.reward') }}</div>
+  <div v-if="itemInfo.collectInfo" class="ml-[1em] w-fit grid grid-cols-2 gap-x-1">
+    <div class="text-left">{{ t('common.collectability') }}</div>
+    <div class="text-right">{{ t('common.reward') }}</div>
     <template v-for="(reward, rewardIndex) in itemInfo.collectInfo.rewards" :key="`collect-reward-${rewardIndex}`">
-      <div style="text-align: left;">
+      <div class="text-left">
         {{ reward.collectabilityMin }}～{{ reward.collectabilityMax ?? '' }}
       </div>
       <div class="flex items-center justify-end">
@@ -29,11 +29,4 @@ defineProps<ItemSubmissionRewardProps>()
 </template>
 
 <style scoped>
-.isr-container {
-  margin-left: 1em;
-  width: fit-content;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  column-gap: 4px;
-}
 </style>

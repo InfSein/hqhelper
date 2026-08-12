@@ -120,10 +120,12 @@ const handleSettingButtonClick = () => {
     @on-setting-button-clicked="handleSettingButtonClick"
   >
     <template #header>
-      <div class="card-title select-none">
-        <n-icon><AllInclusiveSharp /></n-icon>
-        <span class="title">{{ t('common.appfunc.recomm_process') }}</span>
-        <div class="card-title-actions">
+      <div class="app-card-title select-none">
+        <n-icon><FormatListNumberedRtlSharp /></n-icon>
+        <span class="title">
+          {{ t('common.appfunc.recomm_process') }}
+        </span>
+        <div class="app-card-title__actions">
           <a href="javascript:void(0);" @click="handleCollapseOrUncollapseAllBlocks">[{{ isBlocksAllCollapsed() ? t('common.expand_all') : t('common.fold_all') }}]</a>
         </div>
       </div>
@@ -138,7 +140,7 @@ const handleSettingButtonClick = () => {
     />
 
     <template #action>
-      <div class="modal-submit-container">
+      <div class="app-modal-footer">
         <n-button type="info" size="large" @click="handleCopyProcesses">
           <template #icon>
             <n-icon><CopyAllOutlined /></n-icon>

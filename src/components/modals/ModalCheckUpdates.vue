@@ -391,10 +391,12 @@ const handleSettingButtonClick = () => {
       <FoldableCard class="card proxy" card-key="modal-cu-proxy" card-size="small" disable-glass show-card-border>
         <template #header>
           <div class="card-title">
-            <n-icon><VpnLockRound /></n-icon>
-            <span class="title">{{ t('update.proxy.title') }}</span>
-            <div class="card-title-actions font-small">
-              <a href="javascript:void(0)" @click="handleShowProxySiteStatus">[{{ t('update.text.proxy_status_view') }}]</a>
+            <div class="app-card-title">
+              <n-icon><VpnLockRound /></n-icon>
+              <span class="title">{{ t('common.setting') }}</span>
+              <div class="app-card-title__actions font-small">
+                <a href="javascript:void(0)" @click="handleShowProxySiteStatus">[{{ t('update.text.proxy_status_view') }}]</a>
+              </div>
             </div>
           </div>
         </template>

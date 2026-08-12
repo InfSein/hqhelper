@@ -64,12 +64,12 @@ const handleShowItemPriceDetail = () => {
     @on-setting-button-clicked="handleSettingButtonClick"
   >
     <template #header>
-      <div class="card-title select-none">
-        <n-icon><AttachMoneyOutlined /></n-icon>
+      <div class="app-card-title select-none">
+        <n-icon><BalanceOutlined /></n-icon>
         <span class="title">
           {{ t('statistics.group.cost_and_benefit.title') }}
         </span>
-        <div class="card-title-actions">
+        <div class="app-card-title__actions">
           <a href="javascript:void(0);" @click="handleShowItemPriceDetail">[{{ t('item.price.detail_table.intro') }}]</a>
         </div>
       </div>

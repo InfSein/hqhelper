@@ -150,16 +150,16 @@ const handleItemButtonClick = async () => {
       @click="handleItemButtonClick"
     >
       <slot>
-        <div v-if="itemInfo?.id" class="item-container">
-          <div v-if="showIcon" class="item-icon">
+        <div v-if="itemInfo?.id" class="w-full h-full p-[5px] flex items-center gap-[5px]">
+          <div v-if="showIcon" class="flex">
             <XivFARImage
               :src="itemInfo"
               :size="iconSize"
             />
           </div>
 
-          <div v-if="showName" class="item-info" :style="{ maxWidth: itemInfoMaxWidth }">
-            <div class="item-name-container">
+          <div v-if="showName" class="ml-auto flex flex-col gap-[3px] whitespace-nowrap overflow-hidden text-ellipsis" :style="{ maxWidth: itemInfoMaxWidth }">
+            <div class="flex items-center gap-[2px] justify-end">
               <XivFARImage
                 v-if="showCollectorIcon && itemInfo.craftInfo?.jobId"
                 :src="XivJobs[itemInfo.craftInfo?.jobId].job_icon_url"
@@ -170,27 +170,27 @@ const handleItemButtonClick = async () => {
                 :src="XivJobs[itemInfo.gatherInfo?.jobId].job_icon_url"
                 :size="14"
               />
-              <div class="item-name">
+              <div class="whitespace-nowrap overflow-hidden text-ellipsis">
                 {{ getItemName() }}
               </div>
             </div>
-            <div v-if="showAmount" class="item-amount">
+            <div v-if="showAmount" class="text-end">
               x {{ itemAmount }}
             </div>
           </div>
         </div>
         <div v-else>
-          <div v-if="showIcon" class="item-icon">
+          <div v-if="showIcon" class="flex">
             &nbsp;
           </div>
 
-          <div v-if="showName" class="item-info">
-            <div class="item-name-container">
-              <div class="item-name">
+          <div v-if="showName" class="ml-auto flex flex-col gap-[3px] whitespace-nowrap overflow-hidden text-ellipsis">
+            <div class="flex items-center gap-[2px] justify-end">
+              <div class="whitespace-nowrap overflow-hidden text-ellipsis">
                 &nbsp;
               </div>
             </div>
-            <div v-if="showAmount" class="item-amount">
+            <div v-if="showAmount" class="text-end">
               &nbsp;
             </div>
           </div>
@@ -217,48 +217,8 @@ const handleItemButtonClick = async () => {
   width: 100%;
   height: 100%;
 }
-.small-font {
-  font-size: calc(var(--n-font-size) - 2px);
-}
 .item-button {
   padding: 1px;
-
-  .item-container {
-    width: 100%;
-    height: 100%;
-    padding: 5px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-
-    .item-icon {
-      display: flex;
-    }
-    .item-info {
-      margin-left: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-
-      .item-name-container {
-        display: flex;
-        align-items: center;
-        gap: 2px;
-        justify-content: end;
-        .item-name {
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-      }
-      div {
-        text-align: end;
-      }
-    }
-  }
 }
 .item-popover {
   display: flex;

@@ -45,13 +45,13 @@ const {
     <FoldableCard card-key="ft-statistics">
       <template #header>
         <i class="xiv square-2"></i>
-        <span class="card-title-text">{{ t('statistics.view_statistics') }}</span>
-        <a class="card-title-extra" href="javascript:void(0);" @click="showStatement">{{ t('common.mquoted_view_statement') }}</a>
-        <a class="card-title-extra" href="javascript:void(0);" :disabled="updatingPrice" :style="updatingPrice ? 'cursor: not-allowed; color: gray;' : 'cursor: pointer;'" @click="handleAnalysisItemPrices">[{{ updatingPrice ? t('common.loading') : t('statistics.group.cost_and_benefit.title') }}]</a>
+        <span class="app-card-title__text">{{ t('statistics.view_statistics') }}</span>
+        <a class="app-card-title__extra" href="javascript:void(0);" @click="showStatement">{{ t('common.mquoted_view_statement') }}</a>
+        <a class="app-card-title__extra" href="javascript:void(0);" :disabled="updatingPrice" :style="updatingPrice ? 'cursor: not-allowed; color: gray;' : 'cursor: pointer;'" @click="handleAnalysisItemPrices">[{{ updatingPrice ? t('common.loading') : t('statistics.group.cost_and_benefit.title') }}]</a>
       </template>
 
-      <div class="pre">
-        <div class="preset-item">
+      <div class="mb-[15px]">
+        <div class="w-fit leading-[1.2] flex items-center gap-[5px] p-[3px] border border-(--n-color-target) rounded-(--n-border-radius)">
           <n-switch v-model:value="hidePrecraftMaterials" :round="false" size="small" />
           <div>{{ t('statistics.preference.show_direct_materials_only') }}</div>
         </div>
@@ -79,18 +79,4 @@ const {
 </template>
 
 <style scoped>
-.pre {
-  margin-bottom: 15px;
-
-  .preset-item {
-    width: fit-content;
-    line-height: 1.2;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    padding: 3px;
-    border: 1px solid var(--n-color-target);
-    border-radius: var(--n-border-radius);
-  }
-}
 </style>

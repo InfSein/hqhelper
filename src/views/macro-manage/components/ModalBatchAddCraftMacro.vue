@@ -293,7 +293,7 @@ const getActionsSummary = (craftActions: number[]) => {
     </div>
 
     <template #action>
-      <div class="modal-submit-container">
+      <div class="app-modal-footer">
         <n-button type="primary" @click="handleRecognize">
           <template #icon>
             <n-icon><ContentPasteSearchOutlined /></n-icon>
@@ -322,7 +322,7 @@ const getActionsSummary = (craftActions: number[]) => {
       </div>
 
       <template #action>
-        <div class="modal-submit-container">
+        <div class="app-modal-footer">
           <n-button type="primary" @click="handleConfirm">
             <template #icon>
               <n-icon><DoneOutlined /></n-icon>

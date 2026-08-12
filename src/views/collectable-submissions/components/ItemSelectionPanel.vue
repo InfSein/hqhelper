@@ -98,7 +98,7 @@ const handleJoinWorkflow = () => {
       <FoldableCard card-key="ft-item-selection">
         <template #header>
           <i class="xiv square-1"></i>
-          <span class="card-title-text">{{ t('cs_helper.select_collectable_submission') }}</span>
+          <span class="app-card-title__text">{{ t('cs_helper.select_collectable_submission') }}</span>
         </template>
 
         <n-tabs v-model:value="workState.mode" type="segment" animated>

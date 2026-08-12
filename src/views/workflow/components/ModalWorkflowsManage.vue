@@ -74,7 +74,7 @@ const handleSave = () => {
     </div>
 
     <template #action>
-      <div class="modal-submit-container">
+      <div class="app-modal-footer">
         <n-button type="primary" size="large" @click="handleSave">
           <template #icon>
             <n-icon><SaveOutlined /></n-icon>

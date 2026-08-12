@@ -60,7 +60,7 @@ const handleOpenCafeMap = () => {
     <div class="map">
       <div class="title">
         <div class="main">{{ getMapName() }}</div>
-        <div class="subs">{{ getMapSubName() }}</div>
+        <div class="subs text-sub">{{ getMapSubName() }}</div>
       </div>
       <XivMap
         :map-data="props.mapData"
@@ -111,7 +111,6 @@ const handleOpenCafeMap = () => {
     }
     .subs {
       font-size: calc(var(--n-font-size) - 2px);
-      color: var(--color-text-sub);
     }
   }
   .footer {

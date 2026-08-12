@@ -59,7 +59,7 @@ const handleExportToNgaBbsCode = (items : ItemInfo[]) => {
     <FoldableCard card-key="ft-item-selection">
       <template #header>
         <i class="xiv square-1"></i>
-        <span class="card-title-text">{{ t('ft_helper.select_food_and_tinc') }}</span>
+        <span class="app-card-title__text">{{ t('ft_helper.select_food_and_tinc') }}</span>
       </template>
 
       <n-tabs v-model:value="patchModel" type="line" animated>

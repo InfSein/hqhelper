@@ -47,23 +47,10 @@ const onImageLoadError = () => {
     class="select-none"
     @error="onImageLoadError"
   />
-  <div v-else class="err-cell" :style="`--size: ${size}px; font-size: ${(size??14) / 2 + 1}px`">
+  <div v-else class="inline-flex shrink-0 items-center justify-center select-none overflow-hidden text-base bg-sub rounded w-[var(--size)] h-[var(--size)]" :style="`--size: ${size}px; font-size: ${(size??14) / 2 + 1}px`">
     {{ imgData.alt }}
   </div>
 </template>
 
 <style scoped>
-.err-cell {
-  display: inline-flex;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  user-select: none;
-  overflow: hidden;
-  color: var(--color-base);
-  background-color: var(--color-text-sub);
-  border-radius: 4px;
-  width: var(--size);
-  height: var(--size);
-}
 </style>

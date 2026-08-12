@@ -652,7 +652,7 @@ const handleOnScroll = (e: Event) => {
               :key="'time-limit-' + timeLimitIndex"
             >
               <div>{{ timeLimit.start }} ~ {{ timeLimit.end }}</div>
-              <div class="color-success">{{ timeCanGather(timeLimit) }}</div>
+              <div class="text-primary">{{ timeCanGather(timeLimit) }}</div>
             </div>
           </div>
           <div class="content" v-if="itemInfo.gatherInfo?.folkloreId || itemInfo?.gatherInfo?.requirement">

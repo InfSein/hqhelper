@@ -156,10 +156,10 @@ const otherMaterials = computed(() => {
 </script>
 
 <template>
-  <div class="cs-wrapper">
-    <GroupBox id="common-precrafts-group" class="group">
+  <div class="flex flex-col md:grid md:grid-cols-3 gap-y-3.75 gap-x-2.5">
+    <GroupBox id="common-precrafts-group">
       <template #title>{{ t('statistics.group.precrafts') }}</template>
-      <div class="container">
+      <div>
         <ItemList
           :items="precrafts"
           :list-height="listHeight ?? (isMobile ? undefined : 245)"
@@ -168,11 +168,11 @@ const otherMaterials = computed(() => {
       </div>
     </GroupBox>
     <GroupBox
-      id="tome-script-group" class="group"
+      id="tome-script-group"
       :title="t('statistics.group.trade_items')"
       :descriptions="materialTargetDescription"
     >
-      <div class="container">
+      <div>
         <ItemList
           :items="tomeScriptItems"
           :list-height="listHeight ?? (isMobile ? undefined : 245)"
@@ -180,11 +180,11 @@ const otherMaterials = computed(() => {
       </div>
     </GroupBox>
     <GroupBox
-      id="crystals-group" class="group"
+      id="crystals-group"
       :title="t('statistics.group.crystal')"
       :descriptions="materialTargetDescription"
     >
-      <div class="container">
+      <div>
         <ItemList
           :items="crystals"
           :list-height="listHeight ?? (isMobile ? undefined : 245)"
@@ -192,11 +192,11 @@ const otherMaterials = computed(() => {
       </div>
     </GroupBox>
     <GroupBox
-      id="common-gatherings-group" class="group"
+      id="common-gatherings-group"
       :title="t('statistics.group.common_gathering2')"
       :descriptions="materialTargetDescription"
     >
-      <div class="container">
+      <div>
         <ItemList
           :items="gatheringsCommon"
           :list-height="listHeight ?? (isMobile ? undefined : 245)"
@@ -205,11 +205,11 @@ const otherMaterials = computed(() => {
       </div>
     </GroupBox>
     <GroupBox
-      id="timed-gatherings-group" class="group"
+      id="timed-gatherings-group"
       :title="t('statistics.group.time_limited_gathering_and_aethersands')"
       :descriptions="materialTargetDescription"
     >
-      <div class="container">
+      <div>
         <ItemList
           :items="gatheringsTimed"
           :list-height="listHeight ?? (isMobile ? undefined : 245)"
@@ -218,14 +218,14 @@ const otherMaterials = computed(() => {
       </div>
     </GroupBox>
     <GroupBox
-      id="other-materials-group" class="group"
+      id="other-materials-group"
       :title="t('statistics.group.other_materials.title')"
       :descriptions="[
         t('statistics.group.other_materials.tooltip'),
         ...materialTargetDescription
       ]"
     >
-      <div class="container">
+      <div>
         <ItemList
           :items="otherMaterials"
           :list-height="listHeight ?? (isMobile ? undefined : 245)"
@@ -237,24 +237,4 @@ const otherMaterials = computed(() => {
 </template>
 
 <style scoped>
-.cs-wrapper {
-  row-gap: 15px;
-  column-gap: 10px;
-}
-/* Desktop */
-@media screen and (min-width: 768px) {
-  .cs-wrapper {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    grid-auto-flow: row;
-  }
-}
-
-/* Mobile */
-@media screen and (max-width: 767px) {
-  .cs-wrapper {
-    display: flex;
-    flex-direction: column;
-  }
-}
 </style>

@@ -160,7 +160,7 @@ const handleClose = () => {
     </div>
 
     <template #action>
-      <div class="modal-submit-container">
+      <div class="app-modal-footer">
         <TooltipButton
           type="primary"
           :icon="ContentCopyRound"

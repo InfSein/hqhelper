@@ -206,7 +206,7 @@ const isItemGatherableNow = (item: ItemInfo) => {
               >
                 <span style="margin-right: 1px;">(</span>
                 <span>{{ t('recomm_process.text.time_limit_with_val', item.gatherInfo.timeLimitDescription) }}</span>
-                <span v-if="isItemGatherableNow(item)" class="color-success" style="margin-left: 3px;">{{ t('common.gatherable_now') }}</span>
+                <span v-if="isItemGatherableNow(item)" class="text-primary" style="margin-left: 3px;">{{ t('common.gatherable_now') }}</span>
                 <span style="margin-left: 1px;">)</span>
               </div>
               <div

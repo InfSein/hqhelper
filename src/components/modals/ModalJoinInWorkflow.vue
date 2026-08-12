@@ -165,7 +165,7 @@ const handleSubmit = () => {
     </div>
 
     <template #action>
-      <div class="modal-submit-container">
+      <div class="app-modal-footer">
         <n-button type="primary" @click="handleSubmit">
           <template #icon>
             <n-icon><DoneOutlined /></n-icon>

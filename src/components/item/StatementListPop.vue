@@ -96,19 +96,19 @@ const handleCopyList = async () => {
     </template>
 
     <div class="wrapper" ref="listPopContainer">
-      <div class="pop-title font-big">
+      <div class="flex items-center gap-[3px] font-big">
         <n-icon :size="16"><ViewListSharp /></n-icon>
         <span>{{ t('common.list') }}</span>
       </div>
       <n-divider style="margin: 0 0 3px;" />
-      <div class="groupboxes-container">
+      <div class="flex flex-col gap-2.5 my-3.75">
         <GroupBox
           :title="t('common.options')"
-          class="config-container"
+          class="mb-[3px]"
         >
-          <div class="config-item">
+          <div class="ml-[0.5em]">
             <div class="title">{{ t('statement.list.use_amount_of') }}</div>
-            <div class="content">
+            <div class="ml-[1em]">
               <n-radio-group
                 v-model:value="amountRule"
                 name="amount-rule"
@@ -129,12 +129,12 @@ const handleCopyList = async () => {
         <GroupBox
           :title="t('common.content')"
         >
-          <div class="actions-container">
+          <div class="text-end">
             <ButtonCopyAsMacro
               :items="items"
               :container="listPopContainer"
             />
-            <n-button size="tiny" @click="handleCopyList">
+            <n-button size="tiny" class="ml-[3px]" @click="handleCopyList">
               <template #icon>
                 <n-icon><CopyAllOutlined /></n-icon>
               </template>
@@ -156,33 +156,4 @@ const handleCopyList = async () => {
 </template>
 
 <style scoped>
-.wrapper {
-  .pop-title {
-    display: flex;
-    align-items: center;
-    gap: 3px;
-  }
-  .groupboxes-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin: 15px 0;
-  }
-  .config-container {
-    margin-bottom: 3px;
-
-    .config-item {
-      margin-left: 0.5em;
-      .content {
-        margin-left: 1em;
-      }
-    }
-  }
-  .actions-container {
-    text-align: end;
-    button {
-      margin-left: 3px;
-    }
-  }
-}
 </style>

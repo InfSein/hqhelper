@@ -60,7 +60,7 @@ const folderText = computed(() => {
 
 const cardClasses = computed(() => {
   return [
-    (store.userConfig.custom_background && !props.disableGlass) ? 'glasscard' : ''
+    (store.userConfig.custom_background && !props.disableGlass) ? 'app-glass-card' : ''
   ].join(' ')
 })
 const cardContentStyles = computed(() => {
@@ -106,10 +106,10 @@ defineExpose({
   <n-card :id="'card-'+cardKey" :size="cardSize" :class="cardClasses" :content-style="cardContentStyles" embedded :bordered="showCardBorder">
     <template #header>
       <slot name="header">{{ title }}</slot>
-      <span v-if="description" class="description">{{ description }}</span>
+      <span v-if="description" class="ml-[10px] text-[14px]">{{ description }}</span>
     </template>
     <template #header-extra>
-      <div class="extra-header-container">
+      <div class="app-extra-header">
         <n-button
           v-for="(btn, btnIndex) in extraHeaderButtons"
           :key="btnIndex"
@@ -135,12 +135,4 @@ defineExpose({
 </template>
 
 <style scoped>
-.description {
-  margin-left: 10px;
-  font-size: 14px;
-}
-.extra-header-container {
-  display: flex;
-  align-items: center;
-}
 </style>
