@@ -15,12 +15,12 @@ defineProps<ItemPriceLogCellProps>()
 <template>
   <div class="iplc-container">
     <n-button>
-      <div class="w-full h-[64px] grid grid-cols-[auto_1fr] items-center">
-        <div class="text-left flex flex-col gap-[2px]">
+      <div class="w-full h-16 grid grid-cols-[auto_1fr] items-center">
+        <div class="text-left flex flex-col gap-0.5">
           <div>{{ worldName }}</div>
           <div v-if="buyerName" class="text-xs">{{ buyerName }}</div>
         </div>
-        <div class="text-right flex flex-col gap-[2px]">
+        <div class="text-right flex flex-col">
           <div>
             <span class="text-[20px]">{{ pricePerUnit.toLocaleString() }}</span>
             <i class="xiv gil"></i>

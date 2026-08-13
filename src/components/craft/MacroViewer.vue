@@ -47,7 +47,7 @@ const handleCopy = async (text: string) => {
 
 <template>
   <div class="w-full h-full flex flex-col">
-    <div v-if="!hideTabs" class="flex gap-[5px] flex-wrap h-fit">
+    <div v-if="!hideTabs" class="flex gap-1.25 flex-wrap h-fit">
       <n-button
         size="small"
         v-for="(group, groupIndex) in macroGroups"
@@ -94,11 +94,11 @@ const handleCopy = async (text: string) => {
         }"
       >
         <div
-          class="flex gap-[5px]"
+          class="flex gap-1.25"
           v-for="(line, lineIndex) in group"
           :key="`${groupIndex}-macro-line-${lineIndex}`"
         >
-          <div class="w-[20px] text-right select-none text-gray-500">{{ lineIndex + 1 }}</div>
+          <div class="w-5 text-right select-none text-gray-500">{{ lineIndex + 1 }}</div>
           <div class="flex flex-nowrap" :style="contentExtraStyle">{{ line }}</div>
         </div>
       </div>

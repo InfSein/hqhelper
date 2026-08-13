@@ -19,17 +19,11 @@ const showModal = defineModel<boolean>('show', { required: true })
     :title="t('common.appfunc.about_app')"
     :height="isMobile ? '650px' : '600px'"
   >
-    <div class="wrapper" :style="{ height: isMobile ? '550px' : '500px' }">
+    <div class="flex flex-col select-text overflow-y-auto" :style="{ height: isMobile ? '550px' : '500px' }">
       <AboutApp />
     </div>
   </MyModal>
 </template>
 
 <style scoped>
-.wrapper {
-  display: flex;
-  flex-direction: column;
-  user-select: text;
-  overflow-y: auto;
-}
 </style>

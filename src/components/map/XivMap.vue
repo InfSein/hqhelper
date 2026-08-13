@@ -62,7 +62,7 @@ const getAetheryteName = (aetheryte: XivMapAetheryteInfo) => {
                 :style="getPositionStyle(aetheryte.x, aetheryte.y)"
               />
             </template>
-            <div class="text-center text-[12px]">
+            <div class="text-center text-xs">
               <p>{{ getAetheryteName(aetheryte) }}</p>
             </div>
           </n-tooltip>

@@ -150,7 +150,7 @@ const handleItemButtonClick = async () => {
       @click="handleItemButtonClick"
     >
       <slot>
-        <div v-if="itemInfo?.id" class="w-full h-full p-[5px] flex items-center gap-[5px]">
+        <div v-if="itemInfo?.id" class="w-full h-full p-1.25 flex items-center gap-1.25">
           <div v-if="showIcon" class="flex">
             <XivFARImage
               :src="itemInfo"
@@ -158,8 +158,8 @@ const handleItemButtonClick = async () => {
             />
           </div>
 
-          <div v-if="showName" class="ml-auto flex flex-col gap-[3px] whitespace-nowrap overflow-hidden text-ellipsis" :style="{ maxWidth: itemInfoMaxWidth }">
-            <div class="flex items-center gap-[2px] justify-end">
+          <div v-if="showName" class="ml-auto flex flex-col gap-0.75 whitespace-nowrap overflow-hidden text-ellipsis" :style="{ maxWidth: itemInfoMaxWidth }">
+            <div class="flex items-center gap-0.5 justify-end">
               <XivFARImage
                 v-if="showCollectorIcon && itemInfo.craftInfo?.jobId"
                 :src="XivJobs[itemInfo.craftInfo?.jobId].job_icon_url"
@@ -184,8 +184,8 @@ const handleItemButtonClick = async () => {
             &nbsp;
           </div>
 
-          <div v-if="showName" class="ml-auto flex flex-col gap-[3px] whitespace-nowrap overflow-hidden text-ellipsis">
-            <div class="flex items-center gap-[2px] justify-end">
+          <div v-if="showName" class="ml-auto flex flex-col gap-0.75 whitespace-nowrap overflow-hidden text-ellipsis">
+            <div class="flex items-center gap-0.5 justify-end">
               <div class="whitespace-nowrap overflow-hidden text-ellipsis">
                 &nbsp;
               </div>

@@ -31,7 +31,7 @@ const itemCraftRequires = computed(() => {
 </script>
 
 <template>
-  <div class="bordered" :class="level === 1 ? 'hover:bg-bg-hover rounded-[4px] py-px px-1' : ''">
+  <div class="bordered" :class="level === 1 ? 'hover:bg-bg-hover rounded py-px px-1' : ''">
     <ItemSpan v-if="level !== 0" :item-info="item" :amount="amount" show-amount />
     <div v-if="item.craftRequires?.length" class="relative">
       <div

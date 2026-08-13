@@ -171,7 +171,7 @@ defineExpose({
       :id="block.id"
     >
       <template #title>{{ block.name }}</template>
-      <div class="flex flex-col gap-[5px] h-full select-text">
+      <div class="flex flex-col gap-1.25 h-full select-text">
         <ItemStatementTable
           v-model:items-prepared="itemsPrepared[block.preparedKey]"
           v-model:selected-item="selectedItem"

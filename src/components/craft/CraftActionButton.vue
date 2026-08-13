@@ -65,7 +65,7 @@ const handleButtonClick = () => {
       </n-button>
     </template>
     <div class="select-text">
-      <div class="flex items-start gap-[5px] mt-[2%]">
+      <div class="flex items-start gap-1.25 mt-[2%]">
         <XivFARImage
           :src="imgUrl"
           :size="34"

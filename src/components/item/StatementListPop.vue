@@ -96,7 +96,7 @@ const handleCopyList = async () => {
     </template>
 
     <div class="wrapper" ref="listPopContainer">
-      <div class="flex items-center gap-[3px] font-big">
+      <div class="flex items-center gap-0.75 font-big">
         <n-icon :size="16"><ViewListSharp /></n-icon>
         <span>{{ t('common.list') }}</span>
       </div>
@@ -104,7 +104,7 @@ const handleCopyList = async () => {
       <div class="flex flex-col gap-2.5 my-3.75">
         <GroupBox
           :title="t('common.options')"
-          class="mb-[3px]"
+          class="mb-0.75"
         >
           <div class="ml-[0.5em]">
             <div class="title">{{ t('statement.list.use_amount_of') }}</div>
@@ -134,7 +134,7 @@ const handleCopyList = async () => {
               :items="items"
               :container="listPopContainer"
             />
-            <n-button size="tiny" class="ml-[3px]" @click="handleCopyList">
+            <n-button size="tiny" class="ml-0.75" @click="handleCopyList">
               <template #icon>
                 <n-icon><CopyAllOutlined /></n-icon>
               </template>

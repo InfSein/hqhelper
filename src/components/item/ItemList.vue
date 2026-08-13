@@ -96,8 +96,8 @@ const listContainer = ref<HTMLElement>()
 </script>
 
 <template>
-  <div v-if="items.length" class="flex flex-col gap-[3px]" ref="listContainer" :style="getContainerStyles()">
-    <div v-if="!hideActions" class="flex justify-end gap-[2px]">
+  <div v-if="items.length" class="flex flex-col gap-0.75" ref="listContainer" :style="getContainerStyles()">
+    <div v-if="!hideActions" class="flex justify-end gap-0.5">
       <ButtonCopyAsMacro
         :items="items"
         :container="listContainer"
@@ -116,7 +116,7 @@ const listContainer = ref<HTMLElement>()
       </n-button>
     </div>
     <div v-if="mode === 'default'" class="scroll-container overflow-y-scroll" :style="getScrollbarStyles()">
-      <div class="flex flex-col gap-[5px]" :style="displayStyle">
+      <div class="flex flex-col gap-1.25" :style="displayStyle">
         <ItemButton
           v-for="(item, index) in items"
           :key="'item-' + index"

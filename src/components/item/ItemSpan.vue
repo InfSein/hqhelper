@@ -153,7 +153,7 @@ const handleItemIconClick = async () => {
 </script>
 
 <template>
-  <div ref="itemSpanNode" class="flex items-center gap-[3px]" :style="containerStyle">
+  <div ref="itemSpanNode" class="flex items-center gap-0.75" :style="containerStyle">
     <div v-if="!itemInfo?.valid" class="item-text-container">未知物品({{itemInfo?.id}})</div>
     <template v-else>
       <XivFARImage

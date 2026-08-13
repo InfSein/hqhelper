@@ -114,13 +114,13 @@ const handleSwitchShowHistory = () => {
     max-width="650px"
     :height="isMobile ? '650px' : '620px'"
   >
-    <div v-if="!showHistory" class="wrapper " :style="wrapperStyle">
+    <div v-if="!showHistory" class="flex flex-col gap-2.5 select-text overflow-y-auto" :style="wrapperStyle">
       <n-card embedded size="small" class="h-full" content-style="height: 100%;">
         <div class="wrapper-latest-update">
           <n-h1 prefix="bar" class="latest-update-baseinfo">
             <n-text>v{{ latestPatchNote.version }}</n-text>
             <n-text depth="3" class="date">{{ latestPatchNote.date }}</n-text>
-            <n-text v-if="!isMobile" depth="3" class="data-version">
+            <n-text v-if="!isMobile" depth="3" class="text-sm absolute right-0 bottom-0.75">
               ({{ latestPatchGameVerText }})
             </n-text>
           </n-h1>
@@ -152,7 +152,7 @@ const handleSwitchShowHistory = () => {
         </div>
       </n-card>
     </div>
-    <div v-else class="wrapper flex" :style="wrapperStyle">
+    <div v-else class="flex flex-col gap-2.5 select-text overflow-y-auto" :style="wrapperStyle">
       <n-card
         v-for="(patchlog, logIndex) in historyChangelogs"
         :key="patchlog.version"
@@ -233,13 +233,6 @@ const handleSwitchShowHistory = () => {
   padding: 0 var(--n-padding-left) var(--n-padding-bottom) var(--n-padding-left);
 }
 /* All */
-.wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  user-select: text;
-  overflow-y: auto;
-}
 .wrapper-latest-update {
   display: flex;
   flex-direction: column;
@@ -252,11 +245,6 @@ const handleSwitchShowHistory = () => {
     .date {
       padding-left: 8px;
       font-size: 14px;
-    }
-    .data-version {
-      font-size: 14px;
-      position: absolute;
-      right: 0; bottom: 3px;
     }
   }
   .latest-update-content {

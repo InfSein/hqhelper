@@ -297,7 +297,7 @@ const naiveUIThemeOverrides = computed(() : GlobalThemeOverrides => {
             <router-view />
           </n-layout>
 
-          <AccountView v-if="!isMobile && appMode !== 'overlay'" trigger-class="absolute! top-[36px] right-[20px] z-[2000]!" />
+          <AccountView v-if="!isMobile && appMode !== 'overlay'" trigger-class="absolute! top-9 right-5 z-[2000]!" />
 
           <div
             v-if="AppStatus.IsDev && !isMobile"

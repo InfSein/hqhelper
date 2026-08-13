@@ -93,7 +93,7 @@ const handleJoinWorkflow = () => {
 </script>
 
 <template>
-  <div class="panel-wrapper">
+  <div class="flex flex-col gap-3.75">
     <div>
       <FoldableCard card-key="ft-item-selection">
         <template #header>
@@ -311,11 +311,6 @@ const handleJoinWorkflow = () => {
 
 <style scoped>
 /* All */
-.panel-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
 .item-selection-container {
   display: flex;
   flex-direction: column;

@@ -507,7 +507,7 @@ const onClickoutside = () => {
         <n-button
           :ghost="!props.selected"
           :disabled="props.disabled"
-          class="job-button"
+          class="p-px"
           :color="props.btnColor"
           :style="{ width: `${btnSize}px`, height: `${btnSize}px` }"
         >
@@ -545,8 +545,5 @@ const onClickoutside = () => {
   left: initial;
   cursor: pointer;
   user-select: none;
-}
-.job-button {
-  padding: 1px;
 }
 </style>

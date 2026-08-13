@@ -50,8 +50,8 @@ const {
         <a class="app-card-title__extra" href="javascript:void(0);" :disabled="updatingPrice" :style="updatingPrice ? 'cursor: not-allowed; color: gray;' : 'cursor: pointer;'" @click="handleAnalysisItemPrices">[{{ updatingPrice ? t('common.loading') : t('statistics.group.cost_and_benefit.title') }}]</a>
       </template>
 
-      <div class="mb-[15px]">
-        <div class="w-fit leading-[1.2] flex items-center gap-[5px] p-[3px] border border-(--n-color-target) rounded-(--n-border-radius)">
+      <div class="mb-3.75">
+        <div class="w-fit leading-[1.2] flex items-center gap-1.25 p-0.75 border border-(--n-color-target) rounded-(--n-border-radius)">
           <n-switch v-model:value="hidePrecraftMaterials" :round="false" size="small" />
           <div>{{ t('statistics.preference.show_direct_materials_only') }}</div>
         </div>

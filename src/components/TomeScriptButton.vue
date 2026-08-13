@@ -146,19 +146,19 @@ const handleCopyAsMacro = async () => {
       </div>
       <n-divider class="my-1!" />
       <div class="mb-1.25">
-        <div class="w-fit leading-[1.2] flex items-center gap-[5px] p-[3px] border border-[#18A058] rounded-[3px]">
+        <div class="w-fit leading-[1.2] flex items-center gap-1.25 p-0.75 border border-[#18A058] rounded-sm">
           <n-switch v-model:value="showBiColorItems" @update:value="handleShowBiColorItemsChange" :round="false" size="small" />
           <div>{{ t('statistics.tomescript.show_bicolor_items') }}</div>
         </div>
       </div>
-      <div class="leading-[1.2] flex flex-col gap-[5px]">
+      <div class="leading-[1.2] flex flex-col gap-1.25">
         <div class="item" v-for="(itemInfos, scriptID) in items" :key="'popup-tome-' + scriptID">
-          <div class="flex gap-[3px]">
+          <div class="flex gap-0.75">
             <ItemSpan :item-info="getItemInfo(scriptID)" :amount="tomeScripts[scriptID]" show-amount />
           </div>
           <n-divider class="m-0! mx-0.5!" />
           <div class="ml-[1em]">
-            <div class="flex gap-[3px]" v-for="(itemInfo, index) in itemInfos" :key="'popup-tome-' + scriptID + '-' + index">
+            <div class="flex gap-0.75" v-for="(itemInfo, index) in itemInfos" :key="'popup-tome-' + scriptID + '-' + index">
               <ItemSpan :item-info="getItemInfo(itemInfo.id)" :amount="itemInfo.amount" show-amount />
             </div>
           </div>

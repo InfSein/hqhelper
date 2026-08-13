@@ -82,7 +82,7 @@ const statementBlocks = computed(() => {
       :id="block.id"
     >
       <template #title>{{ block.name }}</template>
-      <div class="flex flex-col gap-[5px] h-full select-text">
+      <div class="flex flex-col gap-1.25 h-full select-text">
         <ItemList
           :items="block.items"
           :list-height="480"

@@ -445,7 +445,7 @@ function getGatherJobSvgStyle(jobId: number) {
 
       <div class="flex flex-col">
         <div>
-          <div class="flex items-center gap-[3px] font-big">
+          <div class="flex items-center gap-0.75 font-big">
             <n-icon :size="16" :component="MapOutlined" />
             <span>{{ t('map.gathering_path.title') }}</span>
           </div>
@@ -457,7 +457,7 @@ function getGatherJobSvgStyle(jobId: number) {
         </div>
 
         <n-scrollbar v-else trigger="none" :style="{ maxHeight: popoverContentMaxHeight }">
-          <div class="flex flex-wrap gap-1 justify-center pr-[12px]">
+          <div class="flex flex-wrap gap-1 justify-center pr-3">
             <div
               v-for="entry in displayMapRenderData"
               :key="entry.placeId"
@@ -527,10 +527,10 @@ function getGatherJobSvgStyle(jobId: number) {
                         >
                           <span
                             v-if="hasGatherJobSvg(target.item.gatherInfo?.jobId || 0)"
-                            class="inline-flex w-4 h-4 items-center justify-center border border-[#9B4545] rounded-[4px] bg-[rgba(255,255,255,0.9)] box-border"
+                            class="inline-flex w-4 h-4 items-center justify-center border border-[#9B4545] rounded bg-[rgba(255,255,255,0.9)] box-border"
                           >
                             <span
-                              class="block w-[14px] h-[14px] bg-center bg-contain"
+                              class="block w-3.5 h-3.5 bg-center bg-contain"
                               :style="getGatherJobSvgStyle(target.item.gatherInfo?.jobId || 0)"
                             />
                           </span>
