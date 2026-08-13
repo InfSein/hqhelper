@@ -7,7 +7,7 @@ import DraggableTable from '@/components/ui/DraggableTable.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
 import { deepCopy } from '@/tools'
-import { _VAR_PRESET_CREQ_MAXAMOUNT, type StrictCraftRequirements } from '@/types/workstate/macromanage.ts'
+import { _VAR_PRESET_CREQ_MAXAMOUNT, type StrictCraftRequirements } from '@/types/workstate/macromanage'
 
 const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
 

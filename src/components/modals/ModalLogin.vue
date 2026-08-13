@@ -17,10 +17,10 @@ import {
 import ModalNbbAvatarSelector from './ModalNbbAvatarSelector.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
-import { useNbbCloud } from '@/composables/useNbbCloud.ts'
+import { useNbbCloud } from '@/composables/useNbbCloud'
 import { deepCopy } from '@/tools'
 import { getImgCdnUrl } from '@/tools/game'
-import type { NbbResponse, ResdataRegisterAndLogin } from '@/types/api/nbb-cloud.ts'
+import type { NbbResponse, ResdataRegisterAndLogin } from '@/types/api/nbb-cloud'
 
 const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
 

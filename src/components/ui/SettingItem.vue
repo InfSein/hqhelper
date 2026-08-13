@@ -5,9 +5,9 @@ import {
 import HelpButton from './HelpButton.vue'
 import ImageSelector from './ImageSelector.vue'
 import { useLocale } from '@/composables/useLocale'
-import useUiTools from '@/composables/useUiTools.ts'
+import useUiTools from '@/composables/useUiTools'
 import { useResponsive } from '@/composables/useResponsive'
-import type { AppTextUi, PreferenceItem } from '@/types/index.ts'
+import type { AppTextUi, PreferenceItem } from '@/types/index'
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()

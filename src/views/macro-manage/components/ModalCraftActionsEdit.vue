@@ -8,7 +8,7 @@ import {
 import FoldableCard from '@/components/templates/FoldableCard.vue'
 import CraftActionButton from '@/components/craft/CraftActionButton.vue'
 import { useLocale } from '@/composables/useLocale'
-import UseConfig from '@/composables/useConfig.ts'
+import UseConfig from '@/composables/useConfig'
 import { useResponsive } from '@/composables/useResponsive'
 import { XivCraftActions, XivCraftActionGroups, type XivCraftActionGroupKey } from '@/assets/data'
 import { deepCopy } from '@/tools'

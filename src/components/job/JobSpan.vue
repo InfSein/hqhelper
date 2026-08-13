@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import XivFARImage from '@/components/ui/XivFARImage.vue'
-import UseConfig from '@/composables/useConfig.ts'
+import UseConfig from '@/composables/useConfig'
 import { XivJobs, type XivJob } from '@/assets/data'
 
 const {

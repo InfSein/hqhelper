@@ -5,12 +5,12 @@ import {
 import ItemSpan from '@/components/item/ItemSpan.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
-import useConfig from '@/composables/useConfig.ts'
+import useConfig from '@/composables/useConfig'
 import { useAppModals } from '@/composables/useAppModals'
 import { useResponsive } from '@/composables/useResponsive'
 import { XivUnpackedTradeMap } from '@/assets/data'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
-import type { MacroGenerateMode } from '@/types/config/func.ts'
+import type { MacroGenerateMode } from '@/types/config/func'
 
 const store = useStore()
 const {

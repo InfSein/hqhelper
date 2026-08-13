@@ -7,7 +7,7 @@ import ItemButton from './ItemButton.vue'
 import ButtonCopyAsMacro from '@/components/craft/ButtonCopyAsMacro.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
-import UseConfig from '@/composables/useConfig.ts'
+import UseConfig from '@/composables/useConfig'
 import { type ItemInfo } from '@/tools/item'
 
 const store = useStore()

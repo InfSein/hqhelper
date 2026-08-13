@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import XivFARImage from '@/components/ui/XivFARImage.vue'
-import UseConfig from '@/composables/useConfig.ts'
+import UseConfig from '@/composables/useConfig'
 import type { ItemInfo } from '@/tools/item'
 
 const {

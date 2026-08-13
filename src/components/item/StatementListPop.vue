@@ -6,7 +6,7 @@ import {
 import ButtonCopyAsMacro from '@/components/craft/ButtonCopyAsMacro.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
-import UseConfig from '@/composables/useConfig.ts'
+import UseConfig from '@/composables/useConfig'
 import { useResponsive } from '@/composables/useResponsive'
 import { CopyToClipboard, deepCopy } from '@/tools'
 import type { ItemInfo, StatementRow } from '@/tools/item'

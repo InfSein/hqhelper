@@ -6,10 +6,10 @@ import HelpButton from '@/components/ui/HelpButton.vue'
 import FoldableCard from '@/components/templates/FoldableCard.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
-import { useDialog } from '@/composables/useDialog.ts'
+import { useDialog } from '@/composables/useDialog'
 import { useResponsive } from '@/composables/useResponsive'
 import { XivPatches, type XivPatch, type XivPatchVer } from "@/assets/data"
-import { isGearEmpty } from '@/tools/game/gear.ts'
+import { isGearEmpty } from '@/tools/game/gear'
 import { fixGearSelections, type GearSelections } from '@/types/game/gear'
 
 const store = useStore()

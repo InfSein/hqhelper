@@ -11,13 +11,13 @@ import HelpButton from '@/components/ui/HelpButton.vue'
 import CraftActionButton from '@/components/craft/CraftActionButton.vue'
 import { decompress } from 'xiv-cac-utils'
 import { useLocale } from '@/composables/useLocale'
-import { useDialog } from '@/composables/useDialog.ts'
+import { useDialog } from '@/composables/useDialog'
 import { XivCraftActions } from '@/assets/data'
 import {
   _VAR_MACRO_MAXAMOUNT,
   getDefaultCraftMacro, prepareMacroForSave,
   type RecordedCraftMacro
-} from '@/types/workstate/macromanage.ts'
+} from '@/types/workstate/macromanage'
 
 const { t } = useLocale()
 const { alertError } = useDialog()

@@ -2,7 +2,7 @@
 import MapButton from './MapButton.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
-import { XivMaps } from '@/tools/game/map.ts'
+import { XivMaps } from '@/tools/game/map'
 
 const store = useStore()
 const { t } = useLocale()

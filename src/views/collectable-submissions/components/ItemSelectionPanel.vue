@@ -10,11 +10,11 @@ import ItemSelector from '@/components/item/ItemSelector.vue'
 import ItemSubmissionReward from '@/components/item/ItemSubmissionReward.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
-import UseConfig from '@/composables/useConfig.ts'
+import UseConfig from '@/composables/useConfig'
 import { ExpansionSpecialItems } from '@/constants/game'
 import { XivJobs, XivUnpackedCollectableSubmissions } from '@/assets/data'
 import { getItemInfo } from '@/tools/item'
-import { type WorkState } from '@/types/workstate/cshelper.ts'
+import { type WorkState } from '@/types/workstate/cshelper'
 
 const store = useStore()
 const { t } = useLocale()

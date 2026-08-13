@@ -10,7 +10,7 @@ import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
 import { useAppModals } from '@/composables/useAppModals'
 import { useResponsive } from '@/composables/useResponsive'
-import useItemPrice from '@/composables/useItemPrice.ts'
+import useItemPrice from '@/composables/useItemPrice'
 import type { ItemInfo } from '@/tools/item'
 
 const store = useStore()

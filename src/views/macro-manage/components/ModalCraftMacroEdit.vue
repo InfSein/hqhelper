@@ -24,14 +24,14 @@ import ItemSelector from '@/components/item/ItemSelector.vue'
 import CraftActionButton from '@/components/craft/CraftActionButton.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
-import UseConfig from '@/composables/useConfig.ts'
-import { useDialog } from '@/composables/useDialog.ts'
-import useMacroHelper from '@/views/macro-manage/composables/useMacroHelper.ts'
+import UseConfig from '@/composables/useConfig'
+import { useDialog } from '@/composables/useDialog'
+import useMacroHelper from '@/views/macro-manage/composables/useMacroHelper'
 import { XivCraftActions } from '@/assets/data'
 import { deepCopy, findDuplicatesFromArray } from '@/tools'
 import { getItemInfo } from '@/tools/item'
 import { decompress } from 'xiv-cac-utils'
-import { _VAR_TAG_MAXLEN, _VAR_REMARK_MAXLINE, _VAR_RELATEITEM_MAXLEN, _VAR_TABLESHOW_RELATEITEM_MAXLEN, getDefaultCraftMacro, prepareMacroForSave, type RecordedCraftMacro, type StrictCraftRequirements } from '@/types/workstate/macromanage.ts'
+import { _VAR_TAG_MAXLEN, _VAR_REMARK_MAXLINE, _VAR_RELATEITEM_MAXLEN, _VAR_TABLESHOW_RELATEITEM_MAXLEN, getDefaultCraftMacro, prepareMacroForSave, type RecordedCraftMacro, type StrictCraftRequirements } from '@/types/workstate/macromanage'
 
 const store = useStore()
 const { t } = useLocale()

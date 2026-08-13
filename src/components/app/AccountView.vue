@@ -103,7 +103,7 @@ const handleLogout = async () => {
   >
     <template #trigger>
       <n-button v-if="isMobile" style="--n-height: 65px;">
-        <div class="button-container" style="min-width: 165px; justify-content: space-between; --isize: 36px; --tsize: 24px;">
+        <div class="button-container min-w-41.5 justify-between" style="--isize: 36px; --tsize: 24px;">
           <n-avatar
             :size="36"
             :src="avatarUrl"

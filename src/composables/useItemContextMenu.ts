@@ -8,7 +8,7 @@ import {
 } from '@vicons/material'
 import { CopyToClipboard } from '@/tools'
 import { type ItemInfo } from '@/tools/item'
-import useConfig from '@/composables/useConfig.ts'
+import useConfig from '@/composables/useConfig'
 import useUiTools from './useUiTools'
 import { useLocale } from './useLocale'
 import { useAppModals } from './useAppModals'

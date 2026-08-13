@@ -3,7 +3,7 @@ import {
   type PopoverTrigger,
 } from 'naive-ui'
 import XivFARImage from '@/components/ui/XivFARImage.vue'
-import useConfig from '@/composables/useConfig.ts'
+import useConfig from '@/composables/useConfig'
 import { useResponsive } from '@/composables/useResponsive'
 import type { XivCraftAction } from '@/assets/data'
 import { getImgCdnUrl } from '@/tools/game'
