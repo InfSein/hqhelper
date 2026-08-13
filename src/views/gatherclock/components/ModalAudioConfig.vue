@@ -163,7 +163,7 @@ const handleCancel = () => {
     :title="t('gather_clock.preference.custom_audio.modal_title')"
     max-width="500px"
   >
-    <div class="audio-config-container">
+    <div class="flex flex-col gap-3 py-2">
       <n-form label-placement="left" label-width="110px" :show-feedback="false">
         <n-form-item :label="t('gather_clock.preference.custom_audio.sound_select.title')">
           <n-radio-group v-model:value="tempSoundSelect" name="sound-type-group">
@@ -176,8 +176,8 @@ const handleCancel = () => {
         </n-form-item>
 
         <n-form-item :label="t('gather_clock.preference.custom_audio.title')">
-          <div class="custom-audio-section">
-            <div class="status-text">
+          <div class="flex flex-col gap-2 w-full">
+            <div class="break-all">
               <span v-if="tempCustomAudioName && !tempAudioBlobDeleted" class="color-success">
                 {{ t('gather_clock.preference.custom_audio.status_uploaded', { name: tempCustomAudioName }) }}
               </span>
@@ -186,7 +186,7 @@ const handleCancel = () => {
               </span>
             </div>
 
-            <div class="action-buttons">
+            <div class="flex flex-wrap gap-2">
               <n-button size="small" type="primary" secondary @click="handleTriggerUpload">
                 <template #icon>
                   <n-icon><UploadFileRound /></n-icon>
@@ -228,7 +228,7 @@ const handleCancel = () => {
     </div>
 
     <template #action>
-      <div class="modal-footer flex justify-end gap-2">
+      <div class="flex justify-end gap-2">
         <n-button @click="handleCancel">
           {{ t('common.cancel') }}
         </n-button>
@@ -241,33 +241,4 @@ const handleCancel = () => {
 </template>
 
 <style scoped>
-.audio-config-container {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 8px 0;
-}
-
-.custom-audio-section {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 100%;
-}
-
-.status-text {
-  word-break: break-all;
-}
-
-.action-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.modal-footer {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-}
 </style>

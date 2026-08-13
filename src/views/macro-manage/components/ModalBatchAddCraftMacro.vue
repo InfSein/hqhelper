@@ -166,7 +166,7 @@ const previewColumns = computed((): DataTableColumns<ParsedMacroEntry> => {
             size: 18,
           }, {
             default: () => h(NScrollbar, { style: 'max-height: 400px;' }, {
-              default: () => h('div', { class: 'flex flex-wrap gap-0.5 max-w-[250px]' }, 
+              default: () => h('div', { class: 'flex flex-wrap gap-0.5 max-w-62.5' }, 
                 row.craftActions.map((actionId, index) => {
                   const action = XivCraftActions[actionId]
                   return h(CraftActionButton, {
@@ -257,7 +257,7 @@ const getActionsSummary = (craftActions: number[]) => {
   >
     <div class="batch-add-wrapper">
       <div class="form-block">
-        <div class="form-title">{{ t('macro_manage.text.batch_add_macros_desc_1') }}</div>
+        <div class="font-bold mb-1">{{ t('macro_manage.text.batch_add_macros_desc_1') }}</div>
         <div>
           {{ t('macro_manage.text.batch_add_macros_format_pre') }}
           {{ t('macro_manage.text.batch_add_macros_format_cac') }}
@@ -310,7 +310,7 @@ const getActionsSummary = (craftActions: number[]) => {
       max-width="850px"
     >
       <div class="preview-wrapper">
-        <div class="preview-desc">{{ t('macro_manage.text.batch_add_preview_desc') }}</div>
+        <div class="leading-normal">{{ t('macro_manage.text.batch_add_preview_desc') }}</div>
         <n-data-table
           bordered
           size="small"
@@ -341,21 +341,10 @@ const getActionsSummary = (craftActions: number[]) => {
   flex-direction: column;
   gap: 10px;
   padding: 0 0.5em;
-
-  .form-block {
-    .form-title {
-      font-weight: bold;
-      margin-bottom: 4px;
-    }
-  }
 }
 .preview-wrapper {
   display: flex;
   flex-direction: column;
   gap: 8px;
-
-  .preview-desc {
-    line-height: 1.4;
-  }
 }
 </style>

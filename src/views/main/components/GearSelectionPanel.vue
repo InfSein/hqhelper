@@ -424,7 +424,7 @@ defineExpose({
       <span class="app-card-title__text">{{ t('main.select_gear.title') }}</span>
       <n-popover placement="bottom-start" :trigger="isMobile ? 'click' : 'hover'">
         <template #trigger>
-          <span class="ml-2.5 text-[14px]">{{ selectedAffixes }}</span>
+          <span class="ml-2.5 text-sm">{{ selectedAffixes }}</span>
         </template>
         <div>
           <p v-for="(tip, index) in affixesTips" :key="'title-tip' + index">
