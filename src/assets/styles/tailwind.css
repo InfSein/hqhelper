@@ -5,6 +5,7 @@
 @import 'tailwindcss/utilities.css';
 
 @theme {
+  --color-text: var(--color-text);
   --color-primary: var(--color-primary);
   --color-info: var(--color-info);
   --color-warning: var(--color-warning);

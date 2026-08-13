@@ -37,7 +37,7 @@ defineProps({
 
 <template>
   <fieldset class="group-box" :style="`border: 1px dashed ${borderColor}; ${tiny ? 'padding: 0 8px 4px 8px' : ''}; ${containerExtraStyle}`">
-    <legend class="flex justify-center items-center text-sm w-fit text-(--color-text) whitespace-nowrap overflow-hidden text-ellipsis" :style="{ maxWidth: titleMaxWidth, marginBottom: tiny ? '-7px' : undefined }">
+    <legend class="flex justify-center items-center text-sm w-fit text-text whitespace-nowrap overflow-hidden text-ellipsis" :style="{ maxWidth: titleMaxWidth, marginBottom: tiny ? '-7px' : undefined }">
       <slot name="title">
         <div>{{ title }}</div>
         <div v-if="descriptions?.length" style="margin-left: 1px;">

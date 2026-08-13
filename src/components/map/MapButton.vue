@@ -5,13 +5,13 @@ import {
 import XivMap from './XivMap.vue'
 import XivFARImage from '@/components/ui/XivFARImage.vue'
 import { useLocale } from '@/composables/useLocale'
-import UseConfig from '@/composables/useConfig'
+import useConfig from '@/composables/useConfig'
 import { useResponsive } from '@/composables/useResponsive'
 import { getNearestAetheryte, type XivMapInfo } from '@/tools/game/map'
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()
-const { itemLanguage } = UseConfig()
+const { itemLanguage } = useConfig()
 
 interface MapButtonProps {
   size: number,

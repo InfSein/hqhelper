@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import XivFARImage from '@/components/ui/XivFARImage.vue'
-import UseConfig from '@/composables/useConfig'
+import useConfig from '@/composables/useConfig'
 import { XivJobs, type XivJob } from '@/assets/data'
 
 const {
   itemLanguage,
-} = UseConfig()
+} = useConfig()
 
 const props = defineProps({
   jobId: {

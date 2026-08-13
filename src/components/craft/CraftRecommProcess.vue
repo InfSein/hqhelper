@@ -8,7 +8,7 @@ import XivFARImage from '@/components/ui/XivFARImage.vue'
 import LocationSpan from '@/components/map/LocationSpan.vue'
 import GatheringPathButton from '@/components/map/GatheringPathButton.vue'
 import { useStore } from '@/store'
-import UseConfig from '@/composables/useConfig'
+import useConfig from '@/composables/useConfig'
 import { useLocale } from '@/composables/useLocale'
 import { useEorzeaTime } from '@/composables/useEorzeaTime'
 import { XivJobs, type XivJob } from '@/assets/data'
@@ -17,7 +17,7 @@ import type { RecommItemGroup } from '@/types/item'
 
 const store = useStore()
 const { t } = useLocale()
-const { itemLanguage } = UseConfig()
+const { itemLanguage } = useConfig()
 const { currentET } = useEorzeaTime()
 
 const expandedBlocks = defineModel<Record<number, string[]>>('expandedBlocks', { required: true })

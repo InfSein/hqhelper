@@ -98,11 +98,10 @@ const handleSettingButtonClick = () => {
       <div class="app-card-title select-none">
         <n-icon><TableViewOutlined /></n-icon>
         <span class="title">
-          {{ t('common.mquoted_view_statement') }}
+          {{ t('common.appfunc.craft_statement') }}
         </span>
         <span class="app-card-title__extra">
-          <i class="xiv diaem-nm font-normal"></i>
-          {{ t('statement.text.pro_statement_intro') }}
+          <n-tag type="info" size="small" round>PRO</n-tag>
         </span>
         <div class="app-card-title__actions">
           <a href="javascript:void(0);" @click="handleResetPreparedItems">[{{ t('statement.text.reset_prepared') }}]</a>

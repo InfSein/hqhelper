@@ -8,7 +8,7 @@ import {
 } from '@vicons/material'
 import XivFARImage from '@/components/ui/XivFARImage.vue'
 import { useLocale } from '@/composables/useLocale'
-import UseConfig from '@/composables/useConfig'
+import useConfig from '@/composables/useConfig'
 import useUiTools from '@/composables/useUiTools'
 import { useResponsive } from '@/composables/useResponsive'
 import { XivJobs, XivRoles, type XivRole, type HqDataVer, type XivPatchVer } from '@/assets/data'
@@ -17,7 +17,7 @@ import { getGearIcon, getGearRecomm, useGearAdder } from '@/tools/game/gear'
 import type { GearSelections } from '@/types/game/gear'
 
 const { t } = useLocale()
-const { uiLanguage } = UseConfig()
+const { uiLanguage } = useConfig()
 const { isMobile } = useResponsive()
 const { renderIcon, optionsRenderer } = useUiTools()
 const {

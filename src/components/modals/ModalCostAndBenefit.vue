@@ -65,7 +65,7 @@ const handleShowItemPriceDetail = () => {
   >
     <template #header>
       <div class="app-card-title select-none">
-        <n-icon><BalanceOutlined /></n-icon>
+        <n-icon><AttachMoneyOutlined /></n-icon>
         <span class="title">
           {{ t('statistics.group.cost_and_benefit.title') }}
         </span>

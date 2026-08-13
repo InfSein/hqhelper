@@ -2,7 +2,7 @@
 import {
   CodeSharp,
 } from '@vicons/material'
-import UseConfig from '@/composables/useConfig'
+import useConfig from '@/composables/useConfig'
 import { useLocale } from '@/composables/useLocale'
 import { useAppModals } from '@/composables/useAppModals'
 import type { ItemInfo } from '@/tools/item'
@@ -10,7 +10,7 @@ import type { MacroGenerateMode } from '@/types/config/func'
 
 const NAIVE_UI_MESSAGE = useMessage()
 const { t } = useLocale()
-const { itemLanguage } = UseConfig()
+const { itemLanguage } = useConfig()
 const { copyAsMacro } = useAppModals()
 
 interface ButtonCopyAsMacroProps {

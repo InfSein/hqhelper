@@ -5,7 +5,7 @@ import {
 import ItemPop from '@/components/item/ItemPop.vue'
 import XivFARImage from '@/components/ui/XivFARImage.vue'
 import { useLocale } from '@/composables/useLocale'
-import UseConfig from '@/composables/useConfig'
+import useConfig from '@/composables/useConfig'
 import { useResponsive } from '@/composables/useResponsive'
 import { XivJobs } from '@/assets/data'
 import type { ItemInfo } from '@/tools/item'
@@ -13,7 +13,7 @@ import { XivMaps, type XivMapAetheryteInfo, type XivMapInfo } from '@/tools/game
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()
-const { itemLanguage } = UseConfig()
+const { itemLanguage } = useConfig()
 
 interface GatheringPathButtonProps {
   targetItems: ItemInfo[]

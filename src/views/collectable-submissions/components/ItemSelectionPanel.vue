@@ -10,7 +10,7 @@ import ItemSelector from '@/components/item/ItemSelector.vue'
 import ItemSubmissionReward from '@/components/item/ItemSubmissionReward.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
-import UseConfig from '@/composables/useConfig'
+import useConfig from '@/composables/useConfig'
 import { ExpansionSpecialItems } from '@/constants/game'
 import { XivJobs, XivUnpackedCollectableSubmissions } from '@/assets/data'
 import { getItemInfo } from '@/tools/item'
@@ -21,7 +21,7 @@ const { t } = useLocale()
 const {
   uiLanguage,
   itemLanguage,
-} = UseConfig()
+} = useConfig()
 
 const workState = defineModel<WorkState>('workState', { required: true })
 

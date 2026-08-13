@@ -4,7 +4,7 @@ import {
   UnarchiveOutlined,
 } from '@vicons/material'
 import { useStore } from '@/store'
-import UseConfig from '@/composables/useConfig'
+import useConfig from '@/composables/useConfig'
 import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
 import { XivGearAffixes, XivJobs, XivPatches, type XivPatchVer } from '@/assets/data'
@@ -15,7 +15,7 @@ const handleImportState = inject<(patch: string, gearSelections?: GearSelections
 
 const store = useStore()
 const { t } = useLocale()
-const { uiLanguage } = UseConfig()
+const { uiLanguage } = useConfig()
 const { isMobile } = useResponsive()
 
 const modalMaxWidth = computed(() => {

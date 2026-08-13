@@ -6,7 +6,7 @@ import {
 import ButtonCopyAsMacro from '@/components/craft/ButtonCopyAsMacro.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
-import UseConfig from '@/composables/useConfig'
+import useConfig from '@/composables/useConfig'
 import { useResponsive } from '@/composables/useResponsive'
 import { CopyToClipboard, deepCopy } from '@/tools'
 import type { ItemInfo, StatementRow } from '@/tools/item'
@@ -14,7 +14,7 @@ import type { ItemInfo, StatementRow } from '@/tools/item'
 const store = useStore()
 const { t } = useLocale()
 const { isMobile } = useResponsive()
-const { itemLanguage } = UseConfig()
+const { itemLanguage } = useConfig()
 const NAIVE_UI_MESSAGE = useMessage()
 
 interface ItemListPopProps {

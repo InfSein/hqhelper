@@ -24,7 +24,7 @@ import ItemSelector from '@/components/item/ItemSelector.vue'
 import CraftActionButton from '@/components/craft/CraftActionButton.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
-import UseConfig from '@/composables/useConfig'
+import useConfig from '@/composables/useConfig'
 import { useDialog } from '@/composables/useDialog'
 import useMacroHelper from '@/views/macro-manage/composables/useMacroHelper'
 import { XivCraftActions } from '@/assets/data'
@@ -37,7 +37,7 @@ const store = useStore()
 const { t } = useLocale()
 const { confirm } = useDialog()
 const NAIVE_UI_MESSAGE = useMessage()
-const { itemLanguage } = UseConfig()
+const { itemLanguage } = useConfig()
 const {
   parseCraftMacroText, parseCraftProcedure, exportCraftMacroText,
 } = useMacroHelper()

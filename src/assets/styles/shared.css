@@ -17,6 +17,32 @@
   }
 }
 
+.macro-name-container {
+  line-height: 1.2;
+
+  .macro-name {
+    font-size: 16px;
+  }
+  .macro-tags-container {
+    font-size: 12px;
+    display: flex;
+    gap: 2px;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    .n-tag {
+      height: inherit;
+      font-size: 10px;
+      padding: 0 4px;
+    }
+  }
+  .macro-remark {
+    font-size: 12px;
+  }
+}
+
 .app-extra-header {
   display: flex;
   align-items: center;
@@ -54,7 +80,7 @@
   gap: 8px;
 }
 
-.app-glass-card {
+.glasscard {
   box-shadow: var(--glasscard-shadow);
   background: var(--glasscard-bg) !important;
   backdrop-filter: blur(var(--glasscard-blur)) saturate(var(--glasscard-saturate));
@@ -62,7 +88,7 @@
 
   --color-border: #9e9e9e;
 }
-.app-glass-card.app-glass-card--small {
+.glasscard.glasscard--small {
   box-shadow: unset;
   background: var(--glasscard-bg-small) !important;
   border: 1px solid var(--glasscard-bordercolor-small, --n-border-color);

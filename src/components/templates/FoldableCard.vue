@@ -60,7 +60,7 @@ const folderText = computed(() => {
 
 const cardClasses = computed(() => {
   return [
-    (store.userConfig.custom_background && !props.disableGlass) ? 'app-glass-card' : ''
+    (store.userConfig.custom_background && !props.disableGlass) ? 'glasscard' : ''
   ].join(' ')
 })
 const cardContentStyles = computed(() => {

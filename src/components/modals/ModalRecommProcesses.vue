@@ -7,14 +7,14 @@ import ModalPreferences from './ModalPreferences.vue'
 import CraftRecommProcess from '@/components/craft/CraftRecommProcess.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
-import UseConfig from '@/composables/useConfig'
+import useConfig from '@/composables/useConfig'
 import { CopyToClipboard } from '@/tools'
 import { type ItemInfo } from '@/tools/item'
 import { useFufuCal } from '@/tools/use-fufu-cal'
 
 const store = useStore()
 const { t } = useLocale()
-const { itemLanguage } = UseConfig()
+const { itemLanguage } = useConfig()
 const NAIVE_UI_MESSAGE = useMessage()
 const { calRecommProcessGroups } = useFufuCal()
 
@@ -121,10 +121,8 @@ const handleSettingButtonClick = () => {
   >
     <template #header>
       <div class="app-card-title select-none">
-        <n-icon><FormatListNumberedRtlSharp /></n-icon>
-        <span class="title">
-          {{ t('common.appfunc.recomm_process') }}
-        </span>
+        <n-icon><AllInclusiveSharp /></n-icon>
+        <span class="title">{{ t('common.appfunc.recomm_process') }}</span>
         <div class="app-card-title__actions">
           <a href="javascript:void(0);" @click="handleCollapseOrUncollapseAllBlocks">[{{ isBlocksAllCollapsed() ? t('common.expand_all') : t('common.fold_all') }}]</a>
         </div>

@@ -51,7 +51,7 @@ const {
       </template>
 
       <div class="mb-3.75">
-        <div class="w-fit leading-[1.2] flex items-center gap-1.25 p-0.75 border border-(--n-color-target) rounded-(--n-border-radius)">
+        <div class="w-fit leading-[1.2] flex items-center gap-1.25 p-0.75 border border-primary rounded">
           <n-switch v-model:value="hidePrecraftMaterials" :round="false" size="small" />
           <div>{{ t('statistics.preference.show_direct_materials_only') }}</div>
         </div>

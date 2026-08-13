@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import XivFARImage from '@/components/ui/XivFARImage.vue'
-import UseConfig from '@/composables/useConfig'
+import useConfig from '@/composables/useConfig'
 import { useResponsive } from '@/composables/useResponsive'
 import { type XivMapAetheryteInfo, type XivMapInfo } from '@/tools/game/map'
 
 const { isMobile } = useResponsive()
-const { itemLanguage } = UseConfig()
+const { itemLanguage } = useConfig()
 
 interface MapButtonProps {
   mapData: XivMapInfo,
