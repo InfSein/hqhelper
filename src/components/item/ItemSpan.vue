@@ -205,26 +205,24 @@ const handleItemIconClick = async () => {
 </template>
 
 <style scoped>
-.container {
-  .item-text-container {
-    white-space: nowrap;
+.item-text-container {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  .item-name {
+    display: inline-block;
+    max-width: var(--item-name-maxwidth);
+    vertical-align: top;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
-    .item-name {
-      display: inline-block;
-      max-width: var(--item-name-maxwidth);
-      vertical-align: top;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .item-amount {
-      display: inline-block;
-      vertical-align: top;
-      white-space: nowrap;
-    }
+  .item-amount {
+    display: inline-block;
+    vertical-align: top;
+    white-space: nowrap;
   }
 }
 </style>

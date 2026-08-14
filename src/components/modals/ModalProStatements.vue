@@ -133,30 +133,9 @@ const handleSettingButtonClick = () => {
 </template>
 
 <style scoped>
-/* All */
-.wrapper {
-  user-select: text;
-}
-.wrapper.desktop {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-}
-.group .container {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  height: 100%;
-  user-select: text;
-}
-
-/* Desktop */
-@media screen and (min-width: 768px) {
-}
-
 /* Mobile */
 @media screen and (max-width: 767px) {
-  .card-title-actions {
+  .app-card-title__actions {
     flex-basis: 100%;
   }
 }
