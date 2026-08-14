@@ -857,4 +857,5 @@ const handleSettingButtonClick = () => {
       justify-content: end;
     }
   }
+}
 </style>
