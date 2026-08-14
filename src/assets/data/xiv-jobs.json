@@ -261,6 +261,14 @@
     "job_name_en": "Bastion",
     "job_name_zh": "坚城卫",
     "job_name_ja": "バスティオン",
-    "job_icon_url": "./image/game-job/companion/bastion.png"
+    "job_icon_url": "./image/game-job/companion/none.png"
+  },
+  "45": {
+    "job_id": 45,
+    "short_name": "RNG",
+    "job_name_en": "Ranger",
+    "job_name_zh": "天巡猎",
+    "job_name_ja": "レーンジャー",
+    "job_icon_url": "./image/game-job/companion/none.png"
   }
 }

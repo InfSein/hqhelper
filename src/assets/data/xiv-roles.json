@@ -57,7 +57,7 @@
     "role_icon_url": "./image/game-job/misc/clear_ranged.png",
     "attire": "aiming",
     "accessory": "aiming",
-    "jobs": [23,31,38]
+    "jobs": [23,31,38,45]
   },
   "dps_magic": {
     "role_name_en": "Cast DPS",
