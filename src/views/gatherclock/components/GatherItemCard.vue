@@ -9,7 +9,7 @@ import XivMap from '@/components/map/XivMap.vue'
 import XivFARImage from '@/components/ui/XivFARImage.vue'
 import ItemButton from '@/components/item/ItemButton.vue'
 import LocationSpan from '@/components/map/LocationSpan.vue'
-import UseConfig from '@/composables/useConfig'
+import useConfig from '@/composables/useConfig'
 import { useLocale } from '@/composables/useLocale'
 import { useEorzeaTime } from '@/composables/useEorzeaTime'
 import { useResponsive } from '@/composables/useResponsive'
@@ -23,7 +23,7 @@ const { isMobile } = useResponsive()
 const { currentET } = useEorzeaTime()
 const {
   uiLanguage, itemLanguage,
-} = UseConfig()
+} = useConfig()
 
 interface GatherItemCardProps {
   banItemPop: boolean

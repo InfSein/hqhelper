@@ -15,21 +15,21 @@ defineProps<ItemPriceLogCellProps>()
 <template>
   <div class="iplc-container">
     <n-button>
-      <div class="iplc-content">
-        <div class="iplc-left">
+      <div class="w-full h-16 grid grid-cols-[auto_1fr] items-center">
+        <div class="text-left flex flex-col gap-0.5">
           <div>{{ worldName }}</div>
-          <div v-if="buyerName" class="buyer">{{ buyerName }}</div>
+          <div v-if="buyerName" class="text-xs">{{ buyerName }}</div>
         </div>
-        <div class="iplc-right">
+        <div class="text-right flex flex-col">
           <div>
-            <span class="price">{{ pricePerUnit.toLocaleString() }}</span>
+            <span class="text-[20px]">{{ pricePerUnit.toLocaleString() }}</span>
             <i class="xiv gil"></i>
           </div>
-          <div class="quantity">
+          <div class="text-xs">
             x{{ quantity.toLocaleString() }}
             <i class="xiv hq" v-if="hq"></i>
           </div>
-          <div v-if="time" class="time">
+          <div v-if="time" class="text-xs text-sub">
             {{ formatTimestamp(time * 1000) }}
           </div>
         </div>
@@ -51,42 +51,6 @@ defineProps<ItemPriceLogCellProps>()
   button {
     width: 100%;
     height: 100%;
-  }
-
-  .iplc-content {
-    width: 100%;
-    height: 64px;
-    display: grid;
-    grid-template-columns: auto 1fr;
-    align-items: center;
-
-    .iplc-left {
-      text-align: left;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-
-      .buyer {
-        font-size: 12px;
-      }
-    }
-    .iplc-right {
-      text-align: right;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-
-      .price {
-        font-size: 20px;
-      }
-      .quantity {
-        font-size: 12px;
-      }
-      .time {
-        font-size: 12px;
-        color: var(--color-text-sub);
-      }
-    }
   }
 }
 </style>

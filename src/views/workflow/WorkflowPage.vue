@@ -351,9 +351,9 @@ const setInventoryByStatementPrepared = () => {
         >
           <template #header>
             <i class="xiv square-1"></i>
-            <span class="card-title-text">{{ t('common.select_item2') }}</span>
+            <span class="app-card-title__text">{{ t('common.select_item2') }}</span>
             <ImportItemListPop>
-              <a v-show="!selectCardFolded" class="card-title-extra" href="javascript:void(0);">
+              <a v-show="!selectCardFolded" class="app-card-title__extra" href="javascript:void(0);">
                 [{{ t('common.import') }}]
               </a>
             </ImportItemListPop>
@@ -392,9 +392,9 @@ const setInventoryByStatementPrepared = () => {
         >
           <template #header>
             <i class="xiv square-2"></i>
-            <span class="card-title-text">{{ t('common.view_analysis') }}</span>
+            <span class="app-card-title__text">{{ t('common.view_analysis') }}</span>
             <a
-              class="card-title-extra"
+              class="app-card-title__extra"
               href="javascript:void(0);"
               :disabled="updatingPrice"
               :style="updatingPrice ? 'cursor: not-allowed; color: gray;' : 'cursor: pointer;'"
@@ -404,7 +404,7 @@ const setInventoryByStatementPrepared = () => {
             </a>
             <a
               v-show="store.funcConfig.inventory_workflow_enable_sync && selectedAnaTab === 'statements'"
-              class="card-title-extra"
+              class="app-card-title__extra"
               href="javascript:void(0);"
               style="cursor: pointer;"
               :title="t('workflow.tooltip.set_prepared_by_inventory')"

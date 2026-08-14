@@ -2,7 +2,7 @@
 import MapButton from './MapButton.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
-import { XivMaps } from '@/tools/game/map.ts'
+import { XivMaps } from '@/tools/game/map'
 
 const store = useStore()
 const { t } = useLocale()
@@ -46,12 +46,12 @@ const mapButtonSize = computed(() => {
 </script>
 
 <template>
-  <div class="container">
+  <div class="flex items-center gap-0.75">
     <span v-if="!hideMapName">{{ placeName }}</span>
     <span v-if="!hideCoordinates">{{ t('item.text.quoted_position', { x: coordinateX.toFixed(1), y: coordinateY.toFixed(1) }) }}</span>
     <span
       v-if="showMapButton"
-      class="map-button select-none"
+      class="inline-block align-middle select-none"
       :style="{
         lineHeight: mapButtonSize + 'px'
       }"
@@ -69,10 +69,4 @@ const mapButtonSize = computed(() => {
 </template>
 
 <style scoped>
-.container > *:not(:first-child) {
-  margin-left: 3px;
-}
-.map-button {
-  vertical-align: middle;
-}
 </style>

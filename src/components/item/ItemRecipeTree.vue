@@ -31,7 +31,7 @@ const itemCraftRequires = computed(() => {
 </script>
 
 <template>
-  <div class="bordered" :class="level === 1 ? 'irt-container py-px px-1' : ''">
+  <div class="bordered" :class="level === 1 ? 'hover:bg-bg-hover rounded py-px px-1' : ''">
     <ItemSpan v-if="level !== 0" :item-info="item" :amount="amount" show-amount />
     <div v-if="item.craftRequires?.length" class="relative">
       <div
@@ -61,11 +61,4 @@ const itemCraftRequires = computed(() => {
 </template>
 
 <style scoped>
-.irt-container {
-  border-radius: 4px;
-
-  &:hover {
-    background-color: var(--color-background-hover);
-  }
-}
 </style>

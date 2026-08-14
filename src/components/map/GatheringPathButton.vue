@@ -5,15 +5,15 @@ import {
 import ItemPop from '@/components/item/ItemPop.vue'
 import XivFARImage from '@/components/ui/XivFARImage.vue'
 import { useLocale } from '@/composables/useLocale'
-import UseConfig from '@/composables/useConfig.ts'
+import useConfig from '@/composables/useConfig'
 import { useResponsive } from '@/composables/useResponsive'
 import { XivJobs } from '@/assets/data'
 import type { ItemInfo } from '@/tools/item'
-import { XivMaps, type XivMapAetheryteInfo, type XivMapInfo } from '@/tools/game/map.ts'
+import { XivMaps, type XivMapAetheryteInfo, type XivMapInfo } from '@/tools/game/map'
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()
-const { itemLanguage } = UseConfig()
+const { itemLanguage } = useConfig()
 
 interface GatheringPathButtonProps {
   targetItems: ItemInfo[]
@@ -431,7 +431,7 @@ function getGatherJobSvgStyle(jobId: number) {
 </script>
 
 <template>
-  <div v-if="shouldShowButton" class="gathering-path-button">
+  <div v-if="shouldShowButton" class="inline-flex items-center">
     <n-popover
       :trigger="isMobile ? 'click' : 'hover'"
       :placement="isMobile ? 'bottom' : 'right-start'"
@@ -443,35 +443,35 @@ function getGatherJobSvgStyle(jobId: number) {
         </n-button>
       </template>
 
-      <div class="path-popover">
-        <div class="popover-header">
-          <div class="title font-big">
+      <div class="flex flex-col">
+        <div>
+          <div class="flex items-center gap-0.75 font-big">
             <n-icon :size="16" :component="MapOutlined" />
             <span>{{ t('map.gathering_path.title') }}</span>
           </div>
           <n-divider style="margin: 0 0 3px;" />
         </div>
 
-        <div v-if="!pathActions.length" class="empty-hint">
+        <div v-if="!pathActions.length" class="flex items-center justify-center text-sub">
           {{ t('map.gathering_path.text.empty_hint') }}
         </div>
 
         <n-scrollbar v-else trigger="none" :style="{ maxHeight: popoverContentMaxHeight }">
-          <div class="map-container">
+          <div class="flex flex-wrap gap-1 justify-center pr-3">
             <div
               v-for="entry in displayMapRenderData"
               :key="entry.placeId"
-              class="map-panel"
+              class="flex flex-col items-center gap-1"
             >
-              <div class="map-title">{{ entry.map[`name_${itemLanguage}`] }}</div>
-              <div class="map-content" :style="{ width: MAP_SIZE + 'px', height: MAP_SIZE + 'px' }">
+              <div>{{ entry.map[`name_${itemLanguage}`] }}</div>
+              <div class="relative" :style="{ width: MAP_SIZE + 'px', height: MAP_SIZE + 'px' }">
                 <XivFARImage
-                  class="map-image"
+                  class="block pointer-events-none"
                   :size="MAP_SIZE"
                   :src="entry.map.map_src"
                 />
 
-                <svg class="path-svg" :width="MAP_SIZE" :height="MAP_SIZE">
+                <svg class="absolute top-0 left-0 pointer-events-none z-[4]" :width="MAP_SIZE" :height="MAP_SIZE">
                   <defs>
                     <marker
                       :id="`gather-path-arrowhead-${entry.placeId}`"
@@ -498,7 +498,7 @@ function getGatherJobSvgStyle(jobId: number) {
                   />
                 </svg>
 
-                <div class="markers-overlay">
+                <div class="absolute top-0 left-0 w-full h-full pointer-events-none">
                   <template v-for="(aetheryte, idx) in entry.map.aetherytes" :key="`aeth-${entry.placeId}-${idx}`">
                     <n-tooltip
                       :trigger="isMobile ? 'click' : 'hover'"
@@ -509,12 +509,12 @@ function getGatherJobSvgStyle(jobId: number) {
                     >
                       <template #trigger>
                         <XivFARImage
-                          class="marker aetheryte"
+                          class="absolute -translate-x-1/2 -translate-y-1/2 z-[5] pointer-events-auto"
                           src="./ui/aetheryte.png"
                           :style="getPositionStyle(aetheryte.x, aetheryte.y)"
                         />
                       </template>
-                      <div class="tooltip">{{ aetheryte[`name_${itemLanguage}`] }}</div>
+                      <div class="text-xs text-center">{{ aetheryte[`name_${itemLanguage}`] }}</div>
                     </n-tooltip>
                   </template>
 
@@ -522,15 +522,15 @@ function getGatherJobSvgStyle(jobId: number) {
                     <ItemPop :item-info="target.item" :container-id="containerId">
                       <template #default>
                         <div
-                          class="marker gather-point"
+                          class="absolute -translate-x-1/2 -translate-y-1/2 z-[5] pointer-events-auto w-4 h-4"
                           :style="getPositionStyle(target.x, target.y)"
                         >
                           <span
                             v-if="hasGatherJobSvg(target.item.gatherInfo?.jobId || 0)"
-                            class="gather-point-icon-box"
+                            class="inline-flex w-4 h-4 items-center justify-center border border-[#9B4545] rounded bg-[rgba(255,255,255,0.9)] box-border"
                           >
                             <span
-                              class="gather-point-icon-svg"
+                              class="block w-3.5 h-3.5 bg-center bg-contain"
                               :style="getGatherJobSvgStyle(target.item.gatherInfo?.jobId || 0)"
                             />
                           </span>
@@ -554,110 +554,4 @@ function getGatherJobSvgStyle(jobId: number) {
 </template>
 
 <style scoped>
-.gathering-path-button {
-  display: inline-flex;
-  align-items: center;
-}
-
-.path-popover {
-  display: flex;
-  flex-direction: column;
-
-  .popover-header {
-    .title {
-      display: flex;
-      align-items: center;
-      gap: 3px;
-    }
-  }
-}
-
-.empty-hint {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--color-text-sub);
-}
-
-.map-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  justify-content: center;
-  padding-right: 12px;
-
-  .map-panel {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-
-    .map-content {
-      position: relative;
-
-      .map-image {
-        display: block;
-        pointer-events: none;
-      }
-
-      .path-svg {
-        position: absolute;
-        top: 0;
-        left: 0;
-        pointer-events: none;
-        z-index: 4;
-      }
-
-      .markers-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-
-        .marker {
-          position: absolute;
-          transform: translate(-50%, -50%);
-          z-index: 5;
-          pointer-events: auto;
-        }
-
-        .gather-point {
-          width: 16px;
-          height: 16px;
-
-          .gather-point-icon-box {
-            display: inline-flex;
-            width: 16px;
-            height: 16px;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid #9B4545;
-            border-radius: 4px;
-            background: rgba(255, 255, 255, 0.9);
-            box-sizing: border-box;
-          }
-
-          .gather-point-icon-svg {
-            display: block;
-            width: 14px;
-            height: 14px;
-            -webkit-mask-repeat: no-repeat;
-            mask-repeat: no-repeat;
-            -webkit-mask-position: center;
-            mask-position: center;
-            -webkit-mask-size: contain;
-            mask-size: contain;
-          }
-        }
-      }
-    }
-  }
-}
-
-.tooltip {
-  font-size: 12px;
-  text-align: center;
-}
 </style>

@@ -114,7 +114,7 @@ const handleImport = () => {
     </template>
 
     <div class="wrapper" ref="listPopContainer">
-      <div class="pop-title font-big">
+      <div class="flex items-center gap-0.75 font-big">
         <n-icon :size="16"><ArchiveSharp /></n-icon>
         <span>{{ t('common.import') }}</span>
       </div>
@@ -123,7 +123,7 @@ const handleImport = () => {
         {{ t('workflow.import.itemlist.tip_1') }}
         {{ t('workflow.import.itemlist.tip_2') }}
       </div>
-      <div class="input-container">
+      <div class="mt-1">
         <n-input
           type="textarea"
           v-model:value="importStr"
@@ -131,7 +131,7 @@ const handleImport = () => {
           :rows="10"
         />
       </div>
-      <div class="actions-container">
+      <div class="mt-1 text-end">
         <n-button type="primary" @click="handleImport">
           <template #icon>
             <n-icon><DoneOutlined /></n-icon>
@@ -145,15 +145,6 @@ const handleImport = () => {
 
 <style scoped>
 .wrapper {
-  .pop-title {
-    display: flex;
-    align-items: center;
-    gap: 3px;
-  }
-  .input-container,
-  .actions-container {
-    margin-top: 4px;
-  }
   .actions-container {
     text-align: end;
     button {

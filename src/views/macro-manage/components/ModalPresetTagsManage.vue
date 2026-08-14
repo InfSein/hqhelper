@@ -7,7 +7,7 @@ import DraggableTable from '@/components/ui/DraggableTable.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
 import { deepCopy } from '@/tools'
-import { _VAR_PRESET_TAG_MAXAMOUNT } from '@/types/workstate/macromanage.ts'
+import { _VAR_PRESET_TAG_MAXAMOUNT } from '@/types/workstate/macromanage'
 
 const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
 
@@ -74,7 +74,7 @@ const handleSave = () => {
     </div>
 
     <template #action>
-      <div class="modal-submit-container">
+      <div class="app-modal-footer">
         <n-button type="primary" size="large" @click="handleSave">
           <template #icon>
             <n-icon><SaveOutlined /></n-icon>

@@ -46,8 +46,8 @@ const handleCopy = async (text: string) => {
 </script>
 
 <template>
-  <div class="ame-wrapper">
-    <div v-if="!hideTabs" class="group-btns">
+  <div class="w-full h-full flex flex-col">
+    <div v-if="!hideTabs" class="flex gap-1.25 flex-wrap h-fit">
       <n-button
         size="small"
         v-for="(group, groupIndex) in macroGroups"
@@ -72,7 +72,7 @@ const handleCopy = async (text: string) => {
       {{ t('common.copy') }}
     </n-button>
     <div
-      class="group-container"
+      class="flex-1"
       v-for="(group, groupIndex) in macroGroups"
       :key="`macro-group-${groupIndex}`"
       v-show="selectedGroupIndex === groupIndex"
@@ -88,18 +88,18 @@ const handleCopy = async (text: string) => {
       </div>
       <div
         v-else
-        class="macro-container font-small"
+        class="font-small w-full leading-[1.3] overflow-auto mt-[0.5em]"
         :style="{
           height: contentHeight
         }"
       >
         <div
-          class="macro-line"
+          class="flex gap-1.25"
           v-for="(line, lineIndex) in group"
           :key="`${groupIndex}-macro-line-${lineIndex}`"
         >
-          <div class="line-num">{{ lineIndex + 1 }}</div>
-          <div class="line-content" :style="contentExtraStyle">{{ line }}</div>
+          <div class="w-5 text-right select-none text-gray-500">{{ lineIndex + 1 }}</div>
+          <div class="flex flex-nowrap" :style="contentExtraStyle">{{ line }}</div>
         </div>
       </div>
     </div>
@@ -107,43 +107,4 @@ const handleCopy = async (text: string) => {
 </template>
 
 <style scoped>
-.ame-wrapper {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-
-  .group-btns {
-    display: flex;
-    gap: 5px;
-    flex-wrap: wrap;
-    height: fit-content;
-  }
-  .group-container {
-    flex: 1;
-
-    .macro-container {
-      width: 100%;
-      line-height: 1.3;
-      overflow: auto;
-      margin-top: 0.5em;
-
-      .macro-line {
-        display: flex;
-        gap: 5px;
-
-        .line-num {
-          width: 20px;
-          text-align: right;
-          user-select: none;
-          color: gray;
-        }
-        .line-content {
-          display: flex;
-          flex-wrap: nowrap;
-        }
-      }
-    }
-  }
-}
 </style>

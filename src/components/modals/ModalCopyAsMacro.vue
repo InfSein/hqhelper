@@ -8,7 +8,7 @@ import MacroViewer from '@/components/craft/MacroViewer.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
 import { CopyToClipboard } from '@/tools'
-import type { MacroGenerateMode } from '@/types/config/func.ts'
+import type { MacroGenerateMode } from '@/types/config/func'
 
 const store = useStore()
 const { t } = useLocale()
@@ -160,7 +160,7 @@ const handleClose = () => {
     </div>
 
     <template #action>
-      <div class="modal-submit-container">
+      <div class="app-modal-footer">
         <TooltipButton
           type="primary"
           :icon="ContentCopyRound"

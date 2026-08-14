@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import XivFARImage from '@/components/ui/XivFARImage.vue'
-import UseConfig from '@/composables/useConfig.ts'
+import useConfig from '@/composables/useConfig'
 import { useResponsive } from '@/composables/useResponsive'
-import { type XivMapAetheryteInfo, type XivMapInfo } from '@/tools/game/map.ts'
+import { type XivMapAetheryteInfo, type XivMapInfo } from '@/tools/game/map'
 
 const { isMobile } = useResponsive()
-const { itemLanguage } = UseConfig()
+const { itemLanguage } = useConfig()
 
 interface MapButtonProps {
   mapData: XivMapInfo,
@@ -31,18 +31,18 @@ const getAetheryteName = (aetheryte: XivMapAetheryteInfo) => {
 </script>
 
 <template>
-  <div class="map-wrapper">
-    <div class="map-content" :style="{ width: mapSize + 'px', height: mapSize + 'px' }">
+  <div class="flex items-center justify-center">
+    <div class="relative" :style="{ width: mapSize + 'px', height: mapSize + 'px' }">
       <!-- 地图 -->
       <XivFARImage
-        class="map-image"
+        class="pointer-events-none"
         :size="mapSize"
         :src="mapData.map_src"
       />
-      <div class="markers-overlay">
+      <div class="absolute inset-0 pointer-events-none">
         <!-- 目的地旗帜 -->
         <XivFARImage 
-          class="marker flag"
+          class="absolute -translate-x-1/2 -translate-y-1/2 z-[1] pointer-events-auto"
           src="./ui/flag.png"
           :style="getPositionStyle(flagX, flagY)"
         />
@@ -57,12 +57,12 @@ const getAetheryteName = (aetheryte: XivMapAetheryteInfo) => {
           >
             <template #trigger>
               <XivFARImage 
-                class="marker aetheryte"
+                class="absolute -translate-x-1/2 -translate-y-1/2 z-[1] pointer-events-auto"
                 src="./ui/aetheryte.png"
                 :style="getPositionStyle(aetheryte.x, aetheryte.y)"
               />
             </template>
-            <div class="aetheryte-tooltip">
+            <div class="text-center text-xs">
               <p>{{ getAetheryteName(aetheryte) }}</p>
             </div>
           </n-tooltip>
@@ -73,37 +73,4 @@ const getAetheryteName = (aetheryte: XivMapAetheryteInfo) => {
 </template>
 
 <style scoped>
-.map-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  
-  .map-content {
-    position: relative;
-    
-    .map-image {
-      pointer-events: none;
-    }
-    .markers-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      
-      .marker {
-        position: absolute;
-        transform: translate(-50%, -50%);
-        z-index: 1;
-        pointer-events: auto;
-      }
-    }
-  }
-}
-
-.aetheryte-tooltip {
-  text-align: center;
-  font-size: 12px;
-}
 </style>

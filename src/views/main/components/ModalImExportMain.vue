@@ -18,7 +18,7 @@ import type { ItemInfo } from '@/tools/item'
 import { export2Excel, importExcel } from '@/tools/excel'
 import { useFufuCal } from '@/tools/use-fufu-cal'
 import type { GearSelections } from '@/types/game/gear'
-import type { ItemPriceInfo } from '@/types/item/price.ts'
+import type { ItemPriceInfo } from '@/types/item/price'
 
 const updateItemPrices = inject<() => Promise<void>>('updateItemPrices')!
 

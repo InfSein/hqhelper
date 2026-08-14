@@ -177,7 +177,7 @@ const handleStaffSelectionUpdate = () => {
     </div>
     
     <template #action>
-      <div class="modal-submit-container">
+      <div class="app-modal-footer">
         <n-button
           :type="cautionsConfirmed ? 'default' : 'primary'"
           @click="cautionsConfirmed = !cautionsConfirmed"

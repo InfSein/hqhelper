@@ -8,8 +8,8 @@ import {
 } from '@vicons/material'
 import XivFARImage from '@/components/ui/XivFARImage.vue'
 import { useLocale } from '@/composables/useLocale'
-import UseConfig from '@/composables/useConfig.ts'
-import useUiTools from '@/composables/useUiTools.ts'
+import useConfig from '@/composables/useConfig'
+import useUiTools from '@/composables/useUiTools'
 import { useResponsive } from '@/composables/useResponsive'
 import { XivJobs, XivRoles, type XivRole, type HqDataVer, type XivPatchVer } from '@/assets/data'
 import { visitUrl } from '@/tools'
@@ -17,7 +17,7 @@ import { getGearIcon, getGearRecomm, useGearAdder } from '@/tools/game/gear'
 import type { GearSelections } from '@/types/game/gear'
 
 const { t } = useLocale()
-const { uiLanguage } = UseConfig()
+const { uiLanguage } = useConfig()
 const { isMobile } = useResponsive()
 const { renderIcon, optionsRenderer } = useUiTools()
 const {
@@ -507,7 +507,7 @@ const onClickoutside = () => {
         <n-button
           :ghost="!props.selected"
           :disabled="props.disabled"
-          class="job-button"
+          class="p-px"
           :color="props.btnColor"
           :style="{ width: `${btnSize}px`, height: `${btnSize}px` }"
         >
@@ -545,8 +545,5 @@ const onClickoutside = () => {
   left: initial;
   cursor: pointer;
   user-select: none;
-}
-.job-button {
-  padding: 1px;
 }
 </style>

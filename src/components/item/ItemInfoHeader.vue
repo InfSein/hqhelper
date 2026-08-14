@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import XivFARImage from '@/components/ui/XivFARImage.vue'
-import UseConfig from '@/composables/useConfig.ts'
+import useConfig from '@/composables/useConfig'
 import type { ItemInfo } from '@/tools/item'
 
 const {
   itemLanguage,
-} = UseConfig()
+} = useConfig()
 
 interface ItemInfoHeaderProps {
   itemInfo: ItemInfo
@@ -35,7 +35,7 @@ const getItemSubName = () => {
 </script>
 
 <template>
-  <div class="base-info">
+  <div class="flex items-start gap-[5px] mt-[2%]">
     <XivFARImage
       :src="itemInfo"
       :size="35"
@@ -44,29 +44,21 @@ const getItemSubName = () => {
       <div class="main">
         <span>{{ getItemName() }}</span>
       </div>
-      <div class="sub">{{ getItemSubName() }}</div>
+      <div class="sub text-sub">{{ getItemSubName() }}</div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.base-info {
-  display: flex;
-  align-items: flex-start;
-  gap: 5px;
-  margin-top: 2%;
-
-  .item-names {
-    .main span {
-      line-height: 1;
-      font-size: calc(var(--n-font-size) + 2px);
-    }
-    .sub,
-    .main span.extra-name {
-      line-height: 1;
-      font-size: calc(var(--n-font-size) - 2px);
-      color: var(--color-text-sub);
-    }
+.item-names {
+  .main span {
+    line-height: 1;
+    font-size: calc(var(--n-font-size) + 2px);
+  }
+  .sub,
+  .main span.extra-name {
+    line-height: 1;
+    font-size: calc(var(--n-font-size) - 2px);
   }
 }
 </style>

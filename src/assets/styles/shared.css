@@ -17,13 +17,6 @@
   }
 }
 
-.account-view {
-  position: absolute;
-  top: 36px;
-  right: 20px;
-  z-index: 2000;
-}
-
 .macro-name-container {
   line-height: 1.2;
 
@@ -50,7 +43,7 @@
   }
 }
 
-.extra-header-container {
+.app-extra-header {
   display: flex;
   align-items: center;
 
@@ -81,7 +74,7 @@
   }
 }
 
-.modal-submit-container {
+.app-modal-footer {
   display: flex;
   justify-content: flex-end;
   gap: 8px;
@@ -95,7 +88,7 @@
 
   --color-border: #9e9e9e;
 }
-.glasscard.smallcard {
+.glasscard.glasscard--small {
   box-shadow: unset;
   background: var(--glasscard-bg-small) !important;
   border: 1px solid var(--glasscard-bordercolor-small, --n-border-color);

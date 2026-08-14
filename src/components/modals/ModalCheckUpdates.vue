@@ -10,8 +10,8 @@ import {
 import ModalPreferences from './ModalPreferences.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
-import { useDialog } from '@/composables/useDialog.ts'
-import AppStatus from '@/constants/app.ts'
+import { useDialog } from '@/composables/useDialog'
+import AppStatus from '@/constants/app'
 import { checkAppUpdates, checkElectronUpdates } from '@/tools'
 import type { ProcessStage, ProgressData } from 'env.electron'
 import { checkUrlLag } from '@/tools/web-request'
@@ -391,10 +391,12 @@ const handleSettingButtonClick = () => {
       <FoldableCard class="card proxy" card-key="modal-cu-proxy" card-size="small" disable-glass show-card-border>
         <template #header>
           <div class="card-title">
-            <n-icon><VpnLockRound /></n-icon>
-            <span class="title">{{ t('update.proxy.title') }}</span>
-            <div class="card-title-actions font-small">
-              <a href="javascript:void(0)" @click="handleShowProxySiteStatus">[{{ t('update.text.proxy_status_view') }}]</a>
+            <div class="app-card-title">
+              <n-icon><VpnLockRound /></n-icon>
+              <span class="title">{{ t('update.proxy.title') }}</span>
+              <div class="app-card-title__actions font-small">
+                <a href="javascript:void(0)" @click="handleShowProxySiteStatus">[{{ t('update.text.proxy_status_view') }}]</a>
+              </div>
             </div>
           </div>
         </template>

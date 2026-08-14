@@ -6,7 +6,7 @@ import ItemPop from './ItemPop.vue'
 import XivFARImage from '@/components/ui/XivFARImage.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
-import UseConfig from '@/composables/useConfig.ts'
+import useConfig from '@/composables/useConfig'
 import { useResponsive } from '@/composables/useResponsive'
 import { useItemContextMenu } from '@/composables/useItemContextMenu'
 import { type ItemInfo } from '@/tools/item'
@@ -17,7 +17,7 @@ const { isMobile } = useResponsive()
 const store = useStore()
 const {
   itemLanguage,
-} = UseConfig()
+} = useConfig()
 
 interface ItemSpanProps {
   itemInfo: ItemInfo
@@ -153,7 +153,7 @@ const handleItemIconClick = async () => {
 </script>
 
 <template>
-  <div ref="itemSpanNode" class="container" :style="containerStyle">
+  <div ref="itemSpanNode" class="flex items-center gap-0.75" :style="containerStyle">
     <div v-if="!itemInfo?.valid" class="item-text-container">未知物品({{itemInfo?.id}})</div>
     <template v-else>
       <XivFARImage
@@ -179,7 +179,7 @@ const handleItemIconClick = async () => {
         :pop-custom-width="275"
         :pop-trigger="popTrigger"
       >
-        <n-icon v-if="!hidePopIcon" class="item-popicon" size="14" color="#3b7fef"
+        <n-icon v-if="!hidePopIcon" class="cursor-pointer" size="14" color="#3b7fef"
           @contextmenu="handleContextMenu"
           @touchstart.passive="handleTouchStart"
           @touchmove.passive="handleTouchMove"
@@ -205,34 +205,24 @@ const handleItemIconClick = async () => {
 </template>
 
 <style scoped>
-.container {
-  display: flex;
-  align-items: center;
-  gap: 3px;
+.item-text-container {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
-  .item-text-container {
-    white-space: nowrap;
+  .item-name {
+    display: inline-block;
+    max-width: var(--item-name-maxwidth);
+    vertical-align: top;
     overflow: hidden;
     text-overflow: ellipsis;
-
-    .item-name {
-      display: inline-block;
-      max-width: var(--item-name-maxwidth);
-      vertical-align: top;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .item-amount {
-      display: inline-block;
-      vertical-align: top;
-      white-space: nowrap;
-    }
+    white-space: nowrap;
   }
 
-  .item-popicon {
-    cursor: pointer;
+  .item-amount {
+    display: inline-block;
+    vertical-align: top;
+    white-space: nowrap;
   }
 }
 </style>

@@ -29,12 +29,12 @@ const content = computed(() => {
   >
     <div class="wrapper">
       <!-- <img alt="-" :src="'./image/IMG_7324.jpg'" :width="isMobile ? '100%' : '750px'" height="auto" /> -->
-      <div class="comment font-small">
+      <div class="font-small select-text text-right">
         Photographed by 旭柠, 2024.
       </div>
     </div>
     <template #action>
-      <div class="content-container">
+      <div class="select-text">
         <p v-for="(line, lineIndex) in content" :key="`content-${lineIndex}`">
           {{ line }}
         </p>
@@ -44,11 +44,4 @@ const content = computed(() => {
 </template>
 
 <style scoped>
-.comment {
-  user-select: text;
-  text-align: right;
-}
-.content-container {
-  user-select: text;
-}
 </style>

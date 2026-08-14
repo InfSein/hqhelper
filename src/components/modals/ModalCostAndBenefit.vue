@@ -10,7 +10,7 @@ import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
 import { useAppModals } from '@/composables/useAppModals'
 import { useResponsive } from '@/composables/useResponsive'
-import useItemPrice from '@/composables/useItemPrice.ts'
+import useItemPrice from '@/composables/useItemPrice'
 import type { ItemInfo } from '@/tools/item'
 
 const store = useStore()
@@ -64,12 +64,12 @@ const handleShowItemPriceDetail = () => {
     @on-setting-button-clicked="handleSettingButtonClick"
   >
     <template #header>
-      <div class="card-title select-none">
+      <div class="app-card-title select-none">
         <n-icon><AttachMoneyOutlined /></n-icon>
         <span class="title">
           {{ t('statistics.group.cost_and_benefit.title') }}
         </span>
-        <div class="card-title-actions">
+        <div class="app-card-title__actions">
           <a href="javascript:void(0);" @click="handleShowItemPriceDetail">[{{ t('item.price.detail_table.intro') }}]</a>
         </div>
       </div>

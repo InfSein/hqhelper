@@ -22,18 +22,18 @@ import SettingItem from '@/components/ui/SettingItem.vue'
 import ModalPreferencesImportExport from './ModalPreferencesImportExport.vue'
 import { useStore } from '@/store/index'
 import { useLocale } from '@/composables/useLocale'
-import { useDialog } from '@/composables/useDialog.ts'
-import useUiTools from '@/composables/useUiTools.ts'
+import { useDialog } from '@/composables/useDialog'
+import useUiTools from '@/composables/useUiTools'
 import { useResponsive } from '@/composables/useResponsive'
 import { deepCopy } from '@/tools'
-import type { PreferenceGroup, SettingGroupKey } from '@/types/index.ts'
-import { fixFuncConfig, type FuncConfigModel } from '@/types/config/func.ts'
-import { fixUserConfig, type UserConfigModel } from '@/types/config/user.ts'
+import type { PreferenceGroup, SettingGroupKey } from '@/types/index'
+import { fixFuncConfig, type FuncConfigModel } from '@/types/config/func'
+import { fixUserConfig, type UserConfigModel } from '@/types/config/user'
 import { fixWorkState as fixMmHelperWorkState } from '@/types/workstate/mmhelper'
 import { fixWorkState as fixWorkflowWorkState } from '@/types/workstate/workflow'
 import { fixWorkState as fixHqwbWorkState } from '@/types/workstate/hqworkbench'
 import { fixWorkState as fixGatherclockWorkState } from '@/types/workstate/gatherclock'
-import { dbKey } from '@/utils/app.idb.ts'
+import { dbKey } from '@/utils/app.idb'
 
 const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
 
@@ -1078,7 +1078,7 @@ const containerMaxHeight = computed(() => {
     @on-load="onLoad"
   >
     <template #header>
-      <div class="card-title select-none">
+      <div class="app-card-title select-none">
         <n-icon :component="modalTitle.icon" />
         <span class="title">{{ modalTitle.text }}</span>
         <span class="description">[{{ currentGroupName }}]</span>
@@ -1170,7 +1170,7 @@ const containerMaxHeight = computed(() => {
     />
 
     <template #action>
-      <div class="modal-submit-container">
+      <div class="app-modal-footer">
         <n-button type="primary" size="large" @click="handleSave">
           <template #icon>
             <n-icon><SaveOutlined /></n-icon>

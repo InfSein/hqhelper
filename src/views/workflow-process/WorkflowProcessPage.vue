@@ -8,7 +8,7 @@ const { recommProcessGroups } = useWorkflowStatistics(currentWorkflow)
 </script>
 
 <template>
-  <div id="main-container" class="wrapper">
+  <div id="main-container" class="w-full h-full relative flex flex-col gap-2">
     <CraftRecommProcess
       v-model:expanded-blocks="currentWorkflow.recommData.expandedBlocks"
       v-model:completed-items="currentWorkflow.recommData.completedItems"
@@ -22,12 +22,4 @@ const { recommProcessGroups } = useWorkflowStatistics(currentWorkflow)
 </template>
 
 <style scoped>
-.wrapper {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
 </style>

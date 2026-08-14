@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import XivFARImage from '@/components/ui/XivFARImage.vue'
-import UseConfig from '@/composables/useConfig.ts'
+import useConfig from '@/composables/useConfig'
 import { XivJobs, type XivJob } from '@/assets/data'
 
 const {
   itemLanguage,
-} = UseConfig()
+} = useConfig()
 
 const props = defineProps({
   jobId: {
@@ -55,7 +55,7 @@ const getJobName = () => {
 </script>
 
 <template>
-  <div class="container">
+  <div class="flex items-center">
     <XivFARImage
       v-show="!hideIcon"
       class="img"
@@ -69,8 +69,4 @@ const getJobName = () => {
 </template>
 
 <style scoped>
-.container {
-  display: flex;
-  align-items: center;
-}
 </style>

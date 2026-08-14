@@ -14,15 +14,15 @@ import XivFARImage from '@/components/ui/XivFARImage.vue'
 import LocationSpan from '@/components/map/LocationSpan.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
-import useConfig from '@/composables/useConfig.ts'
+import useConfig from '@/composables/useConfig'
 import { useAppModals } from '@/composables/useAppModals'
 import { useEorzeaTime } from '@/composables/useEorzeaTime'
 import { useResponsive } from '@/composables/useResponsive'
 import { XivItemRemarks, XivJobs, type XivJob, XivAttributes } from '@/assets/data'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
 import { handleGetPriceError } from '@/tools/error'
-import { getItemPriceInfo } from '@/tools/item/price.ts'
-import type { ItemPriceType } from '@/types/config/func.ts'
+import { getItemPriceInfo } from '@/tools/item/price'
+import type { ItemPriceType } from '@/types/config/func'
 
 const store = useStore()
 const { t } = useLocale()
@@ -652,7 +652,7 @@ const handleOnScroll = (e: Event) => {
               :key="'time-limit-' + timeLimitIndex"
             >
               <div>{{ timeLimit.start }} ~ {{ timeLimit.end }}</div>
-              <div class="color-success">{{ timeCanGather(timeLimit) }}</div>
+              <div class="text-primary">{{ timeCanGather(timeLimit) }}</div>
             </div>
           </div>
           <div class="content" v-if="itemInfo.gatherInfo?.folkloreId || itemInfo?.gatherInfo?.requirement">

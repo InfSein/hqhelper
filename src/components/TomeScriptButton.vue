@@ -5,12 +5,12 @@ import {
 import ItemSpan from '@/components/item/ItemSpan.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
-import useConfig from '@/composables/useConfig.ts'
+import useConfig from '@/composables/useConfig'
 import { useAppModals } from '@/composables/useAppModals'
 import { useResponsive } from '@/composables/useResponsive'
 import { XivUnpackedTradeMap } from '@/assets/data'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
-import type { MacroGenerateMode } from '@/types/config/func.ts'
+import type { MacroGenerateMode } from '@/types/config/func'
 
 const store = useStore()
 const {
@@ -141,24 +141,24 @@ const handleCopyAsMacro = async () => {
     </template>
 
     <div class="pop-wrapper">
-      <div class="pop-header">
-        <p>{{ t('statistics.tomescript.title') }}</p>
+      <div class="flex items-center text-[calc(var(--n-font-size)+2px)] leading-[1.2]">
+        <p class="font-bold">{{ t('statistics.tomescript.title') }}</p>
       </div>
-      <n-divider class="block-divider" />
-      <div class="pre">
-        <div class="preset-item">
+      <n-divider class="my-1!" />
+      <div class="mb-1.25">
+        <div class="w-fit leading-[1.2] flex items-center gap-1.25 p-0.75 border border-[#18A058] rounded-sm">
           <n-switch v-model:value="showBiColorItems" @update:value="handleShowBiColorItemsChange" :round="false" size="small" />
           <div>{{ t('statistics.tomescript.show_bicolor_items') }}</div>
         </div>
       </div>
-      <div class="items">
+      <div class="leading-[1.2] flex flex-col gap-1.25">
         <div class="item" v-for="(itemInfos, scriptID) in items" :key="'popup-tome-' + scriptID">
-          <div class="line">
+          <div class="flex gap-0.75">
             <ItemSpan :item-info="getItemInfo(scriptID)" :amount="tomeScripts[scriptID]" show-amount />
           </div>
           <n-divider class="m-0! mx-0.5!" />
-          <div class="content">
-            <div class="line" v-for="(itemInfo, index) in itemInfos" :key="'popup-tome-' + scriptID + '-' + index">
+          <div class="ml-[1em]">
+            <div class="flex gap-0.75" v-for="(itemInfo, index) in itemInfos" :key="'popup-tome-' + scriptID + '-' + index">
               <ItemSpan :item-info="getItemInfo(itemInfo.id)" :amount="itemInfo.amount" show-amount />
             </div>
           </div>
@@ -167,7 +167,7 @@ const handleCopyAsMacro = async () => {
           <n-empty :description="t('common.no_required_items')" />
         </div>
       </div>
-      <n-divider class="block-divider" />
+      <n-divider class="my-1!" />
       <div class="actions">
         <n-button size="tiny" :loading="copyBtnLoading" :disabled="copyBtnLoading" @click="handleCopyAsMacro">
           <template #icon>
@@ -199,47 +199,6 @@ const handleCopyAsMacro = async () => {
     align-items: center;
     flex-shrink: 0;
     margin-left: auto;
-  }
-}
-.pop-wrapper {
-  .block-divider {
-    margin: 4px 0;
-  }
-  .pop-header {
-    display: flex;
-    align-items: center;
-    font-size: calc(var(--n-font-size) + 2px);
-    line-height: 1.2;
-
-    p { font-weight: bold; }
-  }
-  .pre {
-    margin-bottom: 5px;
-
-    .preset-item {
-      width: fit-content;
-      line-height: 1.2;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      padding: 3px;
-      border: 1px solid #18A058;
-      border-radius: 3px;
-    }
-  }
-  .items {
-    line-height: 1.2;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-
-    .item .content {
-      margin-left: 1em;
-    }
-    .item .line {
-      display: flex;
-      gap: 3px;
-    }
   }
 }
 </style>

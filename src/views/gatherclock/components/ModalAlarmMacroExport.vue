@@ -9,18 +9,18 @@ import {
 import ItemSpan from '@/components/item/ItemSpan.vue'
 import MacroViewer from '@/components/craft/MacroViewer.vue'
 import { useLocale } from '@/composables/useLocale'
-import UseConfig from '@/composables/useConfig.ts'
+import useConfig from '@/composables/useConfig'
 import { useResponsive } from '@/composables/useResponsive'
 import { XivJobs, type XivJob } from '@/assets/data'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
-import type { ItemGroup } from '@/types/item/index.ts'
-import type { AlarmMacroOptions } from '@/types/workstate/gatherclock.ts'
+import type { ItemGroup } from '@/types/item/index'
+import type { AlarmMacroOptions } from '@/types/workstate/gatherclock'
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()
 const {
   uiLanguage, itemLanguage,
-} = UseConfig()
+} = useConfig()
 
 const showModal = defineModel<boolean>('show', { required: true })
 const alarmMacroOptions = defineModel<AlarmMacroOptions>('options', { required: true })

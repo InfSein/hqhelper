@@ -65,7 +65,7 @@ const statementBlocks = computed(() => {
       :name="block.id"
       :tab="block.name"
     >
-      <div class="container">
+      <div class="select-text">
         <ItemList
           :items="block.items"
           :list-height="480"
@@ -75,15 +75,14 @@ const statementBlocks = computed(() => {
       </div>
     </n-tab-pane>
   </n-tabs>
-  <div v-else class="wrapper desktop">
+  <div v-else class="select-text grid grid-cols-5 gap-2.5">
     <GroupBox
       v-for="block in statementBlocks"
       :key="block.id"
       :id="block.id"
-      class="group"
     >
       <template #title>{{ block.name }}</template>
-      <div class="container">
+      <div class="flex flex-col gap-1.25 h-full select-text">
         <ItemList
           :items="block.items"
           :list-height="480"
@@ -97,20 +96,4 @@ const statementBlocks = computed(() => {
 </template>
 
 <style scoped>
-/* All */
-.wrapper {
-  user-select: text;
-}
-.wrapper.desktop {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 10px;
-}
-.group .container {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  height: 100%;
-  user-select: text;
-}
 </style>

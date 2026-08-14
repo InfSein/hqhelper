@@ -230,9 +230,9 @@ provide('updateItemPrices', updateItemPrices)
   <FoldableCard card-key="main-statistics">
     <template #header>
       <i class="xiv square-4"></i>
-      <span class="card-title-text">{{ t('statistics.view_statistics') }}</span>
-      <a class="card-title-extra" href="javascript:void(0);" @click="showStatement">{{ t('common.mquoted_view_statement') }}</a>
-      <a class="card-title-extra" href="javascript:void(0);" @click="handleDisplayImportExportModal">[{{ t('common.imexport') }}]</a>
+      <span class="app-card-title__text">{{ t('statistics.view_statistics') }}</span>
+      <a class="app-card-title__extra" href="javascript:void(0);" @click="showStatement">{{ t('common.mquoted_view_statement') }}</a>
+      <a class="app-card-title__extra" href="javascript:void(0);" @click="handleDisplayImportExportModal">[{{ t('common.imexport') }}]</a>
     </template>
     <div class="wrapper">
       <GroupBox

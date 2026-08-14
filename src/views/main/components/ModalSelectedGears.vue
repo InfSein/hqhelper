@@ -5,7 +5,7 @@ import {
 } from '@vicons/material'
 import XivFARImage from '@/components/ui/XivFARImage.vue'
 import { useLocale } from '@/composables/useLocale'
-import useConfig from '@/composables/useConfig.ts'
+import useConfig from '@/composables/useConfig'
 import { useResponsive } from '@/composables/useResponsive'
 import { XivGearAffixes, XivRoles, type XivRole, XivJobs, type HqDataVer } from '@/assets/data'
 import { deepCopy } from '@/tools'
@@ -469,7 +469,7 @@ const handleSave = () => {
     </div>
     
     <template #action>
-      <div class="modal-submit-container">
+      <div class="app-modal-footer">
         <n-button type="primary" size="large" @click="handleSave">
           <template #icon>
             <n-icon><SaveOutlined /></n-icon>

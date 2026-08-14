@@ -14,7 +14,7 @@ defineProps<TooltipTextProps>();
 <template>
   <n-tooltip :trigger="isMobile ? 'click' : 'hover'" :placement="placement">
     <template #trigger>
-      <span class="tooltip-text-trigger">
+      <span class="underline decoration-dotted cursor-help">
         {{ text }}
       </span>
     </template>
@@ -23,9 +23,4 @@ defineProps<TooltipTextProps>();
 </template>
 
 <style scoped>
-.tooltip-text-trigger {
-  text-decoration: underline;
-  text-decoration-style: dotted;
-  cursor: help;
-}
 </style>

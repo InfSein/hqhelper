@@ -111,7 +111,7 @@ const handleImport = () => {
     </div>
 
     <template #action>
-      <div class="modal-submit-container">
+      <div class="app-modal-footer">
         <n-button v-if="action === 'export'" type="primary" @click="handleCopy">
           <template #icon>
             <n-icon><ContentCopyRound /></n-icon>

@@ -5,13 +5,13 @@ import {
 import XivMap from './XivMap.vue'
 import XivFARImage from '@/components/ui/XivFARImage.vue'
 import { useLocale } from '@/composables/useLocale'
-import UseConfig from '@/composables/useConfig.ts'
+import useConfig from '@/composables/useConfig'
 import { useResponsive } from '@/composables/useResponsive'
-import { getNearestAetheryte, type XivMapInfo } from '@/tools/game/map.ts'
+import { getNearestAetheryte, type XivMapInfo } from '@/tools/game/map'
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()
-const { itemLanguage } = UseConfig()
+const { itemLanguage } = useConfig()
 
 interface MapButtonProps {
   size: number,
@@ -60,7 +60,7 @@ const handleOpenCafeMap = () => {
     <div class="map">
       <div class="title">
         <div class="main">{{ getMapName() }}</div>
-        <div class="subs">{{ getMapSubName() }}</div>
+        <div class="subs text-sub">{{ getMapSubName() }}</div>
       </div>
       <XivMap
         :map-data="props.mapData"
@@ -111,7 +111,6 @@ const handleOpenCafeMap = () => {
     }
     .subs {
       font-size: calc(var(--n-font-size) - 2px);
-      color: var(--color-text-sub);
     }
   }
   .footer {

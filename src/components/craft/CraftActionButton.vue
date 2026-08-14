@@ -3,7 +3,7 @@ import {
   type PopoverTrigger,
 } from 'naive-ui'
 import XivFARImage from '@/components/ui/XivFARImage.vue'
-import useConfig from '@/composables/useConfig.ts'
+import useConfig from '@/composables/useConfig'
 import { useResponsive } from '@/composables/useResponsive'
 import type { XivCraftAction } from '@/assets/data'
 import { getImgCdnUrl } from '@/tools/game'
@@ -64,8 +64,8 @@ const handleButtonClick = () => {
         />
       </n-button>
     </template>
-    <div class="action-popover">
-      <div class="base-info">
+    <div class="select-text">
+      <div class="flex items-start gap-1.25 mt-[2%]">
         <XivFARImage
           :src="imgUrl"
           :size="34"
@@ -74,7 +74,7 @@ const handleButtonClick = () => {
           <div class="main">
             <span>{{ craftAction[`name_${itemLanguage}`] }}</span>
           </div>
-          <div class="sub">{{ getSubName() }}</div>
+          <div class="sub text-sub">{{ getSubName() }}</div>
         </div>
       </div>
     </div>
@@ -82,26 +82,15 @@ const handleButtonClick = () => {
 </template>
 
 <style scoped>
-.action-popover {
-  user-select: text;
-
-  .base-info {
-    display: flex;
-    align-items: flex-start;
-    gap: 5px;
-    margin-top: 2%;
-
-    .item-names {
-      .main span {
-        line-height: 1;
-        font-size: calc(var(--n-font-size) + 2px);
-      }
-      .sub,
-      .main span.extra-name {
-        line-height: 1;
-        font-size: calc(var(--n-font-size) - 2px);
-      }
-    }
+.item-names {
+  .main span {
+    line-height: 1;
+    font-size: calc(var(--n-font-size) + 2px);
+  }
+  .sub,
+  .main span.extra-name {
+    line-height: 1;
+    font-size: calc(var(--n-font-size) - 2px);
   }
 }
 </style>

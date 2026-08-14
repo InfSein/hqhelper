@@ -10,18 +10,18 @@ import ItemSelector from '@/components/item/ItemSelector.vue'
 import ItemSubmissionReward from '@/components/item/ItemSubmissionReward.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
-import UseConfig from '@/composables/useConfig.ts'
+import useConfig from '@/composables/useConfig'
 import { ExpansionSpecialItems } from '@/constants/game'
 import { XivJobs, XivUnpackedCollectableSubmissions } from '@/assets/data'
 import { getItemInfo } from '@/tools/item'
-import { type WorkState } from '@/types/workstate/cshelper.ts'
+import { type WorkState } from '@/types/workstate/cshelper'
 
 const store = useStore()
 const { t } = useLocale()
 const {
   uiLanguage,
   itemLanguage,
-} = UseConfig()
+} = useConfig()
 
 const workState = defineModel<WorkState>('workState', { required: true })
 
@@ -93,12 +93,12 @@ const handleJoinWorkflow = () => {
 </script>
 
 <template>
-  <div class="panel-wrapper">
+  <div class="flex flex-col gap-3.75">
     <div>
       <FoldableCard card-key="ft-item-selection">
         <template #header>
           <i class="xiv square-1"></i>
-          <span class="card-title-text">{{ t('cs_helper.select_collectable_submission') }}</span>
+          <span class="app-card-title__text">{{ t('cs_helper.select_collectable_submission') }}</span>
         </template>
 
         <n-tabs v-model:value="workState.mode" type="segment" animated>
@@ -311,11 +311,6 @@ const handleJoinWorkflow = () => {
 
 <style scoped>
 /* All */
-.panel-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
 .item-selection-container {
   display: flex;
   flex-direction: column;

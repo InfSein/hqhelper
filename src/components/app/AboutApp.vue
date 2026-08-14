@@ -3,7 +3,7 @@ import StaffGroup from './StaffGroup.vue'
 import ModalSponsorsList from '@/components/modals/ModalSponsorsList.vue'
 import useStaff from "@/composables/useStaff"
 import { useLocale } from '@/composables/useLocale'
-import AppStatus from '@/constants/app.ts'
+import AppStatus from '@/constants/app'
 
 const { t } = useLocale()
 const { staffMembers } = useStaff()
@@ -100,9 +100,6 @@ const viewSponsors = () => {
 <style scoped>
 .n-divider {
   margin: 10px 0;
-}
-:deep(.n-spin) {
-  --n-size: 14px !important;
 }
 
 .wrapper {
@@ -211,8 +208,6 @@ const viewSponsors = () => {
     }
   }
 }
-
-
 
 /* Desktop */
 @media screen and (min-width: 768px) {

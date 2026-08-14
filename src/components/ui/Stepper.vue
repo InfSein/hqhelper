@@ -35,13 +35,13 @@ const handlePlusClick = () => {
 </script>
 
 <template>
-  <div class="stepper" ref="container" :style="containerStyle">
+  <div class="stepper flex items-center justify-center text-3.75 w-full" ref="container" :style="containerStyle">
     <n-button v-if="showButtons" size="small" class="stepper-button" :disabled="disabled || modelValue === min" @click="handleMinusClick">
       <template #icon>
         <n-icon><minus-sharp /></n-icon>
       </template>
     </n-button>
-    <div class="stepper-input" :style="inputStyle">
+    <div class="mx-0.5 max-w-26.25" :style="inputStyle">
       <n-input-number
         v-model:value="modelValue"
         size="small"
@@ -65,20 +65,7 @@ const handlePlusClick = () => {
 .stepper :deep(input.n-input__input-el) {
   text-align: center;
 }
-
-.stepper {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 15px;
-
-  .stepper-button {
-    width: var(--n-height);
-  }
-  .stepper-input {
-    margin: 0 2px;
-    max-width: 105px;
-  }
+.stepper-button {
+  width: var(--n-height);
 }
 </style>

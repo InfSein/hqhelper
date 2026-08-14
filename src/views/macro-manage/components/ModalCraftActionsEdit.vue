@@ -8,14 +8,14 @@ import {
 import FoldableCard from '@/components/templates/FoldableCard.vue'
 import CraftActionButton from '@/components/craft/CraftActionButton.vue'
 import { useLocale } from '@/composables/useLocale'
-import UseConfig from '@/composables/useConfig.ts'
+import useConfig from '@/composables/useConfig'
 import { useResponsive } from '@/composables/useResponsive'
 import { XivCraftActions, XivCraftActionGroups, type XivCraftActionGroupKey } from '@/assets/data'
 import { deepCopy } from '@/tools'
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()
-const { itemLanguage } = UseConfig()
+const { itemLanguage } = useConfig()
 
 const showModal = defineModel<boolean>('show', { required: true })
 
@@ -158,7 +158,7 @@ const handleSave = () => {
     </div>
 
     <template #action>
-      <div class="modal-submit-container">
+      <div class="app-modal-footer">
         <n-button type="primary" @click="handleSave">
           <template #icon>
             <n-icon><DoneOutlined /></n-icon>

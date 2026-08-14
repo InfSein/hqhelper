@@ -846,7 +846,6 @@ const handleSettingButtonClick = () => {
 @media screen and (max-width: 767px) {
   .query-options {
     flex-direction: column;
-
     #querier-search {
       width: 100%;
     }

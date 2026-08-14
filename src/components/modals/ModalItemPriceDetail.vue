@@ -8,13 +8,13 @@ import GroupBox from '@/components/templates/GroupBox.vue'
 import ItemPriceLogCell from '@/components/item/ItemPriceLogCell.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
-import { useDialog } from '@/composables/useDialog.ts'
+import { useDialog } from '@/composables/useDialog'
 import { useResponsive } from '@/composables/useResponsive'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
 import { handleGetPriceError } from '@/tools/error'
-import { getItemPriceHistory, getItemPriceInfo } from '@/tools/item/price.ts'
-import { ItemPriceApiVersion } from '@/types/item/price.ts'
-import { itemPriceTypes, type ItemPriceType } from '@/types/config/func.ts'
+import { getItemPriceHistory, getItemPriceInfo } from '@/tools/item/price'
+import { ItemPriceApiVersion } from '@/types/item/price'
+import { itemPriceTypes, type ItemPriceType } from '@/types/config/func'
 
 const store = useStore()
 const { t } = useLocale()

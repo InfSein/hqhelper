@@ -94,9 +94,9 @@ const handleIgnoreAnnouncement = async (aid: AnnouncementId) => {
       closable
       @close="handleCloseAnnouncement(announcement.id)"
     >
-      <div class="announcement-content">
-        <div class="content-text" v-html="announcement.content.join('<br>')" />
-        <div class="content-actions-container">
+      <div>
+        <div v-html="announcement.content.join('<br>')" />
+        <div class="mt-1.25 flex gap-x-1 justify-end flex-wrap">
           <n-button quaternary
             v-for="(action, actionIndex) in announcement.actions"
             :key="`anno-${announcement.id}-action-${actionIndex}`"
@@ -124,16 +124,5 @@ const handleIgnoreAnnouncement = async (aid: AnnouncementId) => {
   gap: 5px;
   background-color: var(--glasscard-bg);
   border-radius: 4px;
-
-  .announcement-content {
-
-    .content-actions-container {
-      margin-top: 5px;
-      display: flex;
-      gap: 0 4px;
-      justify-content: flex-end;
-      flex-wrap: wrap;
-    }
-  }
 }
 </style>

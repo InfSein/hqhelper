@@ -6,7 +6,7 @@ import {
 import HelpButton from '@/components/ui/HelpButton.vue'
 import DraggableTable from '@/components/ui/DraggableTable.vue'
 import { useLocale } from '@/composables/useLocale'
-import { _VAR_MAX_WORKFLOW, getDefaultWorkflow, type Workflow } from '@/types/workstate/workflow.ts'
+import { _VAR_MAX_WORKFLOW, getDefaultWorkflow, type Workflow } from '@/types/workstate/workflow'
 
 const { t } = useLocale()
 const NAIVE_UI_MESSAGE = useMessage()
@@ -74,7 +74,7 @@ const handleSave = () => {
     </div>
 
     <template #action>
-      <div class="modal-submit-container">
+      <div class="app-modal-footer">
         <n-button type="primary" size="large" @click="handleSave">
           <template #icon>
             <n-icon><SaveOutlined /></n-icon>

@@ -7,7 +7,7 @@ import GatherItemCard from '@/views/gatherclock/components/GatherItemCard.vue'
 import ModalAudioConfig from '@/views/gatherclock/components/ModalAudioConfig.vue'
 import ModalAlarmMacroExport from '@/views/gatherclock/components/ModalAlarmMacroExport.vue'
 import { useStore } from '@/store'
-import UseConfig from '@/composables/useConfig'
+import useConfig from '@/composables/useConfig'
 import { useDialog } from '@/composables/useDialog'
 import { useLocale } from '@/composables/useLocale'
 import useUiTools from '@/composables/useUiTools'
@@ -33,7 +33,7 @@ const { optionsRenderer } = useUiTools()
 const { getLimitedGatherings } = useNbbCal()
 const {
   uiLanguage, itemLanguage,
-} = UseConfig()
+} = useConfig()
 
 const gatherData = computed(() => {
   const limitedGatherings = getLimitedGatherings()
@@ -569,7 +569,7 @@ const handleShowAlarmMacroExportModal = () => {
     <FoldableCard card-key="gatherclock-filter">
       <template #header>
         <i class="xiv sync-invert"></i>	
-        <span class="card-title-text">{{ t('gather_clock.preference.title') }}</span>
+        <span class="app-card-title__text">{{ t('gather_clock.preference.title') }}</span>
       </template>
 
       <div class="query-form">

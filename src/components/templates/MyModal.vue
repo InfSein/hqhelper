@@ -88,7 +88,7 @@ const handleShowFuncPreference = () => {
   >
     <template #header>
       <slot name="header">
-        <div class="card-title select-none">
+        <div class="app-card-title select-none">
           <n-icon v-if="!!icon" :component="icon" />
           <span class="title">{{ title }}</span>
         </div>
@@ -96,7 +96,7 @@ const handleShowFuncPreference = () => {
     </template>
 
     <template #header-extra>
-      <div class="extra-header-container">
+      <div class="app-extra-header">
         <n-button
           v-for="(btn, btnIndex) in extraHeaderButtons"
           :key="btnIndex"

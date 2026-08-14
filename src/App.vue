@@ -9,17 +9,17 @@ import AccountView from './components/app/AccountView.vue'
 import { useStore } from '@/store/index'
 import { useLocale } from './locales'
 import { useAppMode } from '@/composables/useAppMode'
-import useConfig from '@/composables/useConfig.ts'
+import useConfig from '@/composables/useConfig'
 import { useAppModals } from '@/composables/useAppModals'
-import { registerDialogProvider, useDialog } from '@/composables/useDialog.ts'
+import { registerDialogProvider, useDialog } from '@/composables/useDialog'
 import { useResponsive } from '@/composables/useResponsive'
 import { useElectronSync } from '@/composables/electron-sync'
-import AppStatus from './constants/app.ts'
+import AppStatus from './constants/app'
 import { checkAppUpdates, checkElectronUpdates, deepCopy, getAppBackground, sleep } from './tools'
-import { fixFuncConfig, type FuncConfigModel } from './types/config/func.ts'
-import { fixUserConfig, type UserConfigModel } from './types/config/user.ts'
-import { fixCloudConfig, type CloudConfigModel } from './types/config/cloud.ts'
-import { fixMainCache, type MainCacheModel } from './types/config/cache-main.ts'
+import { fixFuncConfig, type FuncConfigModel } from './types/config/func'
+import { fixUserConfig, type UserConfigModel } from './types/config/user'
+import { fixCloudConfig, type CloudConfigModel } from './types/config/cloud'
+import { fixMainCache, type MainCacheModel } from './types/config/cache-main'
 
 const ModalCopyAsMacro = defineAsyncComponent(() => import('@/components/modals/ModalCopyAsMacro.vue'))
 const ModalJoinInWorkflow = defineAsyncComponent(() => import('@/components/modals/ModalJoinInWorkflow.vue'))
@@ -297,11 +297,11 @@ const naiveUIThemeOverrides = computed(() : GlobalThemeOverrides => {
             <router-view />
           </n-layout>
 
-          <AccountView v-if="!isMobile && appMode !== 'overlay'" trigger-class="account-view" />
+          <AccountView v-if="!isMobile && appMode !== 'overlay'" trigger-class="absolute! top-9 right-5 z-[2000]!" />
 
           <div
             v-if="AppStatus.IsDev && !isMobile"
-            class="absolute bottom-1 left-2 text-xs text-(--color-text-sub) select-none"
+            class="absolute bottom-1 left-2 text-xs text-sub select-none"
           >
             ◈ 当前为开发中版本，不代表最终效果。
           </div>
