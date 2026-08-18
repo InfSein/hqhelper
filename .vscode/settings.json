@@ -5,7 +5,7 @@
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.patterns": {
     "tsconfig.json": "tsconfig.*.json, env.d.ts, env.*.ts",
-    "vite.config.*": "eslint*, crowdin.yml",
+    "vite.config.*": "eslint*",
     "package.json": "package-lock.json",
     "folder-alias.json": "private-folder-alias.json",
     "README.md": "CHANGELOG.md, LICENSE, CONTRIBUTING.md, TODO.md"
