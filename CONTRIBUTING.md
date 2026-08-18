@@ -2,7 +2,7 @@
 
 #### **代码修改**
 
-如果您具有前端编程能力，您可以通过发起 [Pull Request](https://github.com/InfSein/hqhelper-dawntrail/pulls) 等方式参与到 `HqHelper` 的开发工作中。代码可能需要遵守通用规范和一些额外村规，具体请参阅我们的 [Wiki](https://github.com/InfSein/hqhelper-dawntrail/wiki) 。
+如果您具有前端编程能力，您可以通过发起 [Pull Request](https://github.com/InfSein/hqhelper/pulls) 等方式参与到 `HqHelper` 的开发工作中。代码可能需要遵守通用规范和一些额外村规，具体请参阅我们的 [Wiki](https://github.com/InfSein/hqhelper/wiki) 。
 
 您可以使用 AI 编程工具，但应当确保代码质量，让 PR 能够被人类看懂。
 
@@ -16,4 +16,4 @@
 如果仍旧非常希望我们增加第一方支持，请新建 `Issue` 以收集社区意见。
 
 如果你希望对 `HqHelper` 的现有翻译进行修改：
-请直接发起 [Pull Request](https://github.com/InfSein/hqhelper-dawntrail/pulls) 对语言json文件进行修改。在 `vscode` 中，可以使用 `i18n Ally` 插件辅助工作。
+请直接发起 [Pull Request](https://github.com/InfSein/hqhelper/pulls) 对语言json文件进行修改。在 `vscode` 中，可以使用 `i18n Ally` 插件辅助工作。
