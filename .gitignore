@@ -29,7 +29,6 @@ private-folder-alias.json
 # Ai
 .agent
 .agents
-AGENTS.md
 skills-lock.json
 
 # Editor directories and files
