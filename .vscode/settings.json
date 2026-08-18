@@ -8,7 +8,7 @@
     "vite.config.*": "eslint*, crowdin.yml",
     "package.json": "package-lock.json",
     "folder-alias.json": "private-folder-alias.json",
-    "README.md": "CHANGELOG.md, LICENSE"
+    "README.md": "CHANGELOG.md, LICENSE, CONTRIBUTING.md, TODO.md"
   },
   "i18n-ally.localesPaths": [
     "src/locales"

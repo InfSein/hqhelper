@@ -12,9 +12,9 @@
   },
   "scripts": {
     "dev": "vite",
-    "i18n:upload-source": "npx crowdin upload sources",
-    "i18n:upload-translations": "npx crowdin upload translations",
-    "i18n:download": "npx crowdin download",
+    "i18n-source:upload": "node scripts/upload-source.cjs",
+    "i18n-trans:download": "node scripts/download-translation.cjs",
+    "i18n-trans:upload": "node scripts/upload-translation.cjs",
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "build-only": "vite build",
