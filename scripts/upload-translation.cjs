@@ -12,6 +12,7 @@
  *   - 上传 src/locales/{language}.json 至 HQHelper API
  */
 
+/* eslint-disable @typescript-eslint/no-require-imports */
 const fs = require('fs');
 const path = require('path');
 

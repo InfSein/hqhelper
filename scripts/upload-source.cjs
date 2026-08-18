@@ -10,6 +10,7 @@
  *   - 该接口需管理员（admin）权限的 API Key
  */
 
+/* eslint-disable @typescript-eslint/no-require-imports */
 const fs = require('fs');
 const path = require('path');
 

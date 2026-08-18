@@ -12,6 +12,7 @@
  *   - 仅包含已有翻译的词条，未翻译的词条不包含在结果中
  */
 
+/* eslint-disable @typescript-eslint/no-require-imports */
 const fs = require('fs');
 const path = require('path');
 
