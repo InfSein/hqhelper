@@ -2,8 +2,8 @@
   "name": "hqhelper-dawntrail",
   "version": "2.5.1",
   "gamever": {
-    "cn": "7.51",
-    "global": "7.51"
+    "cn": "7.55",
+    "global": "7.55"
   },
   "private": true,
   "type": "module",
