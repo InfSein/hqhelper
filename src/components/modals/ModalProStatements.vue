@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import { 
-  TableViewOutlined
+import {
+  TableViewOutlined,
 } from '@vicons/material'
-import ModalRecommProcesses from './ModalRecommProcesses.vue'
 import ModalPreferences from './ModalPreferences.vue'
+import ModalRecommProcesses from './ModalRecommProcesses.vue'
+import CraftStatementsPro from '@/components/craft/CraftStatementsPro.vue'
+import { useStore } from '@/store'
+import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
 import { type ItemInfo } from '@/tools/item'
 import { useFufuCal } from '@/tools/use-fufu-cal'
-import CraftStatementsPro from '../custom/general/CraftStatementsPro.vue'
-import { useStore } from '@/store'
-
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-// const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
 
 const store = useStore()
+const { t } = useLocale()
+const { isMobile } = useResponsive()
 const { getProStatementData, calRecommProcessData } = useFufuCal()
 
 const showModal = defineModel<boolean>('show', { required: true })
@@ -95,15 +95,15 @@ const handleSettingButtonClick = () => {
     @on-setting-button-clicked="handleSettingButtonClick"
   >
     <template #header>
-      <div class="card-title select-none">
+      <div class="app-card-title select-none">
         <n-icon><TableViewOutlined /></n-icon>
         <span class="title">
           {{ t('common.appfunc.craft_statement') }}
         </span>
-        <span class="card-title-extra">
+        <span class="app-card-title__extra">
           <n-tag type="info" size="small" round>PRO</n-tag>
         </span>
-        <div class="card-title-actions">
+        <div class="app-card-title__actions">
           <a href="javascript:void(0);" @click="handleResetPreparedItems">[{{ t('statement.text.reset_prepared') }}]</a>
           <a href="javascript:void(0);" @click="handleShowRecommendedProcesses">[{{ t('common.appfunc.recomm_process') }}]</a>
         </div>
@@ -133,30 +133,9 @@ const handleSettingButtonClick = () => {
 </template>
 
 <style scoped>
-/* All */
-.wrapper {
-  user-select: text;
-}
-.wrapper.desktop {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-}
-.group .container {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  height: 100%;
-  user-select: text;
-}
-
-/* Desktop */
-@media screen and (min-width: 768px) {
-}
-
 /* Mobile */
 @media screen and (max-width: 767px) {
-  .card-title-actions {
+  .app-card-title__actions {
     flex-basis: 100%;
   }
 }

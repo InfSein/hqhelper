@@ -1,47 +1,49 @@
 <script setup lang="ts">
 import {
+  AllInclusiveSharp,
+  ArchiveSharp,
+  AttachMoneyOutlined,
+  CodeSharp,
+  ColorLensRound,
+  DiscountOutlined,
+  InfoOutlined,
+  MemoryRound,
+  SaveOutlined,
   SettingsSharp,
   SettingsSuggestFilled,
+  TableViewOutlined,
   TravelExploreRound,
   TrendingUpRound,
-  ColorLensRound,
-  MemoryRound,
+  UnarchiveSharp,
   UpdateRound,
-  CodeSharp,
-  DiscountOutlined,
-  TableViewOutlined,
-  AllInclusiveSharp,
-  AttachMoneyOutlined,
-  InfoOutlined,
-  // WifiRound,
-  ArchiveSharp, UnarchiveSharp,
-  SaveOutlined
 } from '@vicons/material'
-import AboutApp from '../custom/general/AboutApp.vue'
-import SettingItem from '../custom/general/SettingItem.vue'
+import AboutApp from '@/components/app/AboutApp.vue'
+import SettingItem from '@/components/ui/SettingItem.vue'
 import ModalPreferencesImportExport from './ModalPreferencesImportExport.vue'
 import { useStore } from '@/store/index'
-import type { PreferenceGroup, SettingGroupKey } from '@/types/index.ts'
-import { fixWorkState as fixHqwbWorkState } from '@/types/workstate/hqworkbench'
-import { fixWorkState as fixMmHelperWorkState } from '@/types/workstate/mmhelper'
-import { fixWorkState as fixGatherclockWorkState } from '@/types/workstate/gatherclock'
-import { fixWorkState as fixWorkflowWorkState } from '@/types/workstate/workflow'
+import { useLocale } from '@/composables/useLocale'
+import { useDialog } from '@/composables/useDialog'
+import useUiTools from '@/composables/useUiTools'
+import { useResponsive } from '@/composables/useResponsive'
+import { useInventoryPlugin } from '@/composables/useInventoryPlugin'
 import { deepCopy } from '@/tools'
-import { useDialog } from '@/composables/useDialog.ts'
-import useUiTools from '@/composables/useUiTools.ts'
-import { dbKey } from '@/utils/app.idb.ts'
-import { fixUserConfig, type UserConfigModel } from '@/types/config/user.ts'
-import { fixFuncConfig, type FuncConfigModel } from '@/types/config/func.ts'
-import { useInventoryPlugin } from '@/composables/useInventoryPlugin.ts'
+import type { PreferenceGroup, SettingGroupKey } from '@/types/index'
+import { fixFuncConfig, type FuncConfigModel } from '@/types/config/func'
+import { fixUserConfig, type UserConfigModel } from '@/types/config/user'
+import { fixWorkState as fixMmHelperWorkState } from '@/types/workstate/mmhelper'
+import { fixWorkState as fixWorkflowWorkState } from '@/types/workstate/workflow'
+import { fixWorkState as fixHqwbWorkState } from '@/types/workstate/hqworkbench'
+import { fixWorkState as fixGatherclockWorkState } from '@/types/workstate/gatherclock'
+import { dbKey } from '@/utils/app.idb'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
 const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
 
 const store = useStore()
+const { t } = useLocale()
 const { confirm } = useDialog()
-const NAIVE_UI_MESSAGE = useMessage()
 const { renderIcon } = useUiTools()
+const { isMobile } = useResponsive()
+const NAIVE_UI_MESSAGE = useMessage()
 const {
   connectionStatus: inventoryConnectionStatus,
   testConnection: testInventoryConnection
@@ -1174,7 +1176,7 @@ const containerMaxHeight = computed(() => {
     @on-load="onLoad"
   >
     <template #header>
-      <div class="card-title select-none">
+      <div class="app-card-title select-none">
         <n-icon :component="modalTitle.icon" />
         <span class="title">{{ modalTitle.text }}</span>
         <span class="description">[{{ currentGroupName }}]</span>
@@ -1266,7 +1268,7 @@ const containerMaxHeight = computed(() => {
     />
 
     <template #action>
-      <div class="modal-submit-container">
+      <div class="app-modal-footer">
         <n-button type="primary" size="large" @click="handleSave">
           <template #icon>
             <n-icon><SaveOutlined /></n-icon>

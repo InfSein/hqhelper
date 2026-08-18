@@ -1,7 +1,8 @@
 import type { DonateInfo, StaffMember } from "@/types/staff"
+import { useLocale } from './useLocale'
 
 const useStaff = () => {
-  const t = inject<(message: string, args?: any) => string>('t')!
+  const { t } = useLocale()
 
   const createStaffMember = (
     name: string,

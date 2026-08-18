@@ -1,24 +1,24 @@
 <script setup lang="ts">
 import {
+  BrowserUpdatedRound,
+  RefreshRound,
+  SpeedRound,
+  SystemUpdateAltRound,
   UpdateSharp,
   VpnLockRound,
-  SystemUpdateAltRound,
-  BrowserUpdatedRound,
-  SpeedRound, RefreshRound
 } from '@vicons/material'
 import ModalPreferences from './ModalPreferences.vue'
-import type { ProcessStage, ProgressData } from 'env.electron'
 import { useStore } from '@/store'
-import AppStatus from '@/constants/app.ts'
-import { useDialog } from '@/composables/useDialog.ts'
+import { useLocale } from '@/composables/useLocale'
+import { useDialog } from '@/composables/useDialog'
+import AppStatus from '@/constants/app'
+import { checkAppUpdates, checkElectronUpdates } from '@/tools'
+import type { ProcessStage, ProgressData } from 'env.electron'
 import { checkUrlLag } from '@/tools/web-request'
-import { type AppVersionJson } from '@/types'
-import { checkAppUpdates } from '@/tools'
-
-const t = inject<(message: string, args?: any) => string>('t')!
-// const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+import type { AppVersionJson } from '@/types'
 
 const store = useStore()
+const { t } = useLocale()
 const { alertError, confirm } = useDialog()
 
 const showModal = defineModel<boolean>('show', { required: true })
@@ -155,13 +155,22 @@ const handleCheckUpdates = async () => {
   latestHqHelperVersion.value = ''
   latestElectronVersion.value = ''
   try {
-    const checkUpdateResponse = await checkAppUpdates()
-    if (checkUpdateResponse.success) {
-      versionContent.value = checkUpdateResponse.data!
+    // HqHelper
+    const checkWebUpdateResponse = await checkAppUpdates()
+    if (checkWebUpdateResponse.success) {
+      versionContent.value = checkWebUpdateResponse.data!
       latestHqHelperVersion.value = versionContent.value.hqhelper
-      latestElectronVersion.value = versionContent.value.electron
     } else {
-      await dealFailure(checkUpdateResponse.message, checkUpdateResponse)
+      await dealFailure(checkWebUpdateResponse.message, checkWebUpdateResponse)
+      latestHqHelperVersion.value = null
+    }
+    // Electron
+    const checkElectronUpdateResponse = await checkElectronUpdates()
+    if (checkElectronUpdateResponse.success) {
+      latestElectronVersion.value = checkElectronUpdateResponse.data!.electron
+    } else {
+      await dealFailure(checkElectronUpdateResponse.message, checkElectronUpdateResponse)
+      latestElectronVersion.value = null
     }
   } catch (e: any) {
     await dealFailure(e?.message || 'UNKNOWN ERROR', e)
@@ -172,8 +181,6 @@ const handleCheckUpdates = async () => {
   async function dealFailure(msg: string, errdata: any) {
     console.error(errdata)
     await alertError(t('update.message.check_update_failed_with_error', msg))
-    latestHqHelperVersion.value = null
-    latestElectronVersion.value = null
   }
 }
 
@@ -384,10 +391,12 @@ const handleSettingButtonClick = () => {
       <FoldableCard class="card proxy" card-key="modal-cu-proxy" card-size="small" disable-glass show-card-border>
         <template #header>
           <div class="card-title">
-            <n-icon><VpnLockRound /></n-icon>
-            <span class="title">{{ t('update.proxy.title') }}</span>
-            <div class="card-title-actions font-small">
-              <a href="javascript:void(0)" @click="handleShowProxySiteStatus">[{{ t('update.text.proxy_status_view') }}]</a>
+            <div class="app-card-title">
+              <n-icon><VpnLockRound /></n-icon>
+              <span class="title">{{ t('update.proxy.title') }}</span>
+              <div class="app-card-title__actions font-small">
+                <a href="javascript:void(0)" @click="handleShowProxySiteStatus">[{{ t('update.text.proxy_status_view') }}]</a>
+              </div>
             </div>
           </div>
         </template>

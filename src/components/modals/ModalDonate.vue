@@ -1,20 +1,18 @@
 <script setup lang="ts">
-import { 
-  HandshakeOutlined,
-  ChecklistRtlSharp,
-  DoneOutlined, SettingsBackupRestoreSharp,
-} from '@vicons/material'
-import HelpButton from '../custom/general/HelpButton.vue'
-import StaffGroup from '../custom/general/StaffGroup.vue'
-import ModalSponsorsList from './ModalSponsorsList.vue'
 import {
-  qGroupInfo,
-} from '@/constants'
+  ChecklistRtlSharp,
+  DoneOutlined,
+  HandshakeOutlined,
+  SettingsBackupRestoreSharp,
+} from '@vicons/material'
+import ModalSponsorsList from './ModalSponsorsList.vue'
+import HelpButton from '@/components/ui/HelpButton.vue'
+import StaffGroup from '@/components/app/StaffGroup.vue'
 import useStaff from "@/composables/useStaff"
+import { useLocale } from '@/composables/useLocale'
+import { qGroupInfo } from '@/constants'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-// const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-
+const { t } = useLocale()
 const { staffMembers } = useStaff()
 
 const showModal = defineModel<boolean>('show', { required: true })
@@ -179,7 +177,7 @@ const handleStaffSelectionUpdate = () => {
     </div>
     
     <template #action>
-      <div class="modal-submit-container">
+      <div class="app-modal-footer">
         <n-button
           :type="cautionsConfirmed ? 'default' : 'primary'"
           @click="cautionsConfirmed = !cautionsConfirmed"

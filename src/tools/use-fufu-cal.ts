@@ -1,9 +1,10 @@
+import { useStore } from '@/store'
+import { useLocale } from '@/composables/useLocale'
 import { XivJobs } from '@/assets/data'
 import type { RecommItemGroup } from '@/types/item'
 import { deepCopy } from '.'
 import { getItemInfo, sortItems, type ItemInfo } from "./item"
 import { useNbbCal } from "./use-nbb-cal"
-import { useStore } from '@/store'
 
 export interface StatementData {
   craftTargets: ItemInfo[];
@@ -24,7 +25,7 @@ export interface ProStatementBlock {
 
 export function useFufuCal() {
   const store = useStore()
-  const t = inject<(message: string, args?: any) => string>('t')!
+  const { t } = useLocale()
 
   const calItems = (selections: Record<number, number>) => {
     const { calItems } = useNbbCal()

@@ -766,6 +766,19 @@
       "release_date_with_val": "更新时间：{date}",
       "view_history": "查看历史日志",
       "view_latest": "查看最新日志"
+    },
+    "2_5_1": {
+      "breaking": {
+        "text_1": "现可点击“成本/收益分析”和物品悬浮窗中的“详表”按钮来查看这个物品的价格详表。",
+        "text_2": "正式启用全新域名 {0} 。",
+        "text_3": "现可通过顶级域名访问和使用HqHelper。",
+        "text_4": "旧域名仍将保持维护。"
+      },
+      "feat": {
+        "text_1": "“背包库存”中增加了筛选输入框。",
+        "text_2": "重新制作了客户端下载页面。",
+        "text_3": "优化了赞助者名单在移动端的显示效果。"
+      }
     }
   },
   "cloud": {
@@ -1288,30 +1301,6 @@
       "wechat_admire": "微信支付(赞赏码)"
     }
   },
-  "download_page": {
-    "link": {
-      "cn_with_index": "国内下载链接{index}",
-      "global": "国际下载链接"
-    },
-    "text": {
-      "text_1": "HqHelper 的大多数功能在网页端即可完成。",
-      "text_10": "※ 需要 Windows 7 或更高版本的系统",
-      "text_11": "{platform} 客户端",
-      "text_12": "※ 需要 10.13 或更高版本的 Mac OS，并且仅限M系列芯片的设备使用",
-      "text_13": "※仅适用于搭载了M系列芯片的设备",
-      "text_14": "我们暂时没有能力提供 Apple 开发者签名，安装时可能会提示「“HqHelper”已损坏，无法打开。你应该将它移到废纸篓」。",
-      "text_15": "你需要解除安全检查限制或是将 HqHelper 添加到白名单方可成功安装。",
-      "text_16": "客户端还可以用新窗口打开工作流的推荐流程。",
-      "text_2": "不过，为了满足部分用户的习惯和实现一些浏览器无法完成的功能，我们也提供客户端服务。",
-      "text_3": "有什么特别功能吗？",
-      "text_4": "即使网络不佳或远程服务器崩溃，客户端也能正常提供基础的计算服务。",
-      "text_5": "客户端允许你在使用新窗口打开采集时钟期间将其置顶，从而达成类似悬浮窗的效果。",
-      "text_6": "您可以收藏此页面，从而在未来方便地下载到最新版本的客户端。",
-      "text_7": "客户端仅是搭载 HqHelper 的“容器”，下载最新版本的客户端后可能仍需要更新一次 HqHelper 的版本。",
-      "text_8": "当前最新版本：{ver}",
-      "text_9": "点击下方按钮来进行下载。"
-    }
-  },
   "err_404": {
     "advise": "请尝试回到上一页或直接返回首页。",
     "page_not_exist": "访问的页面不存在。"
@@ -1420,9 +1409,29 @@
     "message": {
       "following_items_can_be_gathered": "以下物品已可采集：",
       "system_notice_denied": "通知权限被拒绝，请检查浏览器的网站权限设置。",
-      "system_notice_not_supported": "当前使用的浏览器或客户端不支持系统通知功能。"
+      "system_notice_not_supported": "当前使用的浏览器或客户端不支持系统通知功能。",
+      "invalid_audio_format": "不支持的音频格式，请上传常见音频文件（如 mp3、wav、ogg 等）。",
+      "audio_file_too_large": "音频文件过大，请上传小于 10MB 的音频文件。",
+      "confirm_clear_custom_audio": "确定要清除已上传的自定义提示音吗？"
     },
     "preference": {
+      "custom_audio": {
+        "title": "自定义提示音",
+        "modal_title": "提示音设置",
+        "sound_select": {
+          "title": "提示音类型",
+          "option": {
+            "default": "默认提示音",
+            "custom": "自定义提示音"
+          }
+        },
+        "upload": "上传音频",
+        "reupload": "重新上传",
+        "test": "试听",
+        "clear": "清除音频",
+        "status_uploaded": "已导入音频：{name}",
+        "status_not_uploaded": "未导入音频文件，将使用默认提示音。"
+      },
       "disable_item_pop": "禁用物品按钮悬浮窗",
       "mention_way": {
         "option": {

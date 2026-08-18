@@ -1,17 +1,18 @@
 <script setup lang="ts">
 import {
-  ContactlessSharp, CloseSharp
+  CloseSharp,
+  ContactlessSharp,
 } from '@vicons/material'
 import IconQQ from '@/assets/icons/external/IconQQ.vue'
-import IconGithub from '@/assets/icons/external/IconGithub.vue'
 import IconWeibo from '@/assets/icons/external/IconWeibo.vue'
+import IconGithub from '@/assets/icons/external/IconGithub.vue'
 import IconTwitter from '@/assets/icons/external/IconTwitter.vue'
-import {
-  qGroupInfo, githubInfo, otherSocialInfo
-} from '@/constants'
+import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
+import { qGroupInfo, githubInfo, otherSocialInfo } from '@/constants'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+const { t } = useLocale()
+const { isMobile } = useResponsive()
 
 const showModal = defineModel<boolean>('show', { required: true })
 
@@ -122,7 +123,7 @@ const handleClose = () => {
     </n-tabs>
     
     <template #action>
-      <div class="modal-submit-container">
+      <div class="app-modal-footer">
         <n-button type="error" size="large" @click="handleClose">
           <template #icon>
             <n-icon><CloseSharp /></n-icon>

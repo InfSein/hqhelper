@@ -1,32 +1,34 @@
 <script setup lang="ts">
-
 // todo 记得处理兼容性问题
 
-import { 
-  CloudSyncOutlined,
+import {
   ChecklistRtlOutlined,
+  CloudDownloadRound,
   CloudOutlined,
-  CloudDownloadRound, CloudUploadRound,
+  CloudSyncOutlined,
+  CloudUploadRound,
 } from '@vicons/material'
 import { useStore } from '@/store'
-import { fixUserConfig } from '@/types/config/user'
-import { fixFuncConfig } from '@/types/config/func'
-import { fixWorkState as fixWorkflowWorkState } from '@/types/workstate/workflow'
-import { fixWorkState as fixMacromanageWorkState } from '@/types/workstate/macromanage'
-import { fixWorkState as fixFashionclothWorkState } from '@/types/workstate/fchelper'
-import { fixWorkState as fixCsHelperWorkState } from '@/types/workstate/cshelper'
-import { HqList, type NbbResponse } from '@/types/api/nbb-cloud'
-import { deepCopy } from '@/tools'
 import { useDialog } from '@/composables/useDialog'
+import { useLocale } from '@/composables/useLocale'
 import { useNbbCloud } from '@/composables/useNbbCloud'
+import { useResponsive } from '@/composables/useResponsive'
+import { deepCopy } from '@/tools'
+import { fixFuncConfig } from '@/types/config/func'
+import { fixUserConfig } from '@/types/config/user'
+import { HqList, type NbbResponse } from '@/types/api/nbb-cloud'
+import { fixWorkState as fixCsHelperWorkState } from '@/types/workstate/cshelper'
+import { fixWorkState as fixWorkflowWorkState } from '@/types/workstate/workflow'
+import { fixWorkState as fixFashionclothWorkState } from '@/types/workstate/fchelper'
+import { fixWorkState as fixMacromanageWorkState } from '@/types/workstate/macromanage'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile')!
 const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
 
 const store = useStore()
-const { alertInfo, alertError, confirm } = useDialog()
+const { t } = useLocale()
+const { isMobile } = useResponsive()
 const NAIVE_UI_MESSAGE = useMessage()
+const { alertInfo, alertError, confirm } = useDialog()
 const {
   getListBatch, addList, editList,
   resolveListTitle,
@@ -495,10 +497,10 @@ const handleDownload = async () => {
       <div class="wrapper">
         <n-card size="small" embedded>
           <template #header>
-            <div class="card-title">
+            <div class="app-card-title">
               <n-icon><ChecklistRtlOutlined /></n-icon>
               <span class="title">{{ t('cloud.text.sync_range') }}</span>
-              <div class="card-title-actions font-small">
+              <div class="app-card-title__actions font-small">
                 <a href="javascript:void(0)" @click="handleSelectAll">[{{ t('common.select_all') }}]</a>
                 <a href="javascript:void(0)" @click="handleSelectRevert">[{{ t('common.select_invert') }}]</a>
               </div>

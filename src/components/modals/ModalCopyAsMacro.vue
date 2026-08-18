@@ -1,18 +1,17 @@
 <script setup lang="ts">
-import { 
-  CodeSharp, ContentCopyRound
+import {
+  CodeSharp,
+  ContentCopyRound,
 } from '@vicons/material'
-import MacroViewer from '../custom/macro/MacroViewer.vue'
-import TooltipButton from '@/components/custom/general/TooltipButton.vue'
-// import ModalPreferences from './ModalPreferences.vue'
-import { CopyToClipboard } from '@/tools'
+import TooltipButton from '@/components/ui/TooltipButton.vue'
+import MacroViewer from '@/components/craft/MacroViewer.vue'
 import { useStore } from '@/store'
-import type { MacroGenerateMode } from '@/types/config/func.ts'
-
-const t = inject<(message: string, args?: any) => string>('t')!
-// const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+import { useLocale } from '@/composables/useLocale'
+import { CopyToClipboard } from '@/tools'
+import type { MacroGenerateMode } from '@/types/config/func'
 
 const store = useStore()
+const { t } = useLocale()
 const NAIVE_UI_MESSAGE = useMessage()
 
 const showModal = defineModel<boolean>('show', { required: true })
@@ -161,7 +160,7 @@ const handleClose = () => {
     </div>
 
     <template #action>
-      <div class="modal-submit-container">
+      <div class="app-modal-footer">
         <TooltipButton
           type="primary"
           :icon="ContentCopyRound"

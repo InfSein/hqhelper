@@ -159,7 +159,7 @@ export function useNbbCal() {
     for (const itemID in XivUnpackedGatheringItems) {
       const id = Number(itemID)
       if (XivUnpackedGatheringItems[id].popTime) { // 是限时物品
-        if (id < 36630) continue // 手动过滤掉7.0之前的
+        if (id < 42000) continue // 手动过滤掉7.0之前的
         if (!getItem(id)) continue // 过滤掉没有数据的
         const itemInfo = getItemInfo(id)
         const itemLevel = itemInfo.itemLevel <= 690 ? '~690' : itemInfo.itemLevel

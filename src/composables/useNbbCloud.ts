@@ -8,7 +8,7 @@ import type {
   ResdataRegisterAndLogin,
   ResdataGetList, ResdataSetList
 } from '@/types/api/nbb-cloud'
-import { deepCopy } from "../tools"
+import { deepCopy } from "@/tools"
 import { md5 } from "../utils/md5"
 import AppStatus from "@/constants/app"
 import { useStore } from "@/store"

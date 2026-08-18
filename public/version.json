@@ -1,22 +1,13 @@
 {
-  "hqhelper": "2.5.0",
+  "hqhelper": "2.5.1",
   "electron": "v7",
   "android": "v1",
-  "dlink_hqhelper": "~PROXYhttps://github.com/InfSein/hqhelper-dawntrail/releases/download/v~VERSION/static-pages.zip",
+  "dlink_hqhelper": "~PROXYhttps://github.com/InfSein/hqhelper/releases/download/v~VERSION/static-pages.zip",
   "dlink_electron": "~PROXYhttps://github.com/InfSein/hqhelper-client/releases/latest/download/HqHelper.WinSetup.exe",
   "dlink_electron_mac": "~PROXYhttps://github.com/InfSein/hqhelper-client/releases/latest/download/HqHelper.Mac.dmg",
   "dlink_android": "~PROXYhttps://github.com/InfSein/hqhelper-android/releases/latest/download/HqHelper.apk",
   "client_info": {
-    "recomm_proxy": "https://ghfast.top/",
-    "cn_sub_links": [
-      "https://share.weiyun.com/OsHdwXSC"
-    ],
-    "mac_cn_sub_links": [
-      "https://share.weiyun.com/kFYhSQPm"
-    ],
-    "android_cn_sub_links": [
-      "https://share.weiyun.com/qXflkAUz"
-    ]
+    "recomm_proxy": "https://ghfast.top/"
   },
   "maintenance_webpack": false,
   "maintenance_client": false

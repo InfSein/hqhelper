@@ -3,22 +3,23 @@ import {
   TableViewFilled,
 } from '@vicons/material'
 import ChartXy from '../chart/ChartXy.vue'
-import GroupBox from '../templates/GroupBox.vue'
-import ItemPriceLogCell from '../custom/item/ItemPriceLogCell.vue'
-import ItemSelector from '../custom/item/ItemSelector.vue'
+import ItemSelector from '@/components/item/ItemSelector.vue'
+import GroupBox from '@/components/templates/GroupBox.vue'
+import ItemPriceLogCell from '@/components/item/ItemPriceLogCell.vue'
 import { useStore } from '@/store'
-import { useDialog } from '@/composables/useDialog.ts'
-import { handleGetPriceError } from '@/tools/error'
+import { useLocale } from '@/composables/useLocale'
+import { useDialog } from '@/composables/useDialog'
+import { useResponsive } from '@/composables/useResponsive'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
-import { ItemPriceApiVersion } from '@/types/item/price.ts'
-import { getItemPriceHistory, getItemPriceInfo } from '@/tools/item/price.ts'
-import { itemPriceTypes, type ItemPriceType } from '@/types/config/func.ts'
-
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+import { handleGetPriceError } from '@/tools/error'
+import { getItemPriceHistory, getItemPriceInfo } from '@/tools/item/price'
+import { ItemPriceApiVersion } from '@/types/item/price'
+import { itemPriceTypes, type ItemPriceType } from '@/types/config/func'
 
 const store = useStore()
+const { t } = useLocale()
 const { alertError } = useDialog()
+const { isMobile } = useResponsive()
 
 const showModal = defineModel<boolean>('show', { required: true })
 

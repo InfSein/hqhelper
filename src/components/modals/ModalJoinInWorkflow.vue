@@ -1,20 +1,19 @@
 <script setup lang="ts">
-import { 
-  WaterDropOutlined,
+import {
   DoneOutlined,
+  WaterDropOutlined,
 } from '@vicons/material'
-import { deepCopy } from '@/tools'
-import useUiTools from '@/composables/useUiTools.ts'
+import ItemSelectTable from '@/components/item/ItemSelectTable.vue'
 import { useStore } from '@/store'
-import ItemSelectTable from '../custom/item/ItemSelectTable.vue'
-import { fixUserConfig } from '@/types/config/user.ts'
-import { fixFuncConfig, type WorkflowJoinMode } from '@/types/config/func.ts'
-import { _VAR_MAX_WORKFLOW, getDefaultWorkflow } from '@/types/workstate/workflow.ts'
-
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
+import { useLocale } from '@/composables/useLocale'
+import useUiTools from '@/composables/useUiTools'
+import { deepCopy } from '@/tools'
+import { fixUserConfig } from '@/types/config/user'
+import { fixFuncConfig, type WorkflowJoinMode } from '@/types/config/func'
+import { _VAR_MAX_WORKFLOW, getDefaultWorkflow } from '@/types/workstate/workflow'
 
 const store = useStore()
+const { t } = useLocale()
 const NAIVE_UI_MESSAGE = useMessage()
 const { optionsRenderer } = useUiTools()
 
@@ -166,7 +165,7 @@ const handleSubmit = () => {
     </div>
 
     <template #action>
-      <div class="modal-submit-container">
+      <div class="app-modal-footer">
         <n-button type="primary" @click="handleSubmit">
           <template #icon>
             <n-icon><DoneOutlined /></n-icon>

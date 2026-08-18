@@ -1,9 +1,9 @@
 {
-  "name": "hqhelper-dawntrail",
-  "version": "2.5.0",
+  "name": "hqhelper",
+  "version": "2.5.1",
   "gamever": {
-    "cn": "7.51",
-    "global": "7.51"
+    "cn": "7.55",
+    "global": "7.55"
   },
   "private": true,
   "type": "module",
@@ -12,9 +12,9 @@
   },
   "scripts": {
     "dev": "vite",
-    "i18n:upload-source": "npx crowdin upload sources",
-    "i18n:upload-translations": "npx crowdin upload translations",
-    "i18n:download": "npx crowdin download",
+    "i18n-source:upload": "node scripts/upload-source.cjs",
+    "i18n-trans:download": "node scripts/download-translation.cjs",
+    "i18n-trans:upload": "node scripts/upload-translation.cjs",
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "build-only": "vite build",
@@ -41,7 +41,6 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
-    "@crowdin/cli": "^4.13.0",
     "@tailwindcss/vite": "~4.2.4",
     "@tsconfig/node22": "^22.0.5",
     "@types/node": "^22.16.5",

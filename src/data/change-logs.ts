@@ -84,6 +84,35 @@ export const getChangelogs = (
   const isZh = ui_lang === 'zh'
   return [
     {
+      version: '2.5.1',
+      date: '2026-07-28',
+      changes: [
+        {
+          name: groupName.breaking,
+          changes: [
+            t('changelog.shared.game_db_update', {
+              ver: '7.55'
+            }),
+            t('changelog.shared.add_new_func', t('item.price.detail_table.title'))
+              + br + t('changelog.2_5_1.breaking.text_1')
+              + br + getNoteImage('2.5.1', '1.png'),
+            t('changelog.2_5_1.breaking.text_2', [renderLink('https://hqhelper.com', 'hqhelper.com')])
+              + br + t('changelog.2_5_1.breaking.text_3')
+              + tipper + t('changelog.2_5_1.breaking.text_4')
+          ]
+        },
+        {
+          name: groupName.feature,
+          changes: [
+            t('changelog.2_5_1.feat.text_1')
+              + br + getNoteImage('2.5.1', '2.png'),
+            t('changelog.2_5_1.feat.text_2'),
+            t('changelog.2_5_1.feat.text_3')
+          ]
+        }
+      ]
+    },
+    {
       version: '2.5.0',
       date: '2026-04-28',
       changes: [

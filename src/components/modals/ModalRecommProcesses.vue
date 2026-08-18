@@ -1,26 +1,23 @@
 <script setup lang="ts">
-import { 
-  AllInclusiveSharp, CopyAllOutlined
+import {
+  AllInclusiveSharp,
+  CopyAllOutlined,
 } from '@vicons/material'
-import CraftRecommProcess from '../custom/general/CraftRecommProcess.vue'
 import ModalPreferences from './ModalPreferences.vue'
-import { type ItemInfo } from '@/tools/item'
-import { CopyToClipboard } from '@/tools'
-import { useFufuCal } from '@/tools/use-fufu-cal'
-import UseConfig from '@/composables/useConfig.ts'
+import CraftRecommProcess from '@/components/craft/CraftRecommProcess.vue'
 import { useStore } from '@/store'
-
-const t = inject<(message: string, args?: any) => string>('t')!
-// const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-// const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
+import { useLocale } from '@/composables/useLocale'
+import useConfig from '@/composables/useConfig'
+import { CopyToClipboard } from '@/tools'
+import { type ItemInfo } from '@/tools/item'
+import { useFufuCal } from '@/tools/use-fufu-cal'
 
 const store = useStore()
+const { t } = useLocale()
+const { itemLanguage } = useConfig()
 const NAIVE_UI_MESSAGE = useMessage()
 const { calRecommProcessGroups } = useFufuCal()
-const {
-  itemLanguage,
-} = UseConfig()
-  
+
 const showModal = defineModel<boolean>('show', { required: true })
 const expandedBlocks = ref<Record<number, string[]>>({})
 /** (groupId, (itemId, checked)) */
@@ -123,10 +120,10 @@ const handleSettingButtonClick = () => {
     @on-setting-button-clicked="handleSettingButtonClick"
   >
     <template #header>
-      <div class="card-title select-none">
+      <div class="app-card-title select-none">
         <n-icon><AllInclusiveSharp /></n-icon>
         <span class="title">{{ t('common.appfunc.recomm_process') }}</span>
-        <div class="card-title-actions">
+        <div class="app-card-title__actions">
           <a href="javascript:void(0);" @click="handleCollapseOrUncollapseAllBlocks">[{{ isBlocksAllCollapsed() ? t('common.expand_all') : t('common.fold_all') }}]</a>
         </div>
       </div>
@@ -141,7 +138,7 @@ const handleSettingButtonClick = () => {
     />
 
     <template #action>
-      <div class="modal-submit-container">
+      <div class="app-modal-footer">
         <n-button type="info" size="large" @click="handleCopyProcesses">
           <template #icon>
             <n-icon><CopyAllOutlined /></n-icon>

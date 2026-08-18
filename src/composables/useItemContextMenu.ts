@@ -1,4 +1,4 @@
-import { ref, computed, nextTick, inject } from 'vue'
+import { ref, computed, nextTick } from 'vue'
 import { useMessage } from 'naive-ui'
 import {
   FileCopyOutlined,
@@ -8,15 +8,17 @@ import {
 } from '@vicons/material'
 import { CopyToClipboard } from '@/tools'
 import { type ItemInfo } from '@/tools/item'
-import useConfig from '@/composables/useConfig.ts'
+import useConfig from '@/composables/useConfig'
 import useUiTools from './useUiTools'
+import { useLocale } from './useLocale'
+import { useAppModals } from './useAppModals'
 
 export function useItemContextMenu(
   getItemInfo: () => ItemInfo,
   containerId?: string | (() => string | undefined)
 ) {
-  const t = inject<(message: string, args?: any) => string>('t')!
-  const joinItemsToWorkflow = inject<(items: Record<number, number>) => void>('joinItemsToWorkflow')!
+  const { t } = useLocale()
+  const { joinItemsToWorkflow } = useAppModals()
 
   const NAIVE_UI_MESSAGE = useMessage()
   const { itemLanguage } = useConfig()

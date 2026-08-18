@@ -1,4 +1,5 @@
 import { computed } from "vue"
+import { useLocale } from './useLocale'
 import { getImgCdnUrl } from '@/tools/game'
 import { useStore } from "@/store"
 
@@ -11,7 +12,7 @@ interface UserSpecialTitle {
 
 const useCloud = () => {
   const store = useStore()
-  const t = inject<(message: string, args?: any) => string>('t')!
+  const { t } = useLocale()
 
   const avatarUrl = computed(() => {
     if (store.cloudConfig.nbb_account_avatar_vip) {

@@ -11,9 +11,9 @@
   <a href="/docs/README.en.md">English</a>
 </p>
 
-[![GitHub License](https://img.shields.io/github/license/InfSein/hqhelper-dawntrail?style=flat&logo=github)](/LICENSE) ![GitHub Repo stars](https://img.shields.io/github/stars/InfSein/hqhelper-dawntrail?style=flat&logo=github) ![Github Created At](https://img.shields.io/github/created-at/InfSein/hqhelper-dawntrail?style=flat&logo=github) <br>
-[![CodeFactor](https://www.codefactor.io/repository/github/infsein/hqhelper-dawntrail/badge/dev)](https://www.codefactor.io/repository/github/infsein/hqhelper-dawntrail/overview/dev) [![GitHub commit activity](https://img.shields.io/github/commit-activity/m/InfSein/hqhelper-dawntrail/dev)](https://github.com/InfSein/hqhelper-dawntrail/commits/master) [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/InfSein/hqhelper-dawntrail) <br>
-[![GitHub Release](https://img.shields.io/github/v/release/InfSein/hqhelper-dawntrail?style=flat&logo=github)](https://github.com/InfSein/hqhelper-dawntrail/releases) [![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/InfSein/hqhelper-dawntrail/total?style=flat&logo=github)](https://github.com/InfSein/hqhelper-dawntrail/releases) [![Crowdin](https://badges.crowdin.net/hqhelper/localized.svg)](https://crowdin.com/project/hqhelper) <br>
+[![GitHub License](https://img.shields.io/github/license/InfSein/hqhelper?style=flat&logo=github)](/LICENSE) ![GitHub Repo stars](https://img.shields.io/github/stars/InfSein/hqhelper?style=flat&logo=github) ![Github Created At](https://img.shields.io/github/created-at/InfSein/hqhelper?style=flat&logo=github) <br>
+[![CodeFactor](https://www.codefactor.io/repository/github/infsein/hqhelper/badge/dev)](https://www.codefactor.io/repository/github/infsein/hqhelper/overview/dev) [![GitHub commit activity](https://img.shields.io/github/commit-activity/m/InfSein/hqhelper/dev)](https://github.com/InfSein/hqhelper/commits/master) [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/InfSein/hqhelper) <br>
+[![GitHub Release](https://img.shields.io/github/v/release/InfSein/hqhelper?style=flat&logo=github)](https://github.com/InfSein/hqhelper/releases) [![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/InfSein/hqhelper/total?style=flat&logo=github)](https://github.com/InfSein/hqhelper/releases) <br>
 [![Based on Vite](https://img.shields.io/badge/Vite-7.3.2-646CFF?style=flat&logo=vite)](https://github.com/vitejs/vite) [![Based on Vue3](https://img.shields.io/badge/Vue-3.5.28-4FC08D?style=flat&logo=vue.js)](https://github.com/vuejs/core) [![Based on TypeScript](https://img.shields.io/badge/TypeScript-5.8.3-3178C6?style=flat&logo=typescript)](https://github.com/microsoft/TypeScript) [![Based on Naive UI](https://img.shields.io/badge/Naive%20UI-2.43.2-008080?style=flat&logo=npm)](https://github.com/tusen-ai/naive-ui)
 
 面向生产采集玩家的秘籍配方制作计算器。
@@ -26,7 +26,7 @@
 
 #### 正式环境网站
 
-* 主站点：https://infsein.github.io/hqhelper-dawntrail/#/
+* 主站点：https://infsein.github.io/hqhelper/#/
 * 备用站：https://hqhelper.nbb.fan/#/
 
 > [!TIP]\
@@ -52,8 +52,8 @@
 需要安装 `Node.js` 。
 
 ```sh
-git clone https://github.com/InfSein/hqhelper-dawntrail.git
-cd hqhelper-dawntrail
+git clone https://github.com/InfSein/hqhelper.git
+cd hqhelper
 npm i
 npm run dev
 ```
@@ -68,8 +68,8 @@ npm run dev
 
 ### 参与开发
 
-* **寻找问题**：如果您在使用过程中发现有错误/问题的地方，或是对我们的界面/功能/逻辑有优化的建议，欢迎 [提出议题](https://github.com/InfSein/hqhelper-dawntrail/issues/new) 。
-* **解决问题**：如果您具有前端编程能力，您可以通过发起 [拉取请求](https://github.com/InfSein/hqhelper-dawntrail/pulls) 等方式参与到 `HqHelper` 的开发工作中。代码可能需要遵守通用规范和一些额外村规，具体请参阅我们的 [Wiki](https://github.com/InfSein/hqhelper-dawntrail/wiki) 。
+* **寻找问题**：如果您在使用过程中发现有错误/问题的地方，或是对我们的界面/功能/逻辑有优化的建议，欢迎 [提出议题](https://github.com/InfSein/hqhelper/issues/new) 。
+* **解决问题**：如果您具有前端编程能力，您可以通过发起 [拉取请求](https://github.com/InfSein/hqhelper/pulls) 等方式参与到 `HqHelper` 的开发工作中。代码可能需要遵守通用规范和一些额外村规，具体请参阅我们的 [Wiki](https://github.com/InfSein/hqhelper/wiki) 。
 
 ### 提供赞助
 
@@ -98,4 +98,4 @@ npm run dev
 
 ### Star数量历史
 
-[![Stargazers over time](https://starchart.cc/InfSein/hqhelper-dawntrail.svg?variant=adaptive)](https://starchart.cc/InfSein/hqhelper-dawntrail)
+[![Stargazers over time](https://starchart.cc/InfSein/hqhelper.svg?variant=adaptive)](https://starchart.cc/InfSein/hqhelper)

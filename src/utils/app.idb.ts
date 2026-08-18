@@ -4,7 +4,8 @@ const DB_NAME = 'backgroundDB'
 const STORE_NAME = 'backgroundStore'
 
 export enum dbKey {
-  appBackground = 'appBackground'
+  appBackground = 'appBackground',
+  gatherClockAudio = 'gatherClockAudio',
 }
 
 const useIdb = () => {
@@ -31,8 +32,24 @@ const useIdb = () => {
     }
   }
 
+  const gatherClockAudio = {
+    get: async () => {
+      const db = await dbPromise
+      return db.get(STORE_NAME, dbKey.gatherClockAudio) as Promise<Blob | undefined>
+    },
+    set: async (audioBlob: Blob) => {
+      const db = await dbPromise
+      await db.put(STORE_NAME, audioBlob, dbKey.gatherClockAudio)
+    },
+    clear: async () => {
+      const db = await dbPromise
+      return db.delete(STORE_NAME, dbKey.gatherClockAudio)
+    }
+  }
+
   return {
     appBackground,
+    gatherClockAudio,
   }
 }
 

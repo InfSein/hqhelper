@@ -1,22 +1,23 @@
 <script setup lang='ts'>
-import { 
-  AttachMoneyOutlined
+import {
+  AttachMoneyOutlined,
 } from '@vicons/material'
-import ItemPriceTable from '../custom/item/ItemPriceTable.vue'
-import TooltipText from '../custom/general/TooltipText.vue'
-import HelpButton from '../custom/general/HelpButton.vue'
 import ModalPreferences from './ModalPreferences.vue'
-import useItemPrice from '@/composables/useItemPrice.ts'
-import type { ItemInfo } from '@/tools/item'
+import HelpButton from '@/components/ui/HelpButton.vue'
+import TooltipText from '@/components/ui/TooltipText.vue'
+import ItemPriceTable from '@/components/item/ItemPriceTable.vue'
 import { useStore } from '@/store'
-
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-// const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
-const showItemPriceDetail = inject<(items: ItemInfo[]) => void>('showItemPriceDetail')!
+import { useLocale } from '@/composables/useLocale'
+import { useAppModals } from '@/composables/useAppModals'
+import { useResponsive } from '@/composables/useResponsive'
+import useItemPrice from '@/composables/useItemPrice'
+import type { ItemInfo } from '@/tools/item'
 
 const store = useStore()
+const { t } = useLocale()
+const { isMobile } = useResponsive()
 const { calCostAndBenefit } = useItemPrice()
+const { showItemPriceDetail } = useAppModals()
 
 const modalId = 'modal-cost-and-benefits'
 
@@ -63,12 +64,12 @@ const handleShowItemPriceDetail = () => {
     @on-setting-button-clicked="handleSettingButtonClick"
   >
     <template #header>
-      <div class="card-title select-none">
+      <div class="app-card-title select-none">
         <n-icon><AttachMoneyOutlined /></n-icon>
         <span class="title">
           {{ t('statistics.group.cost_and_benefit.title') }}
         </span>
-        <div class="card-title-actions">
+        <div class="app-card-title__actions">
           <a href="javascript:void(0);" @click="handleShowItemPriceDetail">[{{ t('item.price.detail_table.intro') }}]</a>
         </div>
       </div>

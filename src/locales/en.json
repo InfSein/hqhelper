@@ -766,6 +766,19 @@
       "release_date_with_val": "DATE: {date}",
       "view_history": "View history",
       "view_latest": "View latest logs"
+    },
+    "2_5_1": {
+      "breaking": {
+        "text_1": "Now you can click the 'Price Detail' button in cost/benefit analysis and item pop to view the price detail table.",
+        "text_2": "New domain {0} is now available.",
+        "text_3": "Now you can access HqHelper through top-level domain names.",
+        "text_4": "Old domain names will still be maintained."
+      },
+      "feat": {
+        "text_1": "The filter input has been added to \"In-game Inventory\".",
+        "text_2": "Client download page has been recreated.",
+        "text_3": "Optimized the display effect of the Sponsor List on mobile devices."
+      }
     }
   },
   "cloud": {
@@ -1035,7 +1048,8 @@
       "please_input_item_name": "Please enter item name",
       "please_input_val": "Please input {val}",
       "please_wait_for_a_while": "Please wait a while.",
-      "sync_succeed": "Sync Successful"
+      "sync_succeed": "Sync Successful",
+      "cannot_open_same_modal": "Cannot reopen this popup"
     },
     "mode": "Mode",
     "mquoted_view_statement": "[View statements]",
@@ -1152,7 +1166,9 @@
     "warn": "Warning",
     "weibo": "Weibo",
     "will_be_named_with_time_when_empty": "Defaults to time if empty",
-    "work_state": "Work State"
+    "work_state": "Work State",
+    "filter_item": "Filter Item",
+    "item_filter_input_placeholder": "Filter by Name/ID/iLv/Patch"
   },
   "contact_us": {
     "feedback": {
@@ -1285,30 +1301,6 @@
       "wechat_admire": "WeChat Pay"
     }
   },
-  "download_page": {
-    "link": {
-      "cn_with_index": "CN Download Link {index}",
-      "global": "Global Download Link"
-    },
-    "text": {
-      "text_1": "Most HqHelper features are available on the web.",
-      "text_10": "※ Only compatible with Windows 7 or later",
-      "text_11": "{platform} Client",
-      "text_12": "※Only available for Mac OS 10.13 or later",
-      "text_13": "※Only available for devices with M-series chips",
-      "text_14": "We do not have an Apple developer signature. If you see 'HqHelper is damaged'...",
-      "text_15": "You must disable Gatekeeper or whitelist HqHelper to install.",
-      "text_16": "Clients can also open workflow recommended processes in new windows.",
-      "text_2": "However, we provide a client version for exclusive features not possible in a browser.",
-      "text_3": "Client-Exclusive Features:",
-      "text_4": "Offline capability for basic calculations.",
-      "text_5": "Gathering timer overlay with pinning support.",
-      "text_6": "Bookmark this page for easy access to client updates.",
-      "text_7": "The client is a container; internal HqHelper updates may still be required.",
-      "text_8": "Current latest version: {ver}",
-      "text_9": "Click below to download."
-    }
-  },
   "err_404": {
     "advise": "Please go Back or return to Home.",
     "page_not_exist": "Page not found."
@@ -1417,9 +1409,29 @@
     "message": {
       "following_items_can_be_gathered": "Following items can be gathered:",
       "system_notice_denied": "Notification permission denied. Please check browser settings.",
-      "system_notice_not_supported": "Your browser/device does not support system notifications."
+      "system_notice_not_supported": "Your browser/device does not support system notifications.",
+      "invalid_audio_format": "Unsupported audio format. Please upload common audio files (e.g. mp3, wav, ogg).",
+      "audio_file_too_large": "Audio file is too large. Please upload a file smaller than 10MB.",
+      "confirm_clear_custom_audio": "Are you sure you want to clear the uploaded custom sound?"
     },
     "preference": {
+      "custom_audio": {
+        "title": "Custom Sound",
+        "modal_title": "Ringtone Settings",
+        "sound_select": {
+          "title": "Sound Type",
+          "option": {
+            "default": "Default Sound",
+            "custom": "Custom Sound"
+          }
+        },
+        "upload": "Upload Audio",
+        "reupload": "Re-upload",
+        "test": "Preview Sound",
+        "clear": "Clear Audio",
+        "status_uploaded": "Loaded audio: {name}",
+        "status_not_uploaded": "No custom audio loaded. Default sound will be used."
+      },
       "disable_item_pop": "Disable Item Popups",
       "mention_way": {
         "option": {
@@ -1546,6 +1558,24 @@
       "yield_plus": "+{0} BY2/BH2"
     },
     "price": {
+      "detail_table": {
+        "empty": {
+          "no_data": "No Data",
+          "no_item_selected": "Please select item"
+        },
+        "group_marketboard": "Current Price",
+        "group_purchasehistory": "Purchase History",
+        "intro": "Price Detail",
+        "loading": "Getting item price...",
+        "title": "Item Price Detail Table",
+        "show_all": "All",
+        "show_hq": "View HQ Only",
+        "show_nq": "View NQ Only",
+        "group_selectitem": "Select Item",
+        "table_show_type": "Show: ",
+        "group_totaltable": "Price Summary",
+        "intro_short": "Detail"
+      },
       "no_price": "No Price.",
       "no_price_reason": "Reasons: Price not fetched, item not exist, or insufficient data.",
       "no_price_received": "No Price Retrieved",
