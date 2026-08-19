@@ -77,6 +77,8 @@ export interface FuncConfigModel {
 
   // #region 在其他弹窗中设置的配置项
   // * 背包库存
+  /** 用第三方数据替代背包库存，并自动同步数据 */
+  inventory_use_plugin_data: boolean
   /** 在制作报表弹窗中启用背包库存自动同步 */
   inventory_statement_enable_sync: boolean
   /** 在工作流中启用背包库存手动同步 */
@@ -131,6 +133,7 @@ const defaultFuncConfig: FuncConfigModel = {
   universalis_showpriceinpop: true,
   universalis_poppricetypes: ['marketLowestPrice', 'purchasePrice'],
   // * 背包库存
+  inventory_use_plugin_data: false,
   inventory_statement_enable_sync: false,
   inventory_workflow_enable_sync: false,
   inventory_workflow_enable_sync_reverse: false,

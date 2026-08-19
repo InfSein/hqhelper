@@ -1,5 +1,7 @@
 import { computed, onBeforeUnmount, shallowRef, watch } from 'vue'
 import { useStore } from '@/store'
+import { deepCopy } from '@/tools'
+import { getMaterialItems } from '@/tools/item'
 import type { ConnectionStatus, ConnectionTestResult, PluginInventoryMessage, PluginMessage } from '@/types/inventory'
 
 const isConnected = shallowRef(false)
@@ -40,6 +42,19 @@ function isPluginMessage(data: unknown): data is PluginMessage {
   return false
 }
 
+export type InventoryChangeListener = (changedItemIds: number[], snapshot: Record<number, number>) => void
+const listeners = new Set<InventoryChangeListener>()
+
+export function onInventoryChange(fn: InventoryChangeListener) {
+  listeners.add(fn)
+}
+
+export function offInventoryChange(fn: InventoryChangeListener) {
+  listeners.delete(fn)
+}
+
+const lastSnapshot = shallowRef<Record<number, number>>({})
+
 // 处理从插件收到的消息，并保留后续业务扩展入口。
 function handleMessage(data: unknown) {
   if (!isPluginMessage(data)) return
@@ -49,6 +64,58 @@ function handleMessage(data: unknown) {
 
   if (data.cmdType === 2) {
     console.log('[FishXIVItemReader] 背包快照:', data)
+
+    const store = useStore()
+    if (!store.userConfig.receive_third_party_data || !store.funcConfig.inventory_use_plugin_data) {
+      return
+    }
+
+    const validMaterialSet = new Set(getMaterialItems())
+    const newSnapshot: Record<number, number> = {}
+
+    for (const item of data.items) {
+      if (validMaterialSet.has(item.itemId)) {
+        newSnapshot[item.itemId] = (newSnapshot[item.itemId] || 0) + item.quantity
+      }
+    }
+
+    const changedItemIdsSet = new Set<number>()
+    const prevSnapshot = lastSnapshot.value
+
+    for (const idStr in newSnapshot) {
+      const id = Number(idStr)
+      if (prevSnapshot[id] !== newSnapshot[id]) {
+        changedItemIdsSet.add(id)
+      }
+    }
+    for (const idStr in prevSnapshot) {
+      const id = Number(idStr)
+      if (newSnapshot[id] === undefined && prevSnapshot[id] !== 0) {
+        changedItemIdsSet.add(id)
+      }
+    }
+
+    const changedItemIds = Array.from(changedItemIdsSet)
+
+    if (changedItemIds.length > 0) {
+      const newInventoryData = deepCopy(store.funcConfig.inventory_data)
+      for (const id of changedItemIds) {
+        const amount = newSnapshot[id] || 0
+        if (amount > 0) {
+          newInventoryData[id] = amount
+        } else {
+          delete newInventoryData[id]
+        }
+      }
+      store.setFuncConfig({
+        ...store.funcConfig,
+        inventory_data: newInventoryData,
+      })
+
+      listeners.forEach(fn => fn(changedItemIds, newSnapshot))
+    }
+
+    lastSnapshot.value = newSnapshot
   }
 }
 
@@ -124,6 +191,8 @@ export function useInventoryPlugin() {
     connect,
     disconnect,
     testConnection,
+    onInventoryChange,
+    offInventoryChange,
   }
 }
 
@@ -140,6 +209,7 @@ export function useInventoryPluginAutoConnect() {
   const stop = watch(
     settings,
     async (value) => {
+      console.log('[FishXIVItemReader] 设置:', value)
       if (!value.enabled) {
         await plugin.disconnect()
         return

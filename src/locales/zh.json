@@ -1472,6 +1472,12 @@
   },
   "ingame_inventory": {
     "preference": {
+      "inventory_use_plugin_data": {
+        "desc": {
+          "desc_1": "用第三方数据自动更新背包库存数据，并自动同步报表。"
+        },
+        "title": "接收第三方数据并自动同步"
+      },
       "inventory_other_items_way": {
         "desc": {
           "desc_1": "决定自动同步或手动同步时，对不在背包库存中的物品要如何处理。"

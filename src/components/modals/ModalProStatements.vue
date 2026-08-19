@@ -68,8 +68,25 @@ const handleShowRecommendedProcesses = () => {
   showRecommendedProcessesModal.value = true
 }
 
+import { onInventoryChange, offInventoryChange } from '@/composables/useInventoryPlugin'
+
+const handleInventoryChange = (changedItemIds: number[]) => {
+  if (!showModal.value) return
+  if (store.userConfig.receive_third_party_data && store.funcConfig.inventory_use_plugin_data) {
+    proStatementInstace.value?.applyInventoryChanges(changedItemIds)
+  }
+}
+
+onMounted(() => {
+  onInventoryChange(handleInventoryChange)
+})
+
+onBeforeUnmount(() => {
+  offInventoryChange(handleInventoryChange)
+})
+
 const handleStatementLoaded = () => {
-  if (store.funcConfig.inventory_statement_enable_sync) {
+  if (store.funcConfig.inventory_statement_enable_sync || store.funcConfig.inventory_use_plugin_data) {
     if (proStatementInstace?.value?.setPreparedItemsByInventory) {
       proStatementInstace.value.setPreparedItemsByInventory()
     } else {

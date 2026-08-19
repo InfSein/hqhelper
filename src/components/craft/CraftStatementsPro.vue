@@ -135,10 +135,44 @@ const setInventoryByPreparedItems = () => {
   }
 }
 
+const applyInventoryChanges = (changedItemIds: number[]) => {
+  if (!changedItemIds || !changedItemIds.length) return
+  const changedSet = new Set(changedItemIds)
+  const inventory = deepCopy(store.funcConfig.inventory_data)
+
+  dealPrepared(itemsPrepared.value.materialsLv1, props.statementBlocks[1]?.items)
+  dealPrepared(itemsPrepared.value.materialsLvBase, props.statementBlocks[2]?.items)
+
+  function dealPrepared(pmap: Record<number, number>, tmap?: Record<number, number>) {
+    if (!pmap) return
+    Object.keys(pmap).forEach(_id => {
+      const id = Number(_id)
+      if (changedSet.has(id)) {
+        if (inventory[id]) {
+          const inventAmount = inventory[id]
+          const needAmount = tmap?.[id] || 0
+          const reduceAmount = Math.min(inventAmount, needAmount)
+          pmap[id] = reduceAmount
+          inventory[id] -= reduceAmount
+        } else {
+          if (store.funcConfig.inventory_other_items_way === 'clear') {
+            pmap[id] = 0
+          }
+        }
+      } else {
+        if (inventory[id]) {
+          inventory[id] = Math.max(0, inventory[id] - (pmap[id] || 0))
+        }
+      }
+    })
+  }
+}
+
 defineExpose({
   updateSize,
   setPreparedItemsByInventory,
   setInventoryByPreparedItems,
+  applyInventoryChanges,
 })
 </script>
 
