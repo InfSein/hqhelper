@@ -840,6 +840,7 @@
     }
   },
   "common": {
+    "search": "搜索",
     "account": "账号",
     "add": "添加",
     "add2": "新增",
@@ -2510,6 +2511,14 @@
     "tooltip": {
       "set_inventory_by_prepared": "将背包库存的数量设置为报表中的“已有”数量。",
       "set_prepared_by_inventory": "将报表中的“已有”数量设置为背包库存的数量。"
+    },
+    "notebook_search": {
+      "placeholder": "搜索物品…",
+      "history": "搜索历史",
+      "empty_history": "暂无搜索历史",
+      "clear_history": "清空历史记录",
+      "error_empty": "请输入搜索关键字",
+      "error_no_result": "未找到匹配的物品"
     }
   },
   "recipe": {

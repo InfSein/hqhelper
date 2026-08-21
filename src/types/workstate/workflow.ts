@@ -44,6 +44,8 @@ export interface WorkState {
   selectedItem: number;
   currentWorkflow: number;
   workflows: Workflow[];
+  /** 制作笔记搜索历史（最多保留10条） */
+  notebookSearchHistory: string[];
 }
 export const defaultWorkState: WorkState = {
   pageView: 'BC',
@@ -52,7 +54,8 @@ export const defaultWorkState: WorkState = {
   selectedContentGroup: 'i_96',
   selectedItem: 0,
   currentWorkflow: 0,
-  workflows: [getDefaultWorkflow()]
+  workflows: [getDefaultWorkflow()],
+  notebookSearchHistory: [],
 }
 
 export const fixWorkState = (state?: WorkState) : WorkState => {
@@ -62,5 +65,6 @@ export const fixWorkState = (state?: WorkState) : WorkState => {
       workflow.recommData = deepCopy(defaultWorkflow.recommData)
     }
   })
+  _state.notebookSearchHistory ??= []
   return _state
 }

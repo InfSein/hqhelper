@@ -82,12 +82,14 @@ CSS 变量已通过 `src/assets/styles/tailwind.css` 的 `@theme` 映射到 Tail
 | `bg-base` | `--app-color-base` | 基底色 |
 | `border-border` | `--app-color-border` | 边框 |
 
-### 2.3 用色规则
+### 2.3 用色与 Tailwind 规范
 
-- ✅ 使用 CSS 变量 (`var(--app-color-*)`) 或 Tailwind 语义类名 (`text-text`, `bg-bg` 等)
-- ✅ 使用 Naive UI 的内置主题变量 (`var(--n-*)`)
+- ✅ 优先使用 Tailwind 语义映射类名（如 `text-text`, `text-sub`, `text-primary`, `bg-bg`, `bg-bg-hover`, `border-border` 等）
+- ✅ 在原生 CSS / style 属性中使用 CSS 变量 (`var(--app-color-*)`) 或 Naive UI 内置变量 (`var(--n-*)`)
+- ❌ **严禁在 class 中使用 `text-[var(--app-color-*)]` 或 `bg-[var(--app-color-*)]`**，必须使用上方表格中已映射的 Tailwind 语义类名（如 `text-text`, `hover:bg-bg-hover`, `border-border`）
 - ❌ **不要硬编码颜色值**（如 `color: #333`）— 除非是一次性装饰元素且不涉及主题
 - ❌ 不要使用 `rgb(51,54,57)` 等原始值，而是使用对应的语义变量
+- 💡 **Tailwind 4 类名规范**：使用 `shrink-0`（而非 `flex-shrink-0`）、`grow`（而非 `flex-grow`）
 
 ---
 

@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import {
+  CloseRound,
+  DeleteSweepRound,
+  HistoryRound,
   OpenInNewFilled,
   PlaylistAddOutlined,
+  SearchRound,
 } from '@vicons/material'
 import ItemCell from '@/components/item/ItemCell.vue'
 import ItemSpan from '@/components/item/ItemSpan.vue'
@@ -24,12 +28,14 @@ import { getItemInfo, sortItems, type ItemInfo } from '@/tools/item'
 const { t } = useLocale()
 const { isMobile } = useResponsive()
 const { itemLanguage } = useConfig()
+const NAIVE_UI_MESSAGE = useMessage()
 
 const props = defineProps<{
   selectedJob: number
   selectedMenu: 'common' | 'special' | 'master'
   selectedContentGroup: `i_${number}`
   selectedItem: number
+  notebookSearchHistory?: string[]
   menuHeight: string
 }>()
 
@@ -38,6 +44,7 @@ const emit = defineEmits<{
   'update:selectedMenu': [value: 'common' | 'special' | 'master']
   'update:selectedContentGroup': [value: `i_${number}`]
   'update:selectedItem': [value: number]
+  'update:notebookSearchHistory': [value: string[]]
   'add-item': [itemId: number]
 }>()
 
@@ -177,6 +184,117 @@ const simulateCraftCurrSelectedItem = () => {
 }
 // #endregion
 
+// #region notebook search
+interface SearchGroupResult {
+  groupKey: string
+  groupLabel: string
+  items: ItemInfo[]
+}
+
+const searchKeyword = ref('')
+const isSearchMode = ref(false)
+const searchResults = ref<SearchGroupResult[]>([])
+const showHistoryDrawer = ref(false)
+
+const matchItem = (item: ItemInfo, pattern: string) => {
+  const p = pattern.trim().toLowerCase()
+  if (!p) return false
+  const availableKeywords = [item.name_zh, item.name_en, item.name_ja]
+  for (const keyword of availableKeywords) {
+    if (keyword?.toLowerCase().includes(p)) {
+      return true
+    }
+  }
+  if (item.id.toString() === p) return true
+  if (item.itemLevel.toString() === p) return true
+  if (item.patch === p) return true
+  return false
+}
+
+const handleSearch = (keyword?: string) => {
+  const targetKeyword = typeof keyword === 'string' ? keyword : searchKeyword.value
+  searchKeyword.value = targetKeyword
+  if (!targetKeyword || !targetKeyword.trim()) {
+    NAIVE_UI_MESSAGE.error(t('workflow.notebook_search.error_empty'))
+    return
+  }
+  const trimmed = targetKeyword.trim()
+  if (trimmed.length > 50) {
+    return
+  }
+
+  const results: SearchGroupResult[] = []
+  const menuTypes: ('common' | 'special' | 'master')[] = ['common', 'special', 'master']
+
+  Object.values(notebookGroups.value).forEach(group => {
+    const job = group.job
+    const jobName = XivJobs[job]?.[`job_name_${itemLanguage.value}`] || XivJobs[job]?.job_name_zh || ''
+
+    menuTypes.forEach(menuType => {
+      const menus = group.menus[menuType]
+      Object.values(menus).forEach(menu => {
+        Object.values(menu.contentGroups).forEach(cg => {
+          const matched = cg.items.filter(item => matchItem(item, trimmed))
+          if (matched.length > 0) {
+            const groupLabel = cg.name && cg.name !== menu.name
+              ? `${jobName} / ${menu.name} / ${cg.name}`
+              : `${jobName} / ${menu.name}`
+            results.push({
+              groupKey: `${job}_${menuType}_${menu.id}_${cg.id}`,
+              groupLabel,
+              items: matched,
+            })
+          }
+        })
+      })
+    })
+  })
+
+  if (results.length === 0) {
+    NAIVE_UI_MESSAGE.error(t('workflow.notebook_search.error_no_result'))
+    return
+  }
+
+  searchResults.value = results
+  isSearchMode.value = true
+
+  // 记录搜索历史 (最多10条，去重且最新排在最前)
+  const currentHistory = props.notebookSearchHistory ?? []
+  const newHistory = [trimmed, ...currentHistory.filter(h => h !== trimmed)].slice(0, 10)
+  emit('update:notebookSearchHistory', newHistory)
+}
+
+const handleSelectHistoryItem = (item: string) => {
+  showHistoryDrawer.value = false
+  handleSearch(item)
+}
+
+const handleDeleteHistoryItem = (targetIndex: number) => {
+  const currentHistory = [...(props.notebookSearchHistory ?? [])]
+  currentHistory.splice(targetIndex, 1)
+  emit('update:notebookSearchHistory', currentHistory)
+}
+
+const handleClearAllHistory = () => {
+  emit('update:notebookSearchHistory', [])
+}
+
+const handleJobSelect = (job: number) => {
+  isSearchMode.value = false
+  emit('update:selectedJob', job)
+}
+
+const handleMenuTabUpdate = (val: 'common' | 'special' | 'master') => {
+  isSearchMode.value = false
+  emit('update:selectedMenu', val)
+}
+
+const handleContentGroupSelect = (menuId: `i_${number}`) => {
+  isSearchMode.value = false
+  emit('update:selectedContentGroup', menuId)
+}
+// #endregion
+
 // #region item context menu
 const activeContextItem = ref<ItemInfo | null>(null)
 const {
@@ -207,19 +325,116 @@ const handleNotebookItemContextMenu = (e: MouseEvent, item: ItemInfo) => {
       <i class="xiv square-0"></i>
       <span class="app-card-title__text">{{ t('recipe.notebook') }}</span>
     </template>
-    <div class="flex flex-wrap items-center gap-1.5">
-      <n-button
-        v-for="job in Object.keys(notebookGroups)"
-        :key="job"
-        class="p-px w-9! h-9!"
-        :type="selectedJob === Number(job) ? 'primary' : 'default'"
-        @click="emit('update:selectedJob', Number(job))"
-      >
-        <XivFARImage
-          :src="XivJobs[Number(job)].job_icon_url"
-          :size="32"
-        />
-      </n-button>
+    <div class="flex flex-wrap items-center justify-between gap-2">
+      <div class="flex flex-wrap items-center gap-1.5">
+        <n-button
+          v-for="job in Object.keys(notebookGroups)"
+          :key="job"
+          class="p-px w-9! h-9!"
+          :type="!isSearchMode && selectedJob === Number(job) ? 'primary' : 'default'"
+          @click="handleJobSelect(Number(job))"
+        >
+          <XivFARImage
+            :src="XivJobs[Number(job)].job_icon_url"
+            :size="32"
+          />
+        </n-button>
+      </div>
+      <n-input-group class="search-input-group">
+        <n-input-group-label>
+          <div class="px-1 flex items-center gap-1">
+            <div>{{ t('common.search') }}</div>
+          </div>
+        </n-input-group-label>
+        <n-tooltip :trigger="isMobile ? 'manual' : 'hover'" placement="bottom">
+          <template #trigger>
+            <n-input
+              v-model:value="searchKeyword"
+              :placeholder="t('workflow.notebook_search.placeholder')"
+              :maxlength="50"
+              clearable
+              @keydown.enter="handleSearch()"
+            />
+          </template>
+          {{ t('common.item_search_input_placeholder') }}
+        </n-tooltip>
+        <!-- 桌面端搜索历史 -->
+        <n-popover v-if="!isMobile" trigger="hover" placement="bottom-end">
+          <template #trigger>
+            <n-button class="n-square-button">
+              <template #icon>
+                <n-icon :size="16"><HistoryRound /></n-icon>
+              </template>
+            </n-button>
+          </template>
+          <div class="p-1 min-w-44 max-w-64">
+            <div class="text-xs font-bold mb-1.5 px-1 select-none text-sub">
+              {{ t('workflow.notebook_search.history') }}
+            </div>
+            <n-divider class="mt-1! mb-2!" />
+            <template v-if="notebookSearchHistory?.length">
+              <div class="flex flex-col gap-0.5 max-h-48 overflow-y-auto pr-0.5">
+                <div
+                  v-for="(item, idx) in notebookSearchHistory"
+                  :key="idx"
+                  class="flex items-center justify-between gap-1 rounded hover:bg-bg-hover px-1 group transition-colors"
+                >
+                  <span
+                    class="flex-1 text-xs py-1 truncate cursor-pointer select-none text-text hover:text-primary transition-colors"
+                    @click="handleSearch(item)"
+                  >
+                    {{ item }}
+                  </span>
+                  <n-button
+                    quaternary
+                    circle
+                    size="tiny"
+                    class="opacity-60 hover:opacity-100 shrink-0"
+                    @click.stop="handleDeleteHistoryItem(idx)"
+                  >
+                    <template #icon>
+                      <n-icon :size="12"><CloseRound /></n-icon>
+                    </template>
+                  </n-button>
+                </div>
+              </div>
+              <n-divider class="my-1.5!" />
+              <div class="flex justify-end">
+                <n-button
+                  quaternary
+                  size="tiny"
+                  type="error"
+                  @click="handleClearAllHistory"
+                >
+                  <template #icon>
+                    <n-icon :size="14"><DeleteSweepRound /></n-icon>
+                  </template>
+                  {{ t('workflow.notebook_search.clear_history') }}
+                </n-button>
+              </div>
+            </template>
+            <template v-else>
+              <n-empty size="small" :description="t('workflow.notebook_search.empty_history')" class="my-2" />
+            </template>
+          </div>
+        </n-popover>
+        <!-- 移动端搜索历史 -->
+        <n-button
+          v-if="isMobile"
+          class="n-square-button"
+          @click="showHistoryDrawer = true"
+        >
+          <template #icon>
+            <n-icon :size="16"><HistoryRound /></n-icon>
+          </template>
+        </n-button>
+        <!-- 搜索按钮 -->
+        <n-button type="primary" class="n-square-button" @click="handleSearch()">
+          <template #icon>
+            <n-icon :size="16"><SearchRound /></n-icon>
+          </template>
+        </n-button>
+      </n-input-group>
     </div>
     <n-divider class="my-2!" />
     <div class="w-full flex">
@@ -228,14 +443,14 @@ const handleNotebookItemContextMenu = (e: MouseEvent, item: ItemInfo) => {
           :value="selectedMenu"
           type="segment" animated
           class="mb-2"
-          @update:value="(val) => emit('update:selectedMenu', val)"
+          @update:value="handleMenuTabUpdate"
         >
           <n-tab name="common">
             <n-tooltip placement="top">
               <template #trigger>
                 <n-icon
                   :size="18"
-                  :color="selectedMenu === 'common' ? 'var(--color-primary)' : undefined"
+                  :color="!isSearchMode && selectedMenu === 'common' ? 'var(--color-primary)' : undefined"
                 >
                   <component :is="CommonGroupIcon" />
                 </n-icon>
@@ -248,7 +463,7 @@ const handleNotebookItemContextMenu = (e: MouseEvent, item: ItemInfo) => {
               <template #trigger>
                 <n-icon
                   :size="18"
-                  :color="selectedMenu === 'special' ? 'var(--color-primary)' : undefined"
+                  :color="!isSearchMode && selectedMenu === 'special' ? 'var(--color-primary)' : undefined"
                 >
                   <component :is="SpecialGroupIcon" />
                 </n-icon>
@@ -261,7 +476,7 @@ const handleNotebookItemContextMenu = (e: MouseEvent, item: ItemInfo) => {
               <template #trigger>
                 <n-icon
                   :size="18"
-                  :color="selectedMenu === 'master' ? 'var(--color-primary)' : undefined"
+                  :color="!isSearchMode && selectedMenu === 'master' ? 'var(--color-primary)' : undefined"
                 >
                   <component :is="MasterGroupIcon" />
                 </n-icon>
@@ -276,10 +491,10 @@ const handleNotebookItemContextMenu = (e: MouseEvent, item: ItemInfo) => {
               v-for="menu in Object.values(currMenus)"
               :key="menu.id + menu.name"
               size="small"
-              :tertiary="selectedContentGroup === `i_${menu.id}`"
-              :quaternary="selectedContentGroup !== `i_${menu.id}`"
+              :tertiary="!isSearchMode && selectedContentGroup === `i_${menu.id}`"
+              :quaternary="isSearchMode || selectedContentGroup !== `i_${menu.id}`"
               class="justify-start"
-              @click="emit('update:selectedContentGroup', `i_${menu.id}`)"
+              @click="handleContentGroupSelect(`i_${menu.id}`)"
             >
               {{ menu.name }}
             </n-button>
@@ -288,39 +503,76 @@ const handleNotebookItemContextMenu = (e: MouseEvent, item: ItemInfo) => {
       </div>
       <div class="flex-1 pl-2 flex" :style="{ height: menuHeight }">
         <n-scrollbar trigger="none" class="flex-1">
-          <div v-for="cg in currContentGroups" :key="cg.id" class="flex flex-col gap-1 pr-3">
-            <div v-if="cg.name" class="sticky top-0 z-10 w-full rounded px-1" style="background-color: var(--color-border);">
-              <i class="xiv e032"></i>
-              {{ cg.name }}
-            </div>
-            <div
-              v-for="item in cg.items"
-              :key="item.id"
-              class="flex gap-1"
-            >
-              <n-button
-                :type="selectedItem === item.id ? 'primary' : 'default'"
-                class="flex-1 justify-start px-2! py-1! h-auto!"
-                @click="emit('update:selectedItem', item.id)"
-                @contextmenu="handleNotebookItemContextMenu($event, item)"
+          <template v-if="isSearchMode">
+            <div v-for="group in searchResults" :key="group.groupKey" class="flex flex-col gap-1 pr-3 mb-2">
+              <div class="sticky top-0 z-10 w-full rounded px-1" style="background-color: var(--color-border);">
+                <i class="xiv e032"></i>
+                {{ group.groupLabel }}
+              </div>
+              <div
+                v-for="item in group.items"
+                :key="item.id"
+                class="flex gap-1"
               >
-                <ItemCell
-                  :item-info="item"
-                  :amount="0"
-                  show-item-details
-                />
-              </n-button>
-              <n-button
-                type="info"
-                :ghost="selectedItem !== item.id"
-                class="h-auto!"
-                :title="t('workflow.text.add_item_to_curr_workflow.tip_1') + '\r\n' + t('workflow.text.add_item_to_curr_workflow.tip_2')"
-                @click="emit('add-item', item.id)"
-              >
-                <n-icon :size="18"><PlaylistAddOutlined /></n-icon>
-              </n-button>
+                <n-button
+                  :type="selectedItem === item.id ? 'primary' : 'default'"
+                  class="flex-1 justify-start px-2! py-1! h-auto!"
+                  @click="emit('update:selectedItem', item.id)"
+                  @contextmenu="handleNotebookItemContextMenu($event, item)"
+                >
+                  <ItemCell
+                    :item-info="item"
+                    :amount="0"
+                    show-item-details
+                  />
+                </n-button>
+                <n-button
+                  type="info"
+                  :ghost="selectedItem !== item.id"
+                  class="h-auto!"
+                  :title="t('workflow.text.add_item_to_curr_workflow.tip_1') + '\r\n' + t('workflow.text.add_item_to_curr_workflow.tip_2')"
+                  @click="emit('add-item', item.id)"
+                >
+                  <n-icon :size="18"><PlaylistAddOutlined /></n-icon>
+                </n-button>
+              </div>
             </div>
-          </div>
+          </template>
+          <template v-else>
+            <div v-for="cg in currContentGroups" :key="cg.id" class="flex flex-col gap-1 pr-3">
+              <div v-if="cg.name" class="sticky top-0 z-10 w-full rounded px-1" style="background-color: var(--color-border);">
+                <i class="xiv e032"></i>
+                {{ cg.name }}
+              </div>
+              <div
+                v-for="item in cg.items"
+                :key="item.id"
+                class="flex gap-1"
+              >
+                <n-button
+                  :type="selectedItem === item.id ? 'primary' : 'default'"
+                  class="flex-1 justify-start px-2! py-1! h-auto!"
+                  @click="emit('update:selectedItem', item.id)"
+                  @contextmenu="handleNotebookItemContextMenu($event, item)"
+                >
+                  <ItemCell
+                    :item-info="item"
+                    :amount="0"
+                    show-item-details
+                  />
+                </n-button>
+                <n-button
+                  type="info"
+                  :ghost="selectedItem !== item.id"
+                  class="h-auto!"
+                  :title="t('workflow.text.add_item_to_curr_workflow.tip_1') + '\r\n' + t('workflow.text.add_item_to_curr_workflow.tip_2')"
+                  @click="emit('add-item', item.id)"
+                >
+                  <n-icon :size="18"><PlaylistAddOutlined /></n-icon>
+                </n-button>
+              </div>
+            </div>
+          </template>
         </n-scrollbar>
         <n-dropdown
           size="small"
@@ -405,5 +657,72 @@ const handleNotebookItemContextMenu = (e: MouseEvent, item: ItemInfo) => {
         </div>
       </div>
     </div>
+
+    <!-- 移动端搜索历史抽屉 -->
+    <n-drawer
+      v-model:show="showHistoryDrawer"
+      placement="bottom"
+      height="340"
+      :auto-focus="false"
+    >
+      <n-drawer-content :title="t('workflow.notebook_search.history')" closable>
+        <template v-if="notebookSearchHistory?.length">
+          <div class="flex flex-col gap-1 py-1">
+            <div
+              v-for="(item, idx) in notebookSearchHistory"
+              :key="idx"
+              class="flex items-center justify-between gap-2 p-1.5 rounded hover:bg-bg-hover border border-border"
+            >
+              <span
+                class="flex-1 text-sm truncate cursor-pointer select-none"
+                @click="handleSelectHistoryItem(item)"
+              >
+                {{ item }}
+              </span>
+              <n-button
+                quaternary
+                circle
+                size="small"
+                class="shrink-0"
+                @click.stop="handleDeleteHistoryItem(idx)"
+              >
+                <template #icon>
+                  <n-icon :size="16"><CloseRound /></n-icon>
+                </template>
+              </n-button>
+            </div>
+          </div>
+          <n-divider class="my-2!" />
+          <div class="flex justify-end">
+            <n-button
+              quaternary
+              size="small"
+              type="error"
+              @click="handleClearAllHistory"
+            >
+              <template #icon>
+                <n-icon :size="16"><DeleteSweepRound /></n-icon>
+              </template>
+              {{ t('workflow.notebook_search.clear_history') }}
+            </n-button>
+          </div>
+        </template>
+        <template v-else>
+          <n-empty size="medium" :description="t('workflow.notebook_search.empty_history')" class="my-6" />
+        </template>
+      </n-drawer-content>
+    </n-drawer>
   </FoldableCard>
 </template>
+
+<style scoped>
+.search-input-group {
+  max-width: 458px;
+}
+@media screen and (max-width: 767px) {
+  .search-input-group {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+</style>

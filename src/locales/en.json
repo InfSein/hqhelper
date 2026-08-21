@@ -840,6 +840,7 @@
     }
   },
   "common": {
+    "search": "Search",
     "account": "Account",
     "add": "Add",
     "add2": "Add",
@@ -2505,6 +2506,14 @@
     "tooltip": {
       "set_inventory_by_prepared": "Set the inventory quantity to the 'Prepared' quantity in the statement.",
       "set_prepared_by_inventory": "Set the 'Prepared' quantity in the statement to the quantity of In-game inventory."
+    },
+    "notebook_search": {
+      "placeholder": "Search items...",
+      "history": "Search History",
+      "empty_history": "No search history",
+      "clear_history": "Clear history",
+      "error_empty": "Please enter a search keyword",
+      "error_no_result": "No matching items found"
     }
   },
   "recipe": {
