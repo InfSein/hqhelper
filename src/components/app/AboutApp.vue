@@ -51,6 +51,15 @@ const viewSponsors = () => {
     <div id="staffs">
       <div class="title">{{ t('about_app.staff.title') }}</div>
       <div class="content">
+        <div>HqHelper 是开放开源的
+        <a
+          href="https://github.com/InfSein/hqhelper"
+          target="_blank"
+        >
+          GitHub
+        </a>
+        项目，任何人都能够参与其中。</div>
+        不过，绝大多数的开发·维护·运营工作由下述成员完成：
         <n-table class="staff-table" :single-line="false" size="small">
           <tbody>
             <tr>
@@ -59,14 +68,17 @@ const viewSponsors = () => {
                 <StaffGroup :group-members="[staffMembers.infsein, staffMembers.nbb, staffMembers.yakita]" />
               </td>
             </tr>
-            <tr>
-              <td>{{ t('about_app.staff.contributor') }}</td>
-              <td>
-                <StaffGroup :group-members="[staffMembers.wcy, staffMembers.kimuchi, staffMembers.etnatker]" />
-              </td>
-            </tr>
           </tbody>
         </n-table>
+        <div class="flex flex-wrap items-center">
+          另有多位卓越的社区成员为HqHelper的发展贡献了力量，详见：
+          <a
+            href="https://github.com/InfSein/hqhelper/graphs/contributors?selectedMetric=additions&all=1"
+            target="_blank"
+          >
+            HqHelper Contributors
+          </a>
+        </div>
       </div>
     </div>
     <n-divider />

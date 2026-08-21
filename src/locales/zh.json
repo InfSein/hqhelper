@@ -3,16 +3,13 @@
     "staff": {
       "contributor": "贡献者",
       "jobs": {
-        "etnatker": "贡献了以Teamcraft格式展示材料清单的功能",
         "infsein": "负责全部设计开发工作",
-        "kim": "贡献了初期的UI日语国际化",
-        "nbb": "负责提供游戏数据和托管支持",
+        "nbb": "负责提供技术及托管方面的支持",
         "personal_page": "个人主页：",
-        "wcy": "贡献了初版Windows客户端框架",
         "yakita": "负责UI的日语国际化和前瞻物品名的中文翻译"
       },
       "producer": "制作人",
-      "title": "创作人员"
+      "title": "开源建设"
     },
     "thank_donate": {
       "desc": {
@@ -1591,7 +1588,6 @@
     },
     "text": {
       "attribute_isnq_or_hq_desc": "※ 此处仅展示物品的{val}属性",
-      "basic_info": "[{patch}版本] [{id}]",
       "cannot_hq": "无法制作优质道具",
       "cannot_quick_synthesis": "无法进行简易制作",
       "cannot_switch_hqornq": "物品没有{0}，无法切换",
@@ -2532,7 +2528,7 @@
       "import_by_code_failed": "分享码解析失败，请检查分享码是否正确"
     },
     "custom_list": {
-      "join_list": "加入此清单"
+      "join_list": "将此清单加入到工作流"
     }
   },
   "recipe": {

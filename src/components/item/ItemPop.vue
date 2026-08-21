@@ -457,7 +457,7 @@ const handleOnScroll = (e: Event) => {
       <n-divider class="item-divider" />
       <!-- 版本/ID等 -->
       <div class="item-attributes" :class="{ scrolling: popScrolling }">
-        <div class="item-type">
+        <div class="item-attribute">
           <XivFARImage
             class="item-icon"
             :src="itemInfo.uiTypeIconUrl"
@@ -465,7 +465,12 @@ const handleOnScroll = (e: Event) => {
           />
           <p>{{ getItemTypeName() }}</p>
         </div>
-        <p>{{ t('item.text.basic_info', { patch: itemInfo.patch, id: itemInfo.id }) }}</p>
+        <div class="item-attribute">
+          Patch {{ itemInfo.patch }}
+        </div>
+        <div class="item-attribute">
+          {{ itemInfo.id }}
+        </div>
       </div>
       <n-scrollbar class="max-h-110" @scroll="handleOnScroll">
         <!-- 抬头 -->
@@ -968,13 +973,13 @@ const handleOnScroll = (e: Event) => {
     z-index: 1;
   }
 
-  .item-type {
+  .item-attribute {
     display: flex;
     align-items: center;
     gap: 1px;
   }
-  .item-type::before { content: "["; }
-  .item-type::after { content: "]"; }
+  .item-attribute::before { content: "["; }
+  .item-attribute::after { content: "]"; }
 }
 .item-descriptions {
   display: flex;
