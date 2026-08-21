@@ -1050,7 +1050,8 @@
       "please_input_val": "请输入{val}",
       "please_wait_for_a_while": "请稍等片刻。",
       "sync_succeed": "同步成功",
-      "cannot_open_same_modal": "无法重复打开弹窗"
+      "cannot_open_same_modal": "无法重复打开弹窗",
+      "app_beta_tooltip": "当前为测试版本，不代表最终效果。"
     },
     "mode": "模式",
     "mquoted_view_statement": "[查看报表]",

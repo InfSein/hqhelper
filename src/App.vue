@@ -300,10 +300,10 @@ const naiveUIThemeOverrides = computed(() : GlobalThemeOverrides => {
           <AccountView v-if="!isMobile && appMode !== 'overlay'" trigger-class="absolute! top-9 right-5 z-[2000]!" />
 
           <div
-            v-if="AppStatus.IsDev && !isMobile"
+            v-if="AppStatus.IsBeta && !isMobile"
             class="absolute bottom-1 left-2 text-xs text-sub select-none"
           >
-            ◈ 当前为开发中版本，不代表最终效果。
+            ◈ {{ t('common.message.app_beta_tooltip') }}
           </div>
         </n-layout>
 

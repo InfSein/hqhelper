@@ -367,11 +367,11 @@ const handleNotebookItemContextMenu = (e: MouseEvent, item: ItemInfo) => {
               </template>
             </n-button>
           </template>
-          <div class="p-1 min-w-44 max-w-64">
+          <div class="py-1 min-w-44 max-w-64">
             <div class="text-xs font-bold mb-1.5 px-1 select-none text-sub">
               {{ t('workflow.notebook_search.history') }}
             </div>
-            <n-divider class="mt-1! mb-2!" />
+            <n-divider class="my-1!" />
             <template v-if="notebookSearchHistory?.length">
               <div class="flex flex-col gap-0.5 max-h-48 overflow-y-auto pr-0.5">
                 <div
