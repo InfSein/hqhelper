@@ -35,7 +35,7 @@ const getItemSubName = () => {
 </script>
 
 <template>
-  <div class="flex items-start gap-[5px] mt-[2%]">
+  <div class="flex items-start gap-1.25 mt-[2%]">
     <XivFARImage
       :src="itemInfo"
       :size="35"
