@@ -11,6 +11,15 @@ export type XivPatchVer = (typeof XivPatchVers)[number]
 import JsonXivItemRemarks from './manuals/xiv-item-remarks.json'
 export const XivItemRemarks = JsonXivItemRemarks as Record<number, string[]>
 
+import JsonXivRecipeCustomLists from './manuals/xiv-recipe-customlists.json'
+export interface XivRecipeCustomList {
+  name_zh: string
+  name_ja: string
+  name_en: string
+  code: string
+}
+export const XivRecipeCustomLists = JsonXivRecipeCustomLists as XivRecipeCustomList[]
+
 import JsonXivSrbs from './manuals/xiv-srbs.json'
 export const XivSrbs = JsonXivSrbs as Record<number, {
   id: number

@@ -200,3 +200,5 @@ export const playAudio = (source: string) => {
       console.error("Play audio failed:\n"+ error)
     })
 }
+
+export * from './shareCode'

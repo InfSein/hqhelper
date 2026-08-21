@@ -401,7 +401,8 @@ export const export2Excel = (
   
     craftTargets.forEach(item => {
       if (item.amount) {
-        let price = item_price_map[item.id][`${price_type}HQ`]
+        const qualityType = !item.hqable ? 'NQ' : 'HQ'
+        let price = item_price_map[item.id][`${price_type}${qualityType}`]
         if (price) price = Math.floor(price)
         const subtotal = price === undefined ? t('common.unknown') : (price*item.amount).toString()
         tableData.push([

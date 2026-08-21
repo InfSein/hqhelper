@@ -451,465 +451,476 @@ const handleOnScroll = (e: Event) => {
     <template #trigger>
       <slot />
     </template>
-    <ItemInfoHeader :item-info="itemInfo" />
-    <div class="item-level">{{ t('item.text.item_level_with_val', itemInfo.itemLevel) }}</div>
-    <n-divider class="item-divider" />
-    <!-- 版本/ID等 -->
-    <div class="item-attributes" :class="{ scrolling: popScrolling }">
-      <div class="item-type">
-        <XivFARImage
-          class="item-icon"
-          :src="itemInfo.uiTypeIconUrl"
-          :size="14"
-        />
-        <p>{{ getItemTypeName() }}</p>
+    <div class="select-text" @mousedown.stop>
+      <ItemInfoHeader :item-info="itemInfo" />
+      <div class="item-level">{{ t('item.text.item_level_with_val', itemInfo.itemLevel) }}</div>
+      <n-divider class="item-divider" />
+      <!-- 版本/ID等 -->
+      <div class="item-attributes" :class="{ scrolling: popScrolling }">
+        <div class="item-attribute">
+          <XivFARImage
+            class="item-icon"
+            :src="itemInfo.uiTypeIconUrl"
+            :size="14"
+          />
+          <p>{{ getItemTypeName() }}</p>
+        </div>
+        <div class="item-attribute">
+          Patch {{ itemInfo.patch }}
+        </div>
+        <div class="item-attribute">
+          {{ itemInfo.id }}
+        </div>
       </div>
-      <p>{{ t('item.text.basic_info', { patch: itemInfo.patch, id: itemInfo.id }) }}</p>
-    </div>
-    <n-scrollbar class="select-text max-h-110" @scroll="handleOnScroll">
-      <!-- 抬头 -->
-      <div class="item-descriptions">
-        <!-- 游戏内物品描述 -->
-        <div class="main-descriptions" v-html="getItemDescriptions()"></div>
-        <!-- 装备属性 -->
-        <div class="description-block" v-if="itemInfo.attrsProvided.length">
-          <div class="title">
-            {{ t('common.armor_attr') }}
-            <HqSwitcher v-model:hq="showItemHqAttr" :readonly="!itemHasHQ" :size="12" class="extra" />
-          </div>
-          <n-divider class="item-divider" />
-          <div class="content armor" v-if="showItemHqAttr">
-            <div
-              class="item"
-              v-for="(attr, index) in itemInfo.attrsProvided"
-              :key="'attr-hq' + index"
-            >
-              <div>{{ `${getAttrName(attr[0])} +${attr[2]}` }}</div>
+      <n-scrollbar class="max-h-110" @scroll="handleOnScroll">
+        <!-- 抬头 -->
+        <div class="item-descriptions">
+          <!-- 游戏内物品描述 -->
+          <div class="main-descriptions" v-html="getItemDescriptions()"></div>
+          <!-- 装备属性 -->
+          <div class="description-block" v-if="itemInfo.attrsProvided.length">
+            <div class="title">
+              {{ t('common.armor_attr') }}
+              <HqSwitcher v-model:hq="showItemHqAttr" :readonly="!itemHasHQ" :size="12" class="extra" />
             </div>
-          </div>
-          <div class="content armor" v-else>
-            <div
-              class="item"
-              v-for="(attr, index) in itemInfo.attrsProvided"
-              :key="'attr-nq' + index"
-            >
-              <div>{{ `${getAttrName(attr[0])} +${attr[1]}` }}</div>
-            </div>
-          </div>
-          <div v-if="isMobile" class="content extra">
-            ※ {{ t('item.text.curr_show_hqornq', [(showItemHqAttr ? 'HQ' : 'NQ')]) }}
-          </div>
-        </div>
-        <!-- 使用效果(食物/爆发药) -->
-        <div class="description-block" v-if="itemInfo.tempAttrsProvided.length">
-          <div class="title">
-            {{ t('common.effect') }}
-            <HqSwitcher v-model:hq="showItemHqAttr" :readonly="!itemHasHQ" :size="12" class="extra" />
-          </div>
-          <n-divider class="item-divider" />
-          <div class="content">
-            <div class="item" v-for="(attrText, atIndex) in itemTempAttrTexts" :key="'temp-attr-' + atIndex">
-              <div>{{ attrText }}</div>
-            </div>
-          </div>
-          <div v-if="isMobile" class="content extra">
-            ※ {{ t('item.text.curr_show_hqornq', [(showItemHqAttr ? 'HQ' : 'NQ')]) }}
-          </div>
-        </div>
-        <!-- 精选信息 -->
-        <div class="description-block" v-if="itemInfo.canReduceFrom?.length || itemInfo.canReduceTo">
-          <div class="title">{{ t('common.reduce') }}</div>
-          <n-divider class="item-divider" />
-          <div class="content" v-if="itemInfo.canReduceFrom?.length">
-            <div>{{ t('item.text.reduce_info') }}</div>
-            <div class="item" v-for="(reduce, reduceIndex) in itemInfo.canReduceFrom" :key="'reduce-' + reduceIndex">
-              <ItemSpan :item-info="getItemInfo(reduce)" :container-id="containerId" />
-            </div>
-          </div>
-          <div class="content" v-else-if="itemInfo.canReduceTo">
-            <div>{{ t('item.text.reduce_can_get') }}</div>
-            <div class="item">
-              <ItemSpan :item-info="getItemInfo(itemInfo.canReduceTo)" :container-id="containerId" hide-pop-icon />
-            </div>
-          </div>
-        </div>
-        <!-- 笔记 -->
-        <div class="description-block" v-if="uiLanguage === 'zh' && XivItemRemarks[itemInfo.id]?.length">
-          <div class="title">笔记</div>
-          <n-divider class="item-divider" />
-          <div class="content">
-            <ItemRemark
-              :remarks="XivItemRemarks[itemInfo.id]"
-              style="line-height: 1.2;"
-              :pop-trigger="innerPopTrigger"
-            />
-          </div>
-        </div>
-        <!-- 采集 -->
-        <div class="description-block" v-if="itemInfo.gatherInfo || itemInfo.isFishingItem">
-          <div class="title">
-            {{ t('common.gather') }}
-            <div v-if="itemInfo.gatherInfo" class="extra">
-              <XivFARImage
-                class="icon"
-                :src="XivJobs[itemInfo.gatherInfo.jobId].job_icon_url"
-              />
-              <p v-if="itemInfo.gatherInfo.level !== itemInfo.gatherInfo.nodelevel">
-                {{ t('item.text.gather_level_info', {
-                  lv: itemInfo.gatherInfo.level,
-                  job: getJobName(XivJobs[itemInfo.gatherInfo.jobId])
-                }) }}
-              </p>
-              <p v-else>{{ getJobName(XivJobs[itemInfo.gatherInfo.jobId]) }}</p>
-            </div>
-            <div v-if="itemInfo.isFishingItem" class="extra">
-              <XivFARImage
-                class="icon"
-                :src="XivJobs[18].job_icon_url"
-              />
-              <p>{{ getJobName(XivJobs[18]) }}</p>
-            </div>
-            <div v-if="itemInfo.gatherInfo?.[`gntype_${uiLanguage}`]" class="extra">
-              {{ ' - ' }}
-              {{ itemInfo.gatherInfo[`gntype_${uiLanguage}`] }}
-            </div>
-          </div>
-          <n-divider class="item-divider" />
-          <div class="content" v-if="itemInfo.gatherInfo">
-            <div class="other-attrs" v-if="itemGatherDifficulty" style="gap: 2px;">
-              {{ itemGatherDifficulty.diffText }}
-              <HelpButton
-                :size="12"
-                icon="question"
-                color="var(--color-info)"
-                pop-type="popover"
-                :placement="isMobile ? 'bottom' : 'right-start'"
-                style="padding: 0;"
+            <n-divider class="item-divider" />
+            <div class="content armor" v-if="showItemHqAttr">
+              <div
+                class="item"
+                v-for="(attr, index) in itemInfo.attrsProvided"
+                :key="'attr-hq' + index"
               >
-                <div>
-                  <div class="font-bold">{{ t('item.gather_threshold.title.gather_threshold') }}</div>
-                  <n-table size="small" class="content-table tiny-table w-full">
-                    <thead>
-                      <tr>
-                        <th>{{ t('item.gather_threshold.title.field') }}</th>
-                        <th>{{ t('item.gather_threshold.title.threshold') }}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr
-                        v-for="(threshold, index) in itemGatherDifficulty.gatherThresholds"
-                        :key="'gatherThresholds-' + index"
-                      >
-                        <td>{{ threshold.field }}</td>
-                        <td>{{ threshold.value }}</td>
-                      </tr>
-                    </tbody>
-                  </n-table>
-                  <div style="height: 4px;" />
-                  <div class="font-bold">{{ t('item.gather_threshold.title.perception_threshold') }}</div>
-                  <n-table size="small" class="content-table tiny-table w-full">
-                    <thead>
-                      <tr>
-                        <th>{{ t('item.gather_threshold.title.field') }}</th>
-                        <th>{{ t('item.gather_threshold.title.threshold') }}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr
-                        v-for="(threshold, index) in itemGatherDifficulty.perceptionThresholds"
-                        :key="'perceptionThresholds-' + index"
-                      >
-                        <td>{{ threshold.field }}</td>
-                        <td>{{ threshold.value }}</td>
-                      </tr>
-                    </tbody>
-                  </n-table>
-                </div>
-              </HelpButton>
+                <div>{{ `${getAttrName(attr[0])} +${attr[2]}` }}</div>
+              </div>
             </div>
-            <div>{{ t('item.text.gather_pos_info') }}</div>
-            <div class="item">
-              <LocationSpan
-                :place-id="itemInfo.gatherInfo.placeID"
-                :place-name="getPlaceName()"
-                :coordinate-x="itemInfo.gatherInfo.posX"
-                :coordinate-y="itemInfo.gatherInfo.posY"
+            <div class="content armor" v-else>
+              <div
+                class="item"
+                v-for="(attr, index) in itemInfo.attrsProvided"
+                :key="'attr-nq' + index"
+              >
+                <div>{{ `${getAttrName(attr[0])} +${attr[1]}` }}</div>
+              </div>
+            </div>
+            <div v-if="isMobile" class="content extra">
+              ※ {{ t('item.text.curr_show_hqornq', [(showItemHqAttr ? 'HQ' : 'NQ')]) }}
+            </div>
+          </div>
+          <!-- 使用效果(食物/爆发药) -->
+          <div class="description-block" v-if="itemInfo.tempAttrsProvided.length">
+            <div class="title">
+              {{ t('common.effect') }}
+              <HqSwitcher v-model:hq="showItemHqAttr" :readonly="!itemHasHQ" :size="12" class="extra" />
+            </div>
+            <n-divider class="item-divider" />
+            <div class="content">
+              <div class="item" v-for="(attrText, atIndex) in itemTempAttrTexts" :key="'temp-attr-' + atIndex">
+                <div>{{ attrText }}</div>
+              </div>
+            </div>
+            <div v-if="isMobile" class="content extra">
+              ※ {{ t('item.text.curr_show_hqornq', [(showItemHqAttr ? 'HQ' : 'NQ')]) }}
+            </div>
+          </div>
+          <!-- 精选信息 -->
+          <div class="description-block" v-if="itemInfo.canReduceFrom?.length || itemInfo.canReduceTo">
+            <div class="title">{{ t('common.reduce') }}</div>
+            <n-divider class="item-divider" />
+            <div class="content" v-if="itemInfo.canReduceFrom?.length">
+              <div>{{ t('item.text.reduce_info') }}</div>
+              <div class="item" v-for="(reduce, reduceIndex) in itemInfo.canReduceFrom" :key="'reduce-' + reduceIndex">
+                <ItemSpan :item-info="getItemInfo(reduce)" :container-id="containerId" />
+              </div>
+            </div>
+            <div class="content" v-else-if="itemInfo.canReduceTo">
+              <div>{{ t('item.text.reduce_can_get') }}</div>
+              <div class="item">
+                <ItemSpan :item-info="getItemInfo(itemInfo.canReduceTo)" :container-id="containerId" hide-pop-icon />
+              </div>
+            </div>
+          </div>
+          <!-- 笔记 -->
+          <div class="description-block" v-if="uiLanguage === 'zh' && XivItemRemarks[itemInfo.id]?.length">
+            <div class="title">笔记</div>
+            <n-divider class="item-divider" />
+            <div class="content">
+              <ItemRemark
+                :remarks="XivItemRemarks[itemInfo.id]"
+                style="line-height: 1.2;"
                 :pop-trigger="innerPopTrigger"
-                pop-style="padding: 0;"
               />
             </div>
-            <div class="other-attrs" v-if="itemInfo.gatherInfo.recommAetheryte" style="margin-left: 1em;">
-              ※ 
-              {{ t('map.text.recomm_aetheryte') + ' - ' }}
-              {{ itemInfo.gatherInfo.recommAetheryte?.[`name_${itemLanguage}`] }}
-            </div>
           </div>
-          <div class="content" v-if="itemInfo.gatherInfo?.timeLimitInfo?.length">
-            <div>{{ t('item.text.gather_time_info') }}</div>
-            <div
-              class="item"
-              v-for="(timeLimit, timeLimitIndex) in itemInfo.gatherInfo?.timeLimitInfo"
-              :key="'time-limit-' + timeLimitIndex"
-            >
-              <div>{{ timeLimit.start }} ~ {{ timeLimit.end }}</div>
-              <div class="text-primary">{{ timeCanGather(timeLimit) }}</div>
-            </div>
-          </div>
-          <div class="content" v-if="itemInfo.gatherInfo?.folkloreId || itemInfo?.gatherInfo?.requirement">
-            <div>{{ t('item.text.gather_condi') }}</div>
-            <div class="item small-font" v-if="itemInfo?.gatherInfo?.requirement">
-              <div>
-                {{ t('item.text.perception_with_val', itemInfo.gatherInfo?.requirement) }}
+          <!-- 采集 -->
+          <div class="description-block" v-if="itemInfo.gatherInfo || itemInfo.isFishingItem">
+            <div class="title">
+              {{ t('common.gather') }}
+              <div v-if="itemInfo.gatherInfo" class="extra">
+                <XivFARImage
+                  class="icon"
+                  :src="XivJobs[itemInfo.gatherInfo.jobId].job_icon_url"
+                  :size="12"
+                />
+                <p v-if="itemInfo.gatherInfo.level !== itemInfo.gatherInfo.nodelevel">
+                  {{ t('item.text.gather_level_info', {
+                    lv: itemInfo.gatherInfo.level,
+                    job: getJobName(XivJobs[itemInfo.gatherInfo.jobId])
+                  }) }}
+                </p>
+                <p v-else>{{ getJobName(XivJobs[itemInfo.gatherInfo.jobId]) }}</p>
+              </div>
+              <div v-if="itemInfo.isFishingItem" class="extra">
+                <XivFARImage
+                  class="icon"
+                  :src="XivJobs[18].job_icon_url"
+                  :size="12"
+                />
+                <p>{{ getJobName(XivJobs[18]) }}</p>
+              </div>
+              <div v-if="itemInfo.gatherInfo?.[`gntype_${uiLanguage}`]" class="extra">
+                {{ ' - ' }}
+                {{ itemInfo.gatherInfo[`gntype_${uiLanguage}`] }}
               </div>
             </div>
-            <div class="item small-font" v-if="itemInfo.gatherInfo?.folkloreId">
-              {{ t('item.text.need_learn') }}
-              <ItemSpan span-max-width="180px" :img-size="12" :item-info="getItemInfo(itemInfo.gatherInfo.folkloreId)" :container-id="containerId" />
+            <n-divider class="item-divider" />
+            <div class="content" v-if="itemInfo.gatherInfo">
+              <div class="other-attrs" v-if="itemGatherDifficulty" style="gap: 2px;">
+                {{ itemGatherDifficulty.diffText }}
+                <HelpButton
+                  :size="12"
+                  icon="question"
+                  color="var(--color-info)"
+                  pop-type="popover"
+                  :placement="isMobile ? 'bottom' : 'right-start'"
+                  style="padding: 0;"
+                >
+                  <div>
+                    <div class="font-bold">{{ t('item.gather_threshold.title.gather_threshold') }}</div>
+                    <n-table size="small" class="content-table tiny-table w-full">
+                      <thead>
+                        <tr>
+                          <th>{{ t('item.gather_threshold.title.field') }}</th>
+                          <th>{{ t('item.gather_threshold.title.threshold') }}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          v-for="(threshold, index) in itemGatherDifficulty.gatherThresholds"
+                          :key="'gatherThresholds-' + index"
+                        >
+                          <td>{{ threshold.field }}</td>
+                          <td>{{ threshold.value }}</td>
+                        </tr>
+                      </tbody>
+                    </n-table>
+                    <div style="height: 4px;" />
+                    <div class="font-bold">{{ t('item.gather_threshold.title.perception_threshold') }}</div>
+                    <n-table size="small" class="content-table tiny-table w-full">
+                      <thead>
+                        <tr>
+                          <th>{{ t('item.gather_threshold.title.field') }}</th>
+                          <th>{{ t('item.gather_threshold.title.threshold') }}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          v-for="(threshold, index) in itemGatherDifficulty.perceptionThresholds"
+                          :key="'perceptionThresholds-' + index"
+                        >
+                          <td>{{ threshold.field }}</td>
+                          <td>{{ threshold.value }}</td>
+                        </tr>
+                      </tbody>
+                    </n-table>
+                  </div>
+                </HelpButton>
+              </div>
+              <div>{{ t('item.text.gather_pos_info') }}</div>
+              <div class="item">
+                <LocationSpan
+                  :place-id="itemInfo.gatherInfo.placeID"
+                  :place-name="getPlaceName()"
+                  :coordinate-x="itemInfo.gatherInfo.posX"
+                  :coordinate-y="itemInfo.gatherInfo.posY"
+                  :pop-trigger="innerPopTrigger"
+                  pop-style="padding: 0;"
+                />
+              </div>
+              <div class="other-attrs" v-if="itemInfo.gatherInfo.recommAetheryte" style="margin-left: 1em;">
+                ※ 
+                {{ t('map.text.recomm_aetheryte') + ' - ' }}
+                {{ itemInfo.gatherInfo.recommAetheryte?.[`name_${itemLanguage}`] }}
+              </div>
             </div>
-          </div>
-          <div class="content" v-if="itemInfo.gatherInfo?.bonuses?.length">
-            <div>{{ t('item.text.gather_bonus') }}</div>
-            <ul class="list small-font">
-              <li
-                v-for="(bonus, bonusIndex) in itemInfo.gatherInfo.bonuses"
-                :key="'bonus-' + bonusIndex"
+            <div class="content" v-if="itemInfo.gatherInfo?.timeLimitInfo?.length">
+              <div>{{ t('item.text.gather_time_info') }}</div>
+              <div
+                class="item"
+                v-for="(timeLimit, timeLimitIndex) in itemInfo.gatherInfo?.timeLimitInfo"
+                :key="'time-limit-' + timeLimitIndex"
               >
-                {{
-                  t('item.text.gather_bonus_description', [
-                    getAttrName(bonus.condition.attribute),
-                    bonus.condition.value,
-                  ])
-                }}{{ bonus.bonus[`text_${uiLanguage}`] }}
-              </li>
-            </ul>
-          </div>
-          <div class="content" v-if="itemInfo.isFishingItem">
-            <div>{{ t('item.text.gather_website.intro') }}</div>
-            <div class="item actions">
-              <n-button size="small" @click="openInAngler">
-                <template #icon>
-                  <n-icon><OpenInNewFilled /></n-icon>
-                </template>
-                {{ t('common.open_in.angler_search') }}
-              </n-button>
-              <n-button size="small" @click="openInMomola">
-                <template #icon>
-                  <n-icon><OpenInNewFilled /></n-icon>
-                </template>
-                {{ t('common.open_in.ffmomola') }}
-              </n-button>
-            </div>
-          </div>
-          <div v-show="false" class="content extra" v-if="itemInfo.isFishingItem">
-            {{ t('item.text.gather_website.note') }}
-          </div>
-        </div>
-        <!-- 收藏品交易 -->
-        <div class="description-block" v-if="itemInfo.collectInfo">
-          <div class="title">
-            {{ t('common.submission') }}
-            <div class="extra">
-              <i class="xiv collectables"></i>{{ t('common.collectable_submission') }}
-            </div>
-          </div>
-          <n-divider class="item-divider" />
-          <div class="content">
-            <ItemSubmissionReward :item-info="itemInfo" />
-          </div>
-        </div>
-        <!-- 兑换 -->
-        <div class="description-block" v-if="tradeCostList.length">
-          <div class="title">{{ t('common.trade') }}</div>
-          <n-divider class="item-divider" />
-          <div class="content">
-            <div>{{ t('item.text.is_tradable') }}</div>
-            <template v-for="(cost, index) in tradeCostList" :key="index">
-              <div class="item trade-item">
-                {{ index > 0 ? t('common.or') : '' }}
-                <ItemSpan
-                  span-max-width="230px"
-                  :item-info="getItemInfo(cost.costId)"
-                  :amount="cost.costCount"
-                  show-amount
-                  :container-id="containerId"
-                />
+                <div>{{ timeLimit.start }} ~ {{ timeLimit.end }}</div>
+                <div class="text-primary">{{ timeCanGather(timeLimit) }}</div>
               </div>
-              <div class="item trade-item trade-item-l2" v-if="cost.cost2Id && cost.cost2Count">
-                {{ t('common.and') }}
-                <ItemSpan
-                  span-max-width="210px"
-                  :item-info="getItemInfo(cost.cost2Id)"
-                  :amount="cost.cost2Count"
-                  show-amount
-                  :container-id="containerId"
-                />
-              </div>
-              <div class="item trade-item trade-item-l2" v-if="cost.cost3Id && cost.cost3Count">
-                {{ t('common.and') }}
-                <ItemSpan
-                  span-max-width="210px"
-                  :item-info="getItemInfo(cost.cost3Id)"
-                  :amount="cost.cost3Count"
-                  show-amount
-                  :container-id="containerId"
-                />
-              </div>
-              <div class="item other-attrs" v-if="cost.receiveCount > 1">
-                {{ t('item.text.multi_get_each_trade', cost.receiveCount) }}
-              </div>
-              <div class="item other-attrs trade-item" v-if="cost.receive2Id && cost.receive2Count">
-                {{ t('item.text.trade_also_receive') }}
-                <ItemSpan
-                  span-max-width="80px"
-                  :item-info="getItemInfo(cost.receive2Id)"
-                  :img-size="12"
-                  :amount="cost.receive2Count"
-                  :show-amount="cost.receive2Count > 1"
-                  :container-id="containerId"
-                  style="width: fit-content;"
-                />
-              </div>
-            </template>
-          </div>
-        </div>
-        <!-- 制作 -->
-        <div class="description-block" v-if="itemInfo.craftRequires.length">
-          <div class="title">
-            {{ t('common.craft.title') }}
-            <div class="extra">
-              <XivFARImage
-                class="icon"
-                :src="XivJobs[itemInfo.craftInfo?.jobId].job_icon_url"
-              />
-              <p>
-                {{ t('item.text.recipe_level_info', {
-                  lv: itemInfo.craftInfo?.craftLevel,
-                  star: '★'.repeat(itemInfo.craftInfo?.starCount || 0),
-                  job: getJobName(XivJobs[itemInfo.craftInfo?.jobId])
-                }) }}
-              </p>
             </div>
-          </div>
-          <n-divider class="item-divider" />
-          <div class="content">
-            <div class="other-attrs">
-              {{ t('item.text.recipe_detail', {
-                dur: itemInfo.craftInfo?.durability,
-                pro: itemInfo.craftInfo?.progress,
-                qua: itemInfo.craftInfo?.quality
-              }) }}
-              <a
-                v-if="itemInfo?.craftInfo?.recipeId"
-                style="padding: 0; display: flex; align-items: center; line-height: 1.2; cursor: pointer;"
-                :title="t('item.text.simulate_craft_bestcraft')"
-                @click="openInBestCraft"
-              >
-                <n-icon :size="12"><OpenInNewFilled /></n-icon>
-                {{ t('common.simulate_craft') }}
-              </a>
-            </div>
-            <div
-              class="item"
-              v-for="(item, index) in itemCraftRequires"
-              :key="'recipe-' + index"
-            >
-              <ItemSpan :item-info="getItemInfo(item.id)" :amount="item.count" show-amount :container-id="containerId" />
-            </div>
-            <div class="other-attrs" v-if="(itemInfo.craftInfo?.yields || 1) > 1">
-              {{ t('item.text.yields_info', itemInfo.craftInfo?.yields) }}
-            </div>
-            <div v-if="itemInfo.craftInfo?.thresholds?.craftsmanship || itemInfo.craftInfo?.thresholds?.control || itemInfo.craftInfo?.masterRecipeId">
-              <div>{{ t('item.text.craft_condi') }}</div>
-              <div class="item small-font">
-                <div v-if="itemInfo.craftInfo?.thresholds?.craftsmanship">
-                  {{ t('item.text.craftsmanship_with_val', itemInfo.craftInfo?.thresholds?.craftsmanship) }}
-                </div>
-                <div v-if="itemInfo.craftInfo?.thresholds?.control">
-                  {{ t('item.text.control_with_val', itemInfo.craftInfo?.thresholds?.control) }}
+            <div class="content" v-if="itemInfo.gatherInfo?.folkloreId || itemInfo?.gatherInfo?.requirement">
+              <div>{{ t('item.text.gather_condi') }}</div>
+              <div class="item small-font" v-if="itemInfo?.gatherInfo?.requirement">
+                <div>
+                  {{ t('item.text.perception_with_val', itemInfo.gatherInfo?.requirement) }}
                 </div>
               </div>
-              <div class="item small-font" v-if="itemInfo.craftInfo?.masterRecipeId">
+              <div class="item small-font" v-if="itemInfo.gatherInfo?.folkloreId">
                 {{ t('item.text.need_learn') }}
-                <ItemSpan span-max-width="180px" :img-size="12" :item-info="getItemInfo(itemInfo.craftInfo.masterRecipeId)" :container-id="containerId" />
+                <ItemSpan span-max-width="180px" :img-size="12" :item-info="getItemInfo(itemInfo.gatherInfo.folkloreId)" :container-id="containerId" />
               </div>
             </div>
-            <div class="other-attrs">
-              <div v-if="!itemInfo.craftInfo?.qsable" style="color: var(--color-error);">{{ t('item.text.cannot_quick_synthesis') }}</div>
-              <div v-if="!itemInfo.craftInfo?.hqable" style="color: var(--color-error);">{{ t('item.text.cannot_hq') }}</div>
+            <div class="content" v-if="itemInfo.gatherInfo?.bonuses?.length">
+              <div>{{ t('item.text.gather_bonus') }}</div>
+              <ul class="list small-font">
+                <li
+                  v-for="(bonus, bonusIndex) in itemInfo.gatherInfo.bonuses"
+                  :key="'bonus-' + bonusIndex"
+                >
+                  {{
+                    t('item.text.gather_bonus_description', [
+                      getAttrName(bonus.condition.attribute),
+                      bonus.condition.value,
+                    ])
+                  }}{{ bonus.bonus[`text_${uiLanguage}`] }}
+                </li>
+              </ul>
             </div>
-          </div>
-        </div>
-        <!-- 价格 -->
-        <div class="description-block" v-if="store.funcConfig.universalis_showpriceinpop && itemInfo.tradable">
-          <div class="title">
-            {{ t('common.price') }}
-            <div class="extra flex">
-              <div>
-                <span>{{ t('common.last_update_with_val', '') }}</span>
-                <span :style="{ color: itemPriceInfo.priceExpired ? 'var(--color-error)' : undefined }">
-                  {{ itemPriceInfo.lastUpdate }}
-                </span>
+            <div class="content" v-if="itemInfo.isFishingItem">
+              <div>{{ t('item.text.gather_website.intro') }}</div>
+              <div class="item actions">
+                <n-button size="small" @click="openInAngler">
+                  <template #icon>
+                    <n-icon><OpenInNewFilled /></n-icon>
+                  </template>
+                  {{ t('common.open_in.angler_search') }}
+                </n-button>
+                <n-button size="small" @click="openInMomola">
+                  <template #icon>
+                    <n-icon><OpenInNewFilled /></n-icon>
+                  </template>
+                  {{ t('common.open_in.ffmomola') }}
+                </n-button>
               </div>
-              <a
-                :disabled="refreshingItemPrice"
-                style="padding: 0; margin-left: 3px; display: flex; line-height: 1;"
-                :style="refreshingItemPrice ? 'cursor: not-allowed; color: gray;' : 'cursor: pointer;'"
-                @click="refreshItemPrice"
-              >
-                <n-icon :size="12"><RefreshOutlined /></n-icon>
-                {{ refreshingItemPrice ? t('common.refreshing') : t('common.refresh') }}
-              </a>
-              <a
-                style="padding: 0; margin-left: 3px; display: flex; line-height: 1;"
-                @click="showPriceDetailModal"
-              >
-                <n-icon :size="12"><TableViewFilled /></n-icon>
-                {{ t('item.price.detail_table.intro_short') }}
-              </a>
+            </div>
+            <div v-show="false" class="content extra" v-if="itemInfo.isFishingItem">
+              {{ t('item.text.gather_website.note') }}
             </div>
           </div>
-          <n-divider class="item-divider" />
-          <div class="content">
-            <div v-if="itemPriceInfo.prices.length" class="content-table">
-              <n-table size="small" class="tiny-table w-full">
-                <thead>
-                  <tr>
-                    <th></th>
-                    <th>NQ</th>
-                    <th v-if="itemInfo.hqable">HQ</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr
-                    v-for="(price, index) in itemPriceInfo.prices"
-                    :key="'price-' + index"
-                  >
-                    <td>{{ price.name }}</td>
-                    <td>
-                      <div :style="price.styleNq" :title="price.tipNq">{{ price.priceStrNq }}</div>
-                    </td>
-                    <td v-if="itemInfo.hqable">
-                      <div :style="price.styleHq" :title="price.tipHq">{{ price.priceStrHq }}</div>
-                    </td>
-                  </tr>
-                </tbody>
-              </n-table>
+          <!-- 收藏品交易 -->
+          <div class="description-block" v-if="itemInfo.collectInfo">
+            <div class="title">
+              {{ t('common.submission') }}
+              <div class="extra">
+                <i class="xiv collectables"></i>{{ t('common.collectable_submission') }}
+              </div>
             </div>
-            <div v-else style="text-indent: 1em;">
-              {{ t('item.price.no_show_price_type_setted', t('preference.universalis_poppricetypes.title')) }}
+            <n-divider class="item-divider" />
+            <div class="content">
+              <ItemSubmissionReward :item-info="itemInfo" />
             </div>
           </div>
+          <!-- 兑换 -->
+          <div class="description-block" v-if="tradeCostList.length">
+            <div class="title">{{ t('common.trade') }}</div>
+            <n-divider class="item-divider" />
+            <div class="content">
+              <div>{{ t('item.text.is_tradable') }}</div>
+              <template v-for="(cost, index) in tradeCostList" :key="index">
+                <div class="item trade-item">
+                  {{ index > 0 ? t('common.or') : '' }}
+                  <ItemSpan
+                    span-max-width="230px"
+                    :item-info="getItemInfo(cost.costId)"
+                    :amount="cost.costCount"
+                    show-amount
+                    :container-id="containerId"
+                  />
+                </div>
+                <div class="item trade-item trade-item-l2" v-if="cost.cost2Id && cost.cost2Count">
+                  {{ t('common.and') }}
+                  <ItemSpan
+                    span-max-width="210px"
+                    :item-info="getItemInfo(cost.cost2Id)"
+                    :amount="cost.cost2Count"
+                    show-amount
+                    :container-id="containerId"
+                  />
+                </div>
+                <div class="item trade-item trade-item-l2" v-if="cost.cost3Id && cost.cost3Count">
+                  {{ t('common.and') }}
+                  <ItemSpan
+                    span-max-width="210px"
+                    :item-info="getItemInfo(cost.cost3Id)"
+                    :amount="cost.cost3Count"
+                    show-amount
+                    :container-id="containerId"
+                  />
+                </div>
+                <div class="item other-attrs" v-if="cost.receiveCount > 1">
+                  {{ t('item.text.multi_get_each_trade', cost.receiveCount) }}
+                </div>
+                <div class="item other-attrs trade-item" v-if="cost.receive2Id && cost.receive2Count">
+                  {{ t('item.text.trade_also_receive') }}
+                  <ItemSpan
+                    span-max-width="80px"
+                    :item-info="getItemInfo(cost.receive2Id)"
+                    :img-size="12"
+                    :amount="cost.receive2Count"
+                    :show-amount="cost.receive2Count > 1"
+                    :container-id="containerId"
+                    style="width: fit-content;"
+                  />
+                </div>
+              </template>
+            </div>
+          </div>
+          <!-- 制作 -->
+          <div class="description-block" v-if="itemInfo.craftRequires.length">
+            <div class="title">
+              {{ t('common.craft.title') }}
+              <div class="extra">
+                <XivFARImage
+                  class="icon"
+                  :src="XivJobs[itemInfo.craftInfo?.jobId].job_icon_url"
+                  :size="12"
+                  :lazy="false"
+                />
+                <p>
+                  {{ t('item.text.recipe_level_info', {
+                    lv: itemInfo.craftInfo?.craftLevel,
+                    star: '★'.repeat(itemInfo.craftInfo?.starCount || 0),
+                    job: getJobName(XivJobs[itemInfo.craftInfo?.jobId])
+                  }) }}
+                </p>
+              </div>
+            </div>
+            <n-divider class="item-divider" />
+            <div class="content">
+              <div class="other-attrs">
+                {{ t('item.text.recipe_detail', {
+                  dur: itemInfo.craftInfo?.durability,
+                  pro: itemInfo.craftInfo?.progress,
+                  qua: itemInfo.craftInfo?.quality
+                }) }}
+                <a
+                  v-if="itemInfo?.craftInfo?.recipeId"
+                  style="padding: 0; display: flex; align-items: center; line-height: 1.2; cursor: pointer;"
+                  :title="t('item.text.simulate_craft_bestcraft')"
+                  @click="openInBestCraft"
+                >
+                  <n-icon :size="12"><OpenInNewFilled /></n-icon>
+                  {{ t('common.simulate_craft') }}
+                </a>
+              </div>
+              <div
+                class="item"
+                v-for="(item, index) in itemCraftRequires"
+                :key="'recipe-' + index"
+              >
+                <ItemSpan :item-info="getItemInfo(item.id)" :amount="item.count" show-amount :container-id="containerId" />
+              </div>
+              <div class="other-attrs" v-if="(itemInfo.craftInfo?.yields || 1) > 1">
+                {{ t('item.text.yields_info', itemInfo.craftInfo?.yields) }}
+              </div>
+              <div v-if="itemInfo.craftInfo?.thresholds?.craftsmanship || itemInfo.craftInfo?.thresholds?.control || itemInfo.craftInfo?.masterRecipeId">
+                <div>{{ t('item.text.craft_condi') }}</div>
+                <div class="item small-font">
+                  <div v-if="itemInfo.craftInfo?.thresholds?.craftsmanship">
+                    {{ t('item.text.craftsmanship_with_val', itemInfo.craftInfo?.thresholds?.craftsmanship) }}
+                  </div>
+                  <div v-if="itemInfo.craftInfo?.thresholds?.control">
+                    {{ t('item.text.control_with_val', itemInfo.craftInfo?.thresholds?.control) }}
+                  </div>
+                </div>
+                <div class="item small-font" v-if="itemInfo.craftInfo?.masterRecipeId">
+                  {{ t('item.text.need_learn') }}
+                  <ItemSpan span-max-width="180px" :img-size="12" :item-info="getItemInfo(itemInfo.craftInfo.masterRecipeId)" :container-id="containerId" />
+                </div>
+              </div>
+              <div class="other-attrs">
+                <div v-if="!itemInfo.craftInfo?.qsable" style="color: var(--color-error);">{{ t('item.text.cannot_quick_synthesis') }}</div>
+                <div v-if="!itemInfo.craftInfo?.hqable" style="color: var(--color-error);">{{ t('item.text.cannot_hq') }}</div>
+              </div>
+            </div>
+          </div>
+          <!-- 价格 -->
+          <div class="description-block" v-if="store.funcConfig.universalis_showpriceinpop && itemInfo.tradable">
+            <div class="title">
+              {{ t('common.price') }}
+              <div class="extra flex">
+                <div>
+                  <span>{{ t('common.last_update_with_val', '') }}</span>
+                  <span :style="{ color: itemPriceInfo.priceExpired ? 'var(--color-error)' : undefined }">
+                    {{ itemPriceInfo.lastUpdate }}
+                  </span>
+                </div>
+                <a
+                  :disabled="refreshingItemPrice"
+                  style="padding: 0; margin-left: 3px; display: flex; line-height: 1;"
+                  :style="refreshingItemPrice ? 'cursor: not-allowed; color: gray;' : 'cursor: pointer;'"
+                  @click="refreshItemPrice"
+                >
+                  <n-icon :size="12"><RefreshOutlined /></n-icon>
+                  {{ refreshingItemPrice ? t('common.refreshing') : t('common.refresh') }}
+                </a>
+                <a
+                  style="padding: 0; margin-left: 3px; display: flex; line-height: 1;"
+                  @click="showPriceDetailModal"
+                >
+                  <n-icon :size="12"><TableViewFilled /></n-icon>
+                  {{ t('item.price.detail_table.intro_short') }}
+                </a>
+              </div>
+            </div>
+            <n-divider class="item-divider" />
+            <div class="content">
+              <div v-if="itemPriceInfo.prices.length" class="content-table">
+                <n-table size="small" class="tiny-table w-full">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>NQ</th>
+                      <th v-if="itemInfo.hqable">HQ</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      v-for="(price, index) in itemPriceInfo.prices"
+                      :key="'price-' + index"
+                    >
+                      <td>{{ price.name }}</td>
+                      <td>
+                        <div :style="price.styleNq" :title="price.tipNq">{{ price.priceStrNq }}</div>
+                      </td>
+                      <td v-if="itemInfo.hqable">
+                        <div :style="price.styleHq" :title="price.tipHq">{{ price.priceStrHq }}</div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </n-table>
+              </div>
+              <div v-else style="text-indent: 1em;">
+                {{ t('item.price.no_show_price_type_setted', t('preference.universalis_poppricetypes.title')) }}
+              </div>
+            </div>
+          </div>
+          <!-- 插槽，目前好像没用到 -->
+          <slot name="extra-descriptions" />
+          <!-- 注 -->
+          <div class="tail-descriptions">
+            <p v-for="(desc, index) in itemTailDescriptions" :key="'tail-descriptions' + index">
+              {{ t('common.note_x', itemTailDescriptions.length === 1 ? '' : index + 1) }}{{ desc }}
+            </p>
+          </div>
         </div>
-        <!-- 插槽，目前好像没用到 -->
-        <slot name="extra-descriptions" />
-        <!-- 注 -->
-        <div class="tail-descriptions">
-          <p v-for="(desc, index) in itemTailDescriptions" :key="'tail-descriptions' + index">
-            {{ t('common.note_x', itemTailDescriptions.length === 1 ? '' : index + 1) }}{{ desc }}
-          </p>
-        </div>
-      </div>
-    </n-scrollbar>
+      </n-scrollbar>
+    </div>
   </n-popover>
   <slot v-else />
 </template>
@@ -962,13 +973,13 @@ const handleOnScroll = (e: Event) => {
     z-index: 1;
   }
 
-  .item-type {
+  .item-attribute {
     display: flex;
     align-items: center;
     gap: 1px;
   }
-  .item-type::before { content: "["; }
-  .item-type::after { content: "]"; }
+  .item-attribute::before { content: "["; }
+  .item-attribute::after { content: "]"; }
 }
 .item-descriptions {
   display: flex;
@@ -1012,7 +1023,7 @@ const handleOnScroll = (e: Event) => {
         font-size: var(--size-small);
         line-height: 1;
 
-        img {
+        .icon, img {
           float: left;
           height: var(--size-small);
           display: block;

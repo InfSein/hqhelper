@@ -48,7 +48,7 @@ const renderInputSlot = () => {
       :title="!slots.label ? label : undefined"
       :style="labelStyle"
     >
-      <div class="overflow-hidden whitespace-nowrap text-ellipsis leading-[1.5]">
+      <div class="overflow-hidden whitespace-nowrap text-ellipsis leading-normal">
         <slot name="label">{{ label }}</slot>
       </div>
     </n-input-group-label>

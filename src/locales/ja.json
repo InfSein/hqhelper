@@ -840,6 +840,7 @@
     }
   },
   "common": {
+    "search": "検索",
     "account": "アカウント",
     "add": "追加",
     "add2": "新規追加",
@@ -1168,7 +1169,9 @@
     "will_be_named_with_time_when_empty": "入力しない場合はデフォルトで時間で命名されます",
     "work_state": "作業状態",
     "filter_item": "アイテムをフィルタリング",
-    "item_filter_input_placeholder": "アイテム名/ID/IL/パッチでフィルタリングに対応"
+    "item_filter_input_placeholder": "アイテム名/ID/IL/パッチでフィルタリングに対応",
+    "share_code": "共有コード",
+    "share_link": "共有リンク"
   },
   "contact_us": {
     "feedback": {
@@ -1231,7 +1234,7 @@
   },
   "cost_and_benefit": {
     "tooltip": {
-      "cal_hq_price_here": "HQの価格が計算に含まれています。",
+      "cal_hq_price_here": "HQの価格が計算に含まれています（HQがない場合はNQの価格）。",
       "cal_nq_price_here": "NQの価格が計算に含まれています。"
     }
   },
@@ -2485,8 +2488,10 @@
           "error_item_not_found": "第{0}行のアイテム「{1}」は HqHelper のデータベースに収録されていません"
         },
         "tip_1": "ここにアイテムリストを入力すると、ワークフローに一括インポートできます。",
-        "tip_2": "複数の形式と言語に対応しています。下の入力欄のサンプルを参照してください。"
-      }
+        "tip_2": "複数の形式と言語に対応しています。下の入力欄のサンプルを参照してください。",
+        "title": "アイテムリスト"
+      },
+      "share_code_placeholder": "ここに共有コードを入力"
     },
     "join_in_workflow": {
       "desc": {
@@ -2542,11 +2547,30 @@
     "tooltip": {
       "set_inventory_by_prepared": "在庫一覧の数量をレポートの「所持数」に設定します。",
       "set_prepared_by_inventory": "レポート内の「所持」数量を「在庫一覧」の数量に設定する"
+    },
+    "notebook_search": {
+      "placeholder": "アイテムを検索…",
+      "history": "検索履歴",
+      "empty_history": "検索履歴はありません",
+      "clear_history": "履歴を削除",
+      "error_empty": "検索キーワードを入力してください",
+      "error_no_result": "一致するアイテムが見つかりません"
+    },
+    "share": {
+      "title": "ワークフローを共有",
+      "empty_workflow": "現在のワークフローにアイテムがないため、共有コードを生成できません",
+      "copy_succeed": "クリップボードにコピーしました",
+      "import_by_code_failed": "共有コードの解析に失敗しました。正しいコードか確認してください"
+    },
+    "custom_list": {
+      "join_list": "このリストを追加",
+      "total_items": "合計 {0} 種のアイテム"
     }
   },
   "recipe": {
     "notebookgroup": {
-      "other_master_recipes": "秘伝書:その他"
+      "other_master_recipes": "秘伝書:その他",
+      "custom_lists": "おすすめリスト"
     }
   }
 }

@@ -63,27 +63,6 @@ const useStaff = () => {
           { name: "Weibo", url: "https://weibo.com/n/%E5%A4%9C%E5%8C%97yakita" }
         ]
       ),
-      kimuchi: createStaffMember(
-        "Kim",
-        "https://avatars.githubusercontent.com/u/44747407?v=4",
-        t('about_app.staff.jobs.kim'),
-        [],
-        [{ name: "Github", url: "https://github.com/kimuchidev" }]
-      ),
-      wcy: createStaffMember(
-        "joj",
-        "https://avatars.githubusercontent.com/u/30862125?v=4",
-        t('about_app.staff.jobs.wcy'),
-        ["在线求职"],
-        [{ name: "Github", url: "https://github.com/wanchenyang521" }]
-      ),
-      etnatker: createStaffMember(
-        "etnAtker",
-        "https://avatars.githubusercontent.com/u/20952240?v=4",
-        t('about_app.staff.jobs.etnatker'),
-        [],
-        [{ name: "Github", url: "https://github.com/etnAtker" }]
-      ),
     }
   })
 

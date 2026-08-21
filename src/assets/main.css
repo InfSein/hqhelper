@@ -29,21 +29,6 @@
   --app-color-background-action: rgb(250, 250, 252);
   --app-color-background-popover: #fff;
   --app-color-background-hover: #F4F5F5;
-
-  --color-text: var(--app-color-text);
-  --color-text-sub: var(--app-color-text-sub);
-  --color-primary: var(--app-color-primary);
-  --color-info: var(--app-color-info);
-  --color-warning: var(--app-color-warning);
-  --color-error: var(--app-color-error);
-  --color-border: var(--app-color-border);
-  --color-background: var(--app-color-background);
-  --color-base: var(--app-color-base);
-  --color-background-embedded: var(--app-color-background-embedded);
-  --color-background-modal: var(--app-color-background-modal);
-  --color-background-action: var(--app-color-background-action);
-  --color-background-popover: var(--app-color-background-popover);
-  --color-background-hover: var(--app-color-background-hover);
 }
 
 .theme-light {
@@ -86,6 +71,37 @@
   --glasscard-bg: rgba(16,16,20, 0.6);
   --glasscard-bg-small: transparent;
   --glasscard-shadow: 0 4px 8px rgba(0,0,0,0.6);
+}
+
+:root, .theme-dark, .theme-light {
+  --color-text: var(--app-color-text);
+  --color-text-sub: var(--app-color-text-sub);
+  --color-primary: var(--app-color-primary);
+  --color-info: var(--app-color-info);
+  --color-warning: var(--app-color-warning);
+  --color-error: var(--app-color-error);
+  --color-border: var(--app-color-border);
+  --color-background: var(--app-color-background);
+  --color-base: var(--app-color-base);
+  --color-background-embedded: var(--app-color-background-embedded);
+  --color-background-modal: var(--app-color-background-modal);
+  --color-background-action: var(--app-color-background-action);
+  --color-background-popover: var(--app-color-background-popover);
+  --color-background-hover: var(--app-color-background-hover);
+  --color-text: var(--app-color-text);
+  --color-primary: var(--app-color-primary);
+  --color-info: var(--app-color-info);
+  --color-warning: var(--app-color-warning);
+  --color-error: var(--app-color-error);
+  --color-sub: var(--app-color-text-sub);
+  --color-bg: var(--app-color-background);
+  --color-bg-embedded: var(--app-color-background-embedded);
+  --color-bg-modal: var(--app-color-background-modal);
+  --color-bg-action: var(--app-color-background-action);
+  --color-bg-popover: var(--app-color-background-popover);
+  --color-bg-hover: var(--app-color-background-hover);
+  --color-base: var(--app-color-base);
+  --color-border: var(--app-color-border);
 }
 
 a {

@@ -116,7 +116,8 @@ const handleSorterChange = (sorter: any) => {
 }
 
 const getItemPriceDecimal = (item: ItemInfo, type: 'NQ' | 'HQ') => {
-  return store.funcConfig.cache_item_prices[item.id]?.[`${store.funcConfig.universalis_priceType}${type}`]
+  const actualType = (type === 'HQ' && !item.hqable) ? 'NQ' : type
+  return store.funcConfig.cache_item_prices[item.id]?.[`${store.funcConfig.universalis_priceType}${actualType}`]
 }
 const getItemPrice = (item: ItemInfo, type: 'NQ' | 'HQ') => {
   const price = getItemPriceDecimal(item, type)

@@ -1,6 +1,7 @@
 {
   "name": "hqhelper",
   "version": "2.5.1",
+  "beta": true,
   "gamever": {
     "cn": "7.55",
     "global": "7.55"

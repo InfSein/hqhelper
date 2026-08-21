@@ -180,7 +180,9 @@ hqhelper/
 
 ### 4.3 样式
 
-- **Tailwind CSS 4** 用于快速 utility class 编写（如 `flex`, `mt-2`, `text-sm` 等）
+- **Tailwind CSS 4** 用于快速 utility class 编写（如 `flex`, `mt-2`, `text-sm`, `shrink-0` 等）
+- **主题色彩类名**：使用映射好的 Tailwind 语义类名（`text-text`, `text-sub`, `text-primary`, `bg-bg-hover`, `border-border` 等），**严禁**使用 `text-[var(--app-color-*)]` 或 `hover:bg-[var(--app-color-*)]` 等任意值类名
+- **Tailwind 4 类名规范**：使用 `shrink-0`（而非 `flex-shrink-0`）、`grow`（而非 `flex-grow`）
 - **自定义 CSS 变量** 用于颜色主题 — 通过 `--app-color-*` 定义，映射到 Tailwind 的 `@theme`
 - **Scoped Style** 优先 — 组件样式尽量 `<style scoped>`
 - **全局样式覆写** Naive UI 组件放在 `custom.css`
@@ -303,6 +305,7 @@ npm run lint
 | `/fchelper` | FashionClothesPage | 时装搭配 |
 | `/gatherclock` | GatherClockPage | 采集时钟 |
 | `/workflow` | WorkflowPage | 工作流管理 |
+| `/share` | WorkflowPage | 工作流分享链接自动导入 |
 | `/workflow_process` | WorkflowProcessPage | 工作流进程 |
 | `/download` | DownloadPage | 下载页 |
 | `/macromanage` | MacroManagePage | 宏管理 |
@@ -356,6 +359,8 @@ npm run lint
 - ❌ 不要使用 Vue Options API
 - ❌ 不要直接使用 `useI18n()`，使用 `useLocale()` 代替
 - ❌ 不要修改 Tailwind preflight（项目已禁用）
+- ❌ 不要使用 `text-[var(--app-color-*)]`、`hover:bg-[var(--app-color-*)]` 等任意值类名，必须使用 Tailwind 主题映射语义类名（如 `text-text`, `hover:bg-bg-hover`）
+- ❌ 不要使用旧版 Tailwind 类名如 `flex-shrink-0`（改用 `shrink-0`）
 - ❌ 不要在 `templates/` 和 `ui/` 组件中手动 import 已自动注册的组件
 - ❌ 不要引入新的 UI 库替代 Naive UI
 

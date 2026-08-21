@@ -3,16 +3,13 @@
     "staff": {
       "contributor": "贡献者",
       "jobs": {
-        "etnatker": "贡献了以Teamcraft格式展示材料清单的功能",
         "infsein": "负责全部设计开发工作",
-        "kim": "贡献了初期的UI日语国际化",
-        "nbb": "负责提供游戏数据和托管支持",
+        "nbb": "负责提供技术及托管方面的支持",
         "personal_page": "个人主页：",
-        "wcy": "贡献了初版Windows客户端框架",
         "yakita": "负责UI的日语国际化和前瞻物品名的中文翻译"
       },
       "producer": "制作人",
-      "title": "创作人员"
+      "title": "开源建设"
     },
     "thank_donate": {
       "desc": {
@@ -840,6 +837,7 @@
     }
   },
   "common": {
+    "search": "搜索",
     "account": "账号",
     "add": "添加",
     "add2": "新增",
@@ -1049,7 +1047,8 @@
       "please_input_val": "请输入{val}",
       "please_wait_for_a_while": "请稍等片刻。",
       "sync_succeed": "同步成功",
-      "cannot_open_same_modal": "无法重复打开弹窗"
+      "cannot_open_same_modal": "无法重复打开弹窗",
+      "app_beta_tooltip": "当前为测试版本，不代表最终效果。"
     },
     "mode": "模式",
     "mquoted_view_statement": "[查看报表]",
@@ -1168,7 +1167,9 @@
     "will_be_named_with_time_when_empty": "不填则默认以时间命名",
     "work_state": "工作状态",
     "filter_item": "筛选物品",
-    "item_filter_input_placeholder": "支持按物品名/ID/品级/版本筛选"
+    "item_filter_input_placeholder": "支持按物品名/ID/品级/版本筛选",
+    "share_code": "分享码",
+    "share_link": "分享链接"
   },
   "contact_us": {
     "feedback": {
@@ -1231,7 +1232,7 @@
   },
   "cost_and_benefit": {
     "tooltip": {
-      "cal_hq_price_here": "此处计入物品的HQ价格。",
+      "cal_hq_price_here": "此处计入物品的HQ价格（无HQ品质时取NQ价格）。",
       "cal_nq_price_here": "此处计入物品的NQ价格。"
     }
   },
@@ -1593,7 +1594,6 @@
     },
     "text": {
       "attribute_isnq_or_hq_desc": "※ 此处仅展示物品的{val}属性",
-      "basic_info": "[{patch}版本] [{id}]",
       "cannot_hq": "无法制作优质道具",
       "cannot_quick_synthesis": "无法进行简易制作",
       "cannot_switch_hqornq": "物品没有{0}，无法切换",
@@ -2491,8 +2491,10 @@
           "error_item_not_found": "第{0}行的物品“{1}”未被HqHelper的数据库收录"
         },
         "tip_1": "可以在此处输入物品清单，将它们批量导入到工作流。",
-        "tip_2": "支持识别多种格式和语言，可参阅下方输入框的示例。"
-      }
+        "tip_2": "支持识别多种格式和语言，可参阅下方输入框的示例。",
+        "title": "物品清单"
+      },
+      "share_code_placeholder": "在此输入分享码"
     },
     "join_in_workflow": {
       "desc": {
@@ -2553,6 +2555,23 @@
     "tooltip": {
       "set_inventory_by_prepared": "将背包库存的数量设置为报表中的“已有”数量。",
       "set_prepared_by_inventory": "将报表中的“已有”数量设置为背包库存的数量。"
+    },
+    "notebook_search": {
+      "placeholder": "搜索物品…",
+      "history": "搜索历史",
+      "empty_history": "暂无搜索历史",
+      "clear_history": "清空历史记录",
+      "error_empty": "请输入搜索关键字",
+      "error_no_result": "未找到匹配的物品"
+    },
+    "share": {
+      "title": "分享工作流",
+      "empty_workflow": "当前工作流没有物品，无法生成分享码",
+      "copy_succeed": "已复制到剪贴板",
+      "import_by_code_failed": "分享码解析失败，请检查分享码是否正确"
+    },
+    "custom_list": {
+      "join_list": "将此清单加入到工作流"
     }
   },
   "recipe": {
@@ -2563,7 +2582,8 @@
       "other": "其他",
       "common": "分级配方",
       "special": "特殊配方",
-      "master": "秘籍配方"
+      "master": "秘籍配方",
+      "custom_lists": "推荐列表"
     },
     "notebook": "制作笔记",
     "text": {
