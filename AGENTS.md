@@ -305,6 +305,7 @@ npm run lint
 | `/fchelper` | FashionClothesPage | 时装搭配 |
 | `/gatherclock` | GatherClockPage | 采集时钟 |
 | `/workflow` | WorkflowPage | 工作流管理 |
+| `/share` | WorkflowPage | 工作流分享链接自动导入 |
 | `/workflow_process` | WorkflowProcessPage | 工作流进程 |
 | `/download` | DownloadPage | 下载页 |
 | `/macromanage` | MacroManagePage | 宏管理 |

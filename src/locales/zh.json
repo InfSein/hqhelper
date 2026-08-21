@@ -1170,7 +1170,9 @@
     "will_be_named_with_time_when_empty": "不填则默认以时间命名",
     "work_state": "工作状态",
     "filter_item": "筛选物品",
-    "item_filter_input_placeholder": "支持按物品名/ID/品级/版本筛选"
+    "item_filter_input_placeholder": "支持按物品名/ID/品级/版本筛选",
+    "share_code": "分享码",
+    "share_link": "分享链接"
   },
   "contact_us": {
     "feedback": {
@@ -2450,8 +2452,10 @@
           "error_item_not_found": "第{0}行的物品“{1}”未被HqHelper的数据库收录"
         },
         "tip_1": "可以在此处输入物品清单，将它们批量导入到工作流。",
-        "tip_2": "支持识别多种格式和语言，可参阅下方输入框的示例。"
-      }
+        "tip_2": "支持识别多种格式和语言，可参阅下方输入框的示例。",
+        "title": "物品清单"
+      },
+      "share_code_placeholder": "在此输入分享码"
     },
     "join_in_workflow": {
       "desc": {
@@ -2520,6 +2524,15 @@
       "clear_history": "清空历史记录",
       "error_empty": "请输入搜索关键字",
       "error_no_result": "未找到匹配的物品"
+    },
+    "share": {
+      "title": "分享工作流",
+      "empty_workflow": "当前工作流没有物品，无法生成分享码",
+      "copy_succeed": "已复制到剪贴板",
+      "import_by_code_failed": "分享码解析失败，请检查分享码是否正确"
+    },
+    "custom_list": {
+      "join_list": "加入此清单"
     }
   },
   "recipe": {
@@ -2530,7 +2543,8 @@
       "other": "其他",
       "common": "分级配方",
       "special": "特殊配方",
-      "master": "秘籍配方"
+      "master": "秘籍配方",
+      "custom_lists": "推荐列表"
     },
     "notebook": "制作笔记",
     "text": {

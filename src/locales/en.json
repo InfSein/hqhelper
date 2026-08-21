@@ -1169,7 +1169,9 @@
     "will_be_named_with_time_when_empty": "Defaults to time if empty",
     "work_state": "Work State",
     "filter_item": "Filter Item",
-    "item_filter_input_placeholder": "Filter by Name/ID/iLv/Patch"
+    "item_filter_input_placeholder": "Filter by Name/ID/iLv/Patch",
+    "share_code": "Share Code",
+    "share_link": "Share Link"
   },
   "contact_us": {
     "feedback": {
@@ -2449,8 +2451,10 @@
           "error_item_not_found": "The item “{1}” in line {0} is not included in HqHelper’s database"
         },
         "tip_1": "You can enter an item list here to import them into the workflow in bulk.",
-        "tip_2": "Multiple formats and languages are supported; please refer to the examples shown in the input box below."
-      }
+        "tip_2": "Multiple formats and languages are supported; please refer to the examples shown in the input box below.",
+        "title": "Item List"
+      },
+      "share_code_placeholder": "Input share code here"
     },
     "join_in_workflow": {
       "desc": {
@@ -2514,11 +2518,22 @@
       "clear_history": "Clear history",
       "error_empty": "Please enter a search keyword",
       "error_no_result": "No matching items found"
+    },
+    "share": {
+      "title": "Share Workflow",
+      "empty_workflow": "Current workflow has no items, cannot generate share code",
+      "copy_succeed": "Copied to clipboard",
+      "import_by_code_failed": "Failed to parse share code, please check if it is correct"
+    },
+    "custom_list": {
+      "join_list": "Add this list",
+      "total_items": "Total {0} items"
     }
   },
   "recipe": {
     "notebookgroup": {
-      "other_master_recipes": "Other Master Recipes"
+      "other_master_recipes": "Other Master Recipes",
+      "custom_lists": "Recommended Lists"
     }
   }
 }

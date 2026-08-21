@@ -23,16 +23,21 @@ import CraftRecommProcess from '@/components/craft/CraftRecommProcess.vue'
 import CraftStatementsPro from '@/components/craft/CraftStatementsPro.vue'
 import ModalCostAndBenefit from '@/components/modals/ModalCostAndBenefit.vue'
 import NotebookPanel from '@/views/workflow/components/NotebookPanel.vue'
+import { useRoute, useRouter } from 'vue-router'
+import ModalShareWorkflow from '@/views/workflow/components/ModalShareWorkflow.vue'
 import ImportItemListPop from '@/views/workflow/components/ImportItemListPop.vue'
 import ModalWorkflowsManage from '@/views/workflow/components/ModalWorkflowsManage.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
+import { useAppModals } from '@/composables/useAppModals'
 import { useWorkflowState } from '@/composables/useWorkflowState'
 import { useCostAndBenefit } from '@/composables/useCostAndBenefit'
 import { useWorkflowStatistics } from '@/composables/useWorkflowStatistics'
 import { type SettingGroupKey } from '@/types'
 import { getDefaultWorkflow, _VAR_MAX_WORKFLOW } from '@/types/workstate/workflow'
+import { getItemInfo } from '@/tools/item'
+import { decodeShareCode } from '@/tools/shareCode'
 
 const store = useStore()
 const { t } = useLocale()
@@ -55,6 +60,38 @@ const preferenceSettingGroup = ref<SettingGroupKey | undefined>(undefined)
 const preferenceAppShowUP = ref(false)
 const preferenceAppShowFP = ref(false)
 const selectedAnaTab = ref('statistics')
+const showShareModal = ref(false)
+
+const route = useRoute()
+const router = useRouter()
+const { joinItemsToWorkflow } = useAppModals()
+
+const checkRouteShareCode = () => {
+  const code = route.query.code as string | undefined
+  if (code) {
+    const decoded = decodeShareCode(code)
+    if (decoded && Object.keys(decoded).length > 0) {
+      const validItems: Record<number, number> = {}
+      for (const [idStr, amount] of Object.entries(decoded)) {
+        const itemId = Number(idStr)
+        const itemInfo = getItemInfo(itemId)
+        if (itemInfo.craftInfo?.recipeId) {
+          validItems[itemId] = amount
+        }
+      }
+      if (Object.keys(validItems).length > 0) {
+        joinItemsToWorkflow(validItems)
+      } else {
+        NAIVE_UI_MESSAGE.error(t('workflow.share.import_by_code_failed'))
+      }
+    } else {
+      NAIVE_UI_MESSAGE.error(t('workflow.share.import_by_code_failed'))
+    }
+    router.replace({ path: '/workflow' })
+  } else if (route.path === '/share') {
+    router.replace({ path: '/workflow' })
+  }
+}
 
 const headerBlock = ref<HTMLElement>()
 const proStatementInstace = ref<InstanceType<typeof CraftStatementsPro>>()
@@ -71,6 +108,10 @@ const updateHeights = () => {
 onMounted(() => {
   updateHeights()
   window.addEventListener('resize', updateHeights)
+  checkRouteShareCode()
+})
+watch(() => route.query.code, () => {
+  checkRouteShareCode()
 })
 onBeforeUnmount(() => {
   window.removeEventListener('resize', updateHeights)
@@ -354,10 +395,18 @@ const setInventoryByStatementPrepared = () => {
             <i class="xiv square-1"></i>
             <span class="app-card-title__text">{{ t('common.select_item2') }}</span>
             <ImportItemListPop>
-              <a v-show="!selectCardFolded" class="app-card-title__extra" href="javascript:void(0);">
+              <a v-show="!selectCardFolded" class="text-sm ml-1 px-0.5 py-px" href="javascript:void(0);">
                 [{{ t('common.import') }}]
               </a>
             </ImportItemListPop>
+            <a
+              v-show="!selectCardFolded"
+              class="text-sm px-0.5 py-px"
+              href="javascript:void(0);"
+              @click="showShareModal = true"
+            >
+              [{{ t('common.share') }}]
+            </a>
           </template>
           <div class="block items-block">
             <div class="top-actions">
@@ -520,6 +569,10 @@ const setInventoryByStatementPrepared = () => {
       v-model:show="showWorkflowsManageModal"
       v-model:workflows="workState.workflows"
       @after-save="handleFixWorkStateAfterWorkflowsManaged"
+    />
+    <ModalShareWorkflow
+      v-model:show="showShareModal"
+      :items="currentWorkflow.targetItems"
     />
     <ModalCostAndBenefit
       v-model:show="showCostAndBenefitModal"
