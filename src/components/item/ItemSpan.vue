@@ -25,6 +25,7 @@ interface ItemSpanProps {
   showAmount?: boolean
   imgSize?: number
   spanMaxWidth?: string
+  iconLazy?: boolean
   hideIcon?: boolean
   hideName?: boolean
   hidePopIcon?: boolean
@@ -161,6 +162,7 @@ const handleItemIconClick = async () => {
         class="select-none"
         :size="imgSize ?? 14"
         :src="itemInfo"
+        :lazy="iconLazy"
         :title="(hideName && hidePopIcon) ? getItemName() : ''"
       />
       <div class="item-text-container">

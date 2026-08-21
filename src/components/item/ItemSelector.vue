@@ -54,6 +54,7 @@ const renderItemLabel : SelectRenderLabel = (option) => {
   return h(ItemSpan, {
     itemInfo: getItemInfo(option.value),
     containerId: props.containerId,
+    iconLazy: false,
   })
 }
 const filterItem = (pattern: string, option: SelectOption) => {

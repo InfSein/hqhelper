@@ -553,6 +553,7 @@ const handleOnScroll = (e: Event) => {
               <XivFARImage
                 class="icon"
                 :src="XivJobs[itemInfo.gatherInfo.jobId].job_icon_url"
+                :size="12"
               />
               <p v-if="itemInfo.gatherInfo.level !== itemInfo.gatherInfo.nodelevel">
                 {{ t('item.text.gather_level_info', {
@@ -566,6 +567,7 @@ const handleOnScroll = (e: Event) => {
               <XivFARImage
                 class="icon"
                 :src="XivJobs[18].job_icon_url"
+                :size="12"
               />
               <p>{{ getJobName(XivJobs[18]) }}</p>
             </div>
@@ -780,6 +782,8 @@ const handleOnScroll = (e: Event) => {
               <XivFARImage
                 class="icon"
                 :src="XivJobs[itemInfo.craftInfo?.jobId].job_icon_url"
+                :size="12"
+                :lazy="false"
               />
               <p>
                 {{ t('item.text.recipe_level_info', {
@@ -1012,7 +1016,7 @@ const handleOnScroll = (e: Event) => {
         font-size: var(--size-small);
         line-height: 1;
 
-        img {
+        .icon, img {
           float: left;
           height: var(--size-small);
           display: block;
