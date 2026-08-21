@@ -1232,7 +1232,7 @@
   },
   "cost_and_benefit": {
     "tooltip": {
-      "cal_hq_price_here": "此处计入物品的HQ价格。",
+      "cal_hq_price_here": "此处计入物品的HQ价格（无HQ品质时取NQ价格）。",
       "cal_nq_price_here": "此处计入物品的NQ价格。"
     }
   },

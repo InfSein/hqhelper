@@ -1232,7 +1232,7 @@
   },
   "cost_and_benefit": {
     "tooltip": {
-      "cal_hq_price_here": "Based on HQ item prices.",
+      "cal_hq_price_here": "Based on HQ item prices (or NQ prices if HQ is unavailable).",
       "cal_nq_price_here": "Based on NQ item prices."
     }
   },

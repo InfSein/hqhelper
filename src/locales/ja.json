@@ -1232,7 +1232,7 @@
   },
   "cost_and_benefit": {
     "tooltip": {
-      "cal_hq_price_here": "HQの価格が計算に含まれています。",
+      "cal_hq_price_here": "HQの価格が計算に含まれています（HQがない場合はNQの価格）。",
       "cal_nq_price_here": "NQの価格が計算に含まれています。"
     }
   },

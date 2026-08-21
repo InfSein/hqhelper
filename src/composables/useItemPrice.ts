@@ -30,7 +30,8 @@ const useItemPrice = () => {
         if (cacheNotExpired(item)) {
           const p = priceCache[item.id]
           itemsMap[item.id] = { amount: item.amount, price: p }
-          total += item.amount * (p[`${priceKey}${priceType}`] ?? 0)
+          const actualPriceType = (priceType === 'HQ' && !item.hqable) ? 'NQ' : priceType
+          total += item.amount * (p[`${priceKey}${actualPriceType}`] ?? 0)
           hasValue = true
         } else if (item.tradable) {
           updateRequired = true
