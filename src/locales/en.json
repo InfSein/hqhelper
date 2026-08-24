@@ -2009,6 +2009,33 @@
       "title": "Disable Work State Memory"
     },
     "enable_dev_mode": "Enable dev mode",
+    "inventory_plugin": {
+      "receive": {
+        "title": "Receive third-party data"
+      },
+      "port": {
+        "title": "WebSocket port"
+      },
+      "token": {
+        "title": "WebSocket token"
+      },
+      "test": {
+        "title": "Test connection",
+        "idle": "Test connection",
+        "testing": "Testing",
+        "status": "Current status: {status}",
+        "result": "Test result: {result}"
+      },
+      "status": {
+        "disconnected": "Disconnected",
+        "connecting": "Connecting",
+        "connected": "Connected",
+        "error": "Connection error"
+      },
+      "message": {
+        "invalid_settings": "Please enter a valid port and token."
+      }
+    },
     "export": {
       "desc": {
         "desc_1": "You can now export the preferences/features settings of this device to another device. Excludes item price caches.",

@@ -76,7 +76,9 @@ interface PreferenceItemBase {
   require_reload?: boolean
 }
 interface PreferenceItemCommon extends PreferenceItemBase {
-  type: "switch" | "string"
+  type: "switch" | "string" | "password" | "number"
+  min?: number
+  max?: number
 }
 interface PreferenceItemSelect extends PreferenceItemBase {
   type: "radio-group" | "select" | "cascader"
@@ -90,6 +92,8 @@ interface PreferenceItemButton extends PreferenceItemBase {
     type?: 'default' | 'tertiary' | 'primary' | 'success' | 'info' | 'warning' | 'error'
     icon?: Component
     onClick: () => void
+    loading?: boolean
+    disabled?: boolean
   }
 }
 export interface PreferenceItemImageSelectOption {

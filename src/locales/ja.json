@@ -2009,6 +2009,33 @@
       "title": "作業状態の記憶を無効にする"
     },
     "enable_dev_mode": "開発者モードの有効化",
+    "inventory_plugin": {
+      "receive": {
+        "title": "外部データを受信"
+      },
+      "port": {
+        "title": "WebSocket ポート"
+      },
+      "token": {
+        "title": "WebSocket トークン"
+      },
+      "test": {
+        "title": "接続テスト",
+        "idle": "接続テスト",
+        "testing": "テスト中",
+        "status": "現在の状態：{status}",
+        "result": "テスト結果：{result}"
+      },
+      "status": {
+        "disconnected": "未接続",
+        "connecting": "接続中",
+        "connected": "接続済み",
+        "error": "接続エラー"
+      },
+      "message": {
+        "invalid_settings": "有効なポートとトークンを入力してください。"
+      }
+    },
     "export": {
       "desc": {
         "desc_1": "現在、このデバイスの設定/機能設定を他のデバイスにエクスポートできるようになりました。アイテム価格などのキャッシュは含まれません。",

@@ -1480,6 +1480,12 @@
   },
   "ingame_inventory": {
     "preference": {
+      "inventory_use_plugin_data": {
+        "desc": {
+          "desc_1": "用第三方数据自动更新背包库存数据，并自动同步报表。"
+        },
+        "title": "接收第三方数据并自动同步"
+      },
       "inventory_other_items_way": {
         "desc": {
           "desc_1": "决定自动同步或手动同步时，对不在背包库存中的物品要如何处理。"
@@ -2006,6 +2012,39 @@
       "title": "禁用工作状态记忆"
     },
     "enable_dev_mode": "启用开发者模式",
+    "inventory_plugin": {
+      "receive": {
+        "title": "接收第三方数据",
+        "desc": {
+          "desc_1": "允许HqHelper客户端从外部接收和处理数据。"
+        }
+      },
+      "port": {
+        "title": "WebSocket端口"
+      },
+      "token": {
+        "title": "WebSocket密钥",
+        "desc": {
+          "desc_1": "HqHelper在处理接收的数据前会进行密钥认证，请确认此处填入的密钥与来源签名一致。"
+        }
+      },
+      "test": {
+        "title": "测试连接",
+        "idle": "测试连接",
+        "testing": "正在测试",
+        "status": "当前状态：{status}",
+        "result": "测试结果：{result}"
+      },
+      "status": {
+        "disconnected": "未连接",
+        "connecting": "连接中",
+        "connected": "已连接",
+        "error": "连接错误"
+      },
+      "message": {
+        "invalid_settings": "请填写有效端口和密钥。"
+      }
+    },
     "export": {
       "desc": {
         "desc_1": "现在你可以将本设备的偏好设置/功能设置导出到其他设备了。不包括物品价格等缓存。",

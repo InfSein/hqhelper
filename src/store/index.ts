@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { getItem, setItem } from './storage'
 import StorageKeys from './keys'
-import { fixUserConfig, type UserConfigModel } from '@/types/config/user'
+import { fixUserConfig, packUserConfigForStorage, type UserConfigModel } from '@/types/config/user'
 import { fixCloudConfig, type CloudConfigModel } from '@/types/config/cloud'
 import { fixMainCache, type MainCacheModel } from '@/types/config/cache-main'
 import { fixFuncConfig, type FuncConfigModel } from '@/types/config/func'
@@ -16,14 +16,14 @@ export const useStore = defineStore('main', {
   actions: {
     setUserConfig(value: UserConfigModel) {
       this.userConfig = fixUserConfig(value)
-      setItem(StorageKeys.UserConfig, value)
+      setItem(StorageKeys.UserConfig, packUserConfigForStorage(this.userConfig))
     },
     reloadUserConfig() {
       this.userConfig = fixUserConfig(getItem<UserConfigModel>(StorageKeys.UserConfig))
     },
     updateUserConfig() {
       this.userConfig = fixUserConfig(this.userConfig)
-      setItem(StorageKeys.UserConfig, this.userConfig)
+      setItem(StorageKeys.UserConfig, packUserConfigForStorage(this.userConfig))
     },
     setFuncConfig(value: FuncConfigModel) {
       this.funcConfig = fixFuncConfig(value)

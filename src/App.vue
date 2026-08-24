@@ -20,6 +20,7 @@ import { fixFuncConfig, type FuncConfigModel } from './types/config/func'
 import { fixUserConfig, type UserConfigModel } from './types/config/user'
 import { fixCloudConfig, type CloudConfigModel } from './types/config/cloud'
 import { fixMainCache, type MainCacheModel } from './types/config/cache-main'
+import { useInventoryPluginAutoConnect } from '@/composables/useInventoryPlugin.ts'
 
 const ModalCopyAsMacro = defineAsyncComponent(() => import('@/components/modals/ModalCopyAsMacro.vue'))
 const ModalJoinInWorkflow = defineAsyncComponent(() => import('@/components/modals/ModalJoinInWorkflow.vue'))
@@ -36,6 +37,7 @@ const { confirm } = useDialog(t)
 const { isMobile } = useResponsive()
 const { appMode } = useAppMode()
 const { emitSync, onSync } = useElectronSync()
+useInventoryPluginAutoConnect()
 const {
   showCopyMacroModal, macroMapValue,
   showModalJoinInWorkflow, itemsToJoinInWorkflow,

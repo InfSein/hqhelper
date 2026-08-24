@@ -34,6 +34,7 @@ import { useAppModals } from '@/composables/useAppModals'
 import { useWorkflowState } from '@/composables/useWorkflowState'
 import { useCostAndBenefit } from '@/composables/useCostAndBenefit'
 import { useWorkflowStatistics } from '@/composables/useWorkflowStatistics'
+import { onInventoryChange, offInventoryChange } from '@/composables/useInventoryPlugin'
 import { type SettingGroupKey } from '@/types'
 import { getDefaultWorkflow, _VAR_MAX_WORKFLOW } from '@/types/workstate/workflow'
 import { getItemInfo } from '@/tools/item'
@@ -105,9 +106,21 @@ const updateHeights = () => {
     headerHeight.value = 0
   }
 }
+
+const handleWorkflowInventoryChange = (changedItemIds: number[]) => {
+  if (
+    selectedAnaTab.value === 'statements'
+    && store.userConfig.receive_third_party_data
+    && store.funcConfig.inventory_use_plugin_data
+  ) {
+    proStatementInstace.value?.applyInventoryChanges(changedItemIds)
+  }
+}
+
 onMounted(() => {
   updateHeights()
   window.addEventListener('resize', updateHeights)
+  onInventoryChange(handleWorkflowInventoryChange)
   checkRouteShareCode()
 })
 watch(() => route.query.code, () => {
@@ -115,6 +128,7 @@ watch(() => route.query.code, () => {
 })
 onBeforeUnmount(() => {
   window.removeEventListener('resize', updateHeights)
+  offInventoryChange(handleWorkflowInventoryChange)
 })
 const pageHeightVals = computed(() => {
   const pageHeight = windowHeight.value - 272
@@ -313,6 +327,13 @@ const {
   openModal: handleAnalysisItemPrices,
 } = useCostAndBenefit(statementData)
 
+const showStatementSyncButtons = computed(() => {
+  return (
+    !(
+      store.userConfig.receive_third_party_data && store.funcConfig.inventory_use_plugin_data
+    ) && selectedAnaTab.value === 'statements'
+  )
+})
 const handleSetStatementPreparedByInventory = () => {
   if (proStatementInstace?.value?.setPreparedItemsByInventory) {
     proStatementInstace.value.setPreparedItemsByInventory()
@@ -453,7 +474,7 @@ const setInventoryByStatementPrepared = () => {
               [{{ updatingPrice ? t('common.loading') : t('statistics.group.cost_and_benefit.title') }}]
             </a>
             <a
-              v-show="store.funcConfig.inventory_workflow_enable_sync && selectedAnaTab === 'statements'"
+              v-show="store.funcConfig.inventory_workflow_enable_sync && showStatementSyncButtons"
               class="card-title__extra"
               href="javascript:void(0);"
               style="cursor: pointer;"
@@ -463,7 +484,7 @@ const setInventoryByStatementPrepared = () => {
               [{{ t('workflow.text.sync_from_inventory') }}]
             </a>
             <a
-              v-show="store.funcConfig.inventory_workflow_enable_sync_reverse && selectedAnaTab === 'statements'"
+              v-show="store.funcConfig.inventory_workflow_enable_sync_reverse && showStatementSyncButtons"
               class="card-title-extra"
               href="javascript:void(0);"
               style="cursor: pointer;"
