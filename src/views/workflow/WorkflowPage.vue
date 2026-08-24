@@ -34,6 +34,7 @@ import { useAppModals } from '@/composables/useAppModals'
 import { useWorkflowState } from '@/composables/useWorkflowState'
 import { useCostAndBenefit } from '@/composables/useCostAndBenefit'
 import { useWorkflowStatistics } from '@/composables/useWorkflowStatistics'
+import { onInventoryChange, offInventoryChange } from '@/composables/useInventoryPlugin'
 import { type SettingGroupKey } from '@/types'
 import { getDefaultWorkflow, _VAR_MAX_WORKFLOW } from '@/types/workstate/workflow'
 import { getItemInfo } from '@/tools/item'
@@ -105,7 +106,6 @@ const updateHeights = () => {
     headerHeight.value = 0
   }
 }
-import { onInventoryChange, offInventoryChange } from '@/composables/useInventoryPlugin'
 
 const handleWorkflowInventoryChange = (changedItemIds: number[]) => {
   if (
