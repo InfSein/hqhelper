@@ -2011,23 +2011,13 @@
     "enable_dev_mode": "Enable dev mode",
     "inventory_plugin": {
       "receive": {
-        "title": "Receive third-party data",
-        "desc": {
-          "desc_1": "When enabled, the app receives inventory data from FishXIVItemReader.",
-          "desc_2": "The app will not connect until a token is provided."
-        }
+        "title": "Receive third-party data"
       },
       "port": {
-        "title": "WebSocket port",
-        "desc": {
-          "desc_1": "The default port is 17814. Keep it the same as the plugin setting."
-        }
+        "title": "WebSocket port"
       },
       "token": {
-        "title": "WebSocket token",
-        "desc": {
-          "desc_1": "Copy the token from FishXIVItemReader and paste it here."
-        }
+        "title": "WebSocket token"
       },
       "test": {
         "title": "Test connection",

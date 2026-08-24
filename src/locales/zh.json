@@ -2016,20 +2016,16 @@
       "receive": {
         "title": "接收第三方数据",
         "desc": {
-          "desc_1": "开启后，应用会从 FishXIVItemReader 接收背包数据。",
-          "desc_2": "未填写密钥时不会连接。"
+          "desc_1": "允许HqHelper客户端从外部接收和处理数据。"
         }
       },
       "port": {
-        "title": "WebSocket 端口",
-        "desc": {
-          "desc_1": "默认端口为 17814，请与插件中显示的端口保持一致。"
-        }
+        "title": "WebSocket端口"
       },
       "token": {
-        "title": "WebSocket 密钥",
+        "title": "WebSocket密钥",
         "desc": {
-          "desc_1": "从 FishXIVItemReader 插件界面复制密钥后粘贴到这里。"
+          "desc_1": "HqHelper在处理接收的数据前会进行密钥认证，请确认此处填入的密钥与来源签名一致。"
         }
       },
       "test": {

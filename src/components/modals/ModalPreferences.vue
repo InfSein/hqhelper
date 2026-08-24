@@ -369,7 +369,6 @@ const preferenceGroups = computed(() : PreferenceGroup[] => {
               hide: !window.wsApi,
               descriptions: [
                 t('preference.inventory_plugin.receive.desc.desc_1'),
-                t('preference.inventory_plugin.receive.desc.desc_2'),
               ],
               type: 'switch'
             },
@@ -377,9 +376,6 @@ const preferenceGroups = computed(() : PreferenceGroup[] => {
               key: 'inventory_ws_port',
               label: t('preference.inventory_plugin.port.title'),
               hide: !window.wsApi,
-              descriptions: [
-                t('preference.inventory_plugin.port.desc.desc_1'),
-              ],
               type: 'number',
               min: 1,
               max: 65535,
@@ -997,8 +993,8 @@ const onLoad = () => {
 }
 
 const handleCheck = () => {
-  const port = Number(formUserConfigData.value.inventory_ws_port)
-  const token = formUserConfigData.value.inventory_ws_token?.trim() ?? ''
+  const port = Number(formUserConfigData.value.tpd_ws_port)
+  const token = formUserConfigData.value.tpd_ws_token?.trim() ?? ''
   if (
     formUserConfigData.value.receive_third_party_data
     && (!Number.isInteger(port) || port < 1 || port > 65535 || !token)
@@ -1008,8 +1004,8 @@ const handleCheck = () => {
   return ''
 }
 const handleTestInventoryConnection = async () => {
-  const port = Number(formUserConfigData.value.inventory_ws_port)
-  const token = formUserConfigData.value.inventory_ws_token?.trim() ?? ''
+  const port = Number(formUserConfigData.value.tpd_ws_port)
+  const token = formUserConfigData.value.tpd_ws_token?.trim() ?? ''
   if (!Number.isInteger(port) || port < 1 || port > 65535 || !token) {
     inventoryConnectionTestMessage.value = t('preference.inventory_plugin.message.invalid_settings')
     NAIVE_UI_MESSAGE.error(inventoryConnectionTestMessage.value)
@@ -1043,8 +1039,8 @@ const handleSave = async () => {
   formUserConfigData.value.language_item ??= 'auto'
   formUserConfigData.value.disable_workstate_cache ??= false
   formUserConfigData.value.receive_third_party_data ??= false
-  formUserConfigData.value.inventory_ws_port = Number(formUserConfigData.value.inventory_ws_port) || 17814
-  formUserConfigData.value.inventory_ws_token ??= ''
+  formUserConfigData.value.tpd_ws_port = Number(formUserConfigData.value.tpd_ws_port) || 17814
+  formUserConfigData.value.tpd_ws_token ??= ''
   if (formUserConfigData.value.disable_workstate_cache) {
     formUserConfigData.value.hqwb_cache_work_state = fixHqwbWorkState()
     formUserConfigData.value.mmhelper_cache_work_state = fixMmHelperWorkState()

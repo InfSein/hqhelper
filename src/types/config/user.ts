@@ -56,12 +56,12 @@ export interface UserConfigModel {
   disable_workstate_cache: boolean
   /** 启用开发者模式 */
   enable_dev_mode: boolean
-  /** 接收第三方背包数据 */
+  /** 接收第三方数据 */
   receive_third_party_data: boolean
-  /** FishXIVItemReader WebSocket 端口 */
-  inventory_ws_port: number
-  /** FishXIVItemReader WebSocket 密钥 */
-  inventory_ws_token: string
+  /** 第三方数据的 WebSocket 端口 */
+  tpd_ws_port: number
+  /** 第三方数据的 WebSocket 密钥 */
+  tpd_ws_token: string
 
   // * update
   /** 禁用自动更新 */
@@ -120,8 +120,8 @@ const defaultUserConfig: UserConfigModel = {
   disable_workstate_cache: false,
   enable_dev_mode: false,
   receive_third_party_data: false,
-  inventory_ws_port: 17814,
-  inventory_ws_token: '',
+  tpd_ws_port: 17814,
+  tpd_ws_token: '',
   // update
   disable_auto_update: false,
   update_client_builtin: false,
@@ -164,8 +164,8 @@ export const decodeInventoryToken = (token: string) => {
 // 生成用于本地缓存的用户配置。
 export const packUserConfigForStorage = (config: UserConfigModel) => {
   const packed = { ...config } as UserConfigModel & { inventory_ws_token_encoded?: string }
-  packed.inventory_ws_token_encoded = encodeInventoryToken(config.inventory_ws_token)
-  packed.inventory_ws_token = ''
+  packed.inventory_ws_token_encoded = encodeInventoryToken(config.tpd_ws_token)
+  packed.tpd_ws_token = ''
   return packed
 }
 
@@ -199,7 +199,7 @@ export const fixUserConfig = (config?: UserConfigModel) => {
     delete oldConf.fthelper_cache_work_state
   }
   if (oldConf.inventory_ws_token_encoded) {
-    config.inventory_ws_token = decodeInventoryToken(oldConf.inventory_ws_token_encoded)
+    config.tpd_ws_token = decodeInventoryToken(oldConf.inventory_ws_token_encoded)
   }
 
   // 处理结构体设置项

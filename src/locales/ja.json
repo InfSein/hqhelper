@@ -2011,23 +2011,13 @@
     "enable_dev_mode": "開発者モードの有効化",
     "inventory_plugin": {
       "receive": {
-        "title": "外部データを受信",
-        "desc": {
-          "desc_1": "有効にすると、FishXIVItemReader から所持品データを受信します。",
-          "desc_2": "トークンが未入力の場合は接続しません。"
-        }
+        "title": "外部データを受信"
       },
       "port": {
-        "title": "WebSocket ポート",
-        "desc": {
-          "desc_1": "既定のポートは 17814 です。プラグイン側の設定と一致させてください。"
-        }
+        "title": "WebSocket ポート"
       },
       "token": {
-        "title": "WebSocket トークン",
-        "desc": {
-          "desc_1": "FishXIVItemReader の画面からトークンをコピーして貼り付けてください。"
-        }
+        "title": "WebSocket トークン"
       },
       "test": {
         "title": "接続テスト",

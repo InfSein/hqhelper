@@ -13,17 +13,16 @@ const isListening = shallowRef(false)
 let cleanupMessage: (() => void) | null = null
 let cleanupStatus: (() => void) | null = null
 
-// 判断当前环境是否支持 Electron WebSocket 桥接。
 function hasWsApi() {
   return typeof window !== 'undefined' && !!window.wsApi
 }
 
-// 校验基础连接参数，避免无效设置进入主进程。
+// 校验基础连接参数
 function isValidSettings(port: number, token: string) {
   return Number.isInteger(port) && port > 0 && port <= 65535 && token.trim().length > 0
 }
 
-// 判断插件消息是否符合已知结构。
+// 判断插件消息是否符合已知结构
 function isPluginMessage(data: unknown): data is PluginMessage {
   if (!data || typeof data !== 'object') return false
   const message = data as Partial<PluginMessage>
@@ -48,14 +47,12 @@ const listeners = new Set<InventoryChangeListener>()
 export function onInventoryChange(fn: InventoryChangeListener) {
   listeners.add(fn)
 }
-
 export function offInventoryChange(fn: InventoryChangeListener) {
   listeners.delete(fn)
 }
 
 const lastSnapshot = shallowRef<Record<number, number>>({})
 
-// 处理从插件收到的消息，并保留后续业务扩展入口。
 function handleMessage(data: unknown) {
   if (!isPluginMessage(data)) return
 
@@ -63,8 +60,6 @@ function handleMessage(data: unknown) {
   lastError.value = null
 
   if (data.cmdType === 2) {
-    console.log('[FishXIVItemReader] 背包快照:', data)
-
     const store = useStore()
     if (!store.userConfig.receive_third_party_data || !store.funcConfig.inventory_use_plugin_data) {
       return
@@ -134,7 +129,6 @@ function ensureListeners() {
   isListening.value = true
 }
 
-// 连接到 FishXIVItemReader。
 async function connect(port: number, token: string): Promise<boolean> {
   ensureListeners()
   if (!hasWsApi()) {
@@ -156,7 +150,6 @@ async function connect(port: number, token: string): Promise<boolean> {
   }
 }
 
-// 断开 FishXIVItemReader 连接。
 async function disconnect(): Promise<void> {
   if (!hasWsApi()) return
   try {
@@ -168,7 +161,6 @@ async function disconnect(): Promise<void> {
   }
 }
 
-// 测试连接，不改动当前已保存设置。
 async function testConnection(port: number, token: string): Promise<ConnectionTestResult> {
   if (!hasWsApi()) {
     return { success: false, message: '当前环境不支持 WebSocket 插件连接' }
@@ -179,7 +171,6 @@ async function testConnection(port: number, token: string): Promise<ConnectionTe
   return window.wsApi!.testConnection({ port, token: token.trim() })
 }
 
-// 暴露全局共享的插件连接状态和操作。
 export function useInventoryPlugin() {
   ensureListeners()
 
@@ -196,20 +187,18 @@ export function useInventoryPlugin() {
   }
 }
 
-// 按用户设置自动连接或断开 FishXIVItemReader。
 export function useInventoryPluginAutoConnect() {
   const store = useStore()
   const plugin = useInventoryPlugin()
   const settings = computed(() => ({
     enabled: store.userConfig.receive_third_party_data,
-    port: store.userConfig.inventory_ws_port,
-    token: store.userConfig.inventory_ws_token,
+    port: store.userConfig.tpd_ws_port,
+    token: store.userConfig.tpd_ws_token,
   }))
 
   const stop = watch(
     settings,
     async (value) => {
-      console.log('[FishXIVItemReader] 设置:', value)
       if (!value.enabled) {
         await plugin.disconnect()
         return
