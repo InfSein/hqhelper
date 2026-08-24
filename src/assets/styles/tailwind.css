@@ -7,6 +7,7 @@
 @theme {
   --color-text: var(--app-color-text);
   --color-primary: var(--app-color-primary);
+  --color-success: var(--app-color-success);
   --color-info: var(--app-color-info);
   --color-warning: var(--app-color-warning);
   --color-error: var(--app-color-error);

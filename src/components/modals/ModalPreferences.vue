@@ -359,7 +359,7 @@ const preferenceGroups = computed(() : PreferenceGroup[] => {
                 t('preference.disable_auto_update.desc.desc_2'),
                 {
                   value: t('preference.disable_auto_update.desc.desc_3'),
-                  class: 'color-info',
+                  class: 'text-info',
                 }
               ],
               type: 'switch'

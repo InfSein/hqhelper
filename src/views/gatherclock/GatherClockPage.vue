@@ -304,9 +304,9 @@ const dealTimeLimit = (start: string, end: string) => {
       remainET = e - c
       ls = Math.floor(EorzeaTime.EorzeaMinute2LocalSecond(remainET))
       if (ls < 30) {
-        ltClass += ' color-error'
+        ltClass += ' text-error'
       } else if (ls < 60) {
-        ltClass += ' color-warning'
+        ltClass += ' text-warning'
       }
       ltTitle = '剩余可采集时间'
     } else {

@@ -2516,7 +2516,8 @@
         "tip_1": "将该物品添加到当前工作流",
         "tip_2": "如果已经添加过该物品，则会增加数量"
       },
-      "notebook_item_not_selected": "请先选择物品"
+      "notebook_item_not_selected": "请先选择物品",
+      "join_in_curr_workflow": "添加到当前工作流"
     },
     "tooltip": {
       "set_inventory_by_prepared": "将背包库存的数量设置为报表中的“已有”数量。",

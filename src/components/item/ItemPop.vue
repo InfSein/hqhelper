@@ -844,8 +844,8 @@ const handleOnScroll = (e: Event) => {
                 </div>
               </div>
               <div class="other-attrs">
-                <div v-if="!itemInfo.craftInfo?.qsable" style="color: var(--color-error);">{{ t('item.text.cannot_quick_synthesis') }}</div>
-                <div v-if="!itemInfo.craftInfo?.hqable" style="color: var(--color-error);">{{ t('item.text.cannot_hq') }}</div>
+                <div v-if="!itemInfo.craftInfo?.qsable" class="text-error">{{ t('item.text.cannot_quick_synthesis') }}</div>
+                <div v-if="!itemInfo.craftInfo?.hqable" class="text-error">{{ t('item.text.cannot_hq') }}</div>
               </div>
             </div>
           </div>
