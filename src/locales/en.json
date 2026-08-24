@@ -1838,6 +1838,8 @@
       },
       "title": "Select Gears",
       "view_selected": "View Selected",
+      "gear_overview": "Gear Overview",
+      "gear_overview_no_gear": "No gear for this slot",
       "warn": {
         "select_job_first": "Please Select Job"
       }

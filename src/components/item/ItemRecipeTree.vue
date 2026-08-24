@@ -7,6 +7,7 @@ interface ItemRecipeTreeProps {
   item: ItemInfo
   amount: number
   level: number
+  containerId?: string
 }
 const props = defineProps<ItemRecipeTreeProps>()
 
@@ -32,7 +33,7 @@ const itemCraftRequires = computed(() => {
 
 <template>
   <div class="bordered" :class="level === 1 ? 'hover:bg-bg-hover rounded py-px px-1' : ''">
-    <ItemSpan v-if="level !== 0" :item-info="item" :amount="amount" show-amount />
+    <ItemSpan v-if="level !== 0" :item-info="item" :amount="amount" show-amount :container-id="containerId" />
     <div v-if="item.craftRequires?.length" class="relative">
       <div
         v-for="(require, index) in itemCraftRequires"
@@ -53,7 +54,12 @@ const itemCraftRequires = computed(() => {
         </template>
 
         <div :class="level !== 0 ? 'pl-6' : ''">
-          <ItemRecipeTree :item="require.requireItem" :amount="require.needAmount" :level="level + 1" />
+          <ItemRecipeTree
+            :item="require.requireItem"
+            :amount="require.needAmount"
+            :level="level + 1"
+            :container-id="containerId"
+          />
         </div>
       </div>
     </div>

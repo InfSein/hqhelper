@@ -1838,6 +1838,8 @@
       },
       "title": "部位選択",
       "view_selected": "選択済み部位",
+      "gear_overview": "部位一覧",
+      "gear_overview_no_gear": "この部位に対応する装備はありません",
       "warn": {
         "select_job_first": "ジョブを選択してください"
       }

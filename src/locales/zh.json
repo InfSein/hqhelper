@@ -1835,6 +1835,8 @@
       },
       "title": "选择部件",
       "view_selected": "已选部件",
+      "gear_overview": "部件总览",
+      "gear_overview_no_gear": "该部件无对应装备",
       "warn": {
         "select_job_first": "请先选择职业"
       }

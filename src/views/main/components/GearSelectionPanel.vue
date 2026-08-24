@@ -8,6 +8,7 @@ import Stepper from '@/components/ui/Stepper.vue'
 import TooltipButton from '@/components/ui/TooltipButton.vue'
 import DropdownActionMenu from '@/components/ui/DropdownActionMenu.vue'
 import ModalSelectedGears from '@/views/main/components/ModalSelectedGears.vue'
+import ModalGearOverview from '@/views/main/components/ModalGearOverview.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
@@ -32,6 +33,7 @@ const props = defineProps<GearSelectionPanelProps>()
 const emits = defineEmits(['joinWorkflow'])
 
 const showSelectedGears = ref(false)
+const showGearOverview = ref(false)
 
 // #region Affixes Information
 const getAffixesName = () => {
@@ -85,6 +87,14 @@ const disableAllAccessories = computed(() => {
     && !props.patchData?.necklace?.[props.accessoryAffix]
     && !props.patchData?.wrist?.[props.accessoryAffix]
     && !props.patchData?.rings?.[props.accessoryAffix]
+  )
+})
+const disableGearOverview = computed(() => {
+  return jobNotSelected.value || (
+    disableMainhand.value
+    && disableOffhand.value
+    && disableAllAttires.value
+    && disableAllAccessories.value
   )
 })
 // #endregion
@@ -520,7 +530,13 @@ defineExpose({
       </table>
 
       <div class="mt-8 mr-0.75 max-md:mt-auto">
-        <div class="flex justify-end mb-1.5">
+        <div class="flex justify-end mb-1.5 gap-x-3 gap-y-2">
+          <n-button
+            :disabled="disableGearOverview"
+            @click="showGearOverview = true"
+          >
+            {{ t('main.select_gear.gear_overview') }}
+          </n-button>
           <n-button-group>
             <n-button
               :disabled="jobNotSelected"
@@ -605,6 +621,13 @@ defineExpose({
       v-model:show="showSelectedGears"
       v-model:gear-selections="gearSelections"
       :patch-data="patchData"
+    />
+    <ModalGearOverview
+      v-model:show="showGearOverview"
+      :patch-data="patchData"
+      :job-id="jobId"
+      :attire-affix="attireAffix"
+      :accessory-affix="accessoryAffix"
     />
   </FoldableCard>
 </template>
