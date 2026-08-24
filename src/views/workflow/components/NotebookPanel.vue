@@ -408,7 +408,7 @@ const handleNotebookItemContextMenu = (e: MouseEvent, item: ItemInfo) => {
   >
     <template #header>
       <i class="xiv square-0"></i>
-      <span class="app-card-title__text">{{ t('recipe.notebook') }}</span>
+      <span class="card-title__text">{{ t('recipe.notebook') }}</span>
     </template>
     <div class="flex flex-wrap items-center justify-between gap-2">
       <div class="flex flex-wrap items-center gap-1.5">

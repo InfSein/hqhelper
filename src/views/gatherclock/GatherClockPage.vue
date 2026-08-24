@@ -569,7 +569,7 @@ const handleShowAlarmMacroExportModal = () => {
     <FoldableCard card-key="gatherclock-filter">
       <template #header>
         <i class="xiv sync-invert"></i>	
-        <span class="app-card-title__text">{{ t('gather_clock.preference.title') }}</span>
+        <span class="card-title__text">{{ t('gather_clock.preference.title') }}</span>
       </template>
 
       <div class="query-form">

@@ -95,15 +95,15 @@ const handleSettingButtonClick = () => {
     @on-setting-button-clicked="handleSettingButtonClick"
   >
     <template #header>
-      <div class="app-card-title select-none">
+      <div class="card-title select-none">
         <n-icon><TableViewOutlined /></n-icon>
         <span class="title">
           {{ t('common.appfunc.craft_statement') }}
         </span>
-        <span class="app-card-title__extra">
+        <span class="card-title__extra">
           <n-tag type="info" size="small" round>PRO</n-tag>
         </span>
-        <div class="app-card-title__actions">
+        <div class="card-title__actions">
           <a href="javascript:void(0);" @click="handleResetPreparedItems">[{{ t('statement.text.reset_prepared') }}]</a>
           <a href="javascript:void(0);" @click="handleShowRecommendedProcesses">[{{ t('common.appfunc.recomm_process') }}]</a>
         </div>
@@ -135,7 +135,7 @@ const handleSettingButtonClick = () => {
 <style scoped>
 /* Mobile */
 @media screen and (max-width: 767px) {
-  .app-card-title__actions {
+  .card-title__actions {
     flex-basis: 100%;
   }
 }

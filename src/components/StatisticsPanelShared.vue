@@ -45,9 +45,9 @@ const {
     <FoldableCard card-key="ft-statistics">
       <template #header>
         <i class="xiv square-2"></i>
-        <span class="app-card-title__text">{{ t('statistics.view_statistics') }}</span>
-        <a class="app-card-title__extra" href="javascript:void(0);" @click="showStatement">{{ t('common.mquoted_view_statement') }}</a>
-        <a class="app-card-title__extra" href="javascript:void(0);" :disabled="updatingPrice" :style="updatingPrice ? 'cursor: not-allowed; color: gray;' : 'cursor: pointer;'" @click="handleAnalysisItemPrices">[{{ updatingPrice ? t('common.loading') : t('statistics.group.cost_and_benefit.title') }}]</a>
+        <span class="card-title__text">{{ t('statistics.view_statistics') }}</span>
+        <a class="card-title__extra" href="javascript:void(0);" @click="showStatement">{{ t('common.mquoted_view_statement') }}</a>
+        <a class="card-title__extra" href="javascript:void(0);" :disabled="updatingPrice" :style="updatingPrice ? 'cursor: not-allowed; color: gray;' : 'cursor: pointer;'" @click="handleAnalysisItemPrices">[{{ updatingPrice ? t('common.loading') : t('statistics.group.cost_and_benefit.title') }}]</a>
       </template>
 
       <div class="mb-3.75">

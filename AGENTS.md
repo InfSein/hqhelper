@@ -187,7 +187,7 @@ hqhelper/
 - **自定义 CSS 变量** 用于颜色主题 — 通过 `--app-color-*` 定义，映射到 Tailwind 的 `@theme`
 - **Scoped Style** 优先 — 组件样式尽量 `<style scoped>`
 - **全局样式覆写** Naive UI 组件放在 `custom.css`
-- **共享样式** 放在 `shared.css`（如 `.glasscard`, `.app-card-title` 等）
+- **共享样式** 放在 `shared.css`（如 `.glasscard`, `.card-title` 等）
 - **不启用 Tailwind Preflight** — 使用自定义 base.css 替代
 - **`cn()` 工具函数**：用于条件合并 Tailwind 类名（`clsx` + `tailwind-merge`）
 
