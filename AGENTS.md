@@ -183,6 +183,7 @@ hqhelper/
 - **Tailwind CSS 4** 用于快速 utility class 编写（如 `flex`, `mt-2`, `text-sm`, `shrink-0` 等）
 - **主题色彩类名**：使用映射好的 Tailwind 语义类名（`text-text`, `text-sub`, `text-primary`, `bg-bg-hover`, `border-border` 等），**严禁**使用 `text-[var(--app-color-*)]` 或 `hover:bg-[var(--app-color-*)]` 等任意值类名
 - **Tailwind 4 类名规范**：使用 `shrink-0`（而非 `flex-shrink-0`）、`grow`（而非 `flex-grow`）
+- **尽量使用 Tailwind**：尽量使用 tailwind class ，而非自定义 class，除非此 class在同一文件中被多次复用或是内部样式过多
 - **自定义 CSS 变量** 用于颜色主题 — 通过 `--app-color-*` 定义，映射到 Tailwind 的 `@theme`
 - **Scoped Style** 优先 — 组件样式尽量 `<style scoped>`
 - **全局样式覆写** Naive UI 组件放在 `custom.css`
