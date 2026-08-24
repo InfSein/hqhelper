@@ -30,6 +30,7 @@ private-folder-alias.json
 .agent
 .agents
 skills-lock.json
+ARCHITECTURE.md
 
 # Editor directories and files
 .vscode/*

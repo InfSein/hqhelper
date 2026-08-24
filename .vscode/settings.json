@@ -8,8 +8,8 @@
     "vite.config.*": "eslint*",
     "package.json": "package-lock.json",
     "folder-alias.json": "private-folder-alias.json",
-    "AGENTS.md": "DESIGN.md",
-    "README.md": "CHANGELOG.md, LICENSE, CONTRIBUTING.md, TODO.md"
+    "AGENTS.md": "DESIGN.md, ARCHITECTURE.md",
+    "README.md": "README.*.md, CHANGELOG.md, LICENSE, CONTRIBUTING.md, TODO.md"
   },
   "i18n-ally.localesPaths": [
     "src/locales"
