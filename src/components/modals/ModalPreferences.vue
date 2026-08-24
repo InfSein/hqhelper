@@ -424,7 +424,7 @@ const preferenceGroups = computed(() : PreferenceGroup[] => {
                 t('preference.disable_auto_update.desc.desc_2'),
                 {
                   value: t('preference.disable_auto_update.desc.desc_3'),
-                  class: 'color-info',
+                  class: 'text-info',
                 }
               ],
               type: 'switch'
@@ -1176,7 +1176,7 @@ const containerMaxHeight = computed(() => {
     @on-load="onLoad"
   >
     <template #header>
-      <div class="app-card-title select-none">
+      <div class="card-title select-none">
         <n-icon :component="modalTitle.icon" />
         <span class="title">{{ modalTitle.text }}</span>
         <span class="description">[{{ currentGroupName }}]</span>

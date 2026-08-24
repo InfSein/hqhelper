@@ -93,12 +93,12 @@ const getSponsorGenContent = (gen: number) => {
     @on-load="loadSponsors"
   >
     <template #header>
-      <div class="app-card-title select-none">
+      <div class="card-title select-none">
         <n-icon><ChecklistRtlSharp /></n-icon>
         <span class="title">
           {{ t('common.appfunc.thank_list') }}
         </span>
-        <div class="app-card-title__actions">
+        <div class="card-title__actions">
           <a href="javascript:void(0);" @click="showRules">[{{ t('common.rule') }}]</a>
         </div>
       </div>

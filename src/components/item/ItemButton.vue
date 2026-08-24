@@ -45,6 +45,7 @@ interface ItemButtonProps {
 
   /** 是否显示物品图标(可选,默认false) */
   showIcon?: boolean;
+  iconLazy?: boolean
   /** 是否在物品名前展示生产/采集职业的图标 */
   showCollectorIcon?: boolean;
   /** 是否显示物品名称(可选,默认false) */
@@ -75,6 +76,7 @@ const itemAmount = computed(() => {
     : props.itemInfo.amount
 })
 
+const iconLazy = computed(() => props.iconLazy ?? false)
 const iconSize = computed(() => {
   return (props.btnHeight || 34) - 7
 })
@@ -155,6 +157,7 @@ const handleItemButtonClick = async () => {
             <XivFARImage
               :src="itemInfo"
               :size="iconSize"
+              :lazy="iconLazy"
             />
           </div>
 
@@ -164,11 +167,13 @@ const handleItemButtonClick = async () => {
                 v-if="showCollectorIcon && itemInfo.craftInfo?.jobId"
                 :src="XivJobs[itemInfo.craftInfo?.jobId].job_icon_url"
                 :size="14"
+                :lazy="iconLazy"
               />
               <XivFARImage
                 v-else-if="showCollectorIcon && itemInfo.gatherInfo?.jobId"
                 :src="XivJobs[itemInfo.gatherInfo?.jobId].job_icon_url"
                 :size="14"
+                :lazy="iconLazy"
               />
               <div class="whitespace-nowrap overflow-hidden text-ellipsis">
                 {{ getItemName() }}

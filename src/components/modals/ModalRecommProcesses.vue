@@ -120,10 +120,10 @@ const handleSettingButtonClick = () => {
     @on-setting-button-clicked="handleSettingButtonClick"
   >
     <template #header>
-      <div class="app-card-title select-none">
+      <div class="card-title select-none">
         <n-icon><AllInclusiveSharp /></n-icon>
         <span class="title">{{ t('common.appfunc.recomm_process') }}</span>
-        <div class="app-card-title__actions">
+        <div class="card-title__actions">
           <a href="javascript:void(0);" @click="handleCollapseOrUncollapseAllBlocks">[{{ isBlocksAllCollapsed() ? t('common.expand_all') : t('common.fold_all') }}]</a>
         </div>
       </div>

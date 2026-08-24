@@ -178,7 +178,7 @@ const handleCancel = () => {
         <n-form-item :label="t('gather_clock.preference.custom_audio.title')">
           <div class="flex flex-col gap-2 w-full">
             <div class="break-all">
-              <span v-if="tempCustomAudioName && !tempAudioBlobDeleted" class="color-success">
+              <span v-if="tempCustomAudioName && !tempAudioBlobDeleted" class="text-success">
                 {{ t('gather_clock.preference.custom_audio.status_uploaded', { name: tempCustomAudioName }) }}
               </span>
               <span v-else class="text-sub font-small">

@@ -2,6 +2,13 @@
   "about_app": {
     "staff": {
       "contributor": "贡献者",
+      "desc": {
+        "desc_1_1": "HqHelper是开放开源的",
+        "desc_1_2": "项目，任何人都能够参与其中。",
+        "desc_2": "不过，绝大多数的开发·维护·运营工作由下述成员完成：",
+        "desc_3": "另有多位卓越的社区成员为HqHelper的发展贡献了力量。",
+        "desc_4": "来查看贡献者名单。"
+      },
       "jobs": {
         "infsein": "负责全部设计开发工作",
         "nbb": "负责提供技术及托管方面的支持",
@@ -1834,6 +1841,8 @@
       },
       "title": "选择部件",
       "view_selected": "已选部件",
+      "gear_overview": "部件总览",
+      "gear_overview_no_gear": "该部件无对应装备",
       "warn": {
         "select_job_first": "请先选择职业"
       }
@@ -2550,7 +2559,8 @@
         "tip_1": "将该物品添加到当前工作流",
         "tip_2": "如果已经添加过该物品，则会增加数量"
       },
-      "notebook_item_not_selected": "请先选择物品"
+      "notebook_item_not_selected": "请先选择物品",
+      "join_in_curr_workflow": "添加到当前工作流"
     },
     "tooltip": {
       "set_inventory_by_prepared": "将背包库存的数量设置为报表中的“已有”数量。",

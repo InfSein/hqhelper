@@ -6,6 +6,7 @@ import {
   DeleteSweepRound,
   HistoryRound,
   OpenInNewFilled,
+  JoinLeftOutlined,
   PlaylistAddOutlined,
   SearchRound,
 } from '@vicons/material'
@@ -378,6 +379,38 @@ const handleContentGroupSelect = (menuId: `i_${number}`) => {
   isCustomListMode.value = false
   emit('update:selectedContentGroup', menuId)
 }
+
+interface DisplayedNotebookGroup {
+  key: string | number
+  label?: string
+  items: {
+    item: ItemInfo
+    amount: number
+  }[]
+}
+
+const displayedNotebookGroups = computed<DisplayedNotebookGroup[]>(() => {
+  if (isSearchMode.value) {
+    return searchResults.value.map(group => ({
+      key: group.groupKey,
+      label: group.groupLabel,
+      items: group.items.map(item => ({ item, amount: 0 })),
+    }))
+  }
+  if (isCustomListMode.value) {
+    if (!currCustomList.value) return []
+    return [{
+      key: currCustomList.value.index,
+      label: currCustomList.value.name,
+      items: currCustomList.value.items,
+    }]
+  }
+  return Object.values(currContentGroups.value).map(cg => ({
+    key: cg.id,
+    label: cg.name,
+    items: cg.items.map(item => ({ item, amount: 0 })),
+  }))
+})
 // #endregion
 
 // #region item context menu
@@ -408,7 +441,7 @@ const handleNotebookItemContextMenu = (e: MouseEvent, item: ItemInfo) => {
   >
     <template #header>
       <i class="xiv square-0"></i>
-      <span class="app-card-title__text">{{ t('recipe.notebook') }}</span>
+      <span class="card-title__text">{{ t('recipe.notebook') }}</span>
     </template>
     <div class="flex flex-wrap items-center justify-between gap-2">
       <div class="flex flex-wrap items-center gap-1.5">
@@ -605,7 +638,7 @@ const handleNotebookItemContextMenu = (e: MouseEvent, item: ItemInfo) => {
                 </n-button>
                 <n-button
                   size="small"
-                  type="info"
+                  :type="selectedCustomListIndex === cl.index ? 'primary' : 'default'"
                   :tertiary="selectedCustomListIndex === cl.index"
                   :quaternary="selectedCustomListIndex !== cl.index"
                   class="shrink-0 n-square-button"
@@ -613,7 +646,7 @@ const handleNotebookItemContextMenu = (e: MouseEvent, item: ItemInfo) => {
                   @click.stop="handleJoinCustomList(cl)"
                 >
                   <template #icon>
-                    <n-icon :size="16"><PlaylistAddOutlined /></n-icon>
+                    <n-icon :size="16"><JoinLeftOutlined /></n-icon>
                   </template>
                 </n-button>
               </div>
@@ -636,111 +669,43 @@ const handleNotebookItemContextMenu = (e: MouseEvent, item: ItemInfo) => {
       </div>
       <div class="flex-1 pl-2 flex" :style="{ height: menuHeight }">
         <n-scrollbar trigger="none" class="flex-1">
-          <template v-if="isSearchMode">
-            <div v-for="group in searchResults" :key="group.groupKey" class="flex flex-col gap-1 pr-3 mb-2">
-              <div class="sticky top-0 z-10 w-full rounded px-1" style="background-color: var(--color-border);">
-                <i class="xiv e032"></i>
-                {{ group.groupLabel }}
-              </div>
-              <div
-                v-for="item in group.items"
-                :key="item.id"
-                class="flex gap-1"
-              >
-                <n-button
-                  :type="selectedItem === item.id ? 'primary' : 'default'"
-                  class="flex-1 justify-start px-2! py-1! h-auto!"
-                  @click="emit('update:selectedItem', item.id)"
-                  @contextmenu="handleNotebookItemContextMenu($event, item)"
-                >
-                  <ItemCell
-                    :item-info="item"
-                    :amount="0"
-                    show-item-details
-                  />
-                </n-button>
-                <n-button
-                  type="info"
-                  :ghost="selectedItem !== item.id"
-                  class="h-auto!"
-                  :title="t('workflow.text.add_item_to_curr_workflow.tip_1') + '\r\n' + t('workflow.text.add_item_to_curr_workflow.tip_2')"
-                  @click="emit('add-item', item.id)"
-                >
-                  <n-icon :size="18"><PlaylistAddOutlined /></n-icon>
-                </n-button>
-              </div>
+          <div
+            v-for="group in displayedNotebookGroups"
+            :key="group.key"
+            class="flex flex-col gap-1 pr-3 mb-2"
+          >
+            <div v-if="group.label" class="sticky top-0 z-10 w-full rounded px-1 bg-border">
+              <i class="xiv e032"></i>
+              {{ group.label }}
             </div>
-          </template>
-          <template v-else-if="isCustomListMode">
-            <div v-if="currCustomList" class="flex flex-col gap-1 pr-3">
-              <div class="sticky top-0 z-10 w-full rounded px-1 bg-border">
-                <i class="xiv e032"></i>
-                {{ currCustomList.name }}
-              </div>
-              <div
-                v-for="itemEntry in currCustomList.items"
-                :key="itemEntry.item.id"
-                class="flex gap-1"
+            <div
+              v-for="entry in group.items"
+              :key="entry.item.id"
+              class="flex gap-1"
+            >
+              <n-button
+                :type="selectedItem === entry.item.id ? 'primary' : 'default'"
+                class="flex-1 justify-start px-2! py-1! h-auto!"
+                @click="emit('update:selectedItem', entry.item.id)"
+                @contextmenu="handleNotebookItemContextMenu($event, entry.item)"
               >
-                <n-button
-                  :type="selectedItem === itemEntry.item.id ? 'primary' : 'default'"
-                  class="flex-1 justify-start px-2! py-1! h-auto!"
-                  @click="emit('update:selectedItem', itemEntry.item.id)"
-                  @contextmenu="handleNotebookItemContextMenu($event, itemEntry.item)"
-                >
-                  <ItemCell
-                    :item-info="itemEntry.item"
-                    :amount="itemEntry.amount"
-                    show-item-details
-                  />
-                </n-button>
-                <n-button
-                  type="info"
-                  :ghost="selectedItem !== itemEntry.item.id"
-                  class="h-auto!"
-                  :title="t('workflow.text.add_item_to_curr_workflow.tip_1') + '\r\n' + t('workflow.text.add_item_to_curr_workflow.tip_2')"
-                  @click="emit('add-item', itemEntry.item.id)"
-                >
-                  <n-icon :size="18"><PlaylistAddOutlined /></n-icon>
-                </n-button>
-              </div>
-            </div>
-          </template>
-          <template v-else>
-            <div v-for="cg in currContentGroups" :key="cg.id" class="flex flex-col gap-1 pr-3">
-              <div v-if="cg.name" class="sticky top-0 z-10 w-full rounded px-1 bg-border">
-                <i class="xiv e032"></i>
-                {{ cg.name }}
-              </div>
-              <div
-                v-for="item in cg.items"
-                :key="item.id"
-                class="flex gap-1"
+                <ItemCell
+                  :item-info="entry.item"
+                  :amount="entry.amount"
+                  show-item-details
+                />
+              </n-button>
+              <n-button
+                type="info"
+                :ghost="selectedItem !== entry.item.id"
+                class="h-auto!"
+                :title="t('workflow.text.add_item_to_curr_workflow.tip_1') + '\r\n' + t('workflow.text.add_item_to_curr_workflow.tip_2')"
+                @click="emit('add-item', entry.item.id)"
               >
-                <n-button
-                  :type="selectedItem === item.id ? 'primary' : 'default'"
-                  class="flex-1 justify-start px-2! py-1! h-auto!"
-                  @click="emit('update:selectedItem', item.id)"
-                  @contextmenu="handleNotebookItemContextMenu($event, item)"
-                >
-                  <ItemCell
-                    :item-info="item"
-                    :amount="0"
-                    show-item-details
-                  />
-                </n-button>
-                <n-button
-                  type="info"
-                  :ghost="selectedItem !== item.id"
-                  class="h-auto!"
-                  :title="t('workflow.text.add_item_to_curr_workflow.tip_1') + '\r\n' + t('workflow.text.add_item_to_curr_workflow.tip_2')"
-                  @click="emit('add-item', item.id)"
-                >
-                  <n-icon :size="18"><PlaylistAddOutlined /></n-icon>
-                </n-button>
-              </div>
+                <n-icon :size="18"><PlaylistAddOutlined /></n-icon>
+              </n-button>
             </div>
-          </template>
+          </div>
         </n-scrollbar>
         <n-dropdown
           size="small"
@@ -773,11 +738,11 @@ const handleNotebookItemContextMenu = (e: MouseEvent, item: ItemInfo) => {
                   qua: currSelectedItem.craftInfo?.quality
                 }) }}
               </div>
-              <div v-if="(currSelectedItem.craftInfo?.yields || 1) > 1" class="color-success">
+              <div v-if="(currSelectedItem.craftInfo?.yields || 1) > 1" class="text-success">
                 {{ t('item.text.yields_info', currSelectedItem.craftInfo?.yields) }}
               </div>
-              <div v-if="!currSelectedItem.craftInfo?.qsable" class="color-error">{{ t('item.text.cannot_quick_synthesis') }}</div>
-              <div v-if="!currSelectedItem.craftInfo?.hqable" class="color-error">{{ t('item.text.cannot_hq') }}</div>
+              <div v-if="!currSelectedItem.craftInfo?.qsable" class="text-error">{{ t('item.text.cannot_quick_synthesis') }}</div>
+              <div v-if="!currSelectedItem.craftInfo?.hqable" class="text-error">{{ t('item.text.cannot_hq') }}</div>
             </div>
             <div class="flex flex-wrap items-center gap-x-4 text-xs">
               <div v-if="currSelectedItem.craftInfo?.thresholds?.craftsmanship">
@@ -813,7 +778,7 @@ const handleNotebookItemContextMenu = (e: MouseEvent, item: ItemInfo) => {
                 <template #icon>
                   <n-icon :size="18"><PlaylistAddOutlined /></n-icon>
                 </template>
-                {{ t('workflow.text.join_in_workflow') }}
+                {{ t('workflow.text.join_in_curr_workflow') }}
               </TooltipButton>
             </div>
           </n-card>

@@ -2,6 +2,13 @@
   "about_app": {
     "staff": {
       "contributor": "Contributor",
+      "desc": {
+        "desc_1_1": "HqHelper is an open-source project on ",
+        "desc_1_2": ", and anyone can contribute.",
+        "desc_2": "However, most of the development, maintenance, and operations are completed by the following members:",
+        "desc_3": "Many other outstanding community members have also contributed to HqHelper.",
+        "desc_4": "to view the list of contributors."
+      },
       "jobs": {
         "etnatker": "Contributed to the Teamcraft format material list feature",
         "infsein": "Lead Designer and Developer",
@@ -1831,6 +1838,8 @@
       },
       "title": "Select Gears",
       "view_selected": "View Selected",
+      "gear_overview": "Gear Overview",
+      "gear_overview_no_gear": "No gear for this slot",
       "warn": {
         "select_job_first": "Please Select Job"
       }

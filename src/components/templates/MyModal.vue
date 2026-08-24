@@ -88,7 +88,7 @@ const handleShowFuncPreference = () => {
   >
     <template #header>
       <slot name="header">
-        <div class="app-card-title select-none">
+        <div class="card-title select-none">
           <n-icon v-if="!!icon" :component="icon" />
           <span class="title">{{ title }}</span>
         </div>

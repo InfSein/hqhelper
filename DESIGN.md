@@ -199,10 +199,10 @@ font-family: FFXIV, Lato, -apple-system, Helvetica Neue, Segoe UI,
 - 支持 `extraHeaderButtons` 在标题栏右侧添加操作按钮
 
 **卡片标题规范**：
-- 使用 `.app-card-title` 类包裹标题区域
+- 使用 `.card-title` 类包裹标题区域
 - 标题文字使用 `.title` 类
 - 描述文字使用 `.description` 类
-- 额外操作区使用 `.app-card-title__actions` 类
+- 额外操作区使用 `.card-title__actions` 类
 - 标题栏右侧的操作区使用 `.app-extra-header` + `.square-action` 模式
 
 ### 5.2 弹窗 (Modal)

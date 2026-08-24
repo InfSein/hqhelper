@@ -18,39 +18,39 @@ const popTrigger = computed(() => {
 </script>
 
 <template>
-  <div class="member-group">
+  <div class="flex flex-wrap gap-1">
     <n-popover
-      :placement="isMobile ? 'bottom' : 'right-start'"
+      placement="bottom"
       :trigger="popTrigger"
       v-for="member in groupMembers"
       :key="'staff-member-' + member.name"
     >
       <template #trigger>
-        <a href="javascript:void(0);" class="member">
+        <a href="javascript:void(0);" class="flex items-center leading-5 w-fit px-1! py-px!">
           <n-avatar round :size="15" :src="member.avatar_url" fallback-src="./image/game-job/companion/none.png" />
-          <div class="member-name">{{ member.name }}</div>
+          <div class="ml-0.5">{{ member.name }}</div>
         </a>
       </template>
-      <div class="intro-popover">
-        <div class="base-info">
-          <div class="avatar">
+      <div class="w-50 max-w-[98%] select-text">
+        <div class="grid grid-cols-[auto_1fr] gap-1 leading-[1.2]">
+          <div>
             <n-avatar round size="medium" :src="member.avatar_url"
               fallback-src="./image/game-job/companion/none.png" />
           </div>
-          <div class="text">
-            <div class="name">{{ member.name }}</div>
-            <div class="desc">{{ member.desc }}</div>
+          <div>
+            <div class="font-bold font-big">{{ member.name }}</div>
+            <div class="font-small">{{ member.desc }}</div>
           </div>
         </div>
-        <n-divider />
-        <div class="intro">
+        <n-divider class="mx-0! my-1!" />
+        <div>
           <p v-for="(intro, i) in member.introductions" :key="member.name + '-intro-' + i">
             {{ intro }}
           </p>
         </div>
-        <div class="tail">
-          <div class="title">{{ t('about_app.staff.jobs.personal_page') }}</div>
-          <div class="pages">
+        <div class="mt-1">
+          <div class="font-bold">{{ t('about_app.staff.jobs.personal_page') }}</div>
+          <div>
             <a target="_blank" v-for="(page, pIndex) in member.pages" :key="member.name + '-page-' + pIndex" :href="page.url">
               {{ page.name }}
             </a>
@@ -62,50 +62,4 @@ const popTrigger = computed(() => {
 </template>
 
 <style scoped>
-.n-divider {
-  margin: 5px 0;
-}
-.member-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1px;
-
-  .member {
-    display: flex;
-    align-items: center;
-    line-height: 20px;
-    width: fit-content;
-    padding: 1px 3px;
-
-    .member-name {
-      margin-left: 2px;
-    }
-  }
-}
-.intro-popover {
-  width: 220px;
-  max-width: 98%;
-  user-select: text;
-
-  .base-info {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 5px;
-    line-height: 1.2;
-
-    .name {
-      font-weight: bold;
-      font-size: calc(var(--n-font-size) + 2px);
-    }
-    .desc {
-      font-size: calc(var(--n-font-size) - 2px);
-    }
-  }
-  .tail {
-    margin-top: 5px;
-  }
-  .title {
-    font-weight: bold;
-  }
-}
 </style>

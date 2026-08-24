@@ -18,16 +18,16 @@
     border: 1px solid transparent !important;
   }
 }
-.app-card-title__text {
+.card-title__text {
   margin-left: 3px;
   font-size: var(--n-title-font-size);
   font-weight: var(--n-title-font-weight);
 }
-.app-card-title__extra {
+.card-title__extra {
   margin-left: 5px;
   font-size: var(--n-font-size);
 }
-.app-card-title {
+.card-title {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -42,7 +42,7 @@
     font-size: 14px;
   }
 }
-.app-card-title__actions {
+.card-title__actions {
   height: 100%;
   display: flex;
   align-items: baseline;

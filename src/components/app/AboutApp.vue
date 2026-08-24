@@ -3,6 +3,7 @@ import StaffGroup from './StaffGroup.vue'
 import ModalSponsorsList from '@/components/modals/ModalSponsorsList.vue'
 import useStaff from "@/composables/useStaff"
 import { useLocale } from '@/composables/useLocale'
+import { githubInfo } from '@/constants'
 import AppStatus from '@/constants/app'
 
 const { t } = useLocale()
@@ -51,34 +52,21 @@ const viewSponsors = () => {
     <div id="staffs">
       <div class="title">{{ t('about_app.staff.title') }}</div>
       <div class="content">
-        <div>HqHelper 是开放开源的
-        <a
-          href="https://github.com/InfSein/hqhelper"
-          target="_blank"
-        >
-          GitHub
-        </a>
-        项目，任何人都能够参与其中。</div>
-        不过，绝大多数的开发·维护·运营工作由下述成员完成：
-        <n-table class="staff-table" :single-line="false" size="small">
-          <tbody>
-            <tr>
-              <td>{{ t('about_app.staff.producer') }}</td>
-              <td>
-                <StaffGroup :group-members="[staffMembers.infsein, staffMembers.nbb, staffMembers.yakita]" />
-              </td>
-            </tr>
-          </tbody>
-        </n-table>
-        <div class="flex flex-wrap items-center">
-          另有多位卓越的社区成员为HqHelper的发展贡献了力量，详见：
-          <a
-            href="https://github.com/InfSein/hqhelper/graphs/contributors?selectedMetric=additions&all=1"
-            target="_blank"
-          >
-            HqHelper Contributors
-          </a>
+        <p>
+          <span>{{ t('about_app.staff.desc.desc_1_1') }}</span>
+          <a class="py-0" target="_blank" :href="githubInfo.repoUrl">GitHub</a>
+          <span>{{ t('about_app.staff.desc.desc_1_2') }}</span>
+        </p>
+        <p>{{ t('about_app.staff.desc.desc_2') }}</p>
+        <div class="flex items-center justify-center py-1">
+          <StaffGroup :group-members="[staffMembers.infsein, staffMembers.nbb, staffMembers.yakita]" />
         </div>
+        <p>{{ t('about_app.staff.desc.desc_3') }}</p>
+        <p>
+          <span>{{ t('common.click') }}</span>
+          <a class="py-0" target="_blank" :href="githubInfo.contributorsUrl">{{ t('common.here') }}</a>
+          <span>{{ t('about_app.staff.desc.desc_4') }}</span>
+        </p>
       </div>
     </div>
     <n-divider />
@@ -88,7 +76,7 @@ const viewSponsors = () => {
         <p>{{ t('about_app.thank_donate.desc.desc_1') }}</p>
         <p>
           <span>{{ t('common.click') }}</span>
-          <a href="javascript:void(0);" @click="viewSponsors">{{ t('common.here') }}</a>
+          <a href="javascript:void(0);" class="py-0" @click="viewSponsors">{{ t('common.here') }}</a>
           <span>{{ t('about_app.thank_donate.desc.desc_2') }}</span>
         </p>
       </div>
@@ -203,20 +191,6 @@ const viewSponsors = () => {
       color: gray;
       text-indent: initial;
       margin-top: 0.5rem;
-    }
-    .staff-table {
-      margin-top: 5px;
-
-      td {
-        padding: 3px 6px;
-      }
-      tr td:first-child {
-        font-weight: bold;
-        background-color: var(--n-th-color);
-        width: fit-content;
-        min-width: 60px;
-        text-align: center;
-      }
     }
   }
 }

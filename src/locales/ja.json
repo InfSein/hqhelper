@@ -2,6 +2,13 @@
   "about_app": {
     "staff": {
       "contributor": "貢献者",
+      "desc": {
+        "desc_1_1": "HqHelper はオープンソースの ",
+        "desc_1_2": " プロジェクトであり、どなたでも開発に参加できます。",
+        "desc_2": "なお、大部分の開発・保守・運用は以下のメンバーによって行われています：",
+        "desc_3": "また、多くの優れたコミュニティメンバーが HqHelper の発展に力を貸してくださっています。",
+        "desc_4": "貢献者リストを見る。"
+      },
       "jobs": {
         "etnatker": "Teamcraft形式で素材リストを表示する機能に貢献",
         "infsein": "すべての設計開発作業を担当",
@@ -1831,6 +1838,8 @@
       },
       "title": "部位選択",
       "view_selected": "選択済み部位",
+      "gear_overview": "部位一覧",
+      "gear_overview_no_gear": "この部位に対応する装備はありません",
       "warn": {
         "select_job_first": "ジョブを選択してください"
       }
