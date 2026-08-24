@@ -132,11 +132,11 @@ function ensureListeners() {
 async function connect(port: number, token: string): Promise<boolean> {
   ensureListeners()
   if (!hasWsApi()) {
-    lastError.value = '当前环境不支持 WebSocket 插件连接'
+    lastError.value = 'WebSocketAPI not found'
     return false
   }
   if (!isValidSettings(port, token)) {
-    lastError.value = '端口或密钥无效'
+    lastError.value = 'Port/Token invalid'
     return false
   }
 
@@ -145,7 +145,7 @@ async function connect(port: number, token: string): Promise<boolean> {
     return await window.wsApi!.connect({ port, token: token.trim() })
   } catch (error) {
     connectionStatus.value = 'error'
-    lastError.value = error instanceof Error ? error.message : '连接失败'
+    lastError.value = error instanceof Error ? error.message : 'Connection failed'
     return false
   }
 }
@@ -157,16 +157,16 @@ async function disconnect(): Promise<void> {
     connectionStatus.value = 'disconnected'
     isConnected.value = false
   } catch (error) {
-    lastError.value = error instanceof Error ? error.message : '断开连接失败'
+    lastError.value = error instanceof Error ? error.message : 'Disconnection failed'
   }
 }
 
 async function testConnection(port: number, token: string): Promise<ConnectionTestResult> {
   if (!hasWsApi()) {
-    return { success: false, message: '当前环境不支持 WebSocket 插件连接' }
+    return { success: false, message: 'WebSocketAPI not found' }
   }
   if (!isValidSettings(port, token)) {
-    return { success: false, message: '端口或密钥无效' }
+    return { success: false, message: 'Port/Token invalid' }
   }
   return window.wsApi!.testConnection({ port, token: token.trim() })
 }
@@ -191,7 +191,7 @@ export function useInventoryPluginAutoConnect() {
   const store = useStore()
   const plugin = useInventoryPlugin()
   const settings = computed(() => ({
-    enabled: store.userConfig.receive_third_party_data,
+    enabled: hasWsApi() && store.userConfig.receive_third_party_data,
     port: store.userConfig.tpd_ws_port,
     token: store.userConfig.tpd_ws_token,
   }))

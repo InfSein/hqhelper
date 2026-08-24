@@ -77,7 +77,7 @@ export interface FuncConfigModel {
 
   // #region 在其他弹窗中设置的配置项
   // * 背包库存
-  /** 用第三方数据替代背包库存，并自动同步数据 */
+  /** 接收第三方数据并自动同步 */
   inventory_use_plugin_data: boolean
   /** 在制作报表弹窗中启用背包库存自动同步 */
   inventory_statement_enable_sync: boolean

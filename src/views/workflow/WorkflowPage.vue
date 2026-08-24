@@ -108,7 +108,11 @@ const updateHeights = () => {
 import { onInventoryChange, offInventoryChange } from '@/composables/useInventoryPlugin'
 
 const handleWorkflowInventoryChange = (changedItemIds: number[]) => {
-  if (selectedAnaTab.value === 'statements' && store.userConfig.receive_third_party_data && store.funcConfig.inventory_use_plugin_data) {
+  if (
+    selectedAnaTab.value === 'statements'
+    && store.userConfig.receive_third_party_data
+    && store.funcConfig.inventory_use_plugin_data
+  ) {
     proStatementInstace.value?.applyInventoryChanges(changedItemIds)
   }
 }
@@ -323,6 +327,13 @@ const {
   openModal: handleAnalysisItemPrices,
 } = useCostAndBenefit(statementData)
 
+const showStatementSyncButtons = computed(() => {
+  return (
+    !(
+      store.userConfig.receive_third_party_data && store.funcConfig.inventory_use_plugin_data
+    ) && selectedAnaTab.value === 'statements'
+  )
+})
 const handleSetStatementPreparedByInventory = () => {
   if (proStatementInstace?.value?.setPreparedItemsByInventory) {
     proStatementInstace.value.setPreparedItemsByInventory()
@@ -463,7 +474,7 @@ const setInventoryByStatementPrepared = () => {
               [{{ updatingPrice ? t('common.loading') : t('statistics.group.cost_and_benefit.title') }}]
             </a>
             <a
-              v-show="!(store.userConfig.receive_third_party_data && store.funcConfig.inventory_use_plugin_data) && store.funcConfig.inventory_workflow_enable_sync && selectedAnaTab === 'statements'"
+              v-show="store.funcConfig.inventory_workflow_enable_sync && showStatementSyncButtons"
               class="card-title__extra"
               href="javascript:void(0);"
               style="cursor: pointer;"
@@ -473,7 +484,7 @@ const setInventoryByStatementPrepared = () => {
               [{{ t('workflow.text.sync_from_inventory') }}]
             </a>
             <a
-              v-show="!(store.userConfig.receive_third_party_data && store.funcConfig.inventory_use_plugin_data) && store.funcConfig.inventory_workflow_enable_sync_reverse && selectedAnaTab === 'statements'"
+              v-show="store.funcConfig.inventory_workflow_enable_sync_reverse && showStatementSyncButtons"
               class="card-title-extra"
               href="javascript:void(0);"
               style="cursor: pointer;"

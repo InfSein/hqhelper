@@ -375,7 +375,7 @@ const preferenceGroups = computed(() : PreferenceGroup[] => {
             {
               key: 'inventory_ws_port',
               label: t('preference.inventory_plugin.port.title'),
-              hide: !window.wsApi,
+              hide: !window.wsApi || !formUserConfigData.value.receive_third_party_data,
               type: 'number',
               min: 1,
               max: 65535,
@@ -383,7 +383,7 @@ const preferenceGroups = computed(() : PreferenceGroup[] => {
             {
               key: 'inventory_ws_token',
               label: t('preference.inventory_plugin.token.title'),
-              hide: !window.wsApi,
+              hide: !window.wsApi || !formUserConfigData.value.receive_third_party_data,
               descriptions: [
                 t('preference.inventory_plugin.token.desc.desc_1'),
               ],
@@ -392,7 +392,7 @@ const preferenceGroups = computed(() : PreferenceGroup[] => {
             {
               key: 'inventory_ws_test_connection',
               label: t('preference.inventory_plugin.test.title'),
-              hide: !window.wsApi,
+              hide: !window.wsApi || !formUserConfigData.value.receive_third_party_data,
               descriptions: inventoryTestDescriptions.value,
               type: 'button',
               buttonProps: {

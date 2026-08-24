@@ -42,7 +42,8 @@ const onLoad = () => {
 
 const inventorySettingItems = computed(() : Setting[] => {
   const items: Setting[] = []
-  const usePluginDataActive = store.userConfig.receive_third_party_data && formFuncConfigData.value.inventory_use_plugin_data
+  const usePluginDataActive = store.userConfig.receive_third_party_data
+    && formFuncConfigData.value.inventory_use_plugin_data
 
   if (store.userConfig.receive_third_party_data) {
     items.push({
