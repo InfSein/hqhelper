@@ -172,6 +172,11 @@ defineExpose({
     }
   }
 }
+.highlighted-row td {
+  transition: background-color 0.5s ease;
+  color: white;
+  background-color: #3364C7;
+}
 
 /* Desktop */
 @media screen and (min-width: 768px) {
@@ -188,11 +193,5 @@ defineExpose({
       text-align: center;
     }
   }
-}
-
-.highlighted-row td {
-  transition: background-color 0.5s ease;
-  color: white;
-  background-color: #3364C7;
 }
 </style>

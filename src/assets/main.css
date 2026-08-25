@@ -92,11 +92,6 @@
   --color-background-action: var(--app-color-background-action);
   --color-background-popover: var(--app-color-background-popover);
   --color-background-hover: var(--app-color-background-hover);
-  --color-text: var(--app-color-text);
-  --color-primary: var(--app-color-primary);
-  --color-info: var(--app-color-info);
-  --color-warning: var(--app-color-warning);
-  --color-error: var(--app-color-error);
   --color-sub: var(--app-color-text-sub);
   --color-bg: var(--app-color-background);
   --color-bg-embedded: var(--app-color-background-embedded);
@@ -104,8 +99,6 @@
   --color-bg-action: var(--app-color-background-action);
   --color-bg-popover: var(--app-color-background-popover);
   --color-bg-hover: var(--app-color-background-hover);
-  --color-base: var(--app-color-base);
-  --color-border: var(--app-color-border);
 }
 
 a {
