@@ -125,7 +125,7 @@ const onImageLoadError = () => {
     />
     <div
       v-if="loadFailed"
-      class="inline-flex shrink-0 items-center justify-center select-none overflow-hidden bg-sub rounded w-full h-full"
+      class="inline-flex shrink-0 items-center justify-center select-none overflow-hidden text-base bg-sub rounded w-full h-full"
       :style="`font-size: ${(size ?? 14) / 2 + 1}px`"
     >
       {{ imgData.alt }}
