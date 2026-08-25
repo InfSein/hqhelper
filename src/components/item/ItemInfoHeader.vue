@@ -53,12 +53,12 @@ const getItemSubName = () => {
 .item-names {
   .main span {
     line-height: 1;
-    font-size: calc(var(--n-font-size) + 2px);
+    font-size: var(--app-font-size-xl);
   }
   .sub,
   .main span.extra-name {
     line-height: 1;
-    font-size: calc(var(--n-font-size) - 2px);
+    font-size: var(--app-font-size-xs);
   }
 }
 </style>

@@ -107,10 +107,10 @@ const handleOpenCafeMap = () => {
     text-align: center;
 
     .main {
-      font-size: calc(var(--n-font-size) + 2px);
+      font-size: var(--app-font-size-xl);
     }
     .subs {
-      font-size: calc(var(--n-font-size) - 2px);
+      font-size: var(--app-font-size-xs);
     }
   }
   .footer {

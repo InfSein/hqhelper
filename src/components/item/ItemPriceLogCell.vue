@@ -18,18 +18,18 @@ defineProps<ItemPriceLogCellProps>()
       <div class="w-full h-16 grid grid-cols-[auto_1fr] items-center">
         <div class="text-left flex flex-col gap-0.5">
           <div>{{ worldName }}</div>
-          <div v-if="buyerName" class="text-xs">{{ buyerName }}</div>
+          <div v-if="buyerName" class="text-app-xs">{{ buyerName }}</div>
         </div>
         <div class="text-right flex flex-col">
           <div>
             <span class="text-[20px]">{{ pricePerUnit.toLocaleString() }}</span>
             <i class="xiv gil"></i>
           </div>
-          <div class="text-xs">
+          <div class="text-app-xs">
             x{{ quantity.toLocaleString() }}
             <i class="xiv hq" v-if="hq"></i>
           </div>
-          <div v-if="time" class="text-xs text-sub">
+          <div v-if="time" class="text-app-xs text-sub">
             {{ formatTimestamp(time * 1000) }}
           </div>
         </div>

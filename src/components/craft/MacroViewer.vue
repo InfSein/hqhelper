@@ -88,7 +88,7 @@ const handleCopy = async (text: string) => {
       </div>
       <div
         v-else
-        class="font-small w-full leading-[1.3] overflow-auto mt-[0.5em]"
+        class="text-app-xs w-full leading-[1.3] overflow-auto mt-[0.5em]"
         :style="{
           height: contentHeight
         }"

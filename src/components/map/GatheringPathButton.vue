@@ -445,7 +445,7 @@ function getGatherJobSvgStyle(jobId: number) {
 
       <div class="flex flex-col">
         <div>
-          <div class="flex items-center gap-0.75 font-big">
+          <div class="flex items-center gap-0.75 text-app-xl">
             <n-icon :size="16" :component="MapOutlined" />
             <span>{{ t('map.gathering_path.title') }}</span>
           </div>
@@ -514,7 +514,7 @@ function getGatherJobSvgStyle(jobId: number) {
                           :style="getPositionStyle(aetheryte.x, aetheryte.y)"
                         />
                       </template>
-                      <div class="text-xs text-center">{{ aetheryte[`name_${itemLanguage}`] }}</div>
+                      <div class="text-app-xs text-center">{{ aetheryte[`name_${itemLanguage}`] }}</div>
                     </n-tooltip>
                   </template>
 

@@ -290,7 +290,7 @@ const dealTimeLimit = (start: string, end: string) => {
   let canGather = false
   let remainET = 99999
   let remainLT : string | undefined = undefined
-  let ltClass = 'font-small'
+  let ltClass = 'text-app-xs'
   let ltTitle = ''
   try {
     const parseTime = (time: string) => time.split(':').reduce((acc, val, idx) => acc + parseInt(val) * [60, 1][idx], 0)

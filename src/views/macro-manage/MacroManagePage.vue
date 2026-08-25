@@ -289,7 +289,7 @@ const tableColumns = computed(() => {
         }
         return h(
           'div',
-          { class: 'leading-[1.2] font-small' },
+          { class: 'leading-[1.2] text-app-xs' },
           children
         )
       }

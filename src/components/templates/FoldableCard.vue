@@ -106,7 +106,7 @@ defineExpose({
   <n-card :id="'card-'+cardKey" :size="cardSize" :class="cardClasses" :content-style="cardContentStyles" embedded :bordered="showCardBorder">
     <template #header>
       <slot name="header">{{ title }}</slot>
-      <span v-if="description" class="ml-2.5 text-sm">{{ description }}</span>
+      <span v-if="description" class="ml-2.5 text-app-sm">{{ description }}</span>
     </template>
     <template #header-extra>
       <div class="app-extra-header">

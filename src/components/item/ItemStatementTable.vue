@@ -82,7 +82,7 @@ const handleRowClick = (row: StatementRow) => {
         <tr @click="selectedItem = undefined">
           <th>
             {{ t('common.item') }}
-            <span class="font-small">
+            <span class="text-app-xs">
               <StatementListPop
                 :rows="rows.all"
                 :container="tableContainer"

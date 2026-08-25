@@ -110,13 +110,24 @@ font-family: FFXIV, Lato, -apple-system, Helvetica Neue, Segoe UI,
 
 ### 3.2 字号
 
-- 基础字号：`15px`（在 `base.css` 中设定）
-- 用户可自定义字号（通过 `store.userConfig.custom_font_size`）
-- Naive UI 的字号通过 `themeOverrides` 统一设置
-- 文字大小的微调使用 Naive UI 变量 `calc(var(--n-font-size) ± Npx)` 或 Tailwind (`text-sm`, `text-xs` 等)
-- 项目自定义的字号辅助类：
-  - `.font-small` → `calc(var(--n-font-size) - 2px)`
-  - `.font-big` → `calc(var(--n-font-size) + 2px)`
+- 基础字号：默认 `14px`（用户可在偏好设置中自定义选择 12px ~ 16px，存储于 `store.userConfig.custom_font_size`）
+- **全局字体大小变量**：通过 `App.vue` 注入到根容器 CSS 变量 `--app-font-size`，并派生各级相对字号变量
+- **Naive UI 字号**：通过 `themeOverrides.common` 统一设置
+- **Tailwind 字号类名规范**：统一使用映射到 CSS 变量的 Tailwind 语义类名（`text-app-*`），以确保所有文字均随用户字号设置动态缩放：
+
+| Tailwind class | 对应 CSS 变量 | 相对计算值 | 用途 |
+|----------------|--------------|------------|------|
+| `text-app-2xs` | `--app-font-size-2xs` | `calc(var(--app-font-size) - 4px)` | 极小辅助提示 |
+| `text-app-xs` | `--app-font-size-xs` | `calc(var(--app-font-size) - 2px)` | 小号文字、次要描述、标签 |
+| `text-app-sm` | `--app-font-size-sm` | `calc(var(--app-font-size) - 1px)` | 略小文字、卡片副标题 |
+| `text-app-base` | `--app-font-size` | 基准字号 (12~16px) | 标准正文 |
+| `text-app-lg` | `--app-font-size-lg` | `calc(var(--app-font-size) + 1px)` | 略大文字 |
+| `text-app-xl` | `--app-font-size-xl` | `calc(var(--app-font-size) + 2px)` | 大号强调文字、弹窗/卡片次级标题 |
+
+- ❌ **严禁使用 Tailwind 默认固定字号类名**（如 `text-xs`, `text-sm`, `text-base` 等，因其固定了 px 值，无法跟随用户字号偏好），必须使用 `text-app-*`
+- ❌ **严禁使用 `calc(var(--n-font-size) ± Npx)`**，在 scoped style 中应使用 `var(--app-font-size-*)` 变量
+- ⚠️ 仅特殊装饰性标题/图标（如 21px 标题、26px 专属图标等纯固定场景）允许硬编码 px
+
 
 ### 3.3 文字样式约定
 

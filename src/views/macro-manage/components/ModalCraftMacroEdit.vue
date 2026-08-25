@@ -269,7 +269,7 @@ const handleSave = async () => {
                     </template>
 
                     <div class="pop-wrapper">
-                      <div class="flex items-center gap-1 font-big">
+                      <div class="flex items-center gap-1 text-app-xl">
                         <n-icon :size="16"><LocalOfferFilled /></n-icon>
                         <span>{{ t('macro_manage.text.preset_tags') }}</span>
                       </div>
@@ -294,7 +294,7 @@ const handleSave = async () => {
                       <n-empty
                         v-else
                         size="small"
-                        class="font-small no-margin-empty"
+                        class="text-app-xs no-margin-empty"
                         style="align-self: center;"
                         :description="t('macro_manage.message.no_preset_tags')"
                       />
@@ -338,7 +338,7 @@ const handleSave = async () => {
                     </template>
 
                     <div>
-                      <div class="flex items-center gap-1 font-big">
+                      <div class="flex items-center gap-1 text-app-xl">
                         <n-icon :size="16"><BuildFilled /></n-icon>
                         <span>{{ t('macro_manage.text.preset_creqs') }}</span>
                       </div>
@@ -358,7 +358,7 @@ const handleSave = async () => {
                       <n-empty
                         v-else
                         size="small"
-                        class="font-small no-margin-empty"
+                        class="text-app-xs no-margin-empty"
                         :description="t('macro_manage.message.no_preset_creqs')"
                       />
                       <n-divider style="margin: 3px 0;" />
@@ -701,7 +701,7 @@ const handleSave = async () => {
         line-height: 1.5;
 
         .sub {
-          font-size: calc(var(--n-font-size) - 2px);
+          font-size: var(--app-font-size-xs);
         }
       }
       .form-tip {

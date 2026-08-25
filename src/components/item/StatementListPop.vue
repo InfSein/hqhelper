@@ -96,7 +96,7 @@ const handleCopyList = async () => {
     </template>
 
     <div class="wrapper" ref="listPopContainer">
-      <div class="flex items-center gap-0.75 font-big">
+      <div class="flex items-center gap-0.75 text-app-xl">
         <n-icon :size="16"><ViewListSharp /></n-icon>
         <span>{{ t('common.list') }}</span>
       </div>

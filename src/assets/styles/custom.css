@@ -1,11 +1,3 @@
-/* Text */
-.font-small {
-  font-size: calc(var(--n-font-size) - 2px);
-}
-.font-big {
-  font-size: calc(var(--n-font-size) + 2px);
-}
-
 /* Deal Ui */
 .n-square-button {
   width: var(--n-height);
@@ -25,7 +17,7 @@
 }
 .card-title__extra {
   margin-left: 5px;
-  font-size: var(--n-font-size);
+  font-size: var(--app-font-size);
 }
 .card-title {
   display: flex;
@@ -39,16 +31,17 @@
     align-self: end;
     margin-left: 10px;
     margin-bottom: 2px;
-    font-size: 14px;
+    font-size: var(--app-font-size-xs);
   }
 }
 .card-title__actions {
   height: 100%;
   display: flex;
   align-items: baseline;
-  font-size: var(--n-font-size);
+  font-size: var(--app-font-size);
   margin: 3px 0 0 5px;
 }
+
 .no-margin-empty {
   .n-empty__description {
     margin-top: 0 !important;

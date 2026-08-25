@@ -191,7 +191,7 @@ const handleSave = () => {
         margin-right: 6px;
       }
       .panel-tip {
-        font-size: calc(var(--n-font-size) - 2px);
+        font-size: var(--app-font-size-xs);
         opacity: 0.7;
       }
     }

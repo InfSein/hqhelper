@@ -20,8 +20,15 @@
   --color-bg-hover: var(--app-color-background-hover);
   --color-base: var(--app-color-base);
   --color-border: var(--app-color-border);
+
+  --text-app-2xs: var(--app-font-size-2xs);
+  --text-app-xs: var(--app-font-size-xs);
+  --text-app-sm: var(--app-font-size-sm);
+  --text-app-base: var(--app-font-size);
+  --text-app-lg: var(--app-font-size-lg);
+  --text-app-xl: var(--app-font-size-xl);
 }
 
 @utility container {
   width: auto;
-}
+}

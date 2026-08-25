@@ -138,10 +138,12 @@ const appClass = computed(() => {
   return classes.join(' ')
 })
 const appStyle = computed(() => {
+  const fontSize = store.userConfig.custom_font_size || '14px'
   const styles = [
-    appMode.value === 'overlay' ? '' : '--app-bg: ' + appBg.value
+    appMode.value === 'overlay' ? '' : '--app-bg: ' + appBg.value,
+    `--app-font-size: ${fontSize}`,
   ]
-  return styles.join(';')
+  return styles.filter(Boolean).join(';')
 })
 
 const showFestivalEgg = ref(false)
@@ -303,7 +305,7 @@ const naiveUIThemeOverrides = computed(() : GlobalThemeOverrides => {
 
           <div
             v-if="AppStatus.IsBeta && !isMobile"
-            class="absolute bottom-1 left-2 text-xs text-sub select-none"
+            class="absolute bottom-1 left-2 text-app-xs text-sub select-none"
           >
             ◈ {{ t('common.message.app_beta_tooltip') }}
           </div>

@@ -500,7 +500,7 @@ const handleNotebookItemContextMenu = (e: MouseEvent, item: ItemInfo) => {
             </n-button>
           </template>
           <div class="py-1 min-w-44 max-w-64">
-            <div class="text-xs font-bold mb-1.5 px-1 select-none text-sub">
+            <div class="text-app-xs font-bold mb-1.5 px-1 select-none text-sub">
               {{ t('workflow.notebook_search.history') }}
             </div>
             <n-divider class="my-1!" />
@@ -512,7 +512,7 @@ const handleNotebookItemContextMenu = (e: MouseEvent, item: ItemInfo) => {
                   class="flex items-center justify-between gap-1 rounded hover:bg-bg-hover px-1 group transition-colors"
                 >
                   <span
-                    class="flex-1 text-xs py-1 truncate cursor-pointer select-none text-text hover:text-primary transition-colors"
+                    class="flex-1 text-app-xs py-1 truncate cursor-pointer select-none text-text hover:text-primary transition-colors"
                     @click="handleSearch(item)"
                   >
                     {{ item }}
@@ -730,7 +730,7 @@ const handleNotebookItemContextMenu = (e: MouseEvent, item: ItemInfo) => {
               <ItemInfoHeader :item-info="currSelectedItem" class="flex-1 mt-0!" />
             </div>
             <div class="h-1" />
-            <div class="flex flex-wrap items-center gap-x-2 text-xs">
+            <div class="flex flex-wrap items-center gap-x-2 text-app-xs">
               <div class="flex-1">
                 {{ t('item.text.recipe_detail', {
                   dur: currSelectedItem.craftInfo?.durability,
@@ -744,7 +744,7 @@ const handleNotebookItemContextMenu = (e: MouseEvent, item: ItemInfo) => {
               <div v-if="!currSelectedItem.craftInfo?.qsable" class="text-error">{{ t('item.text.cannot_quick_synthesis') }}</div>
               <div v-if="!currSelectedItem.craftInfo?.hqable" class="text-error">{{ t('item.text.cannot_hq') }}</div>
             </div>
-            <div class="flex flex-wrap items-center gap-x-4 text-xs">
+            <div class="flex flex-wrap items-center gap-x-4 text-app-xs">
               <div v-if="currSelectedItem.craftInfo?.thresholds?.craftsmanship">
                 {{ t('recipe.text.craftsmanship_needs', [currSelectedItem.craftInfo?.thresholds?.craftsmanship]) }}
               </div>
@@ -752,7 +752,7 @@ const handleNotebookItemContextMenu = (e: MouseEvent, item: ItemInfo) => {
                 {{ t('recipe.text.control_needs', [currSelectedItem.craftInfo?.thresholds?.control]) }}
               </div>
             </div>
-            <div v-if="currSelectedItem.craftInfo?.masterRecipeId" class="flex items-center justify-end gap-0.5 text-xs">
+            <div v-if="currSelectedItem.craftInfo?.masterRecipeId" class="flex items-center justify-end gap-0.5 text-app-xs">
               {{ t('item.text.need_learn') }}
               <ItemSpan span-max-width="180px" :img-size="12" :item-info="getItemInfo(currSelectedItem.craftInfo.masterRecipeId)" class="gap-0.5!" />
             </div>
@@ -807,7 +807,7 @@ const handleNotebookItemContextMenu = (e: MouseEvent, item: ItemInfo) => {
               class="flex items-center justify-between gap-2 p-1.5 rounded hover:bg-bg-hover border border-border"
             >
               <span
-                class="flex-1 text-sm truncate cursor-pointer select-none"
+                class="flex-1 text-app-sm truncate cursor-pointer select-none"
                 @click="handleSelectHistoryItem(item)"
               >
                 {{ item }}

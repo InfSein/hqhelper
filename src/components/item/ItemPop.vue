@@ -927,7 +927,7 @@ const handleOnScroll = (e: Event) => {
 
 <style scoped>
 .small-font {
-  font-size: calc(var(--n-font-size) - 2px);
+  font-size: var(--app-font-size-xs);
 }
 .content-table {
   td {
@@ -1003,7 +1003,7 @@ const handleOnScroll = (e: Event) => {
       content: "· ";
     }
     .extra {
-      font-size: calc(var(--n-font-size) - 2px);
+      font-size: var(--app-font-size-xs);
       margin: 2px 0 5px;
     }
   }
@@ -1014,8 +1014,8 @@ const handleOnScroll = (e: Event) => {
       font-weight: bold;
       display: flex;
       align-items: baseline;
-      --size-small: calc(var(--n-font-size) - 2px);
-      --textgap-left: calc(var(--n-font-size) - 1px);
+      --size-small: var(--app-font-size-xs);
+      --textgap-left: var(--app-font-size-sm);
 
       .extra {
         margin-left: 3px;
@@ -1084,12 +1084,12 @@ const handleOnScroll = (e: Event) => {
       align-items: center;
       gap: 0 5px;
       flex-wrap: wrap;
-      font-size: calc(var(--n-font-size) - 2px);
+      font-size: var(--app-font-size-xs);
     }
   }
   .tail-descriptions {
     margin-top: 5px;
-    font-size: calc(var(--n-font-size) - 2px);
+    font-size: var(--app-font-size-xs);
     line-height: 1;
   }
 }

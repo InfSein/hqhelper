@@ -210,10 +210,10 @@ const gearGroups = computed<SlotGroup[]>(() => [
         <n-popover placement="bottom-start" :trigger="isMobile ? 'click' : 'hover'">
           <template #trigger>
             <div class="cursor-help">
-              <span class="font-big">{{ currAffixes.jobName }}</span>
-              <span class="font-small ml-2">{{ currAffixes.attireName }}</span>
-              <span class="font-small"> / </span>
-              <span class="font-small">{{ currAffixes.accessoryName }}</span>
+              <span class="text-app-xl">{{ currAffixes.jobName }}</span>
+              <span class="text-app-xs ml-2">{{ currAffixes.attireName }}</span>
+              <span class="text-app-xs"> / </span>
+              <span class="text-app-xs">{{ currAffixes.accessoryName }}</span>
             </div>
           </template>
           <div>
@@ -230,7 +230,7 @@ const gearGroups = computed<SlotGroup[]>(() => [
         :key="groupIndex"
         class="flex flex-col gap-2"
       >
-        <div class="font-bold text-sm text-sub flex items-center gap-1">
+        <div class="font-bold text-app-sm text-sub flex items-center gap-1">
           <span>{{ group.title }}</span>
           <n-divider class="my-0! flex-1" />
         </div>
@@ -243,7 +243,7 @@ const gearGroups = computed<SlotGroup[]>(() => [
           >
             <div class="bg-bg rounded border border-border p-2 h-full flex flex-col justify-start">
               <!-- 槽位标题 -->
-              <div class="flex items-center gap-1.5 font-bold mb-1.5 text-sm text-sub select-none">
+              <div class="flex items-center gap-1.5 font-bold mb-1.5 text-app-sm text-sub select-none">
                 <n-icon :size="16">
                   <component :is="slotItem.icon" />
                 </n-icon>

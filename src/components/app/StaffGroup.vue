@@ -38,8 +38,8 @@ const popTrigger = computed(() => {
               fallback-src="./image/game-job/companion/none.png" />
           </div>
           <div>
-            <div class="font-bold font-big">{{ member.name }}</div>
-            <div class="font-small">{{ member.desc }}</div>
+            <div class="font-bold text-app-xl">{{ member.name }}</div>
+            <div class="text-app-xs">{{ member.desc }}</div>
           </div>
         </div>
         <n-divider class="mx-0! my-1!" />

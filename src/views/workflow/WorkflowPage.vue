@@ -416,13 +416,13 @@ const setInventoryByStatementPrepared = () => {
             <i class="xiv square-1"></i>
             <span class="card-title__text">{{ t('common.select_item2') }}</span>
             <ImportItemListPop>
-              <a v-show="!selectCardFolded" class="text-sm ml-1 px-0.5 py-px" href="javascript:void(0);">
+              <a v-show="!selectCardFolded" class="text-app-sm ml-1 px-0.5 py-px" href="javascript:void(0);">
                 [{{ t('common.import') }}]
               </a>
             </ImportItemListPop>
             <a
               v-show="!selectCardFolded"
-              class="text-sm px-0.5 py-px"
+              class="text-app-sm px-0.5 py-px"
               href="javascript:void(0);"
               @click="showShareModal = true"
             >

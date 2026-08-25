@@ -171,7 +171,7 @@ const preferenceGroups = computed(() : PreferenceGroup[] => {
                 t('preference.custom_background.desc.desc_2'),
                 {
                   value: t('preference.custom_background.desc.desc_3'),
-                  class: 'text-sub font-small',
+                  class: 'text-sub text-app-xs',
                 },
               ],
               type: 'image-select',

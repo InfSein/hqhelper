@@ -53,7 +53,7 @@ const getTradeCost = (itemInfo: ItemInfo, amount: number) => {
       <div>
         <ItemSpan hide-icon :hide-pop-icon="hidePopIcon" :item-info="itemInfo" :span-max-width="itemSpanMaxWidth" :container-id="containerId" />
       </div>
-      <div class="font-small flex gap-x-0.75">
+      <div class="text-app-xs flex gap-x-0.75">
         <div v-if="itemInfo.craftInfo?.jobId" class="flex items-center gap-0.5 crafter">
           <XivFARImage
             :src="XivJobs[itemInfo.craftInfo.jobId].job_icon_url"

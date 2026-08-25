@@ -239,12 +239,12 @@ const handleItemButtonClick = async () => {
     .item-names {
       .main span {
         line-height: 1;
-        font-size: calc(var(--n-font-size) + 2px);
+        font-size: var(--app-font-size-xl);
       }
       .sub,
       .main span.extra-name {
         line-height: 1;
-        font-size: calc(var(--n-font-size) - 2px);
+        font-size: var(--app-font-size-xs);
       }
     }
   }
@@ -288,7 +288,7 @@ const handleItemButtonClick = async () => {
         content: "· ";
       }
       .extra {
-        font-size: calc(var(--n-font-size) - 2px);
+        font-size: var(--app-font-size-xs);
         margin: 2px 0 5px;
       }
     }
@@ -301,7 +301,7 @@ const handleItemButtonClick = async () => {
         .extra {
           margin-left: 3px;
           font-weight: normal;
-          font-size: calc(var(--n-font-size) - 2px);
+          font-size: var(--app-font-size-xs);
         }
       }
       .content .item {
@@ -315,12 +315,12 @@ const handleItemButtonClick = async () => {
         display: flex;
         gap: 5px;
         flex-wrap: wrap;
-        font-size: calc(var(--n-font-size) - 2px);
+        font-size: var(--app-font-size-xs);
       }
     }
     .tail-descriptions {
       margin-top: 5px;
-      font-size: calc(var(--n-font-size) - 2px);
+      font-size: var(--app-font-size-xs);
       line-height: 1;
     }
   }

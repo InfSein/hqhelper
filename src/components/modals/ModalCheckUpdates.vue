@@ -394,7 +394,7 @@ const handleSettingButtonClick = () => {
             <div class="card-title">
               <n-icon><VpnLockRound /></n-icon>
               <span class="title">{{ t('update.proxy.title') }}</span>
-              <div class="card-title__actions font-small">
+              <div class="card-title__actions text-app-xs">
                 <a href="javascript:void(0)" @click="handleShowProxySiteStatus">[{{ t('update.text.proxy_status_view') }}]</a>
               </div>
             </div>

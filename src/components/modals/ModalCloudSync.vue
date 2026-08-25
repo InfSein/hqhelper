@@ -500,7 +500,7 @@ const handleDownload = async () => {
             <div class="card-title">
               <n-icon><ChecklistRtlOutlined /></n-icon>
               <span class="title">{{ t('cloud.text.sync_range') }}</span>
-              <div class="card-title__actions font-small">
+              <div class="card-title__actions text-app-xs">
                 <a href="javascript:void(0)" @click="handleSelectAll">[{{ t('common.select_all') }}]</a>
                 <a href="javascript:void(0)" @click="handleSelectRevert">[{{ t('common.select_invert') }}]</a>
               </div>

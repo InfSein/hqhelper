@@ -160,7 +160,7 @@ const handleImport = () => {
     </template>
 
     <div class="wrapper" ref="listPopContainer">
-      <div class="flex items-center gap-0.75 font-big">
+      <div class="flex items-center gap-0.75 text-app-xl">
         <n-icon :size="16"><ArchiveSharp /></n-icon>
         <span>{{ t('common.import') }}</span>
       </div>
@@ -178,7 +178,7 @@ const handleImport = () => {
 
         <div>
           <div>{{ t('workflow.import.itemlist.title') }}</div>
-          <div class="text-xs text-sub mb-1">
+          <div class="text-app-xs text-sub mb-1">
             {{ t('workflow.import.itemlist.tip_1') }}
             {{ t('workflow.import.itemlist.tip_2') }}
           </div>

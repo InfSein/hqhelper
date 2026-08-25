@@ -120,7 +120,7 @@ const handleSwitchShowHistory = () => {
           <n-h1 prefix="bar" class="latest-update-baseinfo">
             <n-text>v{{ latestPatchNote.version }}</n-text>
             <n-text depth="3" class="date">{{ latestPatchNote.date }}</n-text>
-            <n-text v-if="!isMobile" depth="3" class="text-sm absolute right-0 bottom-0.75">
+            <n-text v-if="!isMobile" depth="3" class="text-app-sm absolute right-0 bottom-0.75">
               ({{ latestPatchGameVerText }})
             </n-text>
           </n-h1>

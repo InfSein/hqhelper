@@ -29,7 +29,7 @@ const content = computed(() => {
   >
     <div class="wrapper">
       <!-- <img alt="-" :src="'./image/IMG_7324.jpg'" :width="isMobile ? '100%' : '750px'" height="auto" /> -->
-      <div class="font-small select-text text-right">
+      <div class="text-app-xs select-text text-right">
         Photographed by 旭柠, 2024.
       </div>
     </div>

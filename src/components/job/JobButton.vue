@@ -373,8 +373,8 @@ const renderJobContextHeader = () => {
           style: 'line-height: 1.2;'
         },
         [
-          h('p', {class:'font-big'}, props.jobName),
-          h('p', {class:'font-small', style: 'color: var(--color-text-sub);'}, jobSubName.value)
+          h('p', {class:'text-app-xl'}, props.jobName),
+          h('p', {class:'text-app-xs', style: 'color: var(--color-text-sub);'}, jobSubName.value)
         ]
       )
     ]
@@ -401,7 +401,7 @@ const renderGearsSelectedHeader = () => {
     if (!currJobGears.value?.count) {
       return [
         h(
-          'div', {class: 'font-small'}, t('common.nothing')
+          'div', {class: 'text-app-xs'}, t('common.nothing')
         )
       ]
     }
@@ -440,7 +440,7 @@ const renderGearsSelectedHeader = () => {
       return h(
         'div',
         {
-          class: 'font-small',
+          class: 'text-app-xs',
           style: 'display: flex; align-items: center; gap: 2px; line-height: 1;'
         },
         [

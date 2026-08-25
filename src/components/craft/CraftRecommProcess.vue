@@ -302,7 +302,7 @@ const isItemGatherableNow = (item: ItemInfo) => {
         display: flex;
         flex-wrap: wrap;
         margin-left: 1em;
-        font-size: calc(var(--n-font-size) - 2px);
+        font-size: var(--app-font-size-xs);
       }
     }
   }

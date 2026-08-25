@@ -141,7 +141,7 @@ const handleCopyAsMacro = async () => {
     </template>
 
     <div class="pop-wrapper">
-      <div class="flex items-center text-[calc(var(--n-font-size)+2px)] leading-[1.2]">
+      <div class="flex items-center text-app-xl leading-[1.2]">
         <p class="font-bold">{{ t('statistics.tomescript.title') }}</p>
       </div>
       <n-divider class="my-1!" />
