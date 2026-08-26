@@ -103,7 +103,7 @@ const notebookGroups = computed(() => {
         menu[`i_${id}`].contentGroups[0] ??= { id: 0, name: srbItem[`name_${itemLanguage.value}`], items: [] }
         menu[`i_${id}`].contentGroups[0].items.push(item)
       } else {
-        const id = 99
+        const id = 0
         menu[`i_${id}`] ??= { id, name: t('recipe.notebookgroup.other_master_recipes'), contentGroups: {} }
         menu[`i_${id}`].contentGroups[srb] ??= { id: srb, name: srbItem[`name_${itemLanguage.value}`], items: [] }
         menu[`i_${id}`].contentGroups[srb].items.push(item)
@@ -117,10 +117,33 @@ const notebookGroups = computed(() => {
       group.menus.special[`i_${id}`].contentGroups[0] ??= { id: 0, items: [] }
       group.menus.special[`i_${id}`].contentGroups[0].items.push(item)
     } else if (item.collectable) {
-      const id = 2
-      group.menus.special[`i_${id}`] ??= { id, name: t('recipe.notebookgroup.collectable'), contentGroups: {} }
-      group.menus.special[`i_${id}`].contentGroups[0] ??= { id: 0, items: [] }
-      group.menus.special[`i_${id}`].contentGroups[0].items.push(item)
+      // recipe.notebookgroup.
+      if (item.collectInfo || item.name_zh.startsWith('收藏用')) {
+        const id = 2
+        group.menus.special[`i_${id}`] ??= { id, name: t('recipe.notebookgroup.collectable'), contentGroups: {} }
+        group.menus.special[`i_${id}`].contentGroups[0] ??= { id: 0, items: [] }
+        group.menus.special[`i_${id}`].contentGroups[0].items.push(item)
+      } else if (item.name_zh.includes('重建用')) {
+        const id = 3
+        group.menus.special[`i_${id}`] ??= { id, name: t('recipe.notebookgroup.skybuilder'), contentGroups: {} }
+        group.menus.special[`i_${id}`].contentGroups[0] ??= { id: 0, items: [] }
+        group.menus.special[`i_${id}`].contentGroups[0].items.push(item)
+      } else if (item.name_zh.includes('改良用')) {
+        const id = 4
+        group.menus.special[`i_${id}`] ??= { id, name: t('recipe.notebookgroup.skysteel'), contentGroups: {} }
+        group.menus.special[`i_${id}`].contentGroups[0] ??= { id: 0, items: [] }
+        group.menus.special[`i_${id}`].contentGroups[0].items.push(item)
+      } else if (item.name_zh.startsWith('面向收藏家的')) {
+        const id = 5
+        group.menus.special[`i_${id}`] ??= { id, name: t('recipe.notebookgroup.splendorous'), contentGroups: {} }
+        group.menus.special[`i_${id}`].contentGroups[0] ??= { id: 0, items: [] }
+        group.menus.special[`i_${id}`].contentGroups[0].items.push(item)
+      } else {
+        const id = 10 // todo：进一步归类、enum重构
+        group.menus.special[`i_${id}`] ??= { id, name: t('recipe.notebookgroup.collectable_other'), contentGroups: {} }
+        group.menus.special[`i_${id}`].contentGroups[0] ??= { id: 0, items: [] }
+        group.menus.special[`i_${id}`].contentGroups[0].items.push(item)
+      }
     } else if (
       item.uiTypeId === /*染剂*/55
     ) {

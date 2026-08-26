@@ -2593,7 +2593,11 @@
       "common": "分级配方",
       "special": "特殊配方",
       "master": "秘籍配方",
-      "custom_lists": "推荐列表"
+      "custom_lists": "推荐列表",
+      "skybuilder": "伊修加德重建",
+      "skysteel": "天钢工具",
+      "splendorous": "莫雯工具",
+      "collectable_other": "未归类收藏品"
     },
     "notebook": "制作笔记",
     "text": {
