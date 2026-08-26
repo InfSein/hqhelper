@@ -386,15 +386,11 @@ const { joinItemsToWorkflow } = useAppModals()
 const isCustomListMode = ref(false)
 const selectedCustomListIndex = ref(0)
 
-interface CustomListItem {
-  item: ItemInfo
-  amount: number
-}
 interface CustomListEntry {
   index: number
   name: string
   code: string
-  items: CustomListItem[]
+  items: ItemInfo[]
   itemsMap: Record<number, number>
 }
 
@@ -402,26 +398,15 @@ const customLists = computed<CustomListEntry[]>(() => {
   return XivRecipeCustomLists.map((customList, index) => {
     const name = customList[`name_${itemLanguage.value}`] || customList.name_zh || ''
     const itemsMap = decodeShareCode(customList.code) || {}
-    const items: CustomListItem[] = []
+    const items: ItemInfo[] = []
     for (const [idStr, amount] of Object.entries(itemsMap)) {
       const itemInfo = getItemInfo(Number(idStr))
       if (itemInfo && itemInfo.id) {
-        items.push({ item: itemInfo, amount })
+        itemInfo.amount = amount
+        items.push(itemInfo)
       }
     }
-    items.sort((a, b) => {
-      const aCraft = a.item.craftInfo
-      const bCraft = b.item.craftInfo
-      if (aCraft && bCraft) {
-        return (aCraft.craftLevel - bCraft.craftLevel) ||
-          (aCraft.starCount - bCraft.starCount) ||
-          (aCraft.rLv - bCraft.rLv) ||
-          (a.item.uiTypeOrder - b.item.uiTypeOrder) ||
-          (a.item.sortOrder - b.item.sortOrder) ||
-          (a.item.id - b.item.id)
-      }
-      return (a.item.sortOrder - b.item.sortOrder) || (a.item.id - b.item.id)
-    })
+    sortItems(items, 'recipeOrder')
     return {
       index,
       name,
@@ -440,7 +425,7 @@ const handleEnterCustomListMode = () => {
   isSearchMode.value = false
   isCustomListMode.value = true
   if (currCustomList.value?.items?.length) {
-    emit('update:selectedItem', currCustomList.value.items[0].item.id)
+    emit('update:selectedItem', currCustomList.value.items[0].id)
   }
 }
 
@@ -448,7 +433,7 @@ const handleCustomListSelect = (index: number) => {
   selectedCustomListIndex.value = index
   const cl = customLists.value[index]
   if (cl?.items?.length) {
-    emit('update:selectedItem', cl.items[0].item.id)
+    emit('update:selectedItem', cl.items[0].id)
   }
 }
 
@@ -499,7 +484,7 @@ const displayedNotebookGroups = computed<DisplayedNotebookGroup[]>(() => {
     return [{
       key: currCustomList.value.index,
       label: currCustomList.value.name,
-      items: currCustomList.value.items,
+      items: currCustomList.value.items.map(item => ({ item, amount: item.amount })),
     }]
   }
   return Object.values(currContentGroups.value).map(cg => ({
