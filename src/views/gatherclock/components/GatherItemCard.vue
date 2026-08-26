@@ -185,6 +185,7 @@ const handleStarButtonClick = (item: ItemInfo) => {
         <div class="gather-job">
           <XivFARImage
             class="icon"
+            :size="14"
             :src="XivJobs[item.gatherInfo.jobId].job_icon_url"
           />
           <p>{{ getJobName(XivJobs[item.gatherInfo.jobId]) }}</p>
@@ -291,7 +292,7 @@ const handleStarButtonClick = (item: ItemInfo) => {
         width: 70%;
         line-height: var(--font-size);
 
-        img {
+        .icon {
           float: left;
           height: var(--font-size);
           display: block;
