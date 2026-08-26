@@ -1631,6 +1631,8 @@
       "recipe_level_info": "{job} Lv. {lv}{star}",
       "reduce_can_get": "収集品を精選することで入手可能なアイテム：",
       "reduce_info": "このアイテムは精選以下のアイテムで入手できます：",
+      "reverse_recipe_lookup": "素材からレシピ検索",
+      "reverse_recipe_lookup_no_result": "このアイテムを素材として使用するレシピが見つかりませんでした",
       "simulate_craft_bestcraft": "BestCraftで製作をシミュレーション",
       "simulate_craft_teamcraft": "TeamCraftで製作をシミュレーション",
       "timelimited_gatherable": "採集可能期間中",
@@ -2541,7 +2543,13 @@
       "workflow_name": "ワークフロー名",
       "workflow_name_default_info": "ワークフローに名前を設定しない場合、順番に「ワークフロー1～{maxlen}」と自動表示されます",
       "workflow_name_reorder_on_deleted": "ワークフローを削除する際、その後にある全ての未命名ワークフローは再び番号付けされます",
-      "workflow_with_index": "ワークフロー{index}"
+      "workflow_with_index": "ワークフロー{index}",
+      "add_item_to_curr_workflow": {
+        "tip_1": "このアイテムを現在のワークフローに追加",
+        "tip_2": "既に追加されている場合は数量が増加します"
+      },
+      "notebook_item_not_selected": "先にアイテムを選択してください",
+      "join_in_curr_workflow": "現在のワークフローに追加"
     },
     "tooltip": {
       "set_inventory_by_prepared": "在庫一覧の数量をレポートの「所持数」に設定します。",
@@ -2552,8 +2560,10 @@
       "history": "検索履歴",
       "empty_history": "検索履歴はありません",
       "clear_history": "履歴を削除",
+      "material_history_prefix": "素材",
       "error_empty": "検索キーワードを入力してください",
-      "error_no_result": "一致するアイテムが見つかりません"
+      "error_no_result": "一致するアイテムが見つかりません",
+      "error_material_id_too_small": "このアイテム（シャード/クリスタルなど）の逆引きレシピ検索には対応していません"
     },
     "share": {
       "title": "ワークフローを共有",

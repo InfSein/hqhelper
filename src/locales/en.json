@@ -1631,6 +1631,8 @@
       "recipe_level_info": "{job} Lv. {lv}{star}",
       "reduce_can_get": "Aetherial Reduction yields:",
       "reduce_info": "Reducible from:",
+      "reverse_recipe_lookup": "Search Recipes by Material",
+      "reverse_recipe_lookup_no_result": "No recipes found using this item as material",
       "simulate_craft_bestcraft": "Simulate in BestCraft",
       "simulate_craft_teamcraft": "Simulate in Teamcraft",
       "timelimited_gatherable": "ACTIVE",
@@ -2541,7 +2543,13 @@
       "workflow_name": "Workflow name",
       "workflow_name_default_info": "If no name was set for a workflow, it would automatically display as 'Workflow 1~{maxlen}' in order.",
       "workflow_name_reorder_on_deleted": "When a workflow is deleted, all subsequent unnamed workflows would be renumbered.",
-      "workflow_with_index": "Workflow {index}"
+      "workflow_with_index": "Workflow {index}",
+      "add_item_to_curr_workflow": {
+        "tip_1": "Add this item to current workflow",
+        "tip_2": "If already added, amount will be increased"
+      },
+      "notebook_item_not_selected": "Please select an item first",
+      "join_in_curr_workflow": "Add to Current Workflow"
     },
     "tooltip": {
       "set_inventory_by_prepared": "Set the inventory quantity to the 'Prepared' quantity in the statement.",
@@ -2552,8 +2560,10 @@
       "history": "Search History",
       "empty_history": "No search history",
       "clear_history": "Clear history",
+      "material_history_prefix": "Material",
       "error_empty": "Please enter a search keyword",
-      "error_no_result": "No matching items found"
+      "error_no_result": "No matching items found",
+      "error_material_id_too_small": "Reverse recipe lookup is not supported for this item (crystals, etc.)"
     },
     "share": {
       "title": "Share Workflow",

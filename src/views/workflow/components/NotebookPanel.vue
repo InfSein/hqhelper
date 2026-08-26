@@ -24,9 +24,9 @@ import { useItemContextMenu } from '@/composables/useItemContextMenu'
 import CommonGroupIcon from '@/assets/icons/game-ui/recipe-notebook/group-common.svg'
 import MasterGroupIcon from '@/assets/icons/game-ui/recipe-notebook/group-master.svg'
 import SpecialGroupIcon from '@/assets/icons/game-ui/recipe-notebook/group-special.svg'
-import { XivJobs, XivRecipeCustomLists, XivSrbMap, XivUnpackedRecipes } from '@/assets/data'
+import { XivJobs, XivRecipeCustomLists, XivSrbMap, XivUnpackedRecipes, XivUnpackedItems } from '@/assets/data'
 import { sortRecord } from '@/tools'
-import { getItemInfo, sortItems, type ItemInfo } from '@/tools/item'
+import { getItemInfo, sortItems, getItemNameRevertMap, type ItemInfo } from '@/tools/item'
 import { decodeShareCode } from '@/tools/shareCode'
 
 const { t } = useLocale()
@@ -227,6 +227,36 @@ const handleSearch = (keyword?: string) => {
     return
   }
 
+  // 检查是否为素材反查前缀
+  const materialPrefixMatch = trimmed.match(/^@(?:素材|Material)[:：]\s*(.+)$/i)
+  if (materialPrefixMatch) {
+    const rawMaterialName = materialPrefixMatch[1].trim()
+    const revertMap = getItemNameRevertMap()
+    let itemId = revertMap.get(rawMaterialName)
+    if (!itemId && !isNaN(Number(rawMaterialName))) {
+      itemId = Number(rawMaterialName)
+    }
+    if (!itemId) {
+      for (const item of Object.values(XivUnpackedItems)) {
+        if (
+          item.name[0] === rawMaterialName ||
+          item.name[1] === rawMaterialName ||
+          item.name[2] === rawMaterialName ||
+          item.name[0].toLowerCase() === rawMaterialName.toLowerCase() ||
+          item.name[1].toLowerCase() === rawMaterialName.toLowerCase() ||
+          item.name[2].toLowerCase() === rawMaterialName.toLowerCase()
+        ) {
+          itemId = item.id
+          break
+        }
+      }
+    }
+    if (itemId) {
+      searchByMaterial(itemId)
+      return
+    }
+  }
+
   const results: SearchGroupResult[] = []
   const menuTypes: ('common' | 'special' | 'master')[] = ['common', 'special', 'master']
 
@@ -266,6 +296,73 @@ const handleSearch = (keyword?: string) => {
   // 记录搜索历史 (最多10条，去重且最新排在最前)
   const currentHistory = props.notebookSearchHistory ?? []
   const newHistory = [trimmed, ...currentHistory.filter(h => h !== trimmed)].slice(0, 10)
+  emit('update:notebookSearchHistory', newHistory)
+}
+
+const searchByMaterial = (itemOrId: ItemInfo | number) => {
+  const itemInfo = typeof itemOrId === 'number' ? getItemInfo(itemOrId) : itemOrId
+  if (!itemInfo?.id) {
+    NAIVE_UI_MESSAGE.error(t('workflow.notebook_search.error_empty'))
+    return
+  }
+  if (itemInfo.id < 100) {
+    NAIVE_UI_MESSAGE.error(t('workflow.notebook_search.error_material_id_too_small'))
+    return
+  }
+
+  const targetItemId = itemInfo.id
+  const itemName = itemInfo[`name_${itemLanguage.value}`] || itemInfo.name_zh
+  const prefix = t('workflow.notebook_search.material_history_prefix')
+  const historyLabel = `@${prefix}:${itemName}`
+
+  const results: SearchGroupResult[] = []
+  const menuTypes: ('common' | 'special' | 'master')[] = ['common', 'special', 'master']
+
+  Object.values(notebookGroups.value).forEach(group => {
+    const job = group.job
+    const jobName = XivJobs[job]?.[`job_name_${itemLanguage.value}`] || XivJobs[job]?.job_name_zh || ''
+
+    menuTypes.forEach(menuType => {
+      const menus = group.menus[menuType]
+      Object.values(menus).forEach(menu => {
+        Object.values(menu.contentGroups).forEach(cg => {
+          const matched = cg.items.filter(item => {
+            const matchMaterial = item.craftRequires?.some(req => req.id === targetItemId)
+            const matchCrystal = item.craftRequireCrystals?.some(req => req.id === targetItemId)
+            return matchMaterial || matchCrystal
+          })
+          if (matched.length > 0) {
+            const groupLabel = cg.name && cg.name !== menu.name
+              ? `${jobName} / ${menu.name} / ${cg.name}`
+              : `${jobName} / ${menu.name}`
+            results.push({
+              groupKey: `${job}_${menuType}_${menu.id}_${cg.id}`,
+              groupLabel,
+              items: matched,
+            })
+          }
+        })
+      })
+    })
+  })
+
+  if (results.length === 0) {
+    NAIVE_UI_MESSAGE.error(t('item.text.reverse_recipe_lookup_no_result'))
+    return
+  }
+
+  searchKeyword.value = historyLabel
+  searchResults.value = results
+  isSearchMode.value = true
+  isCustomListMode.value = false
+
+  if (results[0]?.items?.[0]?.id) {
+    emit('update:selectedItem', results[0].items[0].id)
+  }
+
+  // 记录搜索历史 (最多10条，去重且最新排在最前)
+  const currentHistory = props.notebookSearchHistory ?? []
+  const newHistory = [historyLabel, ...currentHistory.filter(h => h !== historyLabel)].slice(0, 10)
   emit('update:notebookSearchHistory', newHistory)
 }
 
@@ -431,6 +528,10 @@ const handleNotebookItemContextMenu = (e: MouseEvent, item: ItemInfo) => {
   _notebookHandleContextMenu(e)
 }
 // #endregion
+
+defineExpose({
+  searchByMaterial,
+})
 </script>
 
 <template>

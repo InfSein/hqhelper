@@ -1634,6 +1634,8 @@
       "recipe_level_info": "{lv}级{star}{job}配方",
       "reduce_can_get": "精选收藏品形态的该物品可能获得：",
       "reduce_info": "该物品可以通过精选以下道具获得：",
+      "reverse_recipe_lookup": "反查配方",
+      "reverse_recipe_lookup_no_result": "未找到使用该物品作为素材的配方",
       "simulate_craft_bestcraft": "在BestCraft中模拟制作",
       "simulate_craft_teamcraft": "在TeamCraft中模拟制作",
       "timelimited_gatherable": "进行中",
@@ -2567,8 +2569,10 @@
       "history": "搜索历史",
       "empty_history": "暂无搜索历史",
       "clear_history": "清空历史记录",
+      "material_history_prefix": "素材",
       "error_empty": "请输入搜索关键字",
-      "error_no_result": "未找到匹配的物品"
+      "error_no_result": "未找到匹配的物品",
+      "error_material_id_too_small": "该物品不支持反查配方"
     },
     "share": {
       "title": "分享工作流",

@@ -1,10 +1,12 @@
-import { ref, computed, nextTick } from 'vue'
+import { ref, computed, nextTick, inject } from 'vue'
 import { useMessage } from 'naive-ui'
 import {
   FileCopyOutlined,
   LanguageOutlined,
   OpenInNewFilled,
   JoinLeftOutlined,
+  PlaylistAddOutlined,
+  SearchRound,
 } from '@vicons/material'
 import { CopyToClipboard } from '@/tools'
 import { type ItemInfo } from '@/tools/item'
@@ -12,6 +14,7 @@ import useConfig from '@/composables/useConfig'
 import useUiTools from './useUiTools'
 import { useLocale } from './useLocale'
 import { useAppModals } from './useAppModals'
+import { addToCurrentWorkflowKey, reverseRecipeLookupKey } from '@/constants/vue-injects'
 
 export function useItemContextMenu(
   getItemInfo: () => ItemInfo,
@@ -19,6 +22,8 @@ export function useItemContextMenu(
 ) {
   const { t } = useLocale()
   const { joinItemsToWorkflow } = useAppModals()
+  const addToCurrentWorkflow = inject(addToCurrentWorkflowKey, undefined)
+  const reverseRecipeLookup = inject(reverseRecipeLookupKey, undefined)
 
   const NAIVE_UI_MESSAGE = useMessage()
   const { itemLanguage } = useConfig()
@@ -82,7 +87,7 @@ export function useItemContextMenu(
       {
         type: 'divider',
         key: 'd1',
-        show: !!itemInfo?.craftInfo?.recipeId
+        show: !!itemInfo?.craftInfo?.recipeId || (!!reverseRecipeLookup && itemInfo.id >= 100)
       },
       {
         label: t('workflow.text.join_in_workflow'),
@@ -96,8 +101,26 @@ export function useItemContextMenu(
         }
       },
       {
+        label: t('workflow.text.join_in_curr_workflow'),
+        key: 'join-to-curr-workflow',
+        show: !!addToCurrentWorkflow && !!itemInfo?.craftInfo?.recipeId,
+        icon: renderIcon(PlaylistAddOutlined),
+        click: () => {
+          addToCurrentWorkflow?.(itemInfo.id)
+        }
+      },
+      {
+        label: t('item.text.reverse_recipe_lookup'),
+        key: 'reverse-recipe-lookup',
+        show: !!reverseRecipeLookup && itemInfo.id >= 100,
+        icon: renderIcon(SearchRound),
+        click: () => {
+          reverseRecipeLookup?.(itemInfo)
+        }
+      },
+      {
         type: 'divider',
-        key: 'd2'
+        key: 'd3'
       },
       {
         label: t('common.open_in.huijiwiki2'),

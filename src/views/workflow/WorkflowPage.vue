@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, watch, onMounted, onBeforeUnmount, provide } from 'vue'
 import {
   AddSharp,
   AllInclusiveSharp,
@@ -37,8 +37,9 @@ import { useWorkflowStatistics } from '@/composables/useWorkflowStatistics'
 import { onInventoryChange, offInventoryChange } from '@/composables/useInventoryPlugin'
 import { type SettingGroupKey } from '@/types'
 import { getDefaultWorkflow, _VAR_MAX_WORKFLOW } from '@/types/workstate/workflow'
-import { getItemInfo } from '@/tools/item'
+import { getItemInfo, type ItemInfo } from '@/tools/item'
 import { decodeShareCode } from '@/tools/shareCode'
+import { addToCurrentWorkflowKey, reverseRecipeLookupKey } from '@/constants/vue-injects'
 
 const store = useStore()
 const { t } = useLocale()
@@ -228,6 +229,8 @@ const sliderStyle = computed(() => {
 // #endregion
 
 // #region notebook actions
+const notebookPanelRef = ref<InstanceType<typeof NotebookPanel>>()
+
 const handleAddNotebookItem = (itemId: number) => {
   if (!itemId) {
     NAIVE_UI_MESSAGE.error('ITEM NOT FOUND'); return
@@ -236,6 +239,17 @@ const handleAddNotebookItem = (itemId: number) => {
   currentWorkflow.value.targetItems[itemId]++
   currentWorkflow.value.preparedItems.craftTarget[itemId] ??= 0
 }
+
+provide(addToCurrentWorkflowKey, (itemId: number) => {
+  handleAddNotebookItem(itemId)
+})
+
+provide(reverseRecipeLookupKey, (item: ItemInfo) => {
+  if (workState.value.pageView === 'BC') {
+    workState.value.pageView = 'AB'
+  }
+  notebookPanelRef.value?.searchByMaterial(item)
+})
 // #endregion
 
 // #region content-items
@@ -398,6 +412,7 @@ const setInventoryByStatementPrepared = () => {
     >
       <div class="slider-container" :style="sliderStyle">
         <NotebookPanel
+          ref="notebookPanelRef"
           v-model:selected-job="workState.selectedJob"
           v-model:selected-menu="workState.selectedMenu"
           v-model:selected-content-group="workState.selectedContentGroup"

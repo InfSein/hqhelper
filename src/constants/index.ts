@@ -12,3 +12,5 @@ export const otherSocialInfo = {
   twitterUrl: 'https://twitter.com/FF14_HqHelper',
   qqQueryUrl: 'https://docs.qq.com/form/page/DY3RGRERjVnJobXVY',
 }
+
+export * from './vue-injects'
