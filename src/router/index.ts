@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory, type RouteRecordRaw } from 'vue-router'
-import MainPage from '@/views/main/MainPage.vue'
+import HomePage from '@/views/home/HomePage.vue'
 
 /* 
  * 增加路由页面时请注意：
@@ -7,7 +7,11 @@ import MainPage from '@/views/main/MainPage.vue'
  */
 
 const routes : RouteRecordRaw[] = [
-  { path: '/', component: MainPage },
+  { path: '/', component: HomePage },
+  { 
+    path: '/hqwb', 
+    component: () => import('@/views/main/MainPage.vue') 
+  },
   { 
     path: '/fthelper', 
     component: () => import('@/views/food-and-tinc/FoodAndTincPage.vue') 

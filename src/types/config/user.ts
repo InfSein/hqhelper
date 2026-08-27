@@ -16,6 +16,8 @@ export interface UserConfigModel {
   language_ui: "zh" | "en" | "ja"
   /** 物品语言 */
   language_item: "auto" | "zh" | "en" | "ja"
+  /** 默认首页 */
+  default_homepage: "hqwb" | "workflow"
   /** 保存偏好设置后执行的操作 */
   action_after_savesettings: "ask" | "reload" | "none"
 
@@ -85,6 +87,7 @@ export interface UserConfigModel {
   preference_menu_folded: boolean
   cache_lasttime_version: string
   cache_ui_fold: Record<string, boolean>
+  onboarding_completed: boolean
   hqwb_cache_work_state: HqwbWorkState
   mmhelper_cache_work_state: MmHelperWorkState
   gatherclock_cache_work_state: GatherClockWorkState
@@ -99,6 +102,7 @@ const defaultUserConfig: UserConfigModel = {
   // general
   language_ui: 'zh',
   language_item: 'auto',
+  default_homepage: 'hqwb',
   action_after_savesettings: 'ask',
   // appearance
   theme: 'light',
@@ -136,6 +140,7 @@ const defaultUserConfig: UserConfigModel = {
   preference_menu_folded: false,
   cache_lasttime_version: 'none',
   cache_ui_fold: {},
+  onboarding_completed: false,
   hqwb_cache_work_state: fixHqwbWorkState(),
   mmhelper_cache_work_state: fixMmHelperWorkState(),
   gatherclock_cache_work_state: fixGatherClockWorkState(),

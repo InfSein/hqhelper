@@ -67,6 +67,7 @@
         "fchelper": "到底有没有能让我大吃一惊的未来的时尚引领者呢……",
         "fthelper": "帮助你制作食物与爆发药。能帮到就好。",
         "gather_clock": "挖穿艾欧泽亚的好帮手！",
+        "hqwb": "工欲善其事，必先利其器。",
         "ingame_inventory": "喂喂，你的背包已经装满了啊。",
         "macro_manage": "管理，收容，跑路……",
         "open_in_new_window": "在新窗口中打开{tool}",
@@ -881,7 +882,9 @@
       "thank_list": "致谢名单",
       "useful_tools": "实用工具",
       "user_preference": "偏好设置",
-      "workflow": "工作流"
+      "workflow": "工作流",
+      "hqwb": "HQ工作台",
+      "workflow_calc": "配方计算器"
     },
     "appsetting": {
       "appearance": "外观",
@@ -1901,6 +1904,20 @@
     }
   },
   "preference": {
+    "default_homepage": {
+      "desc": {
+        "desc_1": "设置访问根路径 (/) 时默认展示的页面。"
+      },
+      "title": "默认首页"
+    },
+    "rerun_onboarding": {
+      "btn": "重新运行向导",
+      "confirm_dialog": "重新运行初始设置向导将重置引导状态并刷新页面，未保存的偏好设置修改将会丢失，是否继续？",
+      "desc": {
+        "desc_1": "重新运行首次访问应用时的初始化引导向导。"
+      },
+      "title": "初始设置向导"
+    },
     "auto_refresh_after_save": {
       "desc": {
         "desc_1": "此设置修改后本次保存便会生效。另外，仅会在需要刷新的时候执行自动刷新。"
@@ -2603,6 +2620,51 @@
     "text": {
       "craftsmanship_needs": "需要作业精度达到{0}",
       "control_needs": "需要加工精度达到{0}"
+    }
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "欢迎使用 HqHelper",
+      "subtitle": "《最终幻想XIV》生产与采集配方计算工具",
+      "desc_1": "HqHelper 提供装备配装速算、自由多任务工作流、原材料拆解统计、采集时钟、生产宏等全方位辅助功能。",
+      "desc_2": "首次使用前，让我们通过简单的几个步骤完成基础偏好设置。",
+      "start_btn": "开始设置"
+    },
+    "step_1": {
+      "title": "欢迎",
+      "name": "欢迎"
+    },
+    "step_2": {
+      "title": "基础设置",
+      "name": "基础设置",
+      "desc": "设置界面语言、物品名称语言与外观主题。修改将立即生效。",
+      "ui_lang": "界面语言",
+      "item_lang": "物品语言",
+      "theme": "外观主题"
+    },
+    "step_3": {
+      "title": "交互特性",
+      "name": "核心交互",
+      "desc": "在 HqHelper 中，物品按钮与标签具有强大的交互功能：",
+      "feature_hover_title": "悬停查看详情",
+      "feature_hover_desc": "将鼠标光标悬停在物品上，即可查看其制作配方、材料来源、属性、市场参考价格等。",
+      "feature_menu_title": "右键操作菜单",
+      "feature_menu_desc": "右键点击物品（移动端为长按），即可呼出快捷菜单：复制物品名称、复制 /isearch 检索宏、加入工作流等。",
+      "playground_tip": "👉 试着将鼠标悬停在下方物品上，或者右键点击体验操作菜单："
+    },
+    "step_4": {
+      "title": "选择默认首页",
+      "name": "默认首页",
+      "desc": "你可以随时在桌面端左上角菜单切换首页模式：",
+      "hqwb_title": "HQ工作台",
+      "hqwb_desc": "大版本/小补丁配装速查，快速点选整套战斗/生产/采集装备，一键统计素材与点数需求。",
+      "workflow_title": "配方计算器 (工作流)",
+      "workflow_desc": "自由灵活的多配方规划器，支持自定义添加任意物品、树状原料拆解、成本收益核算与流程推荐。"
+    },
+    "btn": {
+      "prev": "上一步",
+      "next": "下一步",
+      "finish": "完成设置并进入应用"
     }
   }
 }
