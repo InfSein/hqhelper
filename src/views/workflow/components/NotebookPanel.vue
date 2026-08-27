@@ -836,7 +836,7 @@ defineExpose({
             content-class="h-full flex flex-col"
           >
             <div class="flex items-baseline">
-              <ItemInfoHeader :item-info="currSelectedItem" class="flex-1 mt-0!" />
+              <ItemInfoHeader show-pop :item-info="currSelectedItem" class="flex-1 mt-0!" />
             </div>
             <div class="h-1" />
             <div class="flex flex-wrap items-center gap-x-2 text-app-xs">

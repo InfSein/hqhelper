@@ -1,10 +1,19 @@
 <script lang="ts" setup>
+import {
+  InfoOutlined,
+} from '@vicons/material'
+import ItemPop from './ItemPop.vue'
 import XivFARImage from '@/components/ui/XivFARImage.vue'
+import { useStore } from '@/store'
 import useConfig from '@/composables/useConfig'
 import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
+import { useItemContextMenu } from '@/composables/useItemContextMenu'
 import type { ItemInfo } from '@/tools/item'
 
+const store = useStore()
 const { t } = useLocale()
+const { isMobile } = useResponsive()
 const {
   itemLanguage,
 } = useConfig()
@@ -13,8 +22,14 @@ interface ItemInfoHeaderProps {
   itemInfo: ItemInfo
   showHqSwitcher?: boolean
   hqReadonly?: boolean
+  showPop?: boolean
+  allowPop?: boolean
+  enablePop?: boolean
+  containerId?: string
 }
 const props = defineProps<ItemInfoHeaderProps>()
+
+const canShowPop = computed(() => !!(props.showPop || props.allowPop || props.enablePop))
 
 const hq = defineModel<boolean>('hq', { default: true })
 
@@ -53,6 +68,52 @@ const getItemSubName = () => {
       return props.itemInfo.name_ja + ' / ' + props.itemInfo.name_en
   }
 }
+
+// #region 右键菜单相关
+
+const {
+  showDropdown,
+  dropdownX,
+  dropdownY,
+  dropdownOptions,
+  handleCopy,
+  handleContextMenu,
+  handleSelect,
+  onClickOutside,
+  handleTouchStart,
+  handleTouchMove,
+  handleTouchEnd,
+} = useItemContextMenu(
+  () => props.itemInfo,
+  () => props.containerId,
+)
+
+// #endregion
+
+const popTrigger = computed(() => {
+  if (!isMobile.value && store.userConfig.click_to_show_pop_in_span) {
+    return 'click'
+  } else {
+    return undefined
+  }
+})
+
+const handleItemIconClick = async () => {
+  const action = store.userConfig.item_info_icon_click_event
+  const itemName = getItemName()
+  let copyContent = ''
+  if (action === 'copy_name') {
+    copyContent = itemName
+  } else if (action === 'copy_isearch') {
+    copyContent = `/isearch "${itemName}"`
+  } else {
+    // do nothing
+  }
+
+  if (copyContent) {
+    await handleCopy(copyContent, t('common.message.copied_with_content', copyContent))
+  }
+}
 </script>
 
 <template>
@@ -60,6 +121,10 @@ const getItemSubName = () => {
     <XivFARImage
       :src="itemInfo"
       :size="35"
+      @contextmenu="handleContextMenu"
+      @touchstart.passive="handleTouchStart"
+      @touchmove.passive="handleTouchMove"
+      @touchend.passive="handleTouchEnd"
     />
     <div class="item-names">
       <div class="main">
@@ -77,9 +142,40 @@ const getItemSubName = () => {
             <line x1="0" y1="0" x2="100" y2="100" class="slash-line" />
           </svg>
         </span>
+        <ItemPop
+          v-if="canShowPop"
+          :item-info="itemInfo"
+          pop-use-custom-width
+          :pop-custom-width="275"
+          :pop-trigger="popTrigger"
+        >
+          <n-icon
+            class="cursor-pointer ml-0.5 mt-px"
+            size="14"
+            color="#3b7fef"
+            @contextmenu="handleContextMenu"
+            @touchstart.passive="handleTouchStart"
+            @touchmove.passive="handleTouchMove"
+            @touchend.passive="handleTouchEnd"
+            @click.stop="handleItemIconClick"
+          >
+            <InfoOutlined />
+          </n-icon>
+        </ItemPop>
       </div>
       <div class="sub text-sub">{{ getItemSubName() }}</div>
     </div>
+    <n-dropdown
+      size="small"
+      placement="bottom-start"
+      trigger="manual"
+      :x="dropdownX"
+      :y="dropdownY"
+      :options="dropdownOptions"
+      :show="showDropdown"
+      :on-clickoutside="onClickOutside"
+      @select="handleSelect"
+    />
   </div>
 </template>
 
