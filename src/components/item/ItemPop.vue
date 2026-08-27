@@ -9,7 +9,6 @@ import ItemRemark from './ItemRemark.vue'
 import ItemInfoHeader from './ItemInfoHeader.vue'
 import ItemSubmissionReward from './ItemSubmissionReward.vue'
 import HelpButton from '@/components/ui/HelpButton.vue'
-import HqSwitcher from '@/components/ui/HqSwitcher.vue'
 import XivFARImage from '@/components/ui/XivFARImage.vue'
 import LocationSpan from '@/components/map/LocationSpan.vue'
 import { useStore } from '@/store'
@@ -149,6 +148,9 @@ const itemHasHQ = computed(() => {
   } else {
     return props.itemInfo.attrsProvided.every(subArr => subArr[2] > 0)
   }
+})
+const showHqSwitcherInHeader = computed(() => {
+  return (props.itemInfo.attrsProvided?.length > 0) || (props.itemInfo.tempAttrsProvided?.length > 0)
 })
 const itemTempAttrTexts = computed(() : string[] => {
   if (!props.itemInfo.tempAttrsProvided?.length) {
@@ -452,7 +454,12 @@ const handleOnScroll = (e: Event) => {
       <slot />
     </template>
     <div class="select-text" @mousedown.stop>
-      <ItemInfoHeader :item-info="itemInfo" />
+      <ItemInfoHeader
+        :item-info="itemInfo"
+        :show-hq-switcher="showHqSwitcherInHeader"
+        v-model:hq="showItemHqAttr"
+        :hq-readonly="!itemHasHQ"
+      />
       <div class="item-level">{{ t('item.text.item_level_with_val', itemInfo.itemLevel) }}</div>
       <n-divider class="item-divider" />
       <!-- 版本/ID等 -->
@@ -481,7 +488,6 @@ const handleOnScroll = (e: Event) => {
           <div class="description-block" v-if="itemInfo.attrsProvided.length">
             <div class="title">
               {{ t('common.armor_attr') }}
-              <HqSwitcher v-model:hq="showItemHqAttr" :readonly="!itemHasHQ" :size="12" class="extra" />
             </div>
             <n-divider class="item-divider" />
             <div class="content armor" v-if="showItemHqAttr">
@@ -510,7 +516,6 @@ const handleOnScroll = (e: Event) => {
           <div class="description-block" v-if="itemInfo.tempAttrsProvided.length">
             <div class="title">
               {{ t('common.effect') }}
-              <HqSwitcher v-model:hq="showItemHqAttr" :readonly="!itemHasHQ" :size="12" class="extra" />
             </div>
             <n-divider class="item-divider" />
             <div class="content">

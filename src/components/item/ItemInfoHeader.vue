@@ -1,16 +1,37 @@
 <script lang="ts" setup>
 import XivFARImage from '@/components/ui/XivFARImage.vue'
 import useConfig from '@/composables/useConfig'
+import { useLocale } from '@/composables/useLocale'
 import type { ItemInfo } from '@/tools/item'
 
+const { t } = useLocale()
 const {
   itemLanguage,
 } = useConfig()
 
 interface ItemInfoHeaderProps {
   itemInfo: ItemInfo
+  showHqSwitcher?: boolean
+  hqReadonly?: boolean
 }
 const props = defineProps<ItemInfoHeaderProps>()
+
+const hq = defineModel<boolean>('hq', { default: true })
+
+const onToggleHq = () => {
+  if (props.hqReadonly) return
+  hq.value = !hq.value
+}
+
+const switcherTip = computed(() => {
+  if (!props.showHqSwitcher) return ''
+  return [
+    t('item.text.curr_show_hqornq', [(hq.value ? 'HQ' : 'NQ')]),
+    props.hqReadonly
+      ? t('item.text.cannot_switch_hqornq', [(hq.value ? 'NQ' : 'HQ')])
+      : t('item.text.click_to_switch_hqornq'),
+  ].join('\r\n')
+})
 
 const getItemName = () => {
   switch (itemLanguage.value) {
@@ -43,6 +64,19 @@ const getItemSubName = () => {
     <div class="item-names">
       <div class="main">
         <span>{{ getItemName() }}</span>
+        <span
+          v-if="showHqSwitcher"
+          class="hq-switcher"
+          :class="{ 'is-nq': !hq, 'is-readonly': hqReadonly }"
+          :title="switcherTip"
+          @click="onToggleHq"
+        >
+          <i class="xiv hq" />
+          <svg class="slash-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <line x1="0" y1="0" x2="100" y2="100" class="slash-bg" />
+            <line x1="0" y1="0" x2="100" y2="100" class="slash-line" />
+          </svg>
+        </span>
       </div>
       <div class="sub text-sub">{{ getItemSubName() }}</div>
     </div>
@@ -51,14 +85,82 @@ const getItemSubName = () => {
 
 <style scoped>
 .item-names {
-  .main span {
-    line-height: 1;
-    font-size: var(--app-font-size-xl);
+  .main {
+    span {
+      line-height: 1;
+      font-size: var(--app-font-size-xl);
+    }
   }
   .sub,
   .main span.extra-name {
     line-height: 1;
     font-size: var(--app-font-size-xs);
+  }
+}
+
+.hq-switcher {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 2px;
+  cursor: pointer;
+  user-select: none;
+  border-radius: 2px;
+  line-height: 1;
+  transition: opacity 0.2s ease, transform 0.15s ease;
+
+  &:hover:not(.is-readonly) {
+    opacity: 0.8;
+  }
+
+  &:active:not(.is-readonly) {
+    transform: scale(0.92);
+  }
+
+  &.is-readonly {
+    cursor: not-allowed;
+  }
+
+  i.xiv.hq {
+    color: var(--n-text-color);
+    font-size: var(--app-font-size-lg);
+    line-height: 1;
+    display: inline-block;
+  }
+
+  .slash-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  .slash-bg {
+    stroke: var(--color-background);
+    stroke-width: 18;
+    stroke-linecap: round;
+    stroke-dasharray: 142;
+    stroke-dashoffset: 142;
+    transition: stroke-dashoffset 0.25s ease-out;
+  }
+
+  .slash-line {
+    stroke: var(--color-text);
+    stroke-width: 10;
+    stroke-linecap: round;
+    stroke-dasharray: 142;
+    stroke-dashoffset: 142;
+    transition: stroke-dashoffset 0.25s ease-out;
+  }
+
+  &.is-nq {
+    .slash-bg,
+    .slash-line {
+      stroke-dashoffset: 0;
+    }
   }
 }
 </style>
