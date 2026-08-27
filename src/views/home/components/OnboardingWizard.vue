@@ -16,7 +16,7 @@ import {
   TranslateOutlined,
   WavesOutlined,
 } from '@vicons/material'
-import HqLogo from '@/components/app/HqLogo.vue'
+import AppLogoPlate from '@/components/app/AppLogoPlate.vue'
 import ItemButton from '@/components/item/ItemButton.vue'
 import ItemSpan from '@/components/item/ItemSpan.vue'
 import { useStore } from '@/store'
@@ -80,9 +80,9 @@ const handleFinish = () => {
 </script>
 
 <template>
-  <div class="onboarding-container flex justify-center items-center py-6 px-3 min-h-[75vh]">
+  <div class="onboarding-container flex justify-center pt-6 md:pt-10 pb-12 px-3">
     <n-card
-      class="onboarding-card max-w-[720px] w-full"
+      class="onboarding-card max-w-180 w-full"
       :class="store.userConfig.custom_background ? 'glasscard' : ''"
       embedded
       :bordered="false"
@@ -96,232 +96,236 @@ const handleFinish = () => {
         </n-steps>
       </div>
 
-      <!-- Step 1: Welcome -->
-      <div v-if="currentStep === 1" class="welcome-step text-center py-4 flex flex-col items-center">
-        <div class="logo-wrapper mb-4">
-          <HqLogo :size="48" />
-        </div>
-        <h1 class="text-2xl font-bold text-text mb-2">{{ t('onboarding.welcome.title') }}</h1>
-        <p class="text-app-base text-primary font-medium mb-4">{{ t('onboarding.welcome.subtitle') }}</p>
-        <p class="text-app-sm text-sub max-w-[500px] mb-2 leading-relaxed">
-          {{ t('onboarding.welcome.desc_1') }}
-        </p>
-        <p class="text-app-sm text-sub max-w-[500px] mb-8 leading-relaxed">
-          {{ t('onboarding.welcome.desc_2') }}
-        </p>
-
-        <n-button type="primary" size="large" class="px-8 font-bold" @click="handleNext">
-          <template #icon>
-            <n-icon><ArrowForwardOutlined /></n-icon>
-          </template>
-          {{ t('onboarding.welcome.start_btn') }}
-        </n-button>
-      </div>
-
-      <!-- Step 2: Basic Settings -->
-      <div v-else-if="currentStep === 2" class="settings-step py-2">
-        <div class="step-header mb-5">
-          <h2 class="text-xl font-bold text-text mb-1">{{ t('onboarding.step_2.title') }}</h2>
-          <p class="text-app-xs text-sub">{{ t('onboarding.step_2.desc') }}</p>
-        </div>
-
-        <div class="settings-list flex flex-col gap-5">
-          <!-- UI Language -->
-          <div class="setting-block p-3.5 rounded-lg border border-border bg-bg">
-            <div class="flex items-center gap-2 mb-2.5 font-bold text-text text-app-sm">
-              <n-icon :component="LanguageOutlined" class="text-primary" />
-              <span>{{ t('onboarding.step_2.ui_lang') }}</span>
+      <div class="step-content-wrapper">
+        <Transition name="step-fade" mode="out-in">
+          <!-- Step 1: Welcome -->
+          <div v-if="currentStep === 1" key="step-1" class="welcome-step text-center py-4 flex flex-col items-center">
+            <div class="logo-wrapper mb-5">
+              <AppLogoPlate />
             </div>
-            <n-radio-group
-              :value="store.userConfig.language_ui"
-              name="ui-lang"
-              @update:value="handleUiLanguageChange"
-            >
-              <n-space>
-                <n-radio-button value="zh">简体中文</n-radio-button>
-                <n-radio-button value="en">English</n-radio-button>
-                <n-radio-button value="ja">日本語</n-radio-button>
-              </n-space>
-            </n-radio-group>
-          </div>
-
-          <!-- Item Language -->
-          <div class="setting-block p-3.5 rounded-lg border border-border bg-bg">
-            <div class="flex items-center gap-2 mb-2.5 font-bold text-text text-app-sm">
-              <n-icon :component="TranslateOutlined" class="text-primary" />
-              <span>{{ t('onboarding.step_2.item_lang') }}</span>
-            </div>
-            <n-radio-group
-              :value="store.userConfig.language_item"
-              name="item-lang"
-              @update:value="handleItemLanguageChange"
-            >
-              <n-space>
-                <n-radio-button value="auto">{{ t('common.auto') }}</n-radio-button>
-                <n-radio-button value="zh">简体中文</n-radio-button>
-                <n-radio-button value="en">English</n-radio-button>
-                <n-radio-button value="ja">日本語</n-radio-button>
-              </n-space>
-            </n-radio-group>
-          </div>
-
-          <!-- Theme -->
-          <div class="setting-block p-3.5 rounded-lg border border-border bg-bg">
-            <div class="flex items-center gap-2 mb-2.5 font-bold text-text text-app-sm">
-              <n-icon :component="ColorLensRound" class="text-primary" />
-              <span>{{ t('onboarding.step_2.theme') }}</span>
-            </div>
-            <n-radio-group
-              :value="store.userConfig.theme"
-              name="theme"
-              @update:value="handleThemeChange"
-            >
-              <n-space>
-                <n-radio-button value="light">
-                  <div class="flex items-center gap-1">
-                    <n-icon :component="LightModeTwotone" />
-                    <span>{{ t('preference.theme.option.light') }}</span>
-                  </div>
-                </n-radio-button>
-                <n-radio-button value="dark">
-                  <div class="flex items-center gap-1">
-                    <n-icon :component="DarkModeTwotone" />
-                    <span>{{ t('preference.theme.option.dark') }}</span>
-                  </div>
-                </n-radio-button>
-                <n-radio-button value="system">
-                  <div class="flex items-center gap-1">
-                    <n-icon :component="SettingsBrightnessOutlined" />
-                    <span>{{ t('preference.theme.option.follow_system') }}</span>
-                  </div>
-                </n-radio-button>
-              </n-space>
-            </n-radio-group>
-          </div>
-        </div>
-      </div>
-
-      <!-- Step 3: Interactive Features Showcase -->
-      <div v-else-if="currentStep === 3" class="features-step py-2">
-        <div class="step-header mb-4">
-          <h2 class="text-xl font-bold text-text mb-1">{{ t('onboarding.step_3.title') }}</h2>
-          <p class="text-app-xs text-sub">{{ t('onboarding.step_3.desc') }}</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-5">
-          <!-- Feature 1: Hover -->
-          <div class="feature-card p-3.5 rounded-lg border border-border bg-bg flex flex-col gap-1.5">
-            <div class="flex items-center gap-2 text-primary font-bold text-app-sm">
-              <n-icon :component="InfoOutlined" size="18" />
-              <span>{{ t('onboarding.step_3.feature_hover_title') }}</span>
-            </div>
-            <p class="text-app-xs text-sub leading-relaxed">
-              {{ t('onboarding.step_3.feature_hover_desc') }}
+            <h1 class="text-2xl font-bold text-text mb-2">{{ t('onboarding.welcome.title') }}</h1>
+            <p class="text-app-base text-primary font-medium mb-4">{{ t('onboarding.welcome.subtitle') }}</p>
+            <p class="text-app-sm text-sub max-w-125 mb-2 leading-relaxed">
+              {{ t('onboarding.welcome.desc_1') }}
             </p>
+            <p class="text-app-sm text-sub max-w-125 mb-8 leading-relaxed">
+              {{ t('onboarding.welcome.desc_2') }}
+            </p>
+
+          <n-button type="primary" size="large" class="px-8 font-bold" @click="handleNext">
+            <template #icon>
+              <n-icon><ArrowForwardOutlined /></n-icon>
+            </template>
+            {{ t('onboarding.welcome.start_btn') }}
+          </n-button>
+        </div>
+
+        <!-- Step 2: Basic Settings -->
+        <div v-else-if="currentStep === 2" key="step-2" class="settings-step py-2">
+          <div class="step-header mb-5">
+            <h2 class="text-xl font-bold text-text mb-1">{{ t('onboarding.step_2.title') }}</h2>
+            <p class="text-app-xs text-sub">{{ t('onboarding.step_2.desc') }}</p>
           </div>
 
-          <!-- Feature 2: Right Click -->
-          <div class="feature-card p-3.5 rounded-lg border border-border bg-bg flex flex-col gap-1.5">
-            <div class="flex items-center gap-2 text-primary font-bold text-app-sm">
-              <n-icon :component="TouchAppOutlined" size="18" />
-              <span>{{ t('onboarding.step_3.feature_menu_title') }}</span>
+          <div class="settings-list flex flex-col gap-5">
+            <!-- UI Language -->
+            <div class="setting-block p-3.5 rounded-lg border border-border bg-bg">
+              <div class="flex items-center gap-2 mb-2.5 font-bold text-text text-app-sm">
+                <n-icon :component="LanguageOutlined" class="text-primary" />
+                <span>{{ t('onboarding.step_2.ui_lang') }}</span>
+              </div>
+              <n-radio-group
+                :value="store.userConfig.language_ui"
+                name="ui-lang"
+                @update:value="handleUiLanguageChange"
+              >
+                <n-space>
+                  <n-radio-button value="zh">简体中文</n-radio-button>
+                  <n-radio-button value="en">English</n-radio-button>
+                  <n-radio-button value="ja">日本語</n-radio-button>
+                </n-space>
+              </n-radio-group>
             </div>
-            <p class="text-app-xs text-sub leading-relaxed">
-              {{ t('onboarding.step_3.feature_menu_desc') }}
-            </p>
+
+            <!-- Item Language -->
+            <div class="setting-block p-3.5 rounded-lg border border-border bg-bg">
+              <div class="flex items-center gap-2 mb-2.5 font-bold text-text text-app-sm">
+                <n-icon :component="TranslateOutlined" class="text-primary" />
+                <span>{{ t('onboarding.step_2.item_lang') }}</span>
+              </div>
+              <n-radio-group
+                :value="store.userConfig.language_item"
+                name="item-lang"
+                @update:value="handleItemLanguageChange"
+              >
+                <n-space>
+                  <n-radio-button value="auto">{{ t('common.auto') }}</n-radio-button>
+                  <n-radio-button value="zh">简体中文</n-radio-button>
+                  <n-radio-button value="en">English</n-radio-button>
+                  <n-radio-button value="ja">日本語</n-radio-button>
+                </n-space>
+              </n-radio-group>
+            </div>
+
+            <!-- Theme -->
+            <div class="setting-block p-3.5 rounded-lg border border-border bg-bg">
+              <div class="flex items-center gap-2 mb-2.5 font-bold text-text text-app-sm">
+                <n-icon :component="ColorLensRound" class="text-primary" />
+                <span>{{ t('onboarding.step_2.theme') }}</span>
+              </div>
+              <n-radio-group
+                :value="store.userConfig.theme"
+                name="theme"
+                @update:value="handleThemeChange"
+              >
+                <n-space>
+                  <n-radio-button value="light">
+                    <div class="flex items-center gap-1">
+                      <n-icon :component="LightModeTwotone" />
+                      <span>{{ t('preference.theme.option.light') }}</span>
+                    </div>
+                  </n-radio-button>
+                  <n-radio-button value="dark">
+                    <div class="flex items-center gap-1">
+                      <n-icon :component="DarkModeTwotone" />
+                      <span>{{ t('preference.theme.option.dark') }}</span>
+                    </div>
+                  </n-radio-button>
+                  <n-radio-button value="system">
+                    <div class="flex items-center gap-1">
+                      <n-icon :component="SettingsBrightnessOutlined" />
+                      <span>{{ t('preference.theme.option.follow_system') }}</span>
+                    </div>
+                  </n-radio-button>
+                </n-space>
+              </n-radio-group>
+            </div>
           </div>
         </div>
 
-        <!-- Interactive Playground -->
-        <div class="playground-box p-4 rounded-lg border border-dashed border-primary/40 bg-bg-action">
-          <p class="text-app-xs font-bold text-primary mb-3 flex items-center gap-1.5">
-            <span>{{ t('onboarding.step_3.playground_tip') }}</span>
-          </p>
+        <!-- Step 3: Interactive Features Showcase -->
+        <div v-else-if="currentStep === 3" key="step-3" class="features-step py-2">
+          <div class="step-header mb-4">
+            <h2 class="text-xl font-bold text-text mb-1">{{ t('onboarding.step_3.title') }}</h2>
+            <p class="text-app-xs text-sub">{{ t('onboarding.step_3.desc') }}</p>
+          </div>
 
-          <div class="flex flex-wrap items-center gap-6 justify-center py-2">
-            <!-- Demo ItemButton -->
-            <div class="flex flex-col items-center gap-1.5">
-              <ItemButton
-                v-if="demoItem1"
-                :item-info="demoItem1"
-                show-icon
-                show-name
-                btn-extra-class="font-medium"
-              />
-              <span class="text-app-2xs text-sub">ItemButton (大按钮组件)</span>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-5">
+            <!-- Feature 1: Hover -->
+            <div class="feature-card p-3.5 rounded-lg border border-border bg-bg flex flex-col gap-1.5">
+              <div class="flex items-center gap-2 text-primary font-bold text-app-sm">
+                <n-icon :component="InfoOutlined" size="18" />
+                <span>{{ t('onboarding.step_3.feature_hover_title') }}</span>
+              </div>
+              <p class="text-app-xs text-sub leading-relaxed">
+                {{ t('onboarding.step_3.feature_hover_desc') }}
+              </p>
             </div>
 
-            <!-- Demo ItemSpan -->
-            <div class="flex flex-col items-center gap-1.5">
-              <div class="p-2 rounded bg-bg border border-border flex items-center">
-                <ItemSpan
-                  v-if="demoItem2"
-                  :item-info="demoItem2"
-                  :img-size="20"
+            <!-- Feature 2: Right Click -->
+            <div class="feature-card p-3.5 rounded-lg border border-border bg-bg flex flex-col gap-1.5">
+              <div class="flex items-center gap-2 text-primary font-bold text-app-sm">
+                <n-icon :component="TouchAppOutlined" size="18" />
+                <span>{{ t('onboarding.step_3.feature_menu_title') }}</span>
+              </div>
+              <p class="text-app-xs text-sub leading-relaxed">
+                {{ t('onboarding.step_3.feature_menu_desc') }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Interactive Playground -->
+          <div class="playground-box p-4 rounded-lg border border-dashed border-primary/40 bg-bg-action">
+            <p class="text-app-xs font-bold text-primary mb-3 flex items-center gap-1.5">
+              <span>{{ t('onboarding.step_3.playground_tip') }}</span>
+            </p>
+
+            <div class="flex flex-wrap items-center gap-6 justify-center py-2">
+              <!-- Demo ItemButton -->
+              <div class="flex flex-col items-center gap-1.5">
+                <ItemButton
+                  v-if="demoItem1"
+                  :item-info="demoItem1"
+                  show-icon
+                  show-name
+                  btn-extra-class="font-medium"
+                />
+                <span class="text-app-2xs text-sub">ItemButton (大按钮组件)</span>
+              </div>
+
+              <!-- Demo ItemSpan -->
+              <div class="flex flex-col items-center gap-1.5">
+                <div class="p-2 rounded bg-bg border border-border flex items-center">
+                  <ItemSpan
+                    v-if="demoItem2"
+                    :item-info="demoItem2"
+                    :img-size="20"
+                  />
+                </div>
+                <span class="text-app-2xs text-sub">ItemSpan (内联标签组件)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 4: Choose Default Homepage -->
+        <div v-else-if="currentStep === 4" key="step-4" class="homepage-step py-2">
+          <div class="step-header mb-4">
+            <h2 class="text-xl font-bold text-text mb-1">{{ t('onboarding.step_4.title') }}</h2>
+            <p class="text-app-xs text-sub">{{ t('onboarding.step_4.desc') }}</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <!-- Choice 1: HQ Workbench -->
+            <div
+              class="choice-card p-4 rounded-xl border-2 transition-all cursor-pointer flex flex-col gap-2"
+              :class="selectedHomepage === 'hqwb' ? 'border-primary bg-primary/5 shadow-sm' : 'border-border bg-bg hover:border-primary/40'"
+              @click="selectedHomepage = 'hqwb'"
+            >
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <div class="p-2 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+                    <n-icon :component="DashboardOutlined" size="22" />
+                  </div>
+                  <span class="font-bold text-text text-app-base">{{ t('onboarding.step_4.hqwb_title') }}</span>
+                </div>
+                <n-icon
+                  :component="selectedHomepage === 'hqwb' ? CheckCircleFilled : CheckCircleOutlineRound"
+                  size="20"
+                  :class="selectedHomepage === 'hqwb' ? 'text-primary' : 'text-sub'"
                 />
               </div>
-              <span class="text-app-2xs text-sub">ItemSpan (内联标签组件)</span>
+              <p class="text-app-xs text-sub leading-relaxed mt-1">
+                {{ t('onboarding.step_4.hqwb_desc') }}
+              </p>
             </div>
-          </div>
-        </div>
-      </div>
 
-      <!-- Step 4: Choose Default Homepage -->
-      <div v-else-if="currentStep === 4" class="homepage-step py-2">
-        <div class="step-header mb-4">
-          <h2 class="text-xl font-bold text-text mb-1">{{ t('onboarding.step_4.title') }}</h2>
-          <p class="text-app-xs text-sub">{{ t('onboarding.step_4.desc') }}</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-          <!-- Choice 1: HQ Workbench -->
-          <div
-            class="choice-card p-4 rounded-xl border-2 transition-all cursor-pointer flex flex-col gap-2"
-            :class="selectedHomepage === 'hqwb' ? 'border-primary bg-primary/5 shadow-sm' : 'border-border bg-bg hover:border-primary/40'"
-            @click="selectedHomepage = 'hqwb'"
-          >
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-2">
-                <div class="p-2 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
-                  <n-icon :component="DashboardOutlined" size="22" />
+            <!-- Choice 2: Recipe Calculator (Workflow) -->
+            <div
+              class="choice-card p-4 rounded-xl border-2 transition-all cursor-pointer flex flex-col gap-2"
+              :class="selectedHomepage === 'workflow' ? 'border-primary bg-primary/5 shadow-sm' : 'border-border bg-bg hover:border-primary/40'"
+              @click="selectedHomepage = 'workflow'"
+            >
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <div class="p-2 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+                    <n-icon :component="WavesOutlined" size="22" />
+                  </div>
+                  <span class="font-bold text-text text-app-base">{{ t('onboarding.step_4.workflow_title') }}</span>
                 </div>
-                <span class="font-bold text-text text-app-base">{{ t('onboarding.step_4.hqwb_title') }}</span>
+                <n-icon
+                  :component="selectedHomepage === 'workflow' ? CheckCircleFilled : CheckCircleOutlineRound"
+                  size="20"
+                  :class="selectedHomepage === 'workflow' ? 'text-primary' : 'text-sub'"
+                />
               </div>
-              <n-icon
-                :component="selectedHomepage === 'hqwb' ? CheckCircleFilled : CheckCircleOutlineRound"
-                size="20"
-                :class="selectedHomepage === 'hqwb' ? 'text-primary' : 'text-sub'"
-              />
+              <p class="text-app-xs text-sub leading-relaxed mt-1">
+                {{ t('onboarding.step_4.workflow_desc') }}
+              </p>
             </div>
-            <p class="text-app-xs text-sub leading-relaxed mt-1">
-              {{ t('onboarding.step_4.hqwb_desc') }}
-            </p>
-          </div>
-
-          <!-- Choice 2: Recipe Calculator (Workflow) -->
-          <div
-            class="choice-card p-4 rounded-xl border-2 transition-all cursor-pointer flex flex-col gap-2"
-            :class="selectedHomepage === 'workflow' ? 'border-primary bg-primary/5 shadow-sm' : 'border-border bg-bg hover:border-primary/40'"
-            @click="selectedHomepage = 'workflow'"
-          >
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-2">
-                <div class="p-2 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
-                  <n-icon :component="WavesOutlined" size="22" />
-                </div>
-                <span class="font-bold text-text text-app-base">{{ t('onboarding.step_4.workflow_title') }}</span>
-              </div>
-              <n-icon
-                :component="selectedHomepage === 'workflow' ? CheckCircleFilled : CheckCircleOutlineRound"
-                size="20"
-                :class="selectedHomepage === 'workflow' ? 'text-primary' : 'text-sub'"
-              />
-            </div>
-            <p class="text-app-xs text-sub leading-relaxed mt-1">
-              {{ t('onboarding.step_4.workflow_desc') }}
-            </p>
           </div>
         </div>
+      </Transition>
       </div>
 
       <!-- Action Footer (Steps 2..4) -->
@@ -368,15 +372,21 @@ const handleFinish = () => {
   border-radius: 12px;
   overflow: hidden;
 }
-.logo-wrapper {
-  animation: float-slow 3s ease-in-out infinite;
+
+.step-content-wrapper {
+  min-height: 360px;
 }
-@keyframes float-slow {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-4px);
-  }
+
+.step-fade-enter-active,
+.step-fade-leave-active {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.step-fade-enter-from {
+  opacity: 0;
+  transform: translateY(6px);
+}
+.step-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-6px);
 }
 </style>
