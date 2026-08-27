@@ -36,9 +36,9 @@ const totalSteps = 4
 // 选中的默认首页
 const selectedHomepage = ref<'hqwb' | 'workflow'>(store.userConfig.default_homepage || 'hqwb')
 
-// 示例物品数据 (7.05 代表性制作药水与装备)
-const demoItem1 = computed(() => getItemInfo(44162)) // 2级刚力之宝药
-const demoItem2 = computed(() => getItemInfo(44163)) // 2级巧力之宝药
+// 示例物品数据
+const demoItem1 = computed(() => getItemInfo(44162))
+const demoItem2 = computed(() => getItemInfo(44163))
 
 // 界面语言改变
 const handleUiLanguageChange = (val: 'zh' | 'en' | 'ja') => {
@@ -80,15 +80,15 @@ const handleFinish = () => {
 </script>
 
 <template>
-  <div class="onboarding-container flex justify-center pt-6 md:pt-10 pb-12 px-3">
+  <div class="min-h-[80vh] flex items-center justify-center pt-6 md:pt-10 pb-12 px-3">
     <n-card
-      class="onboarding-card max-w-180 w-full"
-      :class="store.userConfig.custom_background ? 'glasscard' : ''"
       embedded
       :bordered="false"
+      class="onboarding-card max-w-240 w-[98%]"
+      :class="store.userConfig.custom_background ? 'glasscard' : ''"
     >
       <!-- Stepper Header (Steps 2..4) -->
-      <div v-if="currentStep > 1" class="mb-6 px-2">
+      <div class="mb-6 px-2" :class="currentStep > 1 ? '' : 'opacity-0'">
         <n-steps :current="currentStep - 1" :status="'process'" size="small">
           <n-step :title="t('onboarding.step_2.name')" />
           <n-step :title="t('onboarding.step_3.name')" />
@@ -96,16 +96,16 @@ const handleFinish = () => {
         </n-steps>
       </div>
 
-      <div class="step-content-wrapper">
+      <div class="min-h-95 max-h-[50vh] flex items-center justify-center">
         <Transition name="step-fade" mode="out-in">
           <!-- Step 1: Welcome -->
-          <div v-if="currentStep === 1" key="step-1" class="welcome-step text-center py-4 flex flex-col items-center">
+          <div v-if="currentStep === 1" key="step-1" class="text-center py-4 flex flex-col items-center justify-center">
             <div class="logo-wrapper mb-5">
               <AppLogoPlate />
             </div>
-            <h1 class="text-2xl font-bold text-text mb-2">{{ t('onboarding.welcome.title') }}</h1>
+            <h1 class="text-2xl font-bold text-text">{{ t('onboarding.welcome.title') }}</h1>
             <p class="text-app-base text-primary font-medium mb-4">{{ t('onboarding.welcome.subtitle') }}</p>
-            <p class="text-app-sm text-sub max-w-125 mb-2 leading-relaxed">
+            <p class="text-app-sm text-sub max-w-125 leading-relaxed">
               {{ t('onboarding.welcome.desc_1') }}
             </p>
             <p class="text-app-sm text-sub max-w-125 mb-8 leading-relaxed">
@@ -329,8 +329,8 @@ const handleFinish = () => {
       </div>
 
       <!-- Action Footer (Steps 2..4) -->
-      <template v-if="currentStep > 1" #action>
-        <div class="flex items-center justify-between">
+      <template #action>
+        <div class="flex items-center justify-between" :class="currentStep > 1 ? '' : 'opacity-0'">
           <n-button quaternary @click="handlePrev">
             <template #icon>
               <n-icon><ArrowBackOutlined /></n-icon>
@@ -371,10 +371,6 @@ const handleFinish = () => {
 .onboarding-card {
   border-radius: 12px;
   overflow: hidden;
-}
-
-.step-content-wrapper {
-  min-height: 360px;
 }
 
 .step-fade-enter-active,
