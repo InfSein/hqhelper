@@ -648,7 +648,6 @@ const handleOnScroll = (e: Event) => {
                   :coordinate-x="itemInfo.gatherInfo.posX"
                   :coordinate-y="itemInfo.gatherInfo.posY"
                   :pop-trigger="innerPopTrigger"
-                  pop-style="padding: 0;"
                 />
               </div>
               <div class="other-attrs" v-if="itemInfo.gatherInfo.recommAetheryte" style="margin-left: 1em;">

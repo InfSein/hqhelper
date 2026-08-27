@@ -39,11 +39,11 @@ const getAetheryteName = (aetheryte: XivMapAetheryteInfo) => {
         :size="mapSize"
         :src="mapData.map_src"
       />
-      <div class="absolute inset-0 pointer-events-none">
+      <div class="absolute top-0 left-0 w-full h-full pointer-events-none">
         <!-- 目的地旗帜 -->
-        <XivFARImage 
-          class="absolute -translate-x-1/2 -translate-y-1/2 z-[1] pointer-events-auto"
-          src="./ui/flag.png"
+        <img 
+          class="marker"
+          src="/ui/flag.png"
           :style="getPositionStyle(flagX, flagY)"
         />
         <!-- 以太之光 -->
@@ -56,9 +56,9 @@ const getAetheryteName = (aetheryte: XivMapAetheryteInfo) => {
             content-style="padding: 0;"
           >
             <template #trigger>
-              <XivFARImage 
-                class="absolute -translate-x-1/2 -translate-y-1/2 z-[1] pointer-events-auto"
-                src="./ui/aetheryte.png"
+              <img 
+                class="marker"
+                src="/ui/aetheryte.png"
                 :style="getPositionStyle(aetheryte.x, aetheryte.y)"
               />
             </template>
@@ -73,4 +73,10 @@ const getAetheryteName = (aetheryte: XivMapAetheryteInfo) => {
 </template>
 
 <style scoped>
+.marker {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  pointer-events: auto;
+}
 </style>
