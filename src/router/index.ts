@@ -10,7 +10,7 @@ const routes : RouteRecordRaw[] = [
   { path: '/', component: HomePage },
   { 
     path: '/hqwb', 
-    component: () => import('@/views/main/MainPage.vue') 
+    component: () => import('@/views/main/HqWorkbenchPage.vue') 
   },
   { 
     path: '/fthelper', 

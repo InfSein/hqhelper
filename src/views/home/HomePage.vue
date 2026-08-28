@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import OnboardingWizard from './components/OnboardingWizard.vue'
-import MainPage from '@/views/main/MainPage.vue'
+import MainPage from '@/views/main/HqWorkbenchPage.vue'
 import WorkflowPage from '@/views/workflow/WorkflowPage.vue'
 import { useStore } from '@/store'
 import { useResponsive } from '@/composables/useResponsive'
