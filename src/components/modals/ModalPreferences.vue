@@ -143,9 +143,6 @@ const preferenceGroups = computed(() : PreferenceGroup[] => {
             {
               key: 'default_homepage',
               label: t('preference.default_homepage.title'),
-              descriptions: [
-                t('preference.default_homepage.desc.desc_1'),
-              ],
               type: 'radio-group',
               options: [
                 { value: 'hqwb', label: t('common.appfunc.hqwb') },
