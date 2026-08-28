@@ -6,12 +6,14 @@ import {
   AccessAlarmsOutlined,
   ArrowCircleLeftOutlined,
   BackpackFilled,
+  CalculateOutlined,
   CasesOutlined,
   CasesRound,
   CheckroomFilled,
   CodeOutlined,
   ContactlessOutlined,
   DarkModeTwotone,
+  DashboardOutlined,
   DevicesOtherOutlined,
   DevicesOutlined,
   EventNoteFilled,
@@ -224,6 +226,24 @@ const menuData = computed(() => {
         },
         {
           type: 'router',
+          icon: WavesOutlined,
+          label: t('common.appfunc.workflow'),
+          description: t('appheader.menu.tooltip.workflow'),
+          hide: !isMobile.value,
+          routerKey: 'workflow',
+          allowNewWindow: false,
+        },
+        {
+          type: 'router',
+          icon: DashboardOutlined,
+          label: t('common.appfunc.hqwb'),
+          description: t('appheader.menu.tooltip.hqwb'),
+          hide: !isMobile.value,
+          routerKey: 'hqwb',
+          allowNewWindow: false,
+        },
+        {
+          type: 'router',
           icon: AccessAlarmsOutlined,
           label: t('common.appfunc.gather_clock'),
           description: t('appheader.menu.tooltip.gather_clock'),
@@ -277,14 +297,6 @@ const menuData = computed(() => {
             top: 120,
             left: 45
           },
-        },
-        {
-          type: 'router',
-          icon: WavesOutlined,
-          label: t('common.appfunc.workflow'),
-          description: t('appheader.menu.tooltip.workflow'),
-          routerKey: 'workflow',
-          allowNewWindow: false,
         },
         {
           type: 'router',
@@ -760,6 +772,16 @@ const handleCheckUpdates = async () => {
     }
   }
 }
+const currentHomePage = computed(() => {
+  return store.userConfig.default_homepage || 'hqwb'
+})
+const handleSwitchHomePage = (target: 'hqwb' | 'workflow') => {
+  store.userConfig.default_homepage = target
+  store.updateUserConfig()
+  if (router.currentRoute.value.path !== '/') {
+    router.push('/')
+  }
+}
 </script>
 
 <template>
@@ -820,6 +842,22 @@ const handleCheckUpdates = async () => {
       </div>
       <n-divider v-if="useDesktopUi" style="margin: -1px 0 3px;" />
       <div class="app-menu" v-if="useDesktopUi">
+        <div class="homepage-switcher">
+          <div
+            :class="['homepage-switcher-item', { active: currentHomePage === 'workflow' }]"
+            @click="handleSwitchHomePage('workflow')"
+          >
+            <n-icon :component="CalculateOutlined" />
+            <span>{{ t('common.appfunc.workflow_calc') }}</span>
+          </div>
+          <div
+            :class="['homepage-switcher-item', { active: currentHomePage === 'hqwb' }]"
+            @click="handleSwitchHomePage('hqwb')"
+          >
+            <n-icon :component="DashboardOutlined" />
+            <span>{{ t('common.appfunc.hqwb') }}</span>
+          </div>
+        </div>
         <n-dropdown
           size="small"
           placement="bottom-start"
@@ -966,7 +1004,48 @@ const handleCheckUpdates = async () => {
   }
   .app-menu {
     display: flex;
+    align-items: center;
     gap: 10px;
+  }
+  .homepage-switcher {
+    display: inline-flex;
+    align-items: center;
+    height: 22px;
+    padding: 2px;
+    background-color: var(--app-color-background-hover);
+    border-radius: 4px;
+    box-sizing: border-box;
+    user-select: none;
+
+    .homepage-switcher-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      height: 18px;
+      padding: 0 8px;
+      font-size: var(--app-font-size-2xs);
+      color: var(--app-color-text-sub);
+      border-radius: 3px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      line-height: 1;
+
+      &:hover {
+        color: var(--app-color-text);
+      }
+
+      &.active {
+        background-color: var(--app-color-background);
+        color: var(--app-color-primary);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+
+        span {
+          font-weight: bold;
+        }
+      }
+    }
   }
 }
 

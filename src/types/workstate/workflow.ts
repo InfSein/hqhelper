@@ -48,7 +48,7 @@ export interface WorkState {
   notebookSearchHistory: string[];
 }
 export const defaultWorkState: WorkState = {
-  pageView: 'BC',
+  pageView: 'AB',
   selectedJob: 8,
   selectedMenu: 'common',
   selectedContentGroup: 'i_96',

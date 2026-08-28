@@ -67,6 +67,7 @@
         "fchelper": "到底有没有能让我大吃一惊的未来的时尚引领者呢……",
         "fthelper": "帮助你制作食物与爆发药。能帮到就好。",
         "gather_clock": "挖穿艾欧泽亚的好帮手！",
+        "hqwb": "工欲善其事，必先利其器。",
         "ingame_inventory": "喂喂，你的背包已经装满了啊。",
         "macro_manage": "管理，收容，跑路……",
         "open_in_new_window": "在新窗口中打开{tool}",
@@ -881,7 +882,9 @@
       "thank_list": "致谢名单",
       "useful_tools": "实用工具",
       "user_preference": "偏好设置",
-      "workflow": "工作流"
+      "workflow": "工作流",
+      "hqwb": "HQ工作台",
+      "workflow_calc": "配方计算器"
     },
     "appsetting": {
       "appearance": "外观",
@@ -1901,6 +1904,17 @@
     }
   },
   "preference": {
+    "default_homepage": {
+      "title": "默认首页"
+    },
+    "rerun_onboarding": {
+      "btn": "重新运行向导",
+      "confirm_dialog": "重新运行初始设置向导将重置引导状态并刷新页面，未保存的偏好设置修改将会丢失，是否继续？",
+      "desc": {
+        "desc_1": "重新运行首次访问应用时的初始化引导向导。"
+      },
+      "title": "初始设置向导"
+    },
     "auto_refresh_after_save": {
       "desc": {
         "desc_1": "此设置修改后本次保存便会生效。另外，仅会在需要刷新的时候执行自动刷新。"
@@ -2603,6 +2617,54 @@
     "text": {
       "craftsmanship_needs": "需要作业精度达到{0}",
       "control_needs": "需要加工精度达到{0}"
+    }
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "欢迎使用",
+      "subtitle": "全面进化的现代生产采集辅助工具",
+      "desc_1": "你熟悉的HqHelper，现在更以配方计算器呈现。",
+      "desc_2": "请接受我们的引导，完成基础设置和功能提示。",
+      "start_btn": "开始"
+    },
+    "step_1": {
+      "title": "欢迎",
+      "name": "欢迎"
+    },
+    "step_2": {
+      "title": "基础设置",
+      "name": "基础设置",
+      "desc": "调整语言和主题等基础设置。在这里的修改会立即生效。",
+      "ui_lang": "界面语言",
+      "item_lang": "物品语言",
+      "theme": "外观主题"
+    },
+    "step_3": {
+      "title": "交互指南",
+      "name": "交互指南",
+      "desc": "在HqHelper中，物品按钮/标签是可以交互的：",
+      "feature_hover_title": "悬停详情",
+      "feature_hover_desc": "将鼠标光标悬停在物品上，即可查看其制作配方、材料来源、属性、市场参考价格等。",
+      "feature_menu_title": "右键菜单",
+      "feature_menu_desc": "右键点击物品（移动端为长按），即可呼出功能更加丰富的快捷菜单。",
+      "playground_tip": "试一试！",
+      "button": "按钮",
+      "label": "标签",
+      "cell": "单元格"
+    },
+    "step_4": {
+      "title": "选择默认首页",
+      "name": "选择首页",
+      "desc": "你可以随时在桌面端左上角切换首页。",
+      "hqwb_title": "HQ工作台",
+      "hqwb_desc": "专注于星级HQ的专业工作台，一键统计素材与点数需求。",
+      "workflow_title": "配方计算器（原“工作流”）",
+      "workflow_desc": "自由灵活的现代配方计算器，装载游戏内的全部配方，并提供配方树状拆解、专业报表与流程推荐。"
+    },
+    "btn": {
+      "prev": "上一步",
+      "next": "下一步",
+      "finish": "完成"
     }
   }
 }

@@ -70,6 +70,7 @@
         "fchelper": "Helps you collect materials for fashion accessories.",
         "fthelper": "Helps you craft food and tinctures.",
         "gather_clock": "Track time-limited gatherings.",
+        "hqwb": "A craftsman must first sharpen his tools.",
         "ingame_inventory": "Manage in-game inventory and sync settings.",
         "macro_manage": "Manage crafting macros.",
         "open_in_new_window": "Open {tool} in a new window",
@@ -884,7 +885,9 @@
       "thank_list": "Acknowledgements",
       "useful_tools": "Tools",
       "user_preference": "User Preferences",
-      "workflow": "Workflow"
+      "workflow": "Workflow",
+      "hqwb": "HQ Workbench",
+      "workflow_calc": "Recipe Calculator"
     },
     "appsetting": {
       "appearance": "Appearance",
@@ -1898,6 +1901,20 @@
     }
   },
   "preference": {
+    "default_homepage": {
+      "desc": {
+        "desc_1": "Set which page to display by default when accessing the root path (/)."
+      },
+      "title": "Default Homepage"
+    },
+    "rerun_onboarding": {
+      "btn": "Rerun Wizard",
+      "confirm_dialog": "Rerunning the setup wizard will reset onboarding state and reload the page. Unsaved preference changes will be lost. Continue?",
+      "desc": {
+        "desc_1": "Rerun the initial setup wizard shown on first visit."
+      },
+      "title": "Initial Setup Wizard"
+    },
     "auto_refresh_after_save": {
       "desc": {
         "desc_1": "Takes effect upon next save. Auto-refresh only triggered when necessary."
@@ -2580,6 +2597,51 @@
     "notebookgroup": {
       "other_master_recipes": "Other Master Recipes",
       "custom_lists": "Recommended Lists"
+    }
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "Welcome to HqHelper",
+      "subtitle": "FFXIV Crafting & Gathering Recipe Assistant",
+      "desc_1": "HqHelper provides comprehensive tools for gear planning, flexible multi-craft workflows, material tree breakdown, gathering clock, and craft macros.",
+      "desc_2": "Before getting started, let's configure some basic preferences in a few quick steps.",
+      "start_btn": "Get Started"
+    },
+    "step_1": {
+      "title": "Welcome",
+      "name": "Welcome"
+    },
+    "step_2": {
+      "title": "Basic Settings",
+      "name": "Settings",
+      "desc": "Configure UI language, item name language, and theme. Changes take effect immediately.",
+      "ui_lang": "UI Language",
+      "item_lang": "Item Language",
+      "theme": "Theme"
+    },
+    "step_3": {
+      "title": "Interactive Features",
+      "name": "Features",
+      "desc": "In HqHelper, item buttons and spans provide powerful interactions:",
+      "feature_hover_title": "Hover for Details",
+      "feature_hover_desc": "Hover over any item to preview its crafting recipe, material sources, stats, and market prices.",
+      "feature_menu_title": "Right-Click Context Menu",
+      "feature_menu_desc": "Right-click any item (or long-press on mobile) to open the context menu: copy name, copy /isearch macro, add to workflow, and more.",
+      "playground_tip": "👉 Try hovering over the items below, or right-click to test the context menu:"
+    },
+    "step_4": {
+      "title": "Choose Default Homepage",
+      "name": "Homepage",
+      "desc": "You can always switch between modes anytime using the top-left menu on desktop:",
+      "hqwb_title": "HQ Workbench",
+      "hqwb_desc": "Quick gear calculator by patch. Select combat/crafter/gatherer gear sets and instantly summarize materials and tomestones.",
+      "workflow_title": "Recipe Calculator (Workflow)",
+      "workflow_desc": "Flexible multi-recipe planner. Add any items, view hierarchical material trees, analyze costs and profits, and manage macros."
+    },
+    "btn": {
+      "prev": "Back",
+      "next": "Next",
+      "finish": "Finish Setup & Start"
     }
   }
 }

@@ -301,7 +301,8 @@ npm run lint
 
 | 路径 | 页面 | 说明 |
 |------|------|------|
-| `/` | MainPage | HQ 工作台 (首页) |
+| `/` | HomePage | 首页容器 (引导页 / 默认首页) |
+| `/hqwb` | MainPage | HQ 工作台 |
 | `/fthelper` | FoodAndTincPage | 食药计算 |
 | `/cshelper` | CollectableSubmissionsPage | 收藏品提交 |
 | `/fchelper` | FashionClothesPage | 时装搭配 |

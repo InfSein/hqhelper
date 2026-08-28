@@ -51,6 +51,9 @@ const locale = computed(() => {
   return store.userConfig?.language_ui ?? 'zh'
 })
 setLocale(locale.value)
+watch(locale, (newVal) => {
+  setLocale(newVal)
+})
 
 watch(theme, () => {
   console.log('theme changed:', theme.value)

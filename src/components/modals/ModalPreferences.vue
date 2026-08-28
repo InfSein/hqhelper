@@ -75,6 +75,14 @@ const inventoryTestDescriptions = computed(() => {
   return descriptions
 })
 
+const handleRerunOnboarding = async () => {
+  if (await confirm(t('preference.rerun_onboarding.confirm_dialog'))) {
+    store.userConfig.onboarding_completed = false
+    store.updateUserConfig()
+    location.reload()
+  }
+}
+
 // #region data
 const dealSimOptions = (options: string[]) => {
   return options.map(option => {
@@ -133,6 +141,15 @@ const preferenceGroups = computed(() : PreferenceGroup[] => {
               ],
             },
             {
+              key: 'default_homepage',
+              label: t('preference.default_homepage.title'),
+              type: 'radio-group',
+              options: [
+                { value: 'hqwb', label: t('common.appfunc.hqwb') },
+                { value: 'workflow', label: t('common.appfunc.workflow_calc') },
+              ]
+            },
+            {
               key: 'action_after_savesettings',
               label: t('preference.auto_refresh_after_save.title'),
               warnings: [
@@ -144,6 +161,18 @@ const preferenceGroups = computed(() : PreferenceGroup[] => {
                 { value: 'reload', label: t('common.auto_refresh') },
                 { value: 'none', label: t('common.dont_refresh') }
               ]
+            },
+            {
+              key: 'rerun_onboarding',
+              label: t('preference.rerun_onboarding.title'),
+              descriptions: [
+                t('preference.rerun_onboarding.desc.desc_1'),
+              ],
+              type: 'button',
+              buttonProps: {
+                text: t('preference.rerun_onboarding.btn'),
+                onClick: handleRerunOnboarding
+              }
             }
           ]
         },
