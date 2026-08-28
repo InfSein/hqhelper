@@ -166,7 +166,7 @@ export function useNbbCal() {
         let key = ''
         if (!itemPatch.startsWith('8.')) {
           let expansion = itemPatch.split('.')[0]
-          if (expansion === '1') expansion = '2.0'
+          if (expansion === '1') expansion = '2'
           key = expansion + '.x'
         } else {
           const itemLevel = itemInfo.itemLevel <= 820 ? '~820' : itemInfo.itemLevel

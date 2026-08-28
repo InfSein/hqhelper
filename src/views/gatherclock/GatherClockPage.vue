@@ -19,7 +19,7 @@ import { playAudio } from '@/tools'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
 import { useNbbCal } from '@/tools/use-nbb-cal'
 import type { ItemGroup } from '@/types/item'
-import { fixAlarmMacroOptions, type WorkState } from '@/types/workstate/gatherclock'
+import { fixAlarmMacroOptions, fixWorkState, type WorkState } from '@/types/workstate/gatherclock'
 import useIdb from '@/utils/app.idb'
 import EorzeaTime from '@/utils/game.et'
 
@@ -105,28 +105,7 @@ const canPinWindow = computed(() => {
   return appMode.value === 'overlay' && !!window.electronAPI?.toggleAlwaysOnTop
 })
 
-const workState = ref<WorkState>({
-  patch: '7.4-740',
-  /** 是否将整个窗口置顶 (限v5及以上的客户端使用) */
-  pinWindow: false,
-  /** 通知方式 */
-  notifyMode: 'none' as "none" | "system_noti" | "audio",
-  /** 提示音类型 */
-  soundSelect: 'default' as "default" | "custom",
-  /** 自定义提示音文件名 */
-  customAudioName: '',
-  /** 排序依据 */
-  orderBy: 'remainingTimeAsc' as "itemId" | "gatherStartTimeAsc" | "remainingTimeAsc",
-  /** 是否将目前可以采集的道具置顶 */
-  pinGatherableItems: false,
-  /** 禁用物品按钮悬浮窗 */
-  banItemPop: false,
-  /** 是否直接在采集卡片内展示地图 */
-  showMap: true,
-  alarmMacroOptions: fixAlarmMacroOptions(),
-  starItems: [] as number[],
-  subscribedItems: [] as number[]
-})
+const workState = ref<WorkState>(fixWorkState())
 const showAlarmMacroExportModal = ref(false)
 const showAudioConfigModal = ref(false)
 const idb = useIdb()
@@ -266,14 +245,7 @@ const disable_workstate_cache = store.userConfig.disable_workstate_cache ?? fals
 if (!disable_workstate_cache) {
   const cachedWorkState = store.userConfig.gatherclock_cache_work_state
   if (cachedWorkState && JSON.stringify(cachedWorkState).length > 2) {
-    workState.value = cachedWorkState
-    // 在这里处理后续添加的成员默认值
-    workState.value.notifyMode ??= 'none'
-    workState.value.soundSelect ??= 'default'
-    workState.value.customAudioName ??= ''
-    workState.value.orderBy ??= 'itemId'
-    workState.value.subscribedItems ??= []
-    workState.value.alarmMacroOptions = fixAlarmMacroOptions(workState.value.alarmMacroOptions)
+    workState.value = fixWorkState(cachedWorkState)
   }
 
   // todo - 留意性能：深度侦听需要遍历被侦听对象中的所有嵌套的属性，当用于大型数据结构时，开销很大
@@ -655,31 +627,32 @@ const handleShowAlarmMacroExportModal = () => {
         marginTop: '3px',
         marginBottom: isVerticalOverlay ? '5px' : '12px'
       }" />
-      <n-el
+      <template
         v-for="patch in gatherData"
         :key="patch.key"
-        v-show="workState.patch === patch.key"
       >
-        <div v-if="!patch.items?.length" class="flex items-center justify-center w-full" :style="isMobile ? 'min-height: 300px;' : ''">
-          <n-empty size="large" :description="t('gather_clock.text.no_items')" />
-        </div>
-        <n-grid cols="1 600:2 900:3 1200:4 1500:5 1900:6" :x-gap="5" :y-gap="5">
-          <n-grid-item
-            v-for="item in getSortedItems(patch.items)"
-            :key="item.id"
-          >
-            <GatherItemCard
-              :ban-item-pop="workState.banItemPop"
-              :show-map="workState.showMap"
-              :item="item"
-              :subscribed-items="workState.subscribedItems"
-              :star-items="workState.starItems"
-              @on-star-button-click="handleStarButtonClick"
-              @on-subscribe-button-click="handleSubscribeButtonClick"
-            />
-          </n-grid-item>
-        </n-grid>
-      </n-el>
+        <n-el v-if="workState.patch === patch.key">
+          <div v-if="!patch.items?.length" class="flex items-center justify-center w-full" :style="isMobile ? 'min-height: 300px;' : ''">
+            <n-empty size="large" :description="t('gather_clock.text.no_items')" />
+          </div>
+          <n-grid cols="1 600:2 900:3 1200:4 1500:5 1900:6" :x-gap="5" :y-gap="5">
+            <n-grid-item
+              v-for="item in getSortedItems(patch.items)"
+              :key="item.id"
+            >
+              <GatherItemCard
+                :ban-item-pop="workState.banItemPop"
+                :show-map="workState.showMap"
+                :item="item"
+                :subscribed-items="workState.subscribedItems"
+                :star-items="workState.starItems"
+                @on-star-button-click="handleStarButtonClick"
+                @on-subscribe-button-click="handleSubscribeButtonClick"
+              />
+            </n-grid-item>
+          </n-grid>
+        </n-el>
+      </template>
     </n-card>
 
     <ModalAlarmMacroExport
