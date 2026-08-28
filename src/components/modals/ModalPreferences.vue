@@ -141,15 +141,6 @@ const preferenceGroups = computed(() : PreferenceGroup[] => {
               ],
             },
             {
-              key: 'default_homepage',
-              label: t('preference.default_homepage.title'),
-              type: 'radio-group',
-              options: [
-                { value: 'hqwb', label: t('common.appfunc.hqwb') },
-                { value: 'workflow', label: t('common.appfunc.workflow_calc') },
-              ]
-            },
-            {
               key: 'action_after_savesettings',
               label: t('preference.auto_refresh_after_save.title'),
               warnings: [

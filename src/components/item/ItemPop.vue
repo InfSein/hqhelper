@@ -827,7 +827,7 @@ const handleOnScroll = (e: Event) => {
                 v-for="(item, index) in itemCraftRequires"
                 :key="'recipe-' + index"
               >
-                <ItemSpan :item-info="getItemInfo(item.id)" :amount="item.count" show-amount :container-id="containerId" />
+                <ItemSpan :item-info="getItemInfo(item.id)" :amount="item.count" show-amount span-max-width="210px" :container-id="containerId" />
               </div>
               <div class="other-attrs" v-if="(itemInfo.craftInfo?.yields || 1) > 1">
                 {{ t('item.text.yields_info', itemInfo.craftInfo?.yields) }}
