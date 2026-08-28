@@ -772,13 +772,16 @@ const handleCheckUpdates = async () => {
     }
   }
 }
+
+const isHomePage = computed(() => router.currentRoute.value.path === '/')
 const currentHomePage = computed(() => {
+  if (!isHomePage.value) return ''
   return store.userConfig.default_homepage || 'hqwb'
 })
 const handleSwitchHomePage = (target: 'hqwb' | 'workflow') => {
   store.userConfig.default_homepage = target
   store.updateUserConfig()
-  if (router.currentRoute.value.path !== '/') {
+  if (!isHomePage.value) {
     router.push('/')
   }
 }

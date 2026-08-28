@@ -34,7 +34,7 @@ const routes : RouteRecordRaw[] = [
   },
   { 
     path: '/share', 
-    component: () => import('@/views/workflow/WorkflowPage.vue') 
+    component: HomePage 
   },
   { 
     path: '/workflow_process', 

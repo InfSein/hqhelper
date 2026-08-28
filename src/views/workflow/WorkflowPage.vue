@@ -23,22 +23,19 @@ import CraftRecommProcess from '@/components/craft/CraftRecommProcess.vue'
 import CraftStatementsPro from '@/components/craft/CraftStatementsPro.vue'
 import ModalCostAndBenefit from '@/components/modals/ModalCostAndBenefit.vue'
 import NotebookPanel from '@/views/workflow/components/NotebookPanel.vue'
-import { useRoute, useRouter } from 'vue-router'
 import ModalShareWorkflow from '@/views/workflow/components/ModalShareWorkflow.vue'
 import ImportItemListPop from '@/views/workflow/components/ImportItemListPop.vue'
 import ModalWorkflowsManage from '@/views/workflow/components/ModalWorkflowsManage.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
-import { useAppModals } from '@/composables/useAppModals'
 import { useWorkflowState } from '@/composables/useWorkflowState'
 import { useCostAndBenefit } from '@/composables/useCostAndBenefit'
 import { useWorkflowStatistics } from '@/composables/useWorkflowStatistics'
 import { onInventoryChange, offInventoryChange } from '@/composables/useInventoryPlugin'
 import { type SettingGroupKey } from '@/types'
 import { getDefaultWorkflow, _VAR_MAX_WORKFLOW } from '@/types/workstate/workflow'
-import { getItemInfo, type ItemInfo } from '@/tools/item'
-import { decodeShareCode } from '@/tools/shareCode'
+import { type ItemInfo } from '@/tools/item'
 import { addToCurrentWorkflowKey, reverseRecipeLookupKey } from '@/constants/vue-injects'
 
 const store = useStore()
@@ -63,37 +60,6 @@ const preferenceAppShowUP = ref(false)
 const preferenceAppShowFP = ref(false)
 const selectedAnaTab = ref('statistics')
 const showShareModal = ref(false)
-
-const route = useRoute()
-const router = useRouter()
-const { joinItemsToWorkflow } = useAppModals()
-
-const checkRouteShareCode = () => {
-  const code = route.query.code as string | undefined
-  if (code) {
-    const decoded = decodeShareCode(code)
-    if (decoded && Object.keys(decoded).length > 0) {
-      const validItems: Record<number, number> = {}
-      for (const [idStr, amount] of Object.entries(decoded)) {
-        const itemId = Number(idStr)
-        const itemInfo = getItemInfo(itemId)
-        if (itemInfo.craftInfo?.recipeId) {
-          validItems[itemId] = amount
-        }
-      }
-      if (Object.keys(validItems).length > 0) {
-        joinItemsToWorkflow(validItems)
-      } else {
-        NAIVE_UI_MESSAGE.error(t('workflow.share.import_by_code_failed'))
-      }
-    } else {
-      NAIVE_UI_MESSAGE.error(t('workflow.share.import_by_code_failed'))
-    }
-    router.replace({ path: '/workflow' })
-  } else if (route.path === '/share') {
-    router.replace({ path: '/workflow' })
-  }
-}
 
 const headerBlock = ref<HTMLElement>()
 const proStatementInstace = ref<InstanceType<typeof CraftStatementsPro>>()
@@ -122,10 +88,6 @@ onMounted(() => {
   updateHeights()
   window.addEventListener('resize', updateHeights)
   onInventoryChange(handleWorkflowInventoryChange)
-  checkRouteShareCode()
-})
-watch(() => route.query.code, () => {
-  checkRouteShareCode()
 })
 onBeforeUnmount(() => {
   window.removeEventListener('resize', updateHeights)

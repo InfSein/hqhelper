@@ -40,6 +40,12 @@ const onLoad = () => {
   })
 }
 
+onMounted(() => {
+  if (showModal.value) {
+    onLoad()
+  }
+})
+
 const targetWorkflow = ref<number | "add">(0)
 const workflowOptions = computed(() => {
   const existedWorkflows : {

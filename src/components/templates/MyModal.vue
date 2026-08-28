@@ -40,6 +40,12 @@ const emit = defineEmits([
   'onSettingButtonClicked'
 ])
 
+onMounted(() => {
+  if (showModal.value) {
+    emit('onLoad')
+  }
+})
+
 watch(showModal, async (newVal, oldVal) => {
   if (newVal && !oldVal) {
     emit('onLoad')

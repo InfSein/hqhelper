@@ -19,7 +19,7 @@ import { playAudio } from '@/tools'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
 import { useNbbCal } from '@/tools/use-nbb-cal'
 import type { ItemGroup } from '@/types/item'
-import { fixAlarmMacroOptions, fixWorkState, type WorkState } from '@/types/workstate/gatherclock'
+import { fixWorkState, type WorkState } from '@/types/workstate/gatherclock'
 import useIdb from '@/utils/app.idb'
 import EorzeaTime from '@/utils/game.et'
 
