@@ -225,9 +225,19 @@ const menuData = computed(() => {
         },
         {
           type: 'router',
+          icon: WavesOutlined,
+          label: t('common.appfunc.workflow'),
+          description: t('appheader.menu.tooltip.workflow'),
+          hide: !isMobile.value,
+          routerKey: 'workflow',
+          allowNewWindow: false,
+        },
+        {
+          type: 'router',
           icon: DashboardOutlined,
           label: t('common.appfunc.hqwb'),
           description: t('appheader.menu.tooltip.hqwb'),
+          hide: !isMobile.value,
           routerKey: 'hqwb',
           allowNewWindow: false,
         },
@@ -286,14 +296,6 @@ const menuData = computed(() => {
             top: 120,
             left: 45
           },
-        },
-        {
-          type: 'router',
-          icon: WavesOutlined,
-          label: t('common.appfunc.workflow'),
-          description: t('appheader.menu.tooltip.workflow'),
-          routerKey: 'workflow',
-          allowNewWindow: false,
         },
         {
           type: 'router',
