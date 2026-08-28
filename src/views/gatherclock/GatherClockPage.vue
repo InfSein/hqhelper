@@ -78,11 +78,19 @@ const gatherData = computed(() => {
 
   for (const key in limitedGatherings) {
     const [patch, il] = key.split('-')
-    data.push({
-      title: t('gather_clock.grouptitle_with_patch_and_il', {
+    let title = ''
+    if (il) {
+      title = t('gather_clock.grouptitle_with_patch_and_il', {
         patch: patch,
         il: il
-      }),
+      })
+    } else {
+      title = t('gather_clock.grouptitle_with_patch', {
+        patch: patch
+      })
+    }
+    data.push({
+      title: title,
       key: key,
       items: limitedGatherings[key]
     })
@@ -123,21 +131,6 @@ const showAlarmMacroExportModal = ref(false)
 const showAudioConfigModal = ref(false)
 const idb = useIdb()
 const customAudioUrl = ref<string>('')
-
-const playClockAudio = async () => {
-  if (workState.value.soundSelect === 'custom') {
-    const audioBlob = await idb.gatherClockAudio.get()
-    if (audioBlob) {
-      if (customAudioUrl.value) {
-        URL.revokeObjectURL(customAudioUrl.value)
-      }
-      customAudioUrl.value = URL.createObjectURL(audioBlob)
-      playAudio(customAudioUrl.value)
-      return
-    }
-  }
-  playAudio('./audio/FFXIV_Incoming_Tell_2.mp3')
-}
 
 const notifyModeOptions = computed(() => {
   return [
@@ -251,6 +244,21 @@ const handleNotify = (itemsNeedAlarm: ItemInfo[]) => {
     })
   } else if (workState.value.notifyMode === 'audio') {
     playClockAudio()
+  }
+
+  async function playClockAudio() {
+    if (workState.value.soundSelect === 'custom') {
+      const audioBlob = await idb.gatherClockAudio.get()
+      if (audioBlob) {
+        if (customAudioUrl.value) {
+          URL.revokeObjectURL(customAudioUrl.value)
+        }
+        customAudioUrl.value = URL.createObjectURL(audioBlob)
+        playAudio(customAudioUrl.value)
+        return
+      }
+    }
+    playAudio('./audio/FFXIV_Incoming_Tell_2.mp3')
   }
 }
 

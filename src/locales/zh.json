@@ -1479,7 +1479,8 @@
     "tooltip": {
       "subscribe_1": "点击此按钮来订阅/取消订阅这个采集品。",
       "subscribe_2": "被订阅的采集品可以采集时，我们会按照您设置的“{setting}”向您发送提醒。"
-    }
+    },
+    "grouptitle_with_patch": "版本{patch}"
   },
   "ingame_inventory": {
     "preference": {
