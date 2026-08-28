@@ -46,6 +46,7 @@
 .app-extra-header {
   display: flex;
   align-items: center;
+  /* 这里不能添加gap属性，虽然不加有点丑但加了之后在多个unshow-text按钮之间切换会出现抖动 */
 
   .square-action {
     width: 22px;

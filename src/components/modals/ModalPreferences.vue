@@ -174,7 +174,6 @@ const preferenceGroups = computed(() : PreferenceGroup[] => {
               type: 'button',
               buttonProps: {
                 text: t('preference.rerun_onboarding.btn'),
-                type: 'warning',
                 onClick: handleRerunOnboarding
               }
             }

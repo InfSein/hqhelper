@@ -8,11 +8,9 @@ import {
   DarkModeTwotone,
   DashboardOutlined,
   DoneOutlined,
-  InfoOutlined,
   LanguageOutlined,
   LightModeTwotone,
   SettingsBrightnessOutlined,
-  TouchAppOutlined,
   TranslateOutlined,
   WavesOutlined,
 } from '@vicons/material'
