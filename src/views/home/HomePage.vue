@@ -28,7 +28,7 @@ const activeComponent = computed(() => {
   <div v-if="!isOnboardingCompleted" id="main-container">
     <OnboardingWizard />
   </div>
-  <component :is="activeComponent" v-else />
+  <component v-else :is="activeComponent" />
 </template>
 
 <style scoped>
