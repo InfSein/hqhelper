@@ -6,6 +6,7 @@ import {
   AccessAlarmsOutlined,
   ArrowCircleLeftOutlined,
   BackpackFilled,
+  CalculateOutlined,
   CasesOutlined,
   CasesRound,
   CheckroomFilled,
@@ -846,13 +847,15 @@ const handleSwitchHomePage = (target: 'hqwb' | 'workflow') => {
             :class="['homepage-switcher-item', { active: currentHomePage === 'workflow' }]"
             @click="handleSwitchHomePage('workflow')"
           >
-            {{ t('common.appfunc.workflow_calc') }}
+            <n-icon :component="CalculateOutlined" />
+            <span>{{ t('common.appfunc.workflow_calc') }}</span>
           </div>
           <div
             :class="['homepage-switcher-item', { active: currentHomePage === 'hqwb' }]"
             @click="handleSwitchHomePage('hqwb')"
           >
-            {{ t('common.appfunc.hqwb') }}
+            <n-icon :component="DashboardOutlined" />
+            <span>{{ t('common.appfunc.hqwb') }}</span>
           </div>
         </div>
         <n-dropdown
@@ -1018,6 +1021,7 @@ const handleSwitchHomePage = (target: 'hqwb' | 'workflow') => {
       display: flex;
       align-items: center;
       justify-content: center;
+      gap: 4px;
       height: 18px;
       padding: 0 8px;
       font-size: var(--app-font-size-2xs);
@@ -1035,8 +1039,11 @@ const handleSwitchHomePage = (target: 'hqwb' | 'workflow') => {
       &.active {
         background-color: var(--app-color-background);
         color: var(--app-color-primary);
-        font-weight: bold;
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+
+        span {
+          font-weight: bold;
+        }
       }
     }
   }
