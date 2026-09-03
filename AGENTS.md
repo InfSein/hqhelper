@@ -312,6 +312,7 @@ npm run lint
 | `/workflow_process` | WorkflowProcessPage | 工作流进程 |
 | `/download` | DownloadPage | 下载页 |
 | `/macromanage` | MacroManagePage | 宏管理 |
+| `/patch/:ver` | PatchGuidePage | 版本攻略 |
 | `*` | ErrorPage404 | 404 错误页 |
 
 ---

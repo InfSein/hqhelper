@@ -1859,6 +1859,9 @@
       }
     },
     "select_patch": {
+      "context_menu": {
+        "patch_guide": "Patch Guide"
+      },
       "desc": {
         "selected": "Selected: Patch {val}"
       },
@@ -1899,6 +1902,39 @@
       },
       "recomm_aetheryte": "Recomm. Aetheryte"
     }
+  },
+  "patch_guide": {
+    "title": "Patch Guide",
+    "page_title": "Patch Guide - {val}",
+    "toc": "Navigation",
+    "invalid_patch": "Invalid patch or patch data not updated",
+    "section": {
+      "legendary_gathering": "New Legendary Gatherings",
+      "trade_items": "New Exchange Items",
+      "master_recipe": "New Master Recipe Materials",
+      "new_gears": "New Gears",
+      "new_food": "New Food",
+      "new_medicine": "New Tinctures"
+    },
+    "gear": {
+      "normal_precraft": "Normal Precrafts",
+      "aethersand": "Aethersand",
+      "master_precraft": "Master Precrafts",
+      "crafter_gatherer": "DoH / DoL Full Gear Set",
+      "one_set_desc": "One full set: Main + Off + 5 Left-side + Ear + Neck + Wrist + Ring x2",
+      "life_set_desc": "Full set: All DoH Main/Off + All DoL Main/Off + DoH Left/Right + DoL Left/Right",
+      "life_set_badge": "All tools & gears",
+      "no_combat_gears": "No new combat gears in this patch",
+      "no_life_gears": "No new crafter/gatherer gears in this patch"
+    },
+    "table": {
+      "job": "Job",
+      "item": "Item",
+      "attrs": "Attributes (HQ)",
+      "recipe": "Recipe Tree",
+      "cost": "Exchange Cost"
+    },
+    "empty": "No items found in this patch"
   },
   "preference": {
     "default_homepage": {

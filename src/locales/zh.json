@@ -1863,6 +1863,9 @@
       }
     },
     "select_patch": {
+      "context_menu": {
+        "patch_guide": "版本攻略"
+      },
       "desc": {
         "selected": "已选择版本: {val}"
       },
@@ -1903,6 +1906,39 @@
       },
       "recomm_aetheryte": "推荐传送点"
     }
+  },
+  "patch_guide": {
+    "title": "版本攻略",
+    "page_title": "版本攻略 - {val}",
+    "toc": "快速导航",
+    "invalid_patch": "无效的版本号或该版本数据尚未更新",
+    "section": {
+      "legendary_gathering": "新增传说采集点",
+      "trade_items": "新增兑换物",
+      "master_recipe": "新增秘籍半成品",
+      "new_gears": "新增装备",
+      "new_food": "新增食物",
+      "new_medicine": "新增爆发药"
+    },
+    "gear": {
+      "normal_precraft": "普通半成品",
+      "aethersand": "灵砂",
+      "master_precraft": "秘籍半成品",
+      "crafter_gatherer": "生产采集全套装备",
+      "one_set_desc": "一整套：主手+副手+5防具+耳坠+项链+手镯+戒指×2",
+      "life_set_desc": "全套装备：全部生产职业主副手+全部采集职业主副手+生产防具饰品一套+采集防具饰品一套",
+      "life_set_badge": "全职业主副手+全套防具饰品",
+      "no_combat_gears": "当前版本没有新实装的战斗职业装备",
+      "no_life_gears": "当前版本没有新实装的生产采集装备"
+    },
+    "table": {
+      "job": "职业",
+      "item": "道具",
+      "attrs": "提供属性 (HQ)",
+      "recipe": "树状配方",
+      "cost": "兑换消耗"
+    },
+    "empty": "当前版本未检索到此类物品"
   },
   "preference": {
     "default_homepage": {

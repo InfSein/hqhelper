@@ -48,6 +48,10 @@ const routes : RouteRecordRaw[] = [
     path: '/macromanage', 
     component: () => import('@/views/macro-manage/MacroManagePage.vue') 
   },
+  { 
+    path: '/patch/:ver', 
+    component: () => import('@/views/patch-guide/PatchGuidePage.vue') 
+  },
   {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',

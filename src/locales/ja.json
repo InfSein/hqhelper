@@ -1859,6 +1859,9 @@
       }
     },
     "select_patch": {
+      "context_menu": {
+        "patch_guide": "パッチ攻略"
+      },
       "desc": {
         "selected": "選択したパッチ: {val}"
       },
@@ -1899,6 +1902,39 @@
       },
       "recomm_aetheryte": "おすすめのテレポ地点"
     }
+  },
+  "patch_guide": {
+    "title": "パッチ攻略",
+    "page_title": "パッチ攻略 - {val}",
+    "toc": "目次",
+    "invalid_patch": "無効なパッチまたはデータがまだ更新されていません",
+    "section": {
+      "legendary_gathering": "新規伝説採集ポイント",
+      "trade_items": "新規交換アイテム",
+      "master_recipe": "新規秘伝書中間素材",
+      "new_gears": "新規装備",
+      "new_food": "新規料理",
+      "new_medicine": "新規薬"
+    },
+    "gear": {
+      "normal_precraft": "通常中間素材",
+      "aethersand": "霊砂",
+      "master_precraft": "秘伝書中間素材",
+      "crafter_gatherer": "クラフター・ギャザラー一式装備",
+      "one_set_desc": "一式：主道具+副道具+左側防具5点+耳+首+腕+指×2",
+      "life_set_desc": "全装備：全クラフター主副道具+全ギャザラー主副道具+クラフター防具アクセ一式+ギャザラー防具アクセ一式",
+      "life_set_badge": "全道具・防具アクセ",
+      "no_combat_gears": "このパッチには新規戦闘職装備がありません",
+      "no_life_gears": "このパッチには新規クラフター・ギャザラー装備がありません"
+    },
+    "table": {
+      "job": "ジョブ",
+      "item": "アイテム",
+      "attrs": "効果 (HQ)",
+      "recipe": "レシピツリー",
+      "cost": "交換費用"
+    },
+    "empty": "このパッチのアイテムは見つかりませんでした"
   },
   "preference": {
     "default_homepage": {
