@@ -1930,7 +1930,10 @@
       "no_combat_gears": "No new combat gears in this patch",
       "no_life_gears": "No new crafter/gatherer gears in this patch",
       "combat_gears": "Combat Gear",
-      "life_gears": "Crafter & Gatherer Gear"
+      "life_gears": "Crafter & Gatherer Gear",
+      "view_mode": "View Mode",
+      "mode_tile": "Tile Mode",
+      "mode_overview": "Overview Mode"
     },
     "table": {
       "job": "Job",

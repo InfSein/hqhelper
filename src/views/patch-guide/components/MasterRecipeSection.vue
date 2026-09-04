@@ -6,6 +6,7 @@ import ItemSpan from '@/components/item/ItemSpan.vue'
 import ItemRecipeTree from '@/components/item/ItemRecipeTree.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
 import { XivJobs } from '@/assets/data'
 import { getPatchMasterRecipeItems } from '@/tools/game/patch-guide'
 
@@ -16,6 +17,7 @@ const props = defineProps<MasterRecipeSectionProps>()
 
 const store = useStore()
 const { t } = useLocale()
+const { isMobile } = useResponsive()
 
 const masterItems = computed(() => {
   return getPatchMasterRecipeItems(props.patchVer)
@@ -33,7 +35,11 @@ const masterItems = computed(() => {
 
     <n-empty v-if="!masterItems.length" :description="t('patch_guide.empty')" class="my-4" />
 
-    <div v-else class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
+    <div
+      v-else
+      class="grid gap-2"
+      :class="isMobile ? 'grid-cols-1' : 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'"
+    >
       <n-card
         v-for="item in masterItems"
         :key="item.id"

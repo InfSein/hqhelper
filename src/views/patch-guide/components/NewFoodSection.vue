@@ -5,6 +5,7 @@ import ItemSpan from '@/components/item/ItemSpan.vue'
 import ItemRecipeTree from '@/components/item/ItemRecipeTree.vue'
 import { useLocale } from '@/composables/useLocale'
 import useConfig from '@/composables/useConfig'
+import { useResponsive } from '@/composables/useResponsive'
 import { XivAttributes } from '@/assets/data'
 import { type ItemInfo } from '@/tools/item'
 import { getPatchFoods } from '@/tools/game/patch-guide'
@@ -16,16 +17,19 @@ const props = defineProps<NewFoodSectionProps>()
 
 const { t } = useLocale()
 const { uiLanguage } = useConfig()
+const { isMobile } = useResponsive()
+const chunkSize = computed(() => (isMobile.value ? 1 : 5))
 
 const foods = computed(() => {
   return getPatchFoods(props.patchVer)
 })
 
-// 一行最多展示 5 个食物，按 5 个一组切分
+// 移动端每行 1 个食物，桌面端每行最多 5 个食物
 const chunkedFoods = computed(() => {
   const chunks: ItemInfo[][] = []
-  for (let i = 0; i < foods.value.length; i += 5) {
-    chunks.push(foods.value.slice(i, i + 5))
+  const size = chunkSize.value
+  for (let i = 0; i < foods.value.length; i += size) {
+    chunks.push(foods.value.slice(i, i + size))
   }
   return chunks
 })
@@ -89,7 +93,7 @@ const getAttrDisplays = (item: ItemInfo): AttrDisplay[] => {
       >
         <table class="w-full table-fixed border-collapse text-left">
           <colgroup>
-            <col v-for="i in 5" :key="i" class="w-1/5" />
+            <col v-for="i in chunkSize" :key="i" :class="isMobile ? 'w-full' : 'w-1/5'" />
           </colgroup>
           <tbody>
             <!-- 第一行：食物 ItemSpan -->
@@ -97,12 +101,13 @@ const getAttrDisplays = (item: ItemInfo): AttrDisplay[] => {
               <td
                 v-for="item in chunk"
                 :key="`span-${item.id}`"
-                class="py-2.5 px-3 border-r border-border last:border-r-0 align-middle min-w-44"
+                :class="isMobile ? '' : 'min-w-44'"
+                class="py-2.5 px-3 border-r border-border last:border-r-0 align-middle"
               >
                 <ItemSpan :item-info="item" :img-size="20" class="font-bold" />
               </td>
               <td
-                v-for="i in (5 - chunk.length)"
+                v-for="i in (chunkSize - chunk.length)"
                 :key="`empty-span-${i}`"
                 class="py-2.5 px-3 border-r border-border last:border-r-0 min-w-44"
               />
@@ -113,7 +118,8 @@ const getAttrDisplays = (item: ItemInfo): AttrDisplay[] => {
               <td
                 v-for="item in chunk"
                 :key="`attr-${item.id}`"
-                class="py-2.5 px-3 border-r border-border last:border-r-0 align-top min-w-44"
+                :class="isMobile ? '' : 'min-w-44'"
+                class="py-2.5 px-3 border-r border-border last:border-r-0 align-top"
               >
                 <div class="flex flex-col gap-1 text-app-xs">
                   <div
@@ -126,7 +132,7 @@ const getAttrDisplays = (item: ItemInfo): AttrDisplay[] => {
                 </div>
               </td>
               <td
-                v-for="i in (5 - chunk.length)"
+                v-for="i in (chunkSize - chunk.length)"
                 :key="`empty-attr-${i}`"
                 class="py-2.5 px-3 border-r border-border last:border-r-0 min-w-44"
               />
@@ -137,14 +143,15 @@ const getAttrDisplays = (item: ItemInfo): AttrDisplay[] => {
               <td
                 v-for="item in chunk"
                 :key="`tree-${item.id}`"
-                class="py-2.5 px-3 border-r border-border last:border-r-0 align-top min-w-44"
+                :class="isMobile ? '' : 'min-w-44'"
+                class="py-2.5 px-3 border-r border-border last:border-r-0 align-top"
               >
                 <div class="overflow-x-auto max-h-96">
                   <ItemRecipeTree :item="item" :amount="item.craftInfo?.yields || 1" :level="0" />
                 </div>
               </td>
               <td
-                v-for="i in (5 - chunk.length)"
+                v-for="i in (chunkSize - chunk.length)"
                 :key="`empty-tree-${i}`"
                 class="py-2.5 px-3 border-r border-border last:border-r-0 min-w-44"
               />

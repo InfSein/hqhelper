@@ -1930,7 +1930,10 @@
       "gatherer_total": "ギャザラー合計",
       "life_total": "クラフター・ギャザラー合計",
       "combat_gears": "戦闘ジョブ装備",
-      "life_gears": "クラフター・ギャザラー装備"
+      "life_gears": "クラフター・ギャザラー装備",
+      "view_mode": "表示モード",
+      "mode_tile": "タイル",
+      "mode_overview": "一覧"
     },
     "table": {
       "job": "ジョブ",
