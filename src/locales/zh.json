@@ -1911,7 +1911,7 @@
     "title": "版本攻略",
     "page_title": "版本攻略 - {val}",
     "toc": "快速导航",
-    "invalid_patch": "无效的版本号或该版本数据尚未更新",
+    "invalid_patch": "不支持此版本号",
     "section": {
       "legendary_gathering": "新增传说采集点",
       "trade_items": "新增兑换物",

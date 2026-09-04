@@ -46,19 +46,21 @@ const tradeGroups = computed(() => {
           </div>
         </template>
 
+        <n-divider class="m-0!" />
         <div class="divide-y divide-border">
           <div
             v-for="item in group.items"
             :key="item.targetItem.id"
-            class="flex items-center justify-between py-2 px-1 transition-colors duration-150 hover:bg-bg-hover"
+            class="flex items-center justify-between p-1 transition-colors duration-150 hover:bg-bg-hover"
           >
             <ItemSpan :item-info="item.targetItem" :img-size="20" />
             <ItemSpan
               :item-info="group.costItem"
               :amount="item.costCount"
+              :img-size="16"
               show-amount
               hide-name
-              :img-size="16"
+              hide-pop-icon
             />
           </div>
         </div>

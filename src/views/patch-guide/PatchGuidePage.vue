@@ -114,10 +114,11 @@ const navItems = computed(() => [
       embedded
       :bordered="false"
       :class="store.userConfig.custom_background ? 'glasscard' : ''"
-      class="my-8"
+      class="my-8 min-h-[80vh]"
+      content-class="flex items-center justify-center"
     >
       <n-result
-        status="warning"
+        status="error"
         :title="t('patch_guide.invalid_patch')"
         :description="patchVer ? `Patch ${patchVer}` : ''"
       >
