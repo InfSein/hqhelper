@@ -514,6 +514,7 @@ const onClickoutside = () => {
           <XivFARImage
             :src="jobIcon"
             :size="imgSize"
+            :lazy="false"
           />
           
           <n-dropdown
