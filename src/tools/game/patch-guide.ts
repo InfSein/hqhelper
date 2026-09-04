@@ -43,8 +43,13 @@ export const getPatchLegendaryGatherings = (patchVer: string): ItemInfo[] => {
       }
     }
   }
-  // 按职业和ID排序
-  return items.sort((a, b) => (a.gatherInfo.jobId - b.gatherInfo.jobId) || (a.id - b.id))
+  // 按第一个限时窗口的开始时间排序，再按职业和ID排序
+  return items.sort((a, b) => {
+    const aStart = a.gatherInfo?.timeLimitInfo?.[0]?.start ?? ''
+    const bStart = b.gatherInfo?.timeLimitInfo?.[0]?.start ?? ''
+    if (aStart !== bStart) return aStart.localeCompare(bStart)
+    return (a.gatherInfo.jobId - b.gatherInfo.jobId) || (a.id - b.id)
+  })
 }
 
 export interface PatchTradeGroup {
@@ -269,32 +274,25 @@ export const calcJobGearMaterials = (
 }
 
 /**
- * 计算指定版本生产采集职业全套装备所需素材
+ * 计算指定版本生产职业全套装备所需素材
  */
-export const calcLifeJobsGearMaterials = (
+export const calcCrafterGearMaterials = (
   patchVer: string,
 ): CategorizedMaterials | null => {
   const patchData = HqData.patches[patchVer as XivPatchVer]
-  // 必须存在生产采集装备（如刻木匠主手）
   if (!patchData || !patchData.mainHand?.[8]) {
     return null
   }
 
   const gears: GearSelections = fixGearSelections()
 
-  // 1. 生产职业全部主副手
+  // 生产职业全部主副手
   XivRoles.crafter.jobs.forEach(j => {
     if (patchData.mainHand?.[j]) gears.mainHand[j] = 1
     if (patchData.offHand?.[j]) gears.offHand[j] = 1
   })
 
-  // 2. 采集职业全部主副手
-  XivRoles.gatherer.jobs.forEach(j => {
-    if (patchData.mainHand?.[j]) gears.mainHand[j] = 1
-    if (patchData.offHand?.[j]) gears.offHand[j] = 1
-  })
-
-  // 3. 生产防具与饰品
+  // 生产防具与饰品
   const crafterAttire = XivRoles.crafter.attire as AttireAffix
   gears.headAttire[crafterAttire] = 1
   gears.bodyAttire[crafterAttire] = 1
@@ -308,7 +306,32 @@ export const calcLifeJobsGearMaterials = (
   gears.wrist[crafterAcc] = 1
   gears.rings[crafterAcc] = 2
 
-  // 4. 采集防具与饰品
+  const { calGearSelections } = useNbbCal()
+  const statistics = calGearSelections(gears, patchVer as XivPatchVer)
+
+  return extractMaterials(statistics, patchData)
+}
+
+/**
+ * 计算指定版本采集职业全套装备所需素材
+ */
+export const calcGathererGearMaterials = (
+  patchVer: string,
+): CategorizedMaterials | null => {
+  const patchData = HqData.patches[patchVer as XivPatchVer]
+  if (!patchData || !patchData.mainHand?.[16]) {
+    return null
+  }
+
+  const gears: GearSelections = fixGearSelections()
+
+  // 采集职业全部主副手
+  XivRoles.gatherer.jobs.forEach(j => {
+    if (patchData.mainHand?.[j]) gears.mainHand[j] = 1
+    if (patchData.offHand?.[j]) gears.offHand[j] = 1
+  })
+
+  // 采集防具与饰品
   const gathererAttire = XivRoles.gatherer.attire as AttireAffix
   gears.headAttire[gathererAttire] = 1
   gears.bodyAttire[gathererAttire] = 1
@@ -327,3 +350,57 @@ export const calcLifeJobsGearMaterials = (
 
   return extractMaterials(statistics, patchData)
 }
+
+/**
+ * 合并两组素材（相同物品数量累加）
+ */
+export const mergeCategorizedMaterials = (
+  a: CategorizedMaterials,
+  b: CategorizedMaterials,
+): CategorizedMaterials => {
+  const mergeList = (listA: ItemInfo[], listB: ItemInfo[]): ItemInfo[] => {
+    const map = new Map<number, ItemInfo>()
+    for (const item of listA) {
+      const clone = { ...item }
+      map.set(item.id, clone)
+    }
+    for (const item of listB) {
+      const existing = map.get(item.id)
+      if (existing) {
+        existing.amount = (existing.amount || 0) + (item.amount || 0)
+      } else {
+        map.set(item.id, { ...item })
+      }
+    }
+    return Array.from(map.values())
+  }
+
+  const result: CategorizedMaterials = {
+    normalPrecrafts: mergeList(a.normalPrecrafts, b.normalPrecrafts),
+    aethersands: mergeList(a.aethersands, b.aethersands),
+    masterPrecrafts: mergeList(a.masterPrecrafts, b.masterPrecrafts),
+  }
+
+  sortItems(result.normalPrecrafts, 'recipeOrder')
+  sortItems(result.masterPrecrafts, 'recipeOrder')
+  result.aethersands.sort((a, b) => a.id - b.id)
+
+  return result
+}
+
+/**
+ * 计算指定版本生产采集职业全套装备所需素材（兼容旧调用）
+ */
+export const calcLifeJobsGearMaterials = (
+  patchVer: string,
+): CategorizedMaterials | null => {
+  const crafterMats = calcCrafterGearMaterials(patchVer)
+  const gathererMats = calcGathererGearMaterials(patchVer)
+
+  if (!crafterMats && !gathererMats) return null
+  if (!crafterMats) return gathererMats
+  if (!gathererMats) return crafterMats
+
+  return mergeCategorizedMaterials(crafterMats, gathererMats)
+}
+

@@ -6,8 +6,7 @@ import ItemSpan from '@/components/item/ItemSpan.vue'
 import ItemRecipeTree from '@/components/item/ItemRecipeTree.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
-import useConfig from '@/composables/useConfig'
-import { XivJobs, type XivJob } from '@/assets/data'
+import { XivJobs } from '@/assets/data'
 import { getPatchMasterRecipeItems } from '@/tools/game/patch-guide'
 
 interface MasterRecipeSectionProps {
@@ -17,24 +16,10 @@ const props = defineProps<MasterRecipeSectionProps>()
 
 const store = useStore()
 const { t } = useLocale()
-const { uiLanguage } = useConfig()
 
 const masterItems = computed(() => {
   return getPatchMasterRecipeItems(props.patchVer)
 })
-
-const getJobName = (jobInfo?: XivJob) => {
-  if (!jobInfo) return t('common.unknown')
-  switch (uiLanguage.value) {
-    case 'ja':
-      return jobInfo.job_name_ja
-    case 'en':
-      return jobInfo.job_name_en
-    case 'zh':
-    default:
-      return jobInfo.job_name_zh
-  }
-}
 </script>
 
 <template>
@@ -48,7 +33,7 @@ const getJobName = (jobInfo?: XivJob) => {
 
     <n-empty v-if="!masterItems.length" :description="t('patch_guide.empty')" class="my-4" />
 
-    <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+    <div v-else class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
       <n-card
         v-for="item in masterItems"
         :key="item.id"
@@ -68,7 +53,6 @@ const getJobName = (jobInfo?: XivJob) => {
                 :size="14"
                 :src="XivJobs[item.craftInfo.jobId].job_icon_url"
               />
-              <span>{{ getJobName(XivJobs[item.craftInfo.jobId]) }}</span>
               <span v-if="item.craftInfo.starCount" class="text-warning">
                 {{ '★'.repeat(item.craftInfo.starCount) }}
               </span>

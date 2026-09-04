@@ -1,12 +1,18 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { ShieldOutlined } from '@vicons/material'
+import { ShieldOutlined, HandymanOutlined } from '@vicons/material'
 import XivFARImage from '@/components/ui/XivFARImage.vue'
 import ItemSpan from '@/components/item/ItemSpan.vue'
 import { useLocale } from '@/composables/useLocale'
 import useConfig from '@/composables/useConfig'
 import { XivJobs, XivRoles, HqData, type XivPatchVer, type XivRoleKey, type XivRole } from '@/assets/data'
-import { calcJobGearMaterials, calcLifeJobsGearMaterials, type CategorizedMaterials } from '@/tools/game/patch-guide'
+import {
+  calcJobGearMaterials,
+  calcCrafterGearMaterials,
+  calcGathererGearMaterials,
+  mergeCategorizedMaterials,
+  type CategorizedMaterials,
+} from '@/tools/game/patch-guide'
 
 interface NewGearsSectionProps {
   patchVer: string
@@ -59,10 +65,32 @@ const combatJobsData = computed(() => {
   return list
 })
 
-// 生产采集全套装备素材
-const lifeJobsData = computed(() => {
-  return calcLifeJobsGearMaterials(props.patchVer)
+// 生产职业素材
+const crafterData = computed(() => {
+  return calcCrafterGearMaterials(props.patchVer)
 })
+
+// 采集职业素材
+const gathererData = computed(() => {
+  return calcGathererGearMaterials(props.patchVer)
+})
+
+// 汇总生产采集
+const lifeTotalData = computed(() => {
+  if (!crafterData.value && !gathererData.value) return null
+  if (!crafterData.value) return gathererData.value
+  if (!gathererData.value) return crafterData.value
+  return mergeCategorizedMaterials(crafterData.value, gathererData.value)
+})
+
+// 将数组切片为每 size 个一组，用于纯 flex 布局中实现一行最多 N 个
+const chunkArray = <T>(arr: T[], size: number): T[][] => {
+  const chunks: T[][] = []
+  for (let i = 0; i < arr.length; i += size) {
+    chunks.push(arr.slice(i, i + size))
+  }
+  return chunks
+}
 
 const getJobName = (jobId: number) => {
   const job = XivJobs[jobId]
@@ -102,161 +130,323 @@ const getRoleName = (role: XivRole) => {
     </template>
 
     <n-empty
-      v-if="!combatJobsData.length && !lifeJobsData"
+      v-if="!combatJobsData.length && !lifeTotalData"
       :description="t('patch_guide.empty')"
       class="my-4"
     />
 
-    <div v-else class="flex flex-col gap-2.5">
-      <!-- 说明提示栏 -->
-      <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-app-xs text-sub pl-1">
-        <div v-if="combatJobsData.length" class="flex items-center gap-1">
-          <span class="font-bold text-text">• {{ t('patch_guide.table.job') }}:</span>
-          <span>{{ t('patch_guide.gear.one_set_desc') }}</span>
+    <div v-else class="flex flex-col gap-6">
+      <!-- 1. 战斗职业装备表格 -->
+      <div v-if="combatJobsData.length" class="flex flex-col gap-2">
+        <!-- 当同时有生产采集装备时显示区分标题 -->
+        <div v-if="lifeTotalData" class="flex items-center gap-1.5 font-bold text-app-sm text-sub">
+          <n-icon :component="ShieldOutlined" />
+          <span>{{ t('patch_guide.gear.combat_gears') }}</span>
         </div>
-        <div v-if="lifeJobsData" class="flex items-center gap-1">
-          <span class="font-bold text-primary">• {{ t('patch_guide.gear.crafter_gatherer') }}:</span>
-          <span>{{ t('patch_guide.gear.life_set_desc') }}</span>
+
+        <div class="overflow-x-auto rounded border border-border">
+          <table class="w-full border-collapse text-left">
+            <thead>
+              <tr class="bg-bg-embedded text-app-sm border-b border-border">
+                <th class="py-2.5 px-3 font-bold w-44 min-w-40 border-r border-border">{{ t('patch_guide.table.job') }}</th>
+                <th class="py-2.5 px-3 font-bold border-r border-border text-center">{{ t('patch_guide.gear.normal_precraft') }}</th>
+                <th class="py-2.5 px-3 font-bold border-r border-border min-w-44 text-center">{{ t('patch_guide.gear.aethersand') }}</th>
+                <th class="py-2.5 px-3 font-bold text-center">{{ t('patch_guide.gear.master_precraft') }}</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-border">
+              <!-- 各战斗职业行 -->
+              <tr
+                v-for="row in combatJobsData"
+                :key="`job-${row.jobId}`"
+                class="transition-colors duration-150 hover:bg-bg-hover align-middle"
+              >
+                <!-- 职业列 -->
+                <td class="py-2.5 px-3 border-r border-border align-middle">
+                  <div class="flex items-center gap-2">
+                    <XivFARImage
+                      v-if="XivJobs[row.jobId]"
+                      :size="32"
+                      :src="XivJobs[row.jobId].job_icon_url"
+                    />
+                    <div class="flex flex-col">
+                      <span class="font-bold text-app-sm">{{ getJobName(row.jobId) }}</span>
+                      <span
+                        class="text-app-2xs font-medium"
+                        :style="{ color: row.role?.role_color }"
+                      >
+                        {{ getRoleName(row.role) }}
+                      </span>
+                    </div>
+                  </div>
+                </td>
+
+                <!-- 普通半成品列：纯 flex 布局，一行最多 3 个 -->
+                <td class="py-2.5 px-3 border-r border-border text-center align-middle">
+                  <div v-if="row.materials.normalPrecrafts.length" class="flex flex-col items-center justify-center gap-1.5">
+                    <div
+                      v-for="(subGroup, sIdx) in chunkArray(row.materials.normalPrecrafts, 3)"
+                      :key="sIdx"
+                      class="flex flex-wrap items-center justify-center gap-3"
+                    >
+                      <ItemSpan
+                        v-for="item in subGroup"
+                        :key="item.id"
+                        :item-info="item"
+                        :amount="item.amount"
+                        show-amount
+                        :img-size="18"
+                      />
+                    </div>
+                  </div>
+                  <span v-else class="text-sub text-app-xs">{{ t('common.nothing') }}</span>
+                </td>
+
+                <!-- 灵砂列：纯 flex 布局，一行最多 1 个 -->
+                <td class="py-2.5 px-3 border-r border-border text-center align-middle">
+                  <div v-if="row.materials.aethersands.length" class="flex flex-col items-center justify-center gap-1.5">
+                    <ItemSpan
+                      v-for="item in row.materials.aethersands"
+                      :key="item.id"
+                      :item-info="item"
+                      :amount="item.amount"
+                      show-amount
+                      :img-size="18"
+                    />
+                  </div>
+                  <span v-else class="text-sub text-app-xs">{{ t('common.nothing') }}</span>
+                </td>
+
+                <!-- 秘籍半成品列：纯 flex 布局，一行最多 3 个 -->
+                <td class="py-2.5 px-3 text-center align-middle">
+                  <div v-if="row.materials.masterPrecrafts.length" class="flex flex-col items-center justify-center gap-1.5">
+                    <div
+                      v-for="(subGroup, sIdx) in chunkArray(row.materials.masterPrecrafts, 3)"
+                      :key="sIdx"
+                      class="flex flex-wrap items-center justify-center gap-3"
+                    >
+                      <ItemSpan
+                        v-for="item in subGroup"
+                        :key="item.id"
+                        :item-info="item"
+                        :amount="item.amount"
+                        show-amount
+                        :img-size="18"
+                      />
+                    </div>
+                  </div>
+                  <span v-else class="text-sub text-app-xs">{{ t('common.nothing') }}</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 
-      <!-- 汇总大表格 -->
-      <div class="overflow-x-auto rounded border border-border">
-        <table class="w-full border-collapse text-left">
-          <thead>
-            <tr class="bg-bg-embedded text-app-sm border-b border-border">
-              <th class="py-2.5 px-3 font-bold w-44 min-w-40 border-r border-border">{{ t('patch_guide.table.job') }}</th>
-              <th class="py-2.5 px-3 font-bold border-r border-border">{{ t('patch_guide.gear.normal_precraft') }}</th>
-              <th class="py-2.5 px-3 font-bold border-r border-border min-w-44">{{ t('patch_guide.gear.aethersand') }}</th>
-              <th class="py-2.5 px-3 font-bold">{{ t('patch_guide.gear.master_precraft') }}</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-border">
-            <!-- 各战斗职业行 -->
-            <tr
-              v-for="row in combatJobsData"
-              :key="`job-${row.jobId}`"
-              class="transition-colors duration-150 hover:bg-bg-hover align-top"
-            >
-              <!-- 职业列 -->
-              <td class="py-2.5 px-3 border-r border-border">
-                <div class="flex items-center gap-2">
-                  <XivFARImage
-                    v-if="XivJobs[row.jobId]"
-                    :size="22"
-                    :src="XivJobs[row.jobId].job_icon_url"
-                  />
-                  <div class="flex flex-col">
-                    <span class="font-bold text-app-sm">{{ getJobName(row.jobId) }}</span>
-                    <span
-                      class="text-app-2xs font-medium"
-                      :style="{ color: row.role?.role_color }"
+      <!-- 2. 生产采集职业装备表格 -->
+      <div v-if="lifeTotalData" class="flex flex-col gap-2">
+        <!-- 当同时有战斗职业装备时显示区分标题 -->
+        <div v-if="combatJobsData.length" class="flex items-center gap-1.5 font-bold text-app-sm text-sub">
+          <n-icon :component="HandymanOutlined" />
+          <span>{{ t('patch_guide.gear.life_gears') }}</span>
+        </div>
+
+        <div class="overflow-x-auto rounded border border-border">
+          <table class="w-full border-collapse text-left">
+            <thead>
+              <tr class="bg-bg-embedded text-app-sm border-b border-border">
+                <th class="py-2.5 px-3 font-bold w-44 min-w-40 border-r border-border">{{ t('patch_guide.table.job') }}</th>
+                <th class="py-2.5 px-3 font-bold border-r border-border text-center">{{ t('patch_guide.gear.normal_precraft') }}</th>
+                <th class="py-2.5 px-3 font-bold border-r border-border min-w-44 text-center">{{ t('patch_guide.gear.aethersand') }}</th>
+                <th class="py-2.5 px-3 font-bold text-center">{{ t('patch_guide.gear.master_precraft') }}</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-border">
+              <!-- 生产职业总需求行 -->
+              <tr
+                v-if="crafterData"
+                class="transition-colors duration-150 hover:bg-bg-hover align-middle"
+              >
+                <td class="py-2.5 px-3 border-r border-border align-middle">
+                  <span class="font-bold text-app-sm">{{ t('patch_guide.gear.crafter_total') }}</span>
+                </td>
+                <td class="py-2.5 px-3 border-r border-border text-center align-middle">
+                  <div v-if="crafterData.normalPrecrafts.length" class="flex flex-col items-center justify-center gap-1.5">
+                    <div
+                      v-for="(subGroup, sIdx) in chunkArray(crafterData.normalPrecrafts, 3)"
+                      :key="sIdx"
+                      class="flex flex-wrap items-center justify-center gap-3"
                     >
-                      {{ getRoleName(row.role) }}
-                    </span>
+                      <ItemSpan
+                        v-for="item in subGroup"
+                        :key="item.id"
+                        :item-info="item"
+                        :amount="item.amount"
+                        show-amount
+                        :img-size="18"
+                      />
+                    </div>
                   </div>
-                </div>
-              </td>
+                  <span v-else class="text-sub text-app-xs">{{ t('common.nothing') }}</span>
+                </td>
+                <td class="py-2.5 px-3 border-r border-border text-center align-middle">
+                  <div v-if="crafterData.aethersands.length" class="flex flex-col items-center justify-center gap-1.5">
+                    <ItemSpan
+                      v-for="item in crafterData.aethersands"
+                      :key="item.id"
+                      :item-info="item"
+                      :amount="item.amount"
+                      show-amount
+                      :img-size="18"
+                    />
+                  </div>
+                  <span v-else class="text-sub text-app-xs">{{ t('common.nothing') }}</span>
+                </td>
+                <td class="py-2.5 px-3 text-center align-middle">
+                  <div v-if="crafterData.masterPrecrafts.length" class="flex flex-col items-center justify-center gap-1.5">
+                    <div
+                      v-for="(subGroup, sIdx) in chunkArray(crafterData.masterPrecrafts, 3)"
+                      :key="sIdx"
+                      class="flex flex-wrap items-center justify-center gap-3"
+                    >
+                      <ItemSpan
+                        v-for="item in subGroup"
+                        :key="item.id"
+                        :item-info="item"
+                        :amount="item.amount"
+                        show-amount
+                        :img-size="18"
+                      />
+                    </div>
+                  </div>
+                  <span v-else class="text-sub text-app-xs">{{ t('common.nothing') }}</span>
+                </td>
+              </tr>
 
-              <!-- 普通半成品列 -->
-              <td class="py-2.5 px-3 border-r border-border">
-                <div v-if="row.materials.normalPrecrafts.length" class="flex flex-wrap gap-x-3 gap-y-1.5">
-                  <ItemSpan
-                    v-for="item in row.materials.normalPrecrafts"
-                    :key="item.id"
-                    :item-info="item"
-                    :amount="item.amount"
-                    show-amount
-                    :img-size="18"
-                  />
-                </div>
-                <span v-else class="text-sub text-app-xs">-</span>
-              </td>
+              <!-- 采集职业总需求行 -->
+              <tr
+                v-if="gathererData"
+                class="transition-colors duration-150 hover:bg-bg-hover align-middle"
+              >
+                <td class="py-2.5 px-3 border-r border-border align-middle">
+                  <span class="font-bold text-app-sm">{{ t('patch_guide.gear.gatherer_total') }}</span>
+                </td>
+                <td class="py-2.5 px-3 border-r border-border text-center align-middle">
+                  <div v-if="gathererData.normalPrecrafts.length" class="flex flex-col items-center justify-center gap-1.5">
+                    <div
+                      v-for="(subGroup, sIdx) in chunkArray(gathererData.normalPrecrafts, 3)"
+                      :key="sIdx"
+                      class="flex flex-wrap items-center justify-center gap-3"
+                    >
+                      <ItemSpan
+                        v-for="item in subGroup"
+                        :key="item.id"
+                        :item-info="item"
+                        :amount="item.amount"
+                        show-amount
+                        :img-size="18"
+                      />
+                    </div>
+                  </div>
+                  <span v-else class="text-sub text-app-xs">{{ t('common.nothing') }}</span>
+                </td>
+                <td class="py-2.5 px-3 border-r border-border text-center align-middle">
+                  <div v-if="gathererData.aethersands.length" class="flex flex-col items-center justify-center gap-1.5">
+                    <ItemSpan
+                      v-for="item in gathererData.aethersands"
+                      :key="item.id"
+                      :item-info="item"
+                      :amount="item.amount"
+                      show-amount
+                      :img-size="18"
+                    />
+                  </div>
+                  <span v-else class="text-sub text-app-xs">{{ t('common.nothing') }}</span>
+                </td>
+                <td class="py-2.5 px-3 text-center align-middle">
+                  <div v-if="gathererData.masterPrecrafts.length" class="flex flex-col items-center justify-center gap-1.5">
+                    <div
+                      v-for="(subGroup, sIdx) in chunkArray(gathererData.masterPrecrafts, 3)"
+                      :key="sIdx"
+                      class="flex flex-wrap items-center justify-center gap-3"
+                    >
+                      <ItemSpan
+                        v-for="item in subGroup"
+                        :key="item.id"
+                        :item-info="item"
+                        :amount="item.amount"
+                        show-amount
+                        :img-size="18"
+                      />
+                    </div>
+                  </div>
+                  <span v-else class="text-sub text-app-xs">{{ t('common.nothing') }}</span>
+                </td>
+              </tr>
 
-              <!-- 灵砂列 -->
-              <td class="py-2.5 px-3 border-r border-border">
-                <div v-if="row.materials.aethersands.length" class="flex flex-wrap gap-x-3 gap-y-1.5">
-                  <ItemSpan
-                    v-for="item in row.materials.aethersands"
-                    :key="item.id"
-                    :item-info="item"
-                    :amount="item.amount"
-                    show-amount
-                    :img-size="18"
-                  />
-                </div>
-                <span v-else class="text-sub text-app-xs">-</span>
-              </td>
-
-              <!-- 秘籍半成品列 -->
-              <td class="py-2.5 px-3">
-                <div v-if="row.materials.masterPrecrafts.length" class="flex flex-wrap gap-x-3 gap-y-1.5">
-                  <ItemSpan
-                    v-for="item in row.materials.masterPrecrafts"
-                    :key="item.id"
-                    :item-info="item"
-                    :amount="item.amount"
-                    show-amount
-                    :img-size="18"
-                  />
-                </div>
-                <span v-else class="text-sub text-app-xs">-</span>
-              </td>
-            </tr>
-
-            <!-- 生产采集全套行 -->
-            <tr
-              v-if="lifeJobsData"
-              class="bg-bg-embedded/40 transition-colors duration-150 hover:bg-bg-hover align-top border-t-2 border-border"
-            >
-              <td class="py-2.5 px-3 border-r border-border">
-                <div class="flex flex-col gap-0.5">
-                  <span class="font-bold text-app-sm text-primary">{{ t('patch_guide.gear.crafter_gatherer') }}</span>
-                  <span class="text-app-2xs text-sub">{{ t('patch_guide.gear.life_set_badge') }}</span>
-                </div>
-              </td>
-              <td class="py-2.5 px-3 border-r border-border">
-                <div v-if="lifeJobsData.normalPrecrafts.length" class="flex flex-wrap gap-x-3 gap-y-1.5">
-                  <ItemSpan
-                    v-for="item in lifeJobsData.normalPrecrafts"
-                    :key="item.id"
-                    :item-info="item"
-                    :amount="item.amount"
-                    show-amount
-                    :img-size="18"
-                  />
-                </div>
-                <span v-else class="text-sub text-app-xs">-</span>
-              </td>
-              <td class="py-2.5 px-3 border-r border-border">
-                <div v-if="lifeJobsData.aethersands.length" class="flex flex-wrap gap-x-3 gap-y-1.5">
-                  <ItemSpan
-                    v-for="item in lifeJobsData.aethersands"
-                    :key="item.id"
-                    :item-info="item"
-                    :amount="item.amount"
-                    show-amount
-                    :img-size="18"
-                  />
-                </div>
-                <span v-else class="text-sub text-app-xs">-</span>
-              </td>
-              <td class="py-2.5 px-3">
-                <div v-if="lifeJobsData.masterPrecrafts.length" class="flex flex-wrap gap-x-3 gap-y-1.5">
-                  <ItemSpan
-                    v-for="item in lifeJobsData.masterPrecrafts"
-                    :key="item.id"
-                    :item-info="item"
-                    :amount="item.amount"
-                    show-amount
-                    :img-size="18"
-                  />
-                </div>
-                <span v-else class="text-sub text-app-xs">-</span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+              <!-- 生产采集汇总行 -->
+              <tr
+                v-if="lifeTotalData"
+                class="bg-bg-embedded/40 transition-colors duration-150 hover:bg-bg-hover align-middle border-t-2 border-border font-bold"
+              >
+                <td class="py-2.5 px-3 border-r border-border align-middle">
+                  <span class="font-bold text-app-sm">{{ t('patch_guide.gear.life_total') }}</span>
+                </td>
+                <td class="py-2.5 px-3 border-r border-border text-center align-middle">
+                  <div v-if="lifeTotalData.normalPrecrafts.length" class="flex flex-col items-center justify-center gap-1.5">
+                    <div
+                      v-for="(subGroup, sIdx) in chunkArray(lifeTotalData.normalPrecrafts, 3)"
+                      :key="sIdx"
+                      class="flex flex-wrap items-center justify-center gap-3"
+                    >
+                      <ItemSpan
+                        v-for="item in subGroup"
+                        :key="item.id"
+                        :item-info="item"
+                        :amount="item.amount"
+                        show-amount
+                        :img-size="18"
+                      />
+                    </div>
+                  </div>
+                  <span v-else class="text-sub text-app-xs">{{ t('common.nothing') }}</span>
+                </td>
+                <td class="py-2.5 px-3 border-r border-border text-center align-middle">
+                  <div v-if="lifeTotalData.aethersands.length" class="flex flex-col items-center justify-center gap-1.5">
+                    <ItemSpan
+                      v-for="item in lifeTotalData.aethersands"
+                      :key="item.id"
+                      :item-info="item"
+                      :amount="item.amount"
+                      show-amount
+                      :img-size="18"
+                    />
+                  </div>
+                  <span v-else class="text-sub text-app-xs">{{ t('common.nothing') }}</span>
+                </td>
+                <td class="py-2.5 px-3 text-center align-middle">
+                  <div v-if="lifeTotalData.masterPrecrafts.length" class="flex flex-col items-center justify-center gap-1.5">
+                    <div
+                      v-for="(subGroup, sIdx) in chunkArray(lifeTotalData.masterPrecrafts, 3)"
+                      :key="sIdx"
+                      class="flex flex-wrap items-center justify-center gap-3"
+                    >
+                      <ItemSpan
+                        v-for="item in subGroup"
+                        :key="item.id"
+                        :item-info="item"
+                        :amount="item.amount"
+                        show-amount
+                        :img-size="18"
+                      />
+                    </div>
+                  </div>
+                  <span v-else class="text-sub text-app-xs">{{ t('common.nothing') }}</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </FoldableCard>

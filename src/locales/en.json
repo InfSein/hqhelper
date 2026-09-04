@@ -1914,7 +1914,7 @@
       "master_recipe": "New Master Recipe Materials",
       "new_gears": "New Gears",
       "new_food": "New Food",
-      "new_medicine": "New Tinctures"
+      "new_medicine": "New Medicines"
     },
     "gear": {
       "normal_precraft": "Normal Precrafts",
@@ -1924,8 +1924,13 @@
       "one_set_desc": "One full set: Main + Off + 5 Left-side + Ear + Neck + Wrist + Ring x2",
       "life_set_desc": "Full set: All DoH Main/Off + All DoL Main/Off + DoH Left/Right + DoL Left/Right",
       "life_set_badge": "All tools & gears",
+      "crafter_total": "Crafter Total",
+      "gatherer_total": "Gatherer Total",
+      "life_total": "DoH/DoL Combined",
       "no_combat_gears": "No new combat gears in this patch",
-      "no_life_gears": "No new crafter/gatherer gears in this patch"
+      "no_life_gears": "No new crafter/gatherer gears in this patch",
+      "combat_gears": "Combat Gear",
+      "life_gears": "Crafter & Gatherer Gear"
     },
     "table": {
       "job": "Job",

@@ -44,15 +44,29 @@ const getAttrName = (attrId: number) => {
   }
 }
 
-const getAttrTexts = (item: ItemInfo): string[] => {
+interface AttrDisplay {
+  name: string
+  percent: number
+  max: number
+}
+
+/** 获取食物/药品的属性文本列表，过滤耐力(ID=3)、按上限降序排序 */
+const getAttrDisplays = (item: ItemInfo): AttrDisplay[] => {
   if (!item.tempAttrsProvided?.length) return []
-  return item.tempAttrsProvided.map(attr => {
-    const attrId = attr[0]
-    const hasHq = attr[1]
-    const attrPercent = hasHq ? attr[4] : attr[2]
-    const attrMax = hasHq ? attr[5] : attr[3]
-    return `${getAttrName(attrId)} +${attrPercent}% (${t('common.quoted_maximum', attrMax)})`
-  })
+  return item.tempAttrsProvided
+    .filter(attr => attr[0] !== 3) // 过滤掉耐力属性
+    .map(attr => {
+      const attrId = attr[0]
+      const hasHq = attr[1]
+      const attrPercent = hasHq ? attr[4] : attr[2]
+      const attrMax = hasHq ? attr[5] : attr[3]
+      return {
+        name: getAttrName(attrId),
+        percent: attrPercent,
+        max: attrMax,
+      }
+    })
+    .sort((a, b) => b.max - a.max) // 按属性上限降序排序
 }
 </script>
 
@@ -74,20 +88,24 @@ const getAttrTexts = (item: ItemInfo): string[] => {
         class="overflow-x-auto rounded border border-border"
       >
         <table class="w-full table-fixed border-collapse text-left">
+          <colgroup>
+            <col v-for="i in 5" :key="i" class="w-1/5" />
+          </colgroup>
           <tbody>
             <!-- 第一行：食物 ItemSpan -->
             <tr class="bg-bg-embedded border-b border-border">
               <td
                 v-for="item in chunk"
                 :key="`span-${item.id}`"
-                :style="{ width: `${100 / chunk.length}%` }"
                 class="py-2.5 px-3 border-r border-border last:border-r-0 align-middle min-w-44"
               >
-                <div class="flex items-center justify-between">
-                  <ItemSpan :item-info="item" :img-size="20" class="font-bold" />
-                  <span class="text-app-xs text-sub">iLv {{ item.itemLevel }}</span>
-                </div>
+                <ItemSpan :item-info="item" :img-size="20" class="font-bold" />
               </td>
+              <td
+                v-for="i in (5 - chunk.length)"
+                :key="`empty-span-${i}`"
+                class="py-2.5 px-3 border-r border-border last:border-r-0 min-w-44"
+              />
             </tr>
 
             <!-- 第二行：属性 -->
@@ -99,14 +117,19 @@ const getAttrTexts = (item: ItemInfo): string[] => {
               >
                 <div class="flex flex-col gap-1 text-app-xs">
                   <div
-                    v-for="(attrText, aIndex) in getAttrTexts(item)"
+                    v-for="(attr, aIndex) in getAttrDisplays(item)"
                     :key="aIndex"
-                    class="text-primary font-medium"
+                    class="text-sub font-medium leading-none"
                   >
-                    {{ attrText }}
+                    {{ attr.name }} +{{ attr.percent }}% {{ t('common.quoted_maximum', { val: attr.max }) }}
                   </div>
                 </div>
               </td>
+              <td
+                v-for="i in (5 - chunk.length)"
+                :key="`empty-attr-${i}`"
+                class="py-2.5 px-3 border-r border-border last:border-r-0 min-w-44"
+              />
             </tr>
 
             <!-- 第三行：树状配方 -->
@@ -120,6 +143,11 @@ const getAttrTexts = (item: ItemInfo): string[] => {
                   <ItemRecipeTree :item="item" :amount="item.craftInfo?.yields || 1" :level="0" />
                 </div>
               </td>
+              <td
+                v-for="i in (5 - chunk.length)"
+                :key="`empty-tree-${i}`"
+                class="py-2.5 px-3 border-r border-border last:border-r-0 min-w-44"
+              />
             </tr>
           </tbody>
         </table>

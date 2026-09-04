@@ -1918,7 +1918,7 @@
       "master_recipe": "新增秘籍半成品",
       "new_gears": "新增装备",
       "new_food": "新增食物",
-      "new_medicine": "新增爆发药"
+      "new_medicine": "新增药品"
     },
     "gear": {
       "normal_precraft": "普通半成品",
@@ -1928,8 +1928,13 @@
       "one_set_desc": "一整套：主手+副手+5防具+耳坠+项链+手镯+戒指×2",
       "life_set_desc": "全套装备：全部生产职业主副手+全部采集职业主副手+生产防具饰品一套+采集防具饰品一套",
       "life_set_badge": "全职业主副手+全套防具饰品",
+      "crafter_total": "生产职业总需求",
+      "gatherer_total": "采集职业总需求",
+      "life_total": "生产采集汇总",
       "no_combat_gears": "当前版本没有新实装的战斗职业装备",
-      "no_life_gears": "当前版本没有新实装的生产采集装备"
+      "no_life_gears": "当前版本没有新实装的生产采集装备",
+      "combat_gears": "战斗职业装备",
+      "life_gears": "生产采集装备"
     },
     "table": {
       "job": "职业",

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
 import {
   AccessAlarmsOutlined,
   CurrencyExchangeOutlined,
@@ -37,6 +37,56 @@ const currentPatch = computed(() => {
 
 const pageTitle = computed(() => {
   return t('patch_guide.page_title', { val: patchVer.value })
+})
+
+// 导航栏滚动状态：初始展开，滚动后收起
+const isNavCompact = ref(false)
+
+let scrollTarget: HTMLElement | Window | null = null
+let ticking = false
+
+const getScrollTop = () => {
+  if (scrollTarget && scrollTarget instanceof HTMLElement) {
+    return scrollTarget.scrollTop
+  }
+  return window.scrollY || document.documentElement.scrollTop
+}
+
+const handleScroll = () => {
+  if (!ticking) {
+    window.requestAnimationFrame(() => {
+      const top = getScrollTop()
+      // 迟滞区间：向下滚动超过 80px 变简洁，向上滚动回退到 <= 10px 恢复展开，杜绝抖动
+      if (!isNavCompact.value && top > 80) {
+        isNavCompact.value = true
+      } else if (isNavCompact.value && top <= 10) {
+        isNavCompact.value = false
+      }
+      ticking = false
+    })
+    ticking = true
+  }
+}
+
+onMounted(() => {
+  // 查找 Naive UI 的滚动容器或降级为 window
+  const container = document.querySelector('#main-content .n-scrollbar-container') as HTMLElement
+    || document.querySelector('#main-content .n-layout-scroll-container') as HTMLElement
+  if (container) {
+    scrollTarget = container
+    container.addEventListener('scroll', handleScroll, { passive: true })
+  } else {
+    scrollTarget = window
+    window.addEventListener('scroll', handleScroll, { passive: true })
+  }
+  window.addEventListener('scroll', handleScroll, { passive: true })
+})
+
+onBeforeUnmount(() => {
+  if (scrollTarget && scrollTarget !== window) {
+    scrollTarget.removeEventListener('scroll', handleScroll as EventListener)
+  }
+  window.removeEventListener('scroll', handleScroll as EventListener)
 })
 
 const scrollToSection = (sectionId: string) => {
@@ -91,9 +141,31 @@ const navItems = computed(() => [
         :class="store.userConfig.custom_background ? 'glasscard' : ''"
         class="border border-border sticky top-0 z-20 shadow-xs backdrop-blur-md"
       >
+        <!-- 展开模式下的大标题区：使用 grid-template-rows 丝滑折叠，无 max-height 空走卡顿 -->
+        <div
+          class="title-row"
+          :class="{ 'title-row--collapsed': isNavCompact }"
+        >
+          <div class="overflow-hidden">
+            <div class="flex items-center gap-2 pt-0.5 pb-1.5">
+              <i class="xiv ilv text-app-xl" />
+              <span class="text-app-lg font-bold">{{ pageTitle }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 导航主体：小标题与按钮组（单一按钮列表，切换无闪烁卡顿） -->
         <div class="flex items-center gap-2 overflow-x-auto py-0.5">
-          <span class="text-app-base font-bold shrink-0">{{ pageTitle }}</span>
-          <n-divider vertical class="mx-1" />
+          <!-- 紧凑模式下平滑浮现的小标题 -->
+          <div
+            class="compact-title flex items-center shrink-0 overflow-hidden"
+            :class="{ 'compact-title--visible': isNavCompact }"
+          >
+            <span class="text-app-base font-bold whitespace-nowrap">{{ pageTitle }}</span>
+            <n-divider vertical class="mx-1.5 shrink-0" />
+          </div>
+
+          <!-- 锚点按钮 -->
           <n-button
             v-for="nav in navItems"
             :key="nav.id"
@@ -135,7 +207,7 @@ const navItems = computed(() => [
         <NewFoodSection :patch-ver="patchVer" />
       </div>
 
-      <!-- 板块 6: 新增爆发药 -->
+      <!-- 板块 6: 新增药品 -->
       <div id="section-medicine" class="scroll-mt-16">
         <NewMedicineSection :patch-ver="patchVer" />
       </div>
@@ -148,5 +220,29 @@ const navItems = computed(() => [
 <style scoped>
 #main-container {
   max-width: 100%;
+}
+
+/* 展开大标题平滑高度折叠 */
+.title-row {
+  display: grid;
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transition: grid-template-rows 0.22s ease-out, opacity 0.18s ease-out;
+}
+.title-row--collapsed {
+  grid-template-rows: 0fr;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* 紧凑小标题平滑展开 */
+.compact-title {
+  max-width: 0;
+  opacity: 0;
+  transition: max-width 0.22s ease-out, opacity 0.18s ease-out;
+}
+.compact-title--visible {
+  max-width: 260px;
+  opacity: 1;
 }
 </style>

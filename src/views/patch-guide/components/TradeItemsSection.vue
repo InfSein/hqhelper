@@ -30,7 +30,7 @@ const tradeGroups = computed(() => {
 
     <n-empty v-if="!tradeGroups.length" :description="t('patch_guide.empty')" class="my-4" />
 
-    <div v-else class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+    <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5">
       <n-card
         v-for="group in tradeGroups"
         :key="group.costItem.id"
@@ -42,7 +42,6 @@ const tradeGroups = computed(() => {
       >
         <template #header>
           <div class="flex items-center gap-2">
-            <span class="text-app-sm text-sub">{{ t('patch_guide.table.cost') }}:</span>
             <ItemSpan :item-info="group.costItem" :img-size="20" class="font-bold" />
           </div>
         </template>
@@ -58,6 +57,7 @@ const tradeGroups = computed(() => {
               :item-info="group.costItem"
               :amount="item.costCount"
               show-amount
+              hide-name
               :img-size="16"
             />
           </div>
