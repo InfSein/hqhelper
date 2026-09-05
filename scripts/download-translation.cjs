@@ -63,7 +63,7 @@ async function downloadLanguage(apiUrl, apiKey, language) {
     }
 
     const outputPath = path.join(outputDir, `${language}.json`);
-    fs.writeFileSync(outputPath, data.jsonContent, 'utf-8');
+    fs.writeFileSync(outputPath, data.jsonContent + '\r\n', 'utf-8');
 
     console.log(`✅ [${language}] 下载完成并写入 ${outputPath} (共 ${data.count} 条已翻译词条)`);
   } catch (err) {

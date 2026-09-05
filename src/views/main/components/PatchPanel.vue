@@ -86,6 +86,41 @@ const patchPatterns = computed(() => {
     }),
   ]
 })
+const router = useRouter()
+
+const showContextMenu = ref(false)
+const contextMenuX = ref(0)
+const contextMenuY = ref(0)
+const contextMenuPatch = ref<XivPatch>()
+
+const contextMenuOptions = computed(() => [
+  {
+    label: t('main.select_patch.context_menu.patch_guide'),
+    key: 'patch-guide',
+  },
+])
+
+const handlePatchContextMenu = (e: MouseEvent, patch: XivPatch) => {
+  if (isMobile.value || !patch.updated) return
+  showContextMenu.value = false
+  nextTick(() => {
+    contextMenuPatch.value = patch
+    contextMenuX.value = e.clientX
+    contextMenuY.value = e.clientY
+    showContextMenu.value = true
+  })
+}
+
+const handleContextMenuSelect = (key: string) => {
+  showContextMenu.value = false
+  if (key === 'patch-guide' && contextMenuPatch.value) {
+    router.push(`/patch/${contextMenuPatch.value.v}`)
+  }
+}
+
+const handleContextMenuClickOutside = () => {
+  showContextMenu.value = false
+}
 </script>
 
 <template>
@@ -128,6 +163,7 @@ const patchPatterns = computed(() => {
             :class="patch.v === patchSelected ? 'selected no-border' : ''"
             :disabled="!patch.updated"
             @click="handlePatchSelect(patch)"
+            @contextmenu.prevent="handlePatchContextMenu($event, patch)"
           >
             <div
               class="patch-button-background"
@@ -150,6 +186,17 @@ const patchPatterns = computed(() => {
         </div>
       </n-popover>
     </n-flex>
+
+    <n-dropdown
+      placement="bottom-start"
+      trigger="manual"
+      :x="contextMenuX"
+      :y="contextMenuY"
+      :options="contextMenuOptions"
+      :show="showContextMenu"
+      :on-clickoutside="handleContextMenuClickOutside"
+      @select="handleContextMenuSelect"
+    />
   </FoldableCard>
 </template>
 

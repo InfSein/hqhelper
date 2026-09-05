@@ -80,6 +80,9 @@ export interface UserConfigModel {
   // * tome-script-button
   /** 在点数按钮的统计中显示双色宝石兑换物 */
   tomescript_show_bicolor_items: boolean
+  // * patch-guide
+  /** 版本攻略中新装备表格的查看模式：'tile' 平铺模式 | 'overview' 总览模式 */
+  patchguide_gear_table_mode: 'tile' | 'overview'
   // #endregion
 
   // #region 隐藏的配置项/缓存
@@ -134,6 +137,9 @@ const defaultUserConfig: UserConfigModel = {
 
   // tome-script-button
   tomescript_show_bicolor_items: false,
+
+  // patch-guide
+  patchguide_gear_table_mode: 'tile',
 
   // hidden options
   last_triggered_egg: 0,

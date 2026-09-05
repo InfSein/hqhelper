@@ -237,7 +237,7 @@ const menuData = computed(() => {
           type: 'router',
           icon: DashboardOutlined,
           label: t('common.appfunc.hqwb'),
-          description: t('appheader.menu.tooltip.hqwb'),
+          description: '...',
           hide: !isMobile.value,
           routerKey: 'hqwb',
           allowNewWindow: false,

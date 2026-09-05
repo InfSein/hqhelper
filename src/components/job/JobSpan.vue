@@ -59,6 +59,7 @@ const getJobName = () => {
     <XivFARImage
       v-show="!hideIcon"
       class="img"
+      :lazy="false"
       :size="imgSize"
       :src="jobInfo.job_icon_url"
     />

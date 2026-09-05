@@ -111,6 +111,7 @@ const isJobGroupAvailable = (group: number[]) => {
           <XivFARImage
             :src="role.role_icon_url"
             :size="14"
+            :lazy="false"
           />
           <span>
             {{ getRoleName(role) }}

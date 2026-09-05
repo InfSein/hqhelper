@@ -67,7 +67,6 @@
         "fchelper": "到底有没有能让我大吃一惊的未来的时尚引领者呢……",
         "fthelper": "帮助你制作食物与爆发药。能帮到就好。",
         "gather_clock": "挖穿艾欧泽亚的好帮手！",
-        "hqwb": "工欲善其事，必先利其器。",
         "ingame_inventory": "喂喂，你的背包已经装满了啊。",
         "macro_manage": "管理，收容，跑路……",
         "open_in_new_window": "在新窗口中打开{tool}",
@@ -1421,8 +1420,8 @@
       "following_items_can_be_gathered": "以下物品已可采集：",
       "system_notice_denied": "通知权限被拒绝，请检查浏览器的网站权限设置。",
       "system_notice_not_supported": "当前使用的浏览器或客户端不支持系统通知功能。",
-      "invalid_audio_format": "不支持的音频格式，请上传常见音频文件（如 mp3、wav、ogg 等）。",
-      "audio_file_too_large": "音频文件过大，请上传小于 10MB 的音频文件。",
+      "invalid_audio_format": "不支持此音频格式！",
+      "audio_file_too_large": "音频文件过大(不能超过10MB)！",
       "confirm_clear_custom_audio": "确定要清除已上传的自定义提示音吗？"
     },
     "preference": {
@@ -1863,6 +1862,9 @@
       }
     },
     "select_patch": {
+      "context_menu": {
+        "patch_guide": "版本攻略"
+      },
       "desc": {
         "selected": "已选择版本: {val}"
       },
@@ -1903,6 +1905,37 @@
       },
       "recomm_aetheryte": "推荐传送点"
     }
+  },
+  "patch_guide": {
+    "title": "版本攻略",
+    "toc": "快速导航",
+    "invalid_patch": "不支持此版本号",
+    "section": {
+      "legendary_gathering": "新增传说采集点",
+      "trade_items": "新增兑换物",
+      "master_recipe": "新增秘籍半成品",
+      "new_gears": "新增装备",
+      "new_food": "新增食物",
+      "new_medicine": "新增药品"
+    },
+    "gear": {
+      "normal_precraft": "普通半成品",
+      "aethersand": "灵砂",
+      "master_precraft": "秘籍半成品",
+      "crafter_gatherer": "生产采集全套装备",
+      "crafter_total": "能工巧匠总计",
+      "gatherer_total": "大地使者总计",
+      "life_total": "生产采集总需求",
+      "combat_gears": "战斗职业装备",
+      "life_gears": "生产采集装备",
+      "view_mode": "显示模式：",
+      "mode_tile": "平铺模式",
+      "mode_overview": "总览模式"
+    },
+    "table": {
+      "job": "职业"
+    },
+    "empty": "当前版本未检索到此类物品"
   },
   "preference": {
     "default_homepage": {
