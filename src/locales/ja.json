@@ -3,19 +3,16 @@
     "staff": {
       "contributor": "貢献者",
       "desc": {
-        "desc_1_1": "HqHelper はオープンソースの ",
-        "desc_1_2": " プロジェクトであり、どなたでも開発に参加できます。",
+        "desc_1_1": "HqHelper はオープンソースの",
+        "desc_1_2": "プロジェクトであり、どなたでも開発に参加できます。",
         "desc_2": "なお、大部分の開発・保守・運用は以下のメンバーによって行われています：",
         "desc_3": "また、多くの優れたコミュニティメンバーが HqHelper の発展に力を貸してくださっています。",
         "desc_4": "貢献者リストを見る。"
       },
       "jobs": {
-        "etnatker": "Teamcraft形式で素材リストを表示する機能に貢献",
         "infsein": "すべての設計開発作業を担当",
-        "kim": "初期のUI日本語翻訳に貢献",
         "nbb": "ゲームデータの提供とホスティングサポートを担当",
         "personal_page": "個人ホームページ：",
-        "wcy": "初版Windowsクライアントフレームワークに貢献",
         "yakita": "UIの日本語と先行アイテム名の中国語翻訳を担当"
       },
       "producer": "プロデューサ",
@@ -70,7 +67,6 @@
         "fchelper": "果たして、私を心から驚かせる未来のファッションリーダーは現れるのかしら……",
         "fthelper": "調理品と薬品の制作にサポートいたします。お願い、ワタシを使ってください。",
         "gather_clock": "エオルゼアを掘り尽くすための最高のサポーター！",
-        "hqwb": "弘法も筆の誤り、されど道具は選ぶべし。",
         "ingame_inventory": "おいおい、荷物がいっぱいじゃないか。",
         "macro_manage": "管理、収容、撤退……",
         "open_in_new_window": "新しいウィンドウで{tool}を開く",
@@ -753,6 +749,19 @@
         "text_9": "メイン画面の統計エリアにおいて、特定の条件下でアイテム名が長すぎるためにUI要素がずれる問題を修正しました。"
       }
     },
+    "2_5_1": {
+      "breaking": {
+        "text_1": "現在、「コスト/利益分析」およびアイテムのフローティングウィンドウ内の「詳細」ボタンをクリックすることで、そのアイテムの価格詳細を確認できます。",
+        "text_2": "正式に全新ドメイン {0} を启用しました。",
+        "text_3": "現在、トップレベルドメインからHqHelperにアクセスし、ご利用いただけます。",
+        "text_4": "旧ドメインも引き続きメンテナンスを行います。"
+      },
+      "feat": {
+        "text_1": "「在庫」にフィルタ入力ボックスを追加しました。",
+        "text_2": "クライアントダウンロードページを再作成しました。",
+        "text_3": "スポンサーリストのモバイル端末での表示を最適化しました。"
+      }
+    },
     "breaking": "重要な変更",
     "feat": "機能アップデート",
     "fix": "不具合修正",
@@ -774,19 +783,6 @@
       "release_date_with_val": "更新日：{date}",
       "view_history": "過去の更新履歴を確認",
       "view_latest": "最新更新履歴を確認"
-    },
-    "2_5_1": {
-      "breaking": {
-        "text_1": "現在、「コスト/利益分析」およびアイテムのフローティングウィンドウ内の「詳細」ボタンをクリックすることで、そのアイテムの価格詳細を確認できます。",
-        "text_2": "正式に全新ドメイン {0} を启用しました。",
-        "text_3": "現在、トップレベルドメインからHqHelperにアクセスし、ご利用いただけます。",
-        "text_4": "旧ドメインも引き続きメンテナンスを行います。"
-      },
-      "feat": {
-        "text_1": "「在庫」にフィルタ入力ボックスを追加しました。",
-        "text_2": "クライアントダウンロードページを再作成しました。",
-        "text_3": "スポンサーリストのモバイル端末での表示を最適化しました。"
-      }
     }
   },
   "cloud": {
@@ -848,7 +844,6 @@
     }
   },
   "common": {
-    "search": "検索",
     "account": "アカウント",
     "add": "追加",
     "add2": "新規追加",
@@ -876,6 +871,7 @@
       "func_setting": "機能設定",
       "gather_clock": "採集時計",
       "gathering_path": "採集ルート",
+      "hqwb": "HQワークベンチ",
       "ingame_inventory": "在庫一覧",
       "item_price": "アイテム価格",
       "macro_manage": "マクロ管理",
@@ -886,7 +882,6 @@
       "useful_tools": "ツール",
       "user_preference": "設定",
       "workflow": "ワークフロー",
-      "hqwb": "HQワークベンチ",
       "workflow_calc": "レシピ計算機"
     },
     "appsetting": {
@@ -973,6 +968,7 @@
     },
     "favorited": "お気に入り登録済み",
     "file_name": "ファイル名",
+    "filter_item": "アイテムをフィルタリング",
     "fold": "折り畳む",
     "fold_all": "全て折りたたむ",
     "follow_preference_of_item_price": "「機能設定」内の「アイテム価格」設定に従います。",
@@ -1006,6 +1002,7 @@
     "import_from_excel": "インポート",
     "index": "ホームページ",
     "item": "アイテム",
+    "item_filter_input_placeholder": "アイテム名/ID/IL/パッチでフィルタリングに対応",
     "item_name": "アイテム名",
     "item_price_type": "アイテム価格タイプ",
     "item_search_input_placeholder": "アイテム名/ID/品質/パッチでの検索に対応",
@@ -1035,6 +1032,7 @@
     "medicine": "薬品",
     "message": {
       "ask_continue": "続行しますか？",
+      "cannot_open_same_modal": "ポップアップを重複して開くことはできません",
       "changes_saved": "変更を保存しました",
       "confirm_delete_with_name": "{name}を削除しますか？",
       "copied_with_content": "{content}をコピーしました",
@@ -1059,8 +1057,7 @@
       "please_input_item_name": "アイテム名を入力してください",
       "please_input_val": "{val}を入力してください",
       "please_wait_for_a_while": "しばらくお待ちください。",
-      "sync_succeed": "同期しました",
-      "cannot_open_same_modal": "ポップアップを重複して開くことはできません"
+      "sync_succeed": "同期しました"
     },
     "mode": "モード",
     "mquoted_view_statement": "[素材リストを表示する]",
@@ -1120,6 +1117,7 @@
     "rule": "ルール",
     "save": "保存する",
     "save_succeed": "セーブ成功",
+    "search": "検索",
     "select_all": "すべての内容を選択する",
     "select_invert": "未選択の内容を選択する",
     "select_item": "アイテムを選択",
@@ -1128,6 +1126,8 @@
     "server": "サーバー",
     "setting": "設定",
     "share": "共有",
+    "share_code": "共有コード",
+    "share_link": "共有リンク",
     "simulate_craft": "製作をシミュレーション",
     "simulator": "シミュレーター",
     "special": "特別",
@@ -1177,11 +1177,7 @@
     "warn": "注意",
     "weibo": "Weibo",
     "will_be_named_with_time_when_empty": "入力しない場合はデフォルトで時間で命名されます",
-    "work_state": "作業状態",
-    "filter_item": "アイテムをフィルタリング",
-    "item_filter_input_placeholder": "アイテム名/ID/IL/パッチでフィルタリングに対応",
-    "share_code": "共有コード",
-    "share_link": "共有リンク"
+    "work_state": "作業状態"
   },
   "contact_us": {
     "feedback": {
@@ -1420,30 +1416,30 @@
     },
     "grouptitle_with_patch_and_il": "パッチ{patch}（アイテムレベル{il}）",
     "message": {
-      "following_items_can_be_gathered": "現在採集可能になったアイテム：",
-      "system_notice_denied": "リマインド権限が拒否されました。ブラウザのサイト権限設定を確認してください。",
-      "system_notice_not_supported": "現在使用中のブラウザまたはクライアントがシステム通知機能をサポートしていません。",
-      "invalid_audio_format": "サポートされていない音声形式です。一般的な音声ファイル（mp3、wav、oggなど）をアップロードしてください。",
       "audio_file_too_large": "ファイルサイズが大きすぎます。10MB未満の音声ファイルをアップロードしてください。",
-      "confirm_clear_custom_audio": "アップロードしたカスタム通知音を削除してもよろしいですか？"
+      "confirm_clear_custom_audio": "アップロードしたカスタム通知音を削除してもよろしいですか？",
+      "following_items_can_be_gathered": "現在採集可能になったアイテム：",
+      "invalid_audio_format": "サポートされていない音声形式です。一般的な音声ファイル（mp3、wav、oggなど）をアップロードしてください。",
+      "system_notice_denied": "リマインド権限が拒否されました。ブラウザのサイト権限設定を確認してください。",
+      "system_notice_not_supported": "現在使用中のブラウザまたはクライアントがシステム通知機能をサポートしていません。"
     },
     "preference": {
       "custom_audio": {
-        "title": "カスタム通知音",
-        "modal_title": "通知音の設定",
-        "sound_select": {
-          "title": "通知音の種類",
-          "option": {
-            "default": "デフォルト通知音",
-            "custom": "カスタム通知音"
-          }
-        },
-        "upload": "音声のアップロード",
-        "reupload": "再アップロード",
-        "test": "試聴",
         "clear": "音声を削除",
+        "modal_title": "通知音の設定",
+        "reupload": "再アップロード",
+        "sound_select": {
+          "option": {
+            "custom": "カスタム通知音",
+            "default": "デフォルト通知音"
+          },
+          "title": "通知音の種類"
+        },
+        "status_not_uploaded": "カスタム音声がありません。デフォルト通知音を使用します。",
         "status_uploaded": "読み込み済み：{name}",
-        "status_not_uploaded": "カスタム音声がありません。デフォルト通知音を使用します。"
+        "test": "試聴",
+        "title": "カスタム通知音",
+        "upload": "音声のアップロード"
       },
       "disable_item_pop": "アイテムボタンのツールチップを隠す",
       "mention_way": {
@@ -1578,16 +1574,16 @@
         },
         "group_marketboard": "現在の価格",
         "group_purchasehistory": "取引履歴",
+        "group_selectitem": "アイテム選択",
+        "group_totaltable": "価格の詳細",
         "intro": "詳細を表示する",
+        "intro_short": "詳細",
         "loading": "アイテム価格を取得中……",
-        "title": "アイテムの価格詳細",
         "show_all": "すべて",
         "show_hq": "HQのみ",
         "show_nq": "NQのみ",
-        "group_selectitem": "アイテム選択",
         "table_show_type": "表示：",
-        "group_totaltable": "価格の詳細",
-        "intro_short": "詳細"
+        "title": "アイテムの価格詳細"
       },
       "no_price": "価格がありません。",
       "no_price_reason": "予想の原因：価格が取得されていない/アイテムが実装されていない、またはその品質が存在しない/取引データが不足している",
@@ -1600,7 +1596,6 @@
     },
     "text": {
       "attribute_isnq_or_hq_desc": "※ ここは{val}アイテムの属性のみが表示されます",
-      "basic_info": "[パッチ{patch}] [{id}]",
       "cannot_hq": "HQ製作不可",
       "cannot_quick_synthesis": "簡易製作不可",
       "cannot_switch_hqornq": "アイテムの{0}がないため、切り替えできません",
@@ -1784,6 +1779,8 @@
       "desc": {
         "un_selected": "未選択"
       },
+      "gear_overview": "部位一覧",
+      "gear_overview_no_gear": "この部位に対応する装備はありません",
       "info": {
         "info_1": "同じ装備は一括表示されます。",
         "info_2": "現在の主副道具が該当するジョブ：{val}",
@@ -1843,8 +1840,6 @@
       },
       "title": "部位選択",
       "view_selected": "選択済み部位",
-      "gear_overview": "部位一覧",
-      "gear_overview_no_gear": "この部位に対応する装備はありません",
       "warn": {
         "select_job_first": "ジョブを選択してください"
       }
@@ -1903,62 +1898,83 @@
       "recomm_aetheryte": "おすすめのテレポ地点"
     }
   },
+  "onboarding": {
+    "btn": {
+      "finish": "設定を完了して始める",
+      "next": "次へ",
+      "prev": "戻る"
+    },
+    "step_1": {
+      "name": "ようこそ",
+      "title": "ようこそ"
+    },
+    "step_2": {
+      "desc": "UI言語、アイテム名言語、テーマを設定します。変更は即座に反映されます。",
+      "item_lang": "アイテム名言語",
+      "name": "基本設定",
+      "theme": "テーマ",
+      "title": "基本設定",
+      "ui_lang": "UI言語"
+    },
+    "step_3": {
+      "desc": "HqHelper では、アイテムボタンやラベルに便利な操作機能が備わっています：",
+      "feature_hover_desc": "アイテムの上にカーソルを置くと、レシピ、入手先、ステータス、マーケット参考価格などをプレビューできます。",
+      "feature_hover_title": "ホバーで詳細表示",
+      "feature_menu_desc": "アイテムを右クリック（スマホでは長押し）すると、アイテム名コピー、/isearch マクロコピー、ワークフロー追加などのメニューが表示されます。",
+      "feature_menu_title": "右クリック操作メニュー",
+      "name": "操作機能",
+      "playground_tip": "👉 下のアイテムにカーソルを合わせたり、右クリックしてメニューを試してみてください：",
+      "title": "主な操作機能"
+    },
+    "step_4": {
+      "desc": "デスクトップ版の左上メニューからいつでも切り替えることができます：",
+      "hqwb_desc": "パッチごとの装備一括計算。戦闘・クラフター・ギャザラー装備をすばやく選択し、必要素材やトークンを一括集計します。",
+      "hqwb_title": "HQワークベンチ",
+      "name": "ホームページ",
+      "title": "デフォルトホームページを選択",
+      "workflow_desc": "自由度の高いマルチレシピプランナー。任意のアイテム追加、素材ツリー分解、原価・収益計算、おすすめ製作手順を提供します。",
+      "workflow_title": "レシピ計算機 (ワークフロー)"
+    },
+    "welcome": {
+      "desc_1": "HqHelper は、装備計算、自由なマルチタスクワークフロー、素材ツリー集計、採集時計、製作マクロなど、充実した機能を提供します。",
+      "desc_2": "使い始める前に、いくつかの簡単なステップで基本設定を行いましょう。",
+      "start_btn": "設定を始める",
+      "subtitle": "FFXIV クラフター・ギャザラー向けレシピ計算ツール",
+      "title": "HqHelper へようこそ"
+    }
+  },
   "patch_guide": {
-    "title": "パッチ攻略",
-    "page_title": "パッチ攻略 - {val}",
-    "toc": "目次",
+    "empty": "このパッチのアイテムは見つかりませんでした",
+    "gear": {
+      "aethersand": "霊砂",
+      "combat_gears": "戦闘ジョブ装備",
+      "crafter_gatherer": "クラフター・ギャザラー一式装備",
+      "crafter_total": "クラフター合計",
+      "gatherer_total": "ギャザラー合計",
+      "life_gears": "クラフター・ギャザラー装備",
+      "life_total": "クラフター・ギャザラー合計",
+      "master_precraft": "秘伝書中間素材",
+      "mode_overview": "一覧",
+      "mode_tile": "タイル",
+      "normal_precraft": "通常中間素材",
+      "view_mode": "表示モード"
+    },
     "invalid_patch": "無効なパッチまたはデータがまだ更新されていません",
     "section": {
       "legendary_gathering": "新規伝説採集ポイント",
-      "trade_items": "新規交換アイテム",
       "master_recipe": "新規秘伝書中間素材",
-      "new_gears": "新規装備",
       "new_food": "新規料理",
-      "new_medicine": "新規薬"
-    },
-    "gear": {
-      "normal_precraft": "通常中間素材",
-      "aethersand": "霊砂",
-      "master_precraft": "秘伝書中間素材",
-      "crafter_gatherer": "クラフター・ギャザラー一式装備",
-      "one_set_desc": "一式：主道具+副道具+左側防具5点+耳+首+腕+指×2",
-      "life_set_desc": "全装備：全クラフター主副道具+全ギャザラー主副道具+クラフター防具アクセ一式+ギャザラー防具アクセ一式",
-      "life_set_badge": "全道具・防具アクセ",
-      "no_combat_gears": "このパッチには新規戦闘職装備がありません",
-      "no_life_gears": "このパッチには新規クラフター・ギャザラー装備がありません",
-      "crafter_total": "クラフター合計",
-      "gatherer_total": "ギャザラー合計",
-      "life_total": "クラフター・ギャザラー合計",
-      "combat_gears": "戦闘ジョブ装備",
-      "life_gears": "クラフター・ギャザラー装備",
-      "view_mode": "表示モード",
-      "mode_tile": "タイル",
-      "mode_overview": "一覧"
+      "new_gears": "新規装備",
+      "new_medicine": "新規薬",
+      "trade_items": "新規交換アイテム"
     },
     "table": {
-      "job": "ジョブ",
-      "item": "アイテム",
-      "attrs": "効果 (HQ)",
-      "recipe": "レシピツリー",
-      "cost": "交換費用"
+      "job": "ジョブ"
     },
-    "empty": "このパッチのアイテムは見つかりませんでした"
+    "title": "パッチ攻略",
+    "toc": "目次"
   },
   "preference": {
-    "default_homepage": {
-      "desc": {
-        "desc_1": "ルートパス (/) アクセス時にデフォルトで表示するページを設定します。"
-      },
-      "title": "デフォルトホームページ"
-    },
-    "rerun_onboarding": {
-      "btn": "ウィザードを再実行",
-      "confirm_dialog": "初期設定ウィザードを再実行すると、ガイド状態がリセットされてページが再読み込みされます。未保存の設定は破棄されますが、続行しますか？",
-      "desc": {
-        "desc_1": "初回アクセス時の初期設定ウィザードを再実行します。"
-      },
-      "title": "初期設定ウィザード"
-    },
     "auto_refresh_after_save": {
       "desc": {
         "desc_1": "この設定を変更すると本セーブで有効になります。また、リフレッシュが必要な場合にのみ自動リフレッシュが実行されます。"
@@ -2041,6 +2057,9 @@
       "title": "フォントサイズ"
     },
     "custom_proxy_url": "カスタムアクセラレーションサービスアドレス",
+    "default_homepage": {
+      "title": "デフォルトホームページ"
+    },
     "disable_auto_update": {
       "desc": {
         "desc_1": "アプリの起動時は自動的にバーションチェットを行います、最新バーションがあった場合はお知らせさせていただきます。",
@@ -2072,33 +2091,6 @@
       "title": "作業状態の記憶を無効にする"
     },
     "enable_dev_mode": "開発者モードの有効化",
-    "inventory_plugin": {
-      "receive": {
-        "title": "外部データを受信"
-      },
-      "port": {
-        "title": "WebSocket ポート"
-      },
-      "token": {
-        "title": "WebSocket トークン"
-      },
-      "test": {
-        "title": "接続テスト",
-        "idle": "接続テスト",
-        "testing": "テスト中",
-        "status": "現在の状態：{status}",
-        "result": "テスト結果：{result}"
-      },
-      "status": {
-        "disconnected": "未接続",
-        "connecting": "接続中",
-        "connected": "接続済み",
-        "error": "接続エラー"
-      },
-      "message": {
-        "invalid_settings": "有効なポートとトークンを入力してください。"
-      }
-    },
     "export": {
       "desc": {
         "desc_1": "現在、このデバイスの設定/機能設定を他のデバイスにエクスポートできるようになりました。アイテム価格などのキャッシュは含まれません。",
@@ -2130,6 +2122,33 @@
       },
       "placeholder": "ここに他のHqHelperからエクスポートした設定を貼り付けてください。",
       "title": "設定をインポート"
+    },
+    "inventory_plugin": {
+      "message": {
+        "invalid_settings": "有効なポートとトークンを入力してください。"
+      },
+      "port": {
+        "title": "WebSocket ポート"
+      },
+      "receive": {
+        "title": "外部データを受信"
+      },
+      "status": {
+        "connected": "接続済み",
+        "connecting": "接続中",
+        "disconnected": "未接続",
+        "error": "接続エラー"
+      },
+      "test": {
+        "idle": "接続テスト",
+        "result": "テスト結果：{result}",
+        "status": "現在の状態：{status}",
+        "testing": "テスト中",
+        "title": "接続テスト"
+      },
+      "token": {
+        "title": "WebSocket トークン"
+      }
     },
     "item_amount_use_comma": {
       "desc": {
@@ -2237,6 +2256,14 @@
         "desc_1": "プロ版でレポート作成時にのみ有効"
       },
       "title": "簡易モードでアイテムを表示"
+    },
+    "rerun_onboarding": {
+      "btn": "ウィザードを再実行",
+      "confirm_dialog": "初期設定ウィザードを再実行すると、ガイド状態がリセットされてページが再読み込みされます。未保存の設定は破棄されますが、続行しますか？",
+      "desc": {
+        "desc_1": "初回アクセス時の初期設定ウィザードを再実行します。"
+      },
+      "title": "初期設定ウィザード"
     },
     "server": {
       "option": {
@@ -2367,6 +2394,12 @@
         "desc_2": "これらの機能が必要ない場合、または旧バージョンのリスト作成のスタイルを好む場合は、このオプションを有効にすることを検討してください。"
       },
       "title": "旧バージョンでリストを作成"
+    }
+  },
+  "recipe": {
+    "notebookgroup": {
+      "custom_lists": "おすすめリスト",
+      "other_master_recipes": "秘伝書:その他"
     }
   },
   "recomm_process": {
@@ -2538,6 +2571,9 @@
     }
   },
   "workflow": {
+    "custom_list": {
+      "join_list": "このリストを追加"
+    },
     "import": {
       "itemlist": {
         "message": {
@@ -2578,15 +2614,36 @@
     "message": {
       "max_len": "最大{num}個のワークフローしか追加できません"
     },
+    "notebook_search": {
+      "clear_history": "履歴を削除",
+      "empty_history": "検索履歴はありません",
+      "error_empty": "検索キーワードを入力してください",
+      "error_material_id_too_small": "このアイテム（シャード/クリスタルなど）の逆引きレシピ検索には対応していません",
+      "error_no_result": "一致するアイテムが見つかりません",
+      "history": "検索履歴",
+      "material_history_prefix": "素材",
+      "placeholder": "アイテムを検索…"
+    },
     "recomm_process": "ワークフローのプロセス",
+    "share": {
+      "copy_succeed": "クリップボードにコピーしました",
+      "empty_workflow": "現在のワークフローにアイテムがないため、共有コードを生成できません",
+      "import_by_code_failed": "共有コードの解析に失敗しました。正しいコードか確認してください",
+      "title": "ワークフローを共有"
+    },
     "shared": {
       "new_a_workflow": "新しいワークフローを作成する"
     },
     "text": {
       "add_a_workflow": "ワークフローを追加する",
+      "add_item_to_curr_workflow": {
+        "tip_1": "このアイテムを現在のワークフローに追加",
+        "tip_2": "既に追加されている場合は数量が増加します"
+      },
       "clear_current_workflow": "現在のワークフローの選択済みアイテムをクリア",
       "confirm_delete": "本当にこのワークフローを削除しますか？",
       "delete_this_workflow": "このワークフローを削除する",
+      "join_in_curr_workflow": "現在のワークフローに追加",
       "join_in_workflow": "ワークフローに追加",
       "join_selected_collectable_submissions_in_workflow": "選択した収集品を特定のワークフローに追加する",
       "join_selected_fashion_clothes_in_workflow": "選択したおしゃれ装備を特定のワークフローに追加する",
@@ -2595,6 +2652,7 @@
       "manage_workflows": "ワークフローの管理",
       "manage_workflows_desc": "ここで各ワークフローの名称を変更したり、直接削除したりできます",
       "min_len": "少なくとも1つのワークフローを保持する必要があります",
+      "notebook_item_not_selected": "先にアイテムを選択してください",
       "rename_this_workflow": "このワークフローの名前を変更する",
       "rename_to": "このワークフローの名前を変更する：",
       "set_workflows": "ワークフロー設定",
@@ -2604,88 +2662,11 @@
       "workflow_name": "ワークフロー名",
       "workflow_name_default_info": "ワークフローに名前を設定しない場合、順番に「ワークフロー1～{maxlen}」と自動表示されます",
       "workflow_name_reorder_on_deleted": "ワークフローを削除する際、その後にある全ての未命名ワークフローは再び番号付けされます",
-      "workflow_with_index": "ワークフロー{index}",
-      "add_item_to_curr_workflow": {
-        "tip_1": "このアイテムを現在のワークフローに追加",
-        "tip_2": "既に追加されている場合は数量が増加します"
-      },
-      "notebook_item_not_selected": "先にアイテムを選択してください",
-      "join_in_curr_workflow": "現在のワークフローに追加"
+      "workflow_with_index": "ワークフロー{index}"
     },
     "tooltip": {
       "set_inventory_by_prepared": "在庫一覧の数量をレポートの「所持数」に設定します。",
       "set_prepared_by_inventory": "レポート内の「所持」数量を「在庫一覧」の数量に設定する"
-    },
-    "notebook_search": {
-      "placeholder": "アイテムを検索…",
-      "history": "検索履歴",
-      "empty_history": "検索履歴はありません",
-      "clear_history": "履歴を削除",
-      "material_history_prefix": "素材",
-      "error_empty": "検索キーワードを入力してください",
-      "error_no_result": "一致するアイテムが見つかりません",
-      "error_material_id_too_small": "このアイテム（シャード/クリスタルなど）の逆引きレシピ検索には対応していません"
-    },
-    "share": {
-      "title": "ワークフローを共有",
-      "empty_workflow": "現在のワークフローにアイテムがないため、共有コードを生成できません",
-      "copy_succeed": "クリップボードにコピーしました",
-      "import_by_code_failed": "共有コードの解析に失敗しました。正しいコードか確認してください"
-    },
-    "custom_list": {
-      "join_list": "このリストを追加",
-      "total_items": "合計 {0} 種のアイテム"
-    }
-  },
-  "recipe": {
-    "notebookgroup": {
-      "other_master_recipes": "秘伝書:その他",
-      "custom_lists": "おすすめリスト"
-    }
-  },
-  "onboarding": {
-    "welcome": {
-      "title": "HqHelper へようこそ",
-      "subtitle": "FFXIV クラフター・ギャザラー向けレシピ計算ツール",
-      "desc_1": "HqHelper は、装備計算、自由なマルチタスクワークフロー、素材ツリー集計、採集時計、製作マクロなど、充実した機能を提供します。",
-      "desc_2": "使い始める前に、いくつかの簡単なステップで基本設定を行いましょう。",
-      "start_btn": "設定を始める"
-    },
-    "step_1": {
-      "title": "ようこそ",
-      "name": "ようこそ"
-    },
-    "step_2": {
-      "title": "基本設定",
-      "name": "基本設定",
-      "desc": "UI言語、アイテム名言語、テーマを設定します。変更は即座に反映されます。",
-      "ui_lang": "UI言語",
-      "item_lang": "アイテム名言語",
-      "theme": "テーマ"
-    },
-    "step_3": {
-      "title": "主な操作機能",
-      "name": "操作機能",
-      "desc": "HqHelper では、アイテムボタンやラベルに便利な操作機能が備わっています：",
-      "feature_hover_title": "ホバーで詳細表示",
-      "feature_hover_desc": "アイテムの上にカーソルを置くと、レシピ、入手先、ステータス、マーケット参考価格などをプレビューできます。",
-      "feature_menu_title": "右クリック操作メニュー",
-      "feature_menu_desc": "アイテムを右クリック（スマホでは長押し）すると、アイテム名コピー、/isearch マクロコピー、ワークフロー追加などのメニューが表示されます。",
-      "playground_tip": "👉 下のアイテムにカーソルを合わせたり、右クリックしてメニューを試してみてください："
-    },
-    "step_4": {
-      "title": "デフォルトホームページを選択",
-      "name": "ホームページ",
-      "desc": "デスクトップ版の左上メニューからいつでも切り替えることができます：",
-      "hqwb_title": "HQワークベンチ",
-      "hqwb_desc": "パッチごとの装備一括計算。戦闘・クラフター・ギャザラー装備をすばやく選択し、必要素材やトークンを一括集計します。",
-      "workflow_title": "レシピ計算機 (ワークフロー)",
-      "workflow_desc": "自由度の高いマルチレシピプランナー。任意のアイテム追加、素材ツリー分解、原価・収益計算、おすすめ製作手順を提供します。"
-    },
-    "btn": {
-      "prev": "戻る",
-      "next": "次へ",
-      "finish": "設定を完了して始める"
     }
   }
 }

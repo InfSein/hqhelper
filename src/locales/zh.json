@@ -67,7 +67,6 @@
         "fchelper": "到底有没有能让我大吃一惊的未来的时尚引领者呢……",
         "fthelper": "帮助你制作食物与爆发药。能帮到就好。",
         "gather_clock": "挖穿艾欧泽亚的好帮手！",
-        "hqwb": "工欲善其事，必先利其器。",
         "ingame_inventory": "喂喂，你的背包已经装满了啊。",
         "macro_manage": "管理，收容，跑路……",
         "open_in_new_window": "在新窗口中打开{tool}",
@@ -1421,8 +1420,8 @@
       "following_items_can_be_gathered": "以下物品已可采集：",
       "system_notice_denied": "通知权限被拒绝，请检查浏览器的网站权限设置。",
       "system_notice_not_supported": "当前使用的浏览器或客户端不支持系统通知功能。",
-      "invalid_audio_format": "不支持的音频格式，请上传常见音频文件（如 mp3、wav、ogg 等）。",
-      "audio_file_too_large": "音频文件过大，请上传小于 10MB 的音频文件。",
+      "invalid_audio_format": "不支持此音频格式！",
+      "audio_file_too_large": "音频文件过大(不能超过10MB)！",
       "confirm_clear_custom_audio": "确定要清除已上传的自定义提示音吗？"
     },
     "preference": {

@@ -3,19 +3,16 @@
     "staff": {
       "contributor": "Contributor",
       "desc": {
-        "desc_1_1": "HqHelper is an open-source project on ",
+        "desc_1_1": "HqHelper is an open-source project on",
         "desc_1_2": ", and anyone can contribute.",
         "desc_2": "However, most of the development, maintenance, and operations are completed by the following members:",
         "desc_3": "Many other outstanding community members have also contributed to HqHelper.",
         "desc_4": "to view the list of contributors."
       },
       "jobs": {
-        "etnatker": "Contributed to the Teamcraft format material list feature",
         "infsein": "Lead Designer and Developer",
-        "kim": "Contributed initial Japanese UI localization",
         "nbb": "Provided game data and hosting support",
-        "personal_page": "Personal Homepage: ",
-        "wcy": "Contributed to the initial Windows client framework",
+        "personal_page": "Personal Homepage:",
         "yakita": "Responsible for Japanese UI localization and Chinese translation of new items"
       },
       "producer": "Producers",
@@ -70,7 +67,6 @@
         "fchelper": "Helps you collect materials for fashion accessories.",
         "fthelper": "Helps you craft food and tinctures.",
         "gather_clock": "Track time-limited gatherings.",
-        "hqwb": "A craftsman must first sharpen his tools.",
         "ingame_inventory": "Manage in-game inventory and sync settings.",
         "macro_manage": "Manage crafting macros.",
         "open_in_new_window": "Open {tool} in a new window",
@@ -753,6 +749,19 @@
         "text_9": "Fixed an issue where UI elements in the statistics section of the main interface could become misaligned in certain cases when item names were too long."
       }
     },
+    "2_5_1": {
+      "breaking": {
+        "text_1": "Now you can click the 'Price Detail' button in cost/benefit analysis and item pop to view the price detail table.",
+        "text_2": "New domain {0} is now available.",
+        "text_3": "Now you can access HqHelper through top-level domain names.",
+        "text_4": "Old domain names will still be maintained."
+      },
+      "feat": {
+        "text_1": "The filter input has been added to \"In-game Inventory\".",
+        "text_2": "Client download page has been recreated.",
+        "text_3": "Optimized the display effect of the Sponsor List on mobile devices."
+      }
+    },
     "breaking": "BREAKING CHANGES",
     "feat": "FEATURES",
     "fix": "BUG FIXES",
@@ -760,7 +769,7 @@
     "shared": {
       "add_new_func": "The “{f}” feature has been added.",
       "chs_db_update": "CHS game data updated to {ver}.",
-      "chs_db_update_with_comma": "CHS game data updated to {ver}, ",
+      "chs_db_update_with_comma": "CHS game data updated to {ver},",
       "detail_optimized": "Optimized some details.",
       "game_db_update": "Game data updated to {ver}.",
       "global_db_update": "Global game data updated to {ver}.",
@@ -774,19 +783,6 @@
       "release_date_with_val": "DATE: {date}",
       "view_history": "View history",
       "view_latest": "View latest logs"
-    },
-    "2_5_1": {
-      "breaking": {
-        "text_1": "Now you can click the 'Price Detail' button in cost/benefit analysis and item pop to view the price detail table.",
-        "text_2": "New domain {0} is now available.",
-        "text_3": "Now you can access HqHelper through top-level domain names.",
-        "text_4": "Old domain names will still be maintained."
-      },
-      "feat": {
-        "text_1": "The filter input has been added to \"In-game Inventory\".",
-        "text_2": "Client download page has been recreated.",
-        "text_3": "Optimized the display effect of the Sponsor List on mobile devices."
-      }
     }
   },
   "cloud": {
@@ -848,7 +844,6 @@
     }
   },
   "common": {
-    "search": "Search",
     "account": "Account",
     "add": "Add",
     "add2": "Add",
@@ -876,6 +871,7 @@
       "func_setting": "Function Preferences",
       "gather_clock": "Gather Clock",
       "gathering_path": "Gathering Path",
+      "hqwb": "HQ Workbench",
       "ingame_inventory": "In-game Inventory",
       "item_price": "Item Price",
       "macro_manage": "Macro Management",
@@ -886,7 +882,6 @@
       "useful_tools": "Tools",
       "user_preference": "User Preferences",
       "workflow": "Workflow",
-      "hqwb": "HQ Workbench",
       "workflow_calc": "Recipe Calculator"
     },
     "appsetting": {
@@ -955,7 +950,7 @@
     "effect": "Effects",
     "email": "Email",
     "error": "ERROR",
-    "example_pre": "For example: ",
+    "example_pre": "For example:",
     "exit_selection_mode": "Exit select mode",
     "expand": "Expand",
     "expand_all": "Expand all",
@@ -973,6 +968,7 @@
     },
     "favorited": "Starred",
     "file_name": "File name",
+    "filter_item": "Filter Item",
     "fold": "Fold",
     "fold_all": "Collapse All",
     "follow_preference_of_item_price": "Follows \"Item Price\" settings in Preferences.",
@@ -1006,6 +1002,7 @@
     "import_from_excel": "Import from Excel",
     "index": "Home",
     "item": "Item",
+    "item_filter_input_placeholder": "Filter by Name/ID/iLv/Patch",
     "item_name": "Item Name",
     "item_price_type": "Item Price Type",
     "item_search_input_placeholder": "Search by Name/ID/iLv/Patch",
@@ -1017,7 +1014,7 @@
     "lang_ja": "Japanese",
     "lang_zh": "Chinese",
     "last_update_with_val": "Last update: {val}",
-    "latest_version": "Latest Version: ",
+    "latest_version": "Latest Version:",
     "learn_more": "Learn more",
     "line_max_len": "Max {limit} lines",
     "list": "List",
@@ -1035,6 +1032,7 @@
     "medicine": "Medicine",
     "message": {
       "ask_continue": "Continue?",
+      "cannot_open_same_modal": "Cannot reopen this popup",
       "changes_saved": "Saved",
       "confirm_delete_with_name": "Delete {name}?",
       "copied_with_content": "\"{content}\" copied",
@@ -1059,8 +1057,7 @@
       "please_input_item_name": "Please enter item name",
       "please_input_val": "Please input {val}",
       "please_wait_for_a_while": "Please wait a while.",
-      "sync_succeed": "Sync Successful",
-      "cannot_open_same_modal": "Cannot reopen this popup"
+      "sync_succeed": "Sync Successful"
     },
     "mode": "Mode",
     "mquoted_view_statement": "[View statements]",
@@ -1074,7 +1071,7 @@
     "no_data": "No data",
     "no_required_items": "No items required",
     "not_planned": "No plans yet",
-    "note_x": "Note {val}: ",
+    "note_x": "Note {val}:",
     "nothing": "None",
     "number": "No.",
     "open_in": {
@@ -1120,6 +1117,7 @@
     "rule": "Rules",
     "save": "Save",
     "save_succeed": "Saved Successfully",
+    "search": "Search",
     "select_all": "Select All",
     "select_invert": "Invert Selection",
     "select_item": "Select Items",
@@ -1128,6 +1126,8 @@
     "server": "Server",
     "setting": "Settings",
     "share": "Share",
+    "share_code": "Share Code",
+    "share_link": "Share Link",
     "simulate_craft": "Simulate Craft",
     "simulator": "Simulator",
     "special": "Special",
@@ -1177,11 +1177,7 @@
     "warn": "Warning",
     "weibo": "Weibo",
     "will_be_named_with_time_when_empty": "Defaults to time if empty",
-    "work_state": "Work State",
-    "filter_item": "Filter Item",
-    "item_filter_input_placeholder": "Filter by Name/ID/iLv/Patch",
-    "share_code": "Share Code",
-    "share_link": "Share Link"
+    "work_state": "Work State"
   },
   "contact_us": {
     "feedback": {
@@ -1330,7 +1326,7 @@
     "chirstmas": {
       "text": {
         "text_1": "Merry Christmas",
-        "text_2": "Good day to you, ",
+        "text_2": "Good day to you,",
         "text_3": "miss/sir.",
         "text_4": "I trust you've met with no grief during this year's Starlight Celebration?"
       }
@@ -1420,30 +1416,30 @@
     },
     "grouptitle_with_patch_and_il": "Patch {patch} (IL{il})",
     "message": {
-      "following_items_can_be_gathered": "Following items can be gathered:",
-      "system_notice_denied": "Notification permission denied. Please check browser settings.",
-      "system_notice_not_supported": "Your browser/device does not support system notifications.",
-      "invalid_audio_format": "Unsupported audio format. Please upload common audio files (e.g. mp3, wav, ogg).",
       "audio_file_too_large": "Audio file is too large. Please upload a file smaller than 10MB.",
-      "confirm_clear_custom_audio": "Are you sure you want to clear the uploaded custom sound?"
+      "confirm_clear_custom_audio": "Are you sure you want to clear the uploaded custom sound?",
+      "following_items_can_be_gathered": "Following items can be gathered:",
+      "invalid_audio_format": "Unsupported audio format. Please upload common audio files (e.g. mp3, wav, ogg).",
+      "system_notice_denied": "Notification permission denied. Please check browser settings.",
+      "system_notice_not_supported": "Your browser/device does not support system notifications."
     },
     "preference": {
       "custom_audio": {
-        "title": "Custom Sound",
-        "modal_title": "Ringtone Settings",
-        "sound_select": {
-          "title": "Sound Type",
-          "option": {
-            "default": "Default Sound",
-            "custom": "Custom Sound"
-          }
-        },
-        "upload": "Upload Audio",
-        "reupload": "Re-upload",
-        "test": "Preview Sound",
         "clear": "Clear Audio",
+        "modal_title": "Ringtone Settings",
+        "reupload": "Re-upload",
+        "sound_select": {
+          "option": {
+            "custom": "Custom Sound",
+            "default": "Default Sound"
+          },
+          "title": "Sound Type"
+        },
+        "status_not_uploaded": "No custom audio loaded. Default sound will be used.",
         "status_uploaded": "Loaded audio: {name}",
-        "status_not_uploaded": "No custom audio loaded. Default sound will be used."
+        "test": "Preview Sound",
+        "title": "Custom Sound",
+        "upload": "Upload Audio"
       },
       "disable_item_pop": "Disable Item Popups",
       "mention_way": {
@@ -1578,16 +1574,16 @@
         },
         "group_marketboard": "Current Price",
         "group_purchasehistory": "Purchase History",
+        "group_selectitem": "Select Item",
+        "group_totaltable": "Price Summary",
         "intro": "Price Detail",
+        "intro_short": "Detail",
         "loading": "Getting item price...",
-        "title": "Item Price Detail Table",
         "show_all": "All",
         "show_hq": "View HQ Only",
         "show_nq": "View NQ Only",
-        "group_selectitem": "Select Item",
-        "table_show_type": "Show: ",
-        "group_totaltable": "Price Summary",
-        "intro_short": "Detail"
+        "table_show_type": "Show:",
+        "title": "Item Price Detail Table"
       },
       "no_price": "No Price.",
       "no_price_reason": "Reasons: Price not fetched, item not exist, or insufficient data.",
@@ -1600,7 +1596,6 @@
     },
     "text": {
       "attribute_isnq_or_hq_desc": "※ Displaying {val} attributes.",
-      "basic_info": "[Patch {patch}] [ID: {id}]",
       "cannot_hq": "HQ Unavailable",
       "cannot_quick_synthesis": "No Quick Synthesis",
       "cannot_switch_hqornq": "Cannot switch (Item lacks {0})",
@@ -1610,8 +1605,8 @@
       "craft_condi": "Requirements:",
       "craftsmanship_with_val": "Craftsmanship: {val}",
       "curr_show_hqornq": "Displaying status: {0}",
-      "gather_bonus": "Gathering Bonus: ",
-      "gather_bonus_description": "{0} reaches {1}: ",
+      "gather_bonus": "Gathering Bonus:",
+      "gather_bonus_description": "{0} reaches {1}:",
       "gather_condi": "Gathering Conditions:",
       "gather_level_info": "{job} Lv. {lv}",
       "gather_pos_info": "Gatherable at:",
@@ -1690,20 +1685,20 @@
       "batch_add_macros_examples": "For example:\n1111/2222/333 -> Craftsmanship 1111/Control 2222/CP 333\n1111 -> Craftsmanship 1111/Control 0/CP 0\n1111/2222 -> Craftsmanship 1111/Control 2222/CP 0\n/2222/333 -> Craftsmanship 0/Control 2222/CP 333",
       "batch_add_macros_format_cac": "CAC",
       "batch_add_macros_format_name": "Macro_Name(Optional)",
-      "batch_add_macros_format_pre": "Format: ",
+      "batch_add_macros_format_pre": "Format:",
       "batch_add_macros_format_req": "3D_Requirements(Optional)",
       "batch_add_macros_placeholder": "Enter content here, one per line...",
       "batch_add_macros_req_control": "Control",
       "batch_add_macros_req_cp": "CP",
       "batch_add_macros_req_craft": "Craftsmanship",
       "batch_add_macros_req_post": ", any part can be omitted.",
-      "batch_add_macros_req_pre": "3D requirements format: ",
+      "batch_add_macros_req_pre": "3D requirements format:",
       "batch_add_preview": "Confirm Batch Add",
       "batch_add_preview_desc": "The following macros will be added, please confirm:",
       "batch_add_recognize": "Recognize",
       "batch_operate": "Batch Operations",
       "can_select_item_or_input_name": "Select from DB or enter name.",
-      "click_to_edit_pre": "You can also set the process in the macro editor: ",
+      "click_to_edit_pre": "You can also set the process in the macro editor:",
       "cover_auto_val_when_inputed": "Manual input overrides auto-calculation.",
       "delete_all_macros": "Delete All Macros",
       "drag_to_sort": "Long press to drag and reorder.",
@@ -1721,10 +1716,10 @@
         "text_6": "CAC is a new standard for compressed crafting processes.",
         "text_7": "Paste the process code or share link to the input box below to identify the full process."
       },
-      "import_source": "Import Source: ",
+      "import_source": "Import Source:",
       "input_item_name": "Enter Item Name",
       "macro_lang": "Macro Language",
-      "macro_lang_with_colon": "Language: ",
+      "macro_lang_with_colon": "Language:",
       "macro_name": "Macro Name",
       "no_macro_content_set": "No Content",
       "no_relate_item_set": "No Related Items",
@@ -1740,7 +1735,7 @@
       "remove_action": "Delete this skill",
       "select_from_db": "Select from DB",
       "tag_name": "Tag Name",
-      "tag_with_colon": "Tags: "
+      "tag_with_colon": "Tags:"
     },
     "title": "Macro Management"
   },
@@ -1784,6 +1779,8 @@
       "desc": {
         "un_selected": "None"
       },
+      "gear_overview": "Gear Overview",
+      "gear_overview_no_gear": "No gear for this slot",
       "info": {
         "info_1": "Duplicate equipment will be merged.",
         "info_2": "Current Main/Offhand: {val}",
@@ -1843,8 +1840,6 @@
       },
       "title": "Select Gears",
       "view_selected": "View Selected",
-      "gear_overview": "Gear Overview",
-      "gear_overview_no_gear": "No gear for this slot",
       "warn": {
         "select_job_first": "Please Select Job"
       }
@@ -1903,62 +1898,83 @@
       "recomm_aetheryte": "Recomm. Aetheryte"
     }
   },
+  "onboarding": {
+    "btn": {
+      "finish": "Finish Setup & Start",
+      "next": "Next",
+      "prev": "Back"
+    },
+    "step_1": {
+      "name": "Welcome",
+      "title": "Welcome"
+    },
+    "step_2": {
+      "desc": "Configure UI language, item name language, and theme. Changes take effect immediately.",
+      "item_lang": "Item Language",
+      "name": "Settings",
+      "theme": "Theme",
+      "title": "Basic Settings",
+      "ui_lang": "UI Language"
+    },
+    "step_3": {
+      "desc": "In HqHelper, item buttons and spans provide powerful interactions:",
+      "feature_hover_desc": "Hover over any item to preview its crafting recipe, material sources, stats, and market prices.",
+      "feature_hover_title": "Hover for Details",
+      "feature_menu_desc": "Right-click any item (or long-press on mobile) to open the context menu: copy name, copy /isearch macro, add to workflow, and more.",
+      "feature_menu_title": "Right-Click Context Menu",
+      "name": "Features",
+      "playground_tip": "👉 Try hovering over the items below, or right-click to test the context menu:",
+      "title": "Interactive Features"
+    },
+    "step_4": {
+      "desc": "You can always switch between modes anytime using the top-left menu on desktop:",
+      "hqwb_desc": "Quick gear calculator by patch. Select combat/crafter/gatherer gear sets and instantly summarize materials and tomestones.",
+      "hqwb_title": "HQ Workbench",
+      "name": "Homepage",
+      "title": "Choose Default Homepage",
+      "workflow_desc": "Flexible multi-recipe planner. Add any items, view hierarchical material trees, analyze costs and profits, and manage macros.",
+      "workflow_title": "Recipe Calculator (Workflow)"
+    },
+    "welcome": {
+      "desc_1": "HqHelper provides comprehensive tools for gear planning, flexible multi-craft workflows, material tree breakdown, gathering clock, and craft macros.",
+      "desc_2": "Before getting started, let's configure some basic preferences in a few quick steps.",
+      "start_btn": "Get Started",
+      "subtitle": "FFXIV Crafting & Gathering Recipe Assistant",
+      "title": "Welcome to HqHelper"
+    }
+  },
   "patch_guide": {
-    "title": "Patch Guide",
-    "page_title": "Patch Guide - {val}",
-    "toc": "Navigation",
+    "empty": "No items found in this patch",
+    "gear": {
+      "aethersand": "Aethersand",
+      "combat_gears": "Combat Gear",
+      "crafter_gatherer": "DoH / DoL Full Gear Set",
+      "crafter_total": "Crafter Total",
+      "gatherer_total": "Gatherer Total",
+      "life_gears": "Crafter & Gatherer Gear",
+      "life_total": "DoH/DoL Combined",
+      "master_precraft": "Master Precrafts",
+      "mode_overview": "Overview Mode",
+      "mode_tile": "Tile Mode",
+      "normal_precraft": "Normal Precrafts",
+      "view_mode": "View Mode"
+    },
     "invalid_patch": "Invalid patch or patch data not updated",
     "section": {
       "legendary_gathering": "New Legendary Gatherings",
-      "trade_items": "New Exchange Items",
       "master_recipe": "New Master Recipe Materials",
-      "new_gears": "New Gears",
       "new_food": "New Food",
-      "new_medicine": "New Medicines"
-    },
-    "gear": {
-      "normal_precraft": "Normal Precrafts",
-      "aethersand": "Aethersand",
-      "master_precraft": "Master Precrafts",
-      "crafter_gatherer": "DoH / DoL Full Gear Set",
-      "one_set_desc": "One full set: Main + Off + 5 Left-side + Ear + Neck + Wrist + Ring x2",
-      "life_set_desc": "Full set: All DoH Main/Off + All DoL Main/Off + DoH Left/Right + DoL Left/Right",
-      "life_set_badge": "All tools & gears",
-      "crafter_total": "Crafter Total",
-      "gatherer_total": "Gatherer Total",
-      "life_total": "DoH/DoL Combined",
-      "no_combat_gears": "No new combat gears in this patch",
-      "no_life_gears": "No new crafter/gatherer gears in this patch",
-      "combat_gears": "Combat Gear",
-      "life_gears": "Crafter & Gatherer Gear",
-      "view_mode": "View Mode",
-      "mode_tile": "Tile Mode",
-      "mode_overview": "Overview Mode"
+      "new_gears": "New Gears",
+      "new_medicine": "New Medicines",
+      "trade_items": "New Exchange Items"
     },
     "table": {
-      "job": "Job",
-      "item": "Item",
-      "attrs": "Attributes (HQ)",
-      "recipe": "Recipe Tree",
-      "cost": "Exchange Cost"
+      "job": "Job"
     },
-    "empty": "No items found in this patch"
+    "title": "Patch Guide",
+    "toc": "Navigation"
   },
   "preference": {
-    "default_homepage": {
-      "desc": {
-        "desc_1": "Set which page to display by default when accessing the root path (/)."
-      },
-      "title": "Default Homepage"
-    },
-    "rerun_onboarding": {
-      "btn": "Rerun Wizard",
-      "confirm_dialog": "Rerunning the setup wizard will reset onboarding state and reload the page. Unsaved preference changes will be lost. Continue?",
-      "desc": {
-        "desc_1": "Rerun the initial setup wizard shown on first visit."
-      },
-      "title": "Initial Setup Wizard"
-    },
     "auto_refresh_after_save": {
       "desc": {
         "desc_1": "Takes effect upon next save. Auto-refresh only triggered when necessary."
@@ -2041,6 +2057,9 @@
       "title": "Font size"
     },
     "custom_proxy_url": "Custom Proxy Host",
+    "default_homepage": {
+      "title": "Default Homepage"
+    },
     "disable_auto_update": {
       "desc": {
         "desc_1": "We check the latest version once when you start the application, and prompt you to update.",
@@ -2072,33 +2091,6 @@
       "title": "Disable Work State Memory"
     },
     "enable_dev_mode": "Enable dev mode",
-    "inventory_plugin": {
-      "receive": {
-        "title": "Receive third-party data"
-      },
-      "port": {
-        "title": "WebSocket port"
-      },
-      "token": {
-        "title": "WebSocket token"
-      },
-      "test": {
-        "title": "Test connection",
-        "idle": "Test connection",
-        "testing": "Testing",
-        "status": "Current status: {status}",
-        "result": "Test result: {result}"
-      },
-      "status": {
-        "disconnected": "Disconnected",
-        "connecting": "Connecting",
-        "connected": "Connected",
-        "error": "Connection error"
-      },
-      "message": {
-        "invalid_settings": "Please enter a valid port and token."
-      }
-    },
     "export": {
       "desc": {
         "desc_1": "You can now export the preferences/features settings of this device to another device. Excludes item price caches.",
@@ -2130,6 +2122,33 @@
       },
       "placeholder": "Paste the settings exported from another HqHelper here.",
       "title": "Import Preferences"
+    },
+    "inventory_plugin": {
+      "message": {
+        "invalid_settings": "Please enter a valid port and token."
+      },
+      "port": {
+        "title": "WebSocket port"
+      },
+      "receive": {
+        "title": "Receive third-party data"
+      },
+      "status": {
+        "connected": "Connected",
+        "connecting": "Connecting",
+        "disconnected": "Disconnected",
+        "error": "Connection error"
+      },
+      "test": {
+        "idle": "Test connection",
+        "result": "Test result: {result}",
+        "status": "Current status: {status}",
+        "testing": "Testing",
+        "title": "Test connection"
+      },
+      "token": {
+        "title": "WebSocket token"
+      }
     },
     "item_amount_use_comma": {
       "desc": {
@@ -2237,6 +2256,14 @@
         "desc_1": "Only works in Pro statement."
       },
       "title": "Show item in concise mode"
+    },
+    "rerun_onboarding": {
+      "btn": "Rerun Wizard",
+      "confirm_dialog": "Rerunning the setup wizard will reset onboarding state and reload the page. Unsaved preference changes will be lost. Continue?",
+      "desc": {
+        "desc_1": "Rerun the initial setup wizard shown on first visit."
+      },
+      "title": "Initial Setup Wizard"
     },
     "server": {
       "option": {
@@ -2366,7 +2393,13 @@
         "desc_1": "We provides PRO Craft Statement after v2.0.10 to provide more detailed item information table and support to calculate the remaining materials based on the prepared materials.",
         "desc_2": "If you dont need to use these features, or you prefer the old version of craft statement, you can consider to turn on this option."
       },
-      "title": "Use traditional Craft Statement "
+      "title": "Use traditional Craft Statement"
+    }
+  },
+  "recipe": {
+    "notebookgroup": {
+      "custom_lists": "Recommended Lists",
+      "other_master_recipes": "Other Master Recipes"
     }
   },
   "recomm_process": {
@@ -2538,11 +2571,14 @@
     }
   },
   "workflow": {
+    "custom_list": {
+      "join_list": "Add this list"
+    },
     "import": {
       "itemlist": {
         "message": {
           "error_content_invalid_after": "Import would be canceled.",
-          "error_content_invalid_prev": "There was a problem with the entered content. Please check: ",
+          "error_content_invalid_prev": "There was a problem with the entered content. Please check:",
           "error_count_invalid": "The quantity “{1}” in line {0} is invalid. It must be an integer greater than 0",
           "error_format_invalid": "The content “{1}” in line {0} is in an unsupported format",
           "error_item_duplicated": "The item “{1}” in line {0} is duplicated with a previous line",
@@ -2578,15 +2614,36 @@
     "message": {
       "max_len": "You can only add up to {num} workflows"
     },
+    "notebook_search": {
+      "clear_history": "Clear history",
+      "empty_history": "No search history",
+      "error_empty": "Please enter a search keyword",
+      "error_material_id_too_small": "Reverse recipe lookup is not supported for this item (crystals, etc.)",
+      "error_no_result": "No matching items found",
+      "history": "Search History",
+      "material_history_prefix": "Material",
+      "placeholder": "Search items..."
+    },
     "recomm_process": "Workflow Process",
+    "share": {
+      "copy_succeed": "Copied to clipboard",
+      "empty_workflow": "Current workflow has no items, cannot generate share code",
+      "import_by_code_failed": "Failed to parse share code, please check if it is correct",
+      "title": "Share Workflow"
+    },
     "shared": {
       "new_a_workflow": "Create New Workflow"
     },
     "text": {
       "add_a_workflow": "Add a workflow",
+      "add_item_to_curr_workflow": {
+        "tip_1": "Add this item to current workflow",
+        "tip_2": "If already added, amount will be increased"
+      },
       "clear_current_workflow": "Clear selected items in current workflow",
       "confirm_delete": "Delete this workflow?",
       "delete_this_workflow": "Delete this workflow",
+      "join_in_curr_workflow": "Add to Current Workflow",
       "join_in_workflow": "Add to workflow",
       "join_selected_collectable_submissions_in_workflow": "Add selected collections to a workflow",
       "join_selected_fashion_clothes_in_workflow": "Add selected fashion clothes to a workflow",
@@ -2595,97 +2652,21 @@
       "manage_workflows": "Manage workflows",
       "manage_workflows_desc": "Here you can modify the names of each workflow or delete them directly.",
       "min_len": "You must keep at least one workflow.",
+      "notebook_item_not_selected": "Please select an item first",
       "rename_this_workflow": "Rename this workflow",
       "rename_to": "Rename this workflow to:",
       "set_workflows": "Configure Workflow",
-      "switch_workflows": "Switch Workflow: ",
+      "switch_workflows": "Switch Workflow:",
       "sync_from_inventory": "Sync from inventory",
       "sync_to_inventory": "Sync to inventory",
       "workflow_name": "Workflow name",
       "workflow_name_default_info": "If no name was set for a workflow, it would automatically display as 'Workflow 1~{maxlen}' in order.",
       "workflow_name_reorder_on_deleted": "When a workflow is deleted, all subsequent unnamed workflows would be renumbered.",
-      "workflow_with_index": "Workflow {index}",
-      "add_item_to_curr_workflow": {
-        "tip_1": "Add this item to current workflow",
-        "tip_2": "If already added, amount will be increased"
-      },
-      "notebook_item_not_selected": "Please select an item first",
-      "join_in_curr_workflow": "Add to Current Workflow"
+      "workflow_with_index": "Workflow {index}"
     },
     "tooltip": {
       "set_inventory_by_prepared": "Set the inventory quantity to the 'Prepared' quantity in the statement.",
       "set_prepared_by_inventory": "Set the 'Prepared' quantity in the statement to the quantity of In-game inventory."
-    },
-    "notebook_search": {
-      "placeholder": "Search items...",
-      "history": "Search History",
-      "empty_history": "No search history",
-      "clear_history": "Clear history",
-      "material_history_prefix": "Material",
-      "error_empty": "Please enter a search keyword",
-      "error_no_result": "No matching items found",
-      "error_material_id_too_small": "Reverse recipe lookup is not supported for this item (crystals, etc.)"
-    },
-    "share": {
-      "title": "Share Workflow",
-      "empty_workflow": "Current workflow has no items, cannot generate share code",
-      "copy_succeed": "Copied to clipboard",
-      "import_by_code_failed": "Failed to parse share code, please check if it is correct"
-    },
-    "custom_list": {
-      "join_list": "Add this list",
-      "total_items": "Total {0} items"
-    }
-  },
-  "recipe": {
-    "notebookgroup": {
-      "other_master_recipes": "Other Master Recipes",
-      "custom_lists": "Recommended Lists"
-    }
-  },
-  "onboarding": {
-    "welcome": {
-      "title": "Welcome to HqHelper",
-      "subtitle": "FFXIV Crafting & Gathering Recipe Assistant",
-      "desc_1": "HqHelper provides comprehensive tools for gear planning, flexible multi-craft workflows, material tree breakdown, gathering clock, and craft macros.",
-      "desc_2": "Before getting started, let's configure some basic preferences in a few quick steps.",
-      "start_btn": "Get Started"
-    },
-    "step_1": {
-      "title": "Welcome",
-      "name": "Welcome"
-    },
-    "step_2": {
-      "title": "Basic Settings",
-      "name": "Settings",
-      "desc": "Configure UI language, item name language, and theme. Changes take effect immediately.",
-      "ui_lang": "UI Language",
-      "item_lang": "Item Language",
-      "theme": "Theme"
-    },
-    "step_3": {
-      "title": "Interactive Features",
-      "name": "Features",
-      "desc": "In HqHelper, item buttons and spans provide powerful interactions:",
-      "feature_hover_title": "Hover for Details",
-      "feature_hover_desc": "Hover over any item to preview its crafting recipe, material sources, stats, and market prices.",
-      "feature_menu_title": "Right-Click Context Menu",
-      "feature_menu_desc": "Right-click any item (or long-press on mobile) to open the context menu: copy name, copy /isearch macro, add to workflow, and more.",
-      "playground_tip": "👉 Try hovering over the items below, or right-click to test the context menu:"
-    },
-    "step_4": {
-      "title": "Choose Default Homepage",
-      "name": "Homepage",
-      "desc": "You can always switch between modes anytime using the top-left menu on desktop:",
-      "hqwb_title": "HQ Workbench",
-      "hqwb_desc": "Quick gear calculator by patch. Select combat/crafter/gatherer gear sets and instantly summarize materials and tomestones.",
-      "workflow_title": "Recipe Calculator (Workflow)",
-      "workflow_desc": "Flexible multi-recipe planner. Add any items, view hierarchical material trees, analyze costs and profits, and manage macros."
-    },
-    "btn": {
-      "prev": "Back",
-      "next": "Next",
-      "finish": "Finish Setup & Start"
     }
   }
 }
