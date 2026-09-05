@@ -33,7 +33,7 @@ const masterItems = computed(() => {
       </div>
     </template>
 
-    <n-empty v-if="!masterItems.length" :description="t('patch_guide.empty')" class="my-4" />
+    <n-empty v-if="!masterItems.length" :description="t('common.nothing')" class="my-4" />
 
     <div
       v-else

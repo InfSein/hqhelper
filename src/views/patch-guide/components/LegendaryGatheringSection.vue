@@ -68,7 +68,7 @@ const handleStarButtonClick = (itemInfo: ItemInfo) => {
       </div>
     </template>
 
-    <n-empty v-if="!gatherings.length" :description="t('patch_guide.empty')" class="my-4" />
+    <n-empty v-if="!gatherings.length" :description="t('common.nothing')" class="my-4" />
 
     <n-el v-else>
       <n-grid

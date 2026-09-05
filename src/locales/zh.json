@@ -1909,7 +1909,6 @@
   },
   "patch_guide": {
     "title": "版本攻略",
-    "page_title": "版本攻略 - {val}",
     "toc": "快速导航",
     "invalid_patch": "不支持此版本号",
     "section": {
@@ -1925,14 +1924,9 @@
       "aethersand": "灵砂",
       "master_precraft": "秘籍半成品",
       "crafter_gatherer": "生产采集全套装备",
-      "one_set_desc": "一整套：主手+副手+5防具+耳坠+项链+手镯+戒指×2",
-      "life_set_desc": "全套装备：全部生产职业主副手+全部采集职业主副手+生产防具饰品一套+采集防具饰品一套",
-      "life_set_badge": "全职业主副手+全套防具饰品",
-      "crafter_total": "生产职业总需求",
-      "gatherer_total": "采集职业总需求",
-      "life_total": "生产采集汇总",
-      "no_combat_gears": "当前版本没有新实装的战斗职业装备",
-      "no_life_gears": "当前版本没有新实装的生产采集装备",
+      "crafter_total": "能工巧匠总计",
+      "gatherer_total": "大地使者总计",
+      "life_total": "生产采集总需求",
       "combat_gears": "战斗职业装备",
       "life_gears": "生产采集装备",
       "view_mode": "显示模式：",
@@ -1940,11 +1934,7 @@
       "mode_overview": "总览模式"
     },
     "table": {
-      "job": "职业",
-      "item": "道具",
-      "attrs": "提供属性 (HQ)",
-      "recipe": "树状配方",
-      "cost": "兑换消耗"
+      "job": "职业"
     },
     "empty": "当前版本未检索到此类物品"
   },

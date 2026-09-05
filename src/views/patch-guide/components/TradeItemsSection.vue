@@ -28,7 +28,7 @@ const tradeGroups = computed(() => {
       </div>
     </template>
 
-    <n-empty v-if="!tradeGroups.length" :description="t('patch_guide.empty')" class="my-4" />
+    <n-empty v-if="!tradeGroups.length" :description="t('common.nothing')" class="my-4" />
 
     <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5">
       <n-card

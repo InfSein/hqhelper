@@ -36,7 +36,7 @@ const currentPatch = computed(() => {
 })
 
 const pageTitle = computed(() => {
-  return t('patch_guide.page_title', { val: patchVer.value })
+  return t('patch_guide.title') + ' - ' + patchVer.value
 })
 
 // 导航栏滚动状态：初始展开，滚动后收起
@@ -142,7 +142,7 @@ const navItems = computed(() => [
         :class="store.userConfig.custom_background ? 'glasscard' : ''"
         class="border border-border sticky top-0 z-20 shadow-xs backdrop-blur-md"
       >
-        <!-- 展开模式下的大标题区：使用 grid-template-rows 丝滑折叠，无 max-height 空走卡顿 -->
+        <!-- 展开模式下的大标题区 -->
         <div
           class="title-row"
           :class="{ 'title-row--collapsed': isNavCompact }"
@@ -155,7 +155,7 @@ const navItems = computed(() => [
           </div>
         </div>
 
-        <!-- 导航主体：小标题与按钮组（单一按钮列表，切换无闪烁卡顿） -->
+        <!-- 导航主体：小标题与按钮组 -->
         <div class="flex items-center gap-2 overflow-x-auto py-0.5">
           <!-- 紧凑模式下平滑浮现的小标题 -->
           <div

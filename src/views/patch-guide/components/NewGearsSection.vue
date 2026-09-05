@@ -581,7 +581,7 @@ const lifeRowClassName = (row: LifeTableRow) => {
 
     <n-empty
       v-if="!combatJobsData.length && !lifeTotalData"
-      :description="t('patch_guide.empty')"
+      :description="t('common.nothing')"
       class="my-4"
     />
 

@@ -82,7 +82,7 @@ const getAttrDisplays = (item: ItemInfo): AttrDisplay[] => {
       </div>
     </template>
 
-    <n-empty v-if="!medicines.length" :description="t('patch_guide.empty')" class="my-4" />
+    <n-empty v-if="!medicines.length" :description="t('common.nothing')" class="my-4" />
 
     <div v-else class="flex flex-col gap-4">
       <div
