@@ -4,15 +4,14 @@ import {
   RefreshOutlined,
 } from '@vicons/material'
 import { useStore } from '@/store'
-import { useDialog } from '@/tools/dialog'
-import type { MainCacheModel } from '@/models/cache-main'
-
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const mainCache = inject<Ref<MainCacheModel>>('mainCache')!
+import { useDialog } from '@/composables/useDialog'
+import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
 
 const store = useStore()
-const { alertInfo } = useDialog(t)
+const { t } = useLocale()
+const { alertInfo } = useDialog()
+const { isMobile } = useResponsive()
 
 const showModal = defineModel<boolean>('show', { required: true })
 
@@ -59,8 +58,8 @@ const loadSponsors = async () => {
       throw new Error(sponsorsContent.errmsg)
     }
     sponsors.value = sponsorsContent.data.content.sponsors
-    mainCache.value.sponsor_nbbids = sponsors.value.flatMap(s => s.nbbid ? [s.nbbid] : [])
-    store.setMainCache(mainCache.value)
+    store.mainCache.sponsor_nbbids = sponsors.value.flatMap(s => s.nbbid ? [s.nbbid] : [])
+    store.setMainCache(store.mainCache)
     sponsorLoadingStatus.value = 'finished'
   } catch (e: any) {
     sponsorLoadingStatus.value = 'error'
@@ -99,14 +98,14 @@ const getSponsorGenContent = (gen: number) => {
         <span class="title">
           {{ t('common.appfunc.thank_list') }}
         </span>
-        <div class="card-title-actions">
+        <div class="card-title__actions">
           <a href="javascript:void(0);" @click="showRules">[{{ t('common.rule') }}]</a>
         </div>
       </div>
     </template>
 
     <div class="wrapper">
-      <div v-if="sponsorLoadingStatus === 'loading'" class="spin-container">
+      <div v-if="sponsorLoadingStatus === 'loading'" class="flex items-center gap-1 mt-[5px] ml-[1.2em]">
         <n-spin size="small" style="text-indent: initial;" />
         <div>{{ t('common.loading') }}</div>
       </div>

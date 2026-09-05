@@ -1,10 +1,9 @@
-import type { Ref } from 'vue'
+import { useStore } from '@/store'
+import { useLocale } from '@/composables/useLocale'
 import { XivJobs } from '@/assets/data'
-import type { RecommItemGroup } from '@/models/item'
-import type { UserConfigModel } from "@/models/config-user"
-import type { FuncConfigModel } from "@/models/config-func"
+import type { RecommItemGroup } from '@/types/item'
 import { deepCopy } from '.'
-import { getItemInfo, type ItemInfo } from "./item"
+import { getItemInfo, sortItems, type ItemInfo } from "./item"
 import { useNbbCal } from "./use-nbb-cal"
 
 export interface StatementData {
@@ -24,11 +23,10 @@ export interface ProStatementBlock {
   preparedKey: ProStatementPreparedKey;
 }
 
-export function useFufuCal(
-  userConfig: Ref<UserConfigModel>,
-  funcConfig: Ref<FuncConfigModel>,
-  t: (message: string, args?: any) => string,
-) {
+export function useFufuCal() {
+  const store = useStore()
+  const { t } = useLocale()
+
   const calItems = (selections: Record<number, number>) => {
     const { calItems } = useNbbCal()
     return calItems(selections)
@@ -54,7 +52,7 @@ export function useFufuCal(
     return { craftTargets, materialsLv1, materialsLv2, materialsLv3, materialsLv4, materialsLv5, materialsLvBase }
 
     function processStatistics(_in: any, out: any[]) {
-      const ignoreCrystal = funcConfig.value.statement_ignore_crystals
+      const ignoreCrystal = store.funcConfig.statement_ignore_crystals
       for (const id in _in) {
         const item = getItemInfo(_in[id])
         if (ignoreCrystal && item.isCrystal) continue
@@ -105,7 +103,7 @@ export function useFufuCal(
     Object.values(statisticsForLv1.lv1).forEach((calResult : any) => {
       const itemID : number = calResult.id
       const amount : number = calResult.need
-      if (funcConfig.value.statement_ignore_crystals && isCrystal(itemID)) return
+      if (store.funcConfig.statement_ignore_crystals && isCrystal(itemID)) return
       lv1Items[itemID] = amount
     })
 
@@ -121,7 +119,7 @@ export function useFufuCal(
     Object.values(statistics.lvBase).forEach((calResult : any) => {
       const itemID : number = calResult.id
       const amount : number = calResult.need
-      if (funcConfig.value.statement_ignore_crystals && isCrystal(itemID)) return
+      if (store.funcConfig.statement_ignore_crystals && isCrystal(itemID)) return
       baseItems[itemID] = amount
     })
     // nbb计算模型目前会忽略掉制作目标(这里的话是直接素材列表)中没有配方的道具，这里对它们进行特殊处理
@@ -385,14 +383,7 @@ export function useFufuCal(
         const items = craftings[jobId]
         // NOTE: 'recipeOrderSearch' is the same as 'itemId'.
         if (processes_craftable_item_sortby === 'recipeOrder') {
-          items.sort((a, b) => 
-            (a.craftInfo.craftLevel - b.craftInfo.craftLevel) ||
-            (a.craftInfo.starCount - b.craftInfo.starCount) ||
-            (a.craftInfo.rLv - b.craftInfo.rLv) ||
-            (a.uiTypeOrder - b.uiTypeOrder) ||
-            (a.sortOrder - b.sortOrder) ||
-            (a.id - b.id)
-          )
+          sortItems(items, 'recipeOrder')
         }
         groups.push({
           type: `craft-${type}`,

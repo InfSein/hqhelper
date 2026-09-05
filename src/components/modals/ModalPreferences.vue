@@ -1,43 +1,53 @@
 <script setup lang="ts">
 import {
+  AllInclusiveSharp,
+  ArchiveSharp,
+  AttachMoneyOutlined,
+  CodeSharp,
+  ColorLensRound,
+  DiscountOutlined,
+  InfoOutlined,
+  MemoryRound,
+  SaveOutlined,
   SettingsSharp,
   SettingsSuggestFilled,
+  TableViewOutlined,
   TravelExploreRound,
   TrendingUpRound,
-  ColorLensRound,
-  MemoryRound,
+  UnarchiveSharp,
   UpdateRound,
-  CodeSharp,
-  DiscountOutlined,
-  TableViewOutlined,
-  AllInclusiveSharp,
-  AttachMoneyOutlined,
-  InfoOutlined,
-  // WifiRound,
-  ArchiveSharp, UnarchiveSharp,
-  SaveOutlined
 } from '@vicons/material'
-import AboutApp from '../custom/general/AboutApp.vue'
-import SettingItem from '../custom/general/SettingItem.vue'
+import AboutApp from '@/components/app/AboutApp.vue'
+import SettingItem from '@/components/ui/SettingItem.vue'
 import ModalPreferencesImportExport from './ModalPreferencesImportExport.vue'
 import { useStore } from '@/store/index'
-import type { PreferenceGroup, SettingGroupKey } from '@/models'
-import { type UserConfigModel, fixUserConfig } from '@/models/config-user'
-import { fixFuncConfig, type FuncConfigModel } from '@/models/config-func'
-import { fixWorkState } from '@/models/workflow'
+import { useLocale } from '@/composables/useLocale'
+import { useDialog } from '@/composables/useDialog'
+import useUiTools from '@/composables/useUiTools'
+import { useResponsive } from '@/composables/useResponsive'
+import { useInventoryPlugin } from '@/composables/useInventoryPlugin'
 import { deepCopy } from '@/tools'
-import { useDialog } from '@/tools/dialog'
-import useUiTools from '@/tools/ui'
-import { dbKey } from '@/tools/idb'
+import type { PreferenceGroup, SettingGroupKey } from '@/types/index'
+import { fixFuncConfig, type FuncConfigModel } from '@/types/config/func'
+import { fixUserConfig, type UserConfigModel } from '@/types/config/user'
+import { fixWorkState as fixMmHelperWorkState } from '@/types/workstate/mmhelper'
+import { fixWorkState as fixWorkflowWorkState } from '@/types/workstate/workflow'
+import { fixWorkState as fixHqwbWorkState } from '@/types/workstate/hqworkbench'
+import { fixWorkState as fixGatherclockWorkState } from '@/types/workstate/gatherclock'
+import { dbKey } from '@/utils/app.idb'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
 const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
 
 const store = useStore()
-const { confirm } = useDialog(t)
+const { t } = useLocale()
+const { confirm } = useDialog()
+const { renderIcon } = useUiTools()
+const { isMobile } = useResponsive()
 const NAIVE_UI_MESSAGE = useMessage()
-const { renderIcon } = useUiTools(isMobile)
+const {
+  connectionStatus: inventoryConnectionStatus,
+  testConnection: testInventoryConnection
+} = useInventoryPlugin()
 
 const showModal = defineModel<boolean>('show', { required: true })
 const emit = defineEmits(['close', 'afterSubmit'])
@@ -49,6 +59,29 @@ interface ModalPreferencesProps {
   appShowFp?: boolean
 }
 const props = defineProps<ModalPreferencesProps>()
+
+const isTestingInventoryConnection = ref(false)
+const inventoryConnectionTestMessage = ref('')
+const inventoryStatusText = computed(() => {
+  return t(`preference.inventory_plugin.status.${inventoryConnectionStatus.value}`)
+})
+const inventoryTestDescriptions = computed(() => {
+  const descriptions = [
+    t('preference.inventory_plugin.test.status', { status: inventoryStatusText.value })
+  ]
+  if (inventoryConnectionTestMessage.value) {
+    descriptions.push(t('preference.inventory_plugin.test.result', { result: inventoryConnectionTestMessage.value }))
+  }
+  return descriptions
+})
+
+const handleRerunOnboarding = async () => {
+  if (await confirm(t('preference.rerun_onboarding.confirm_dialog'))) {
+    store.userConfig.onboarding_completed = false
+    store.updateUserConfig()
+    location.reload()
+  }
+}
 
 // #region data
 const dealSimOptions = (options: string[]) => {
@@ -119,6 +152,18 @@ const preferenceGroups = computed(() : PreferenceGroup[] => {
                 { value: 'reload', label: t('common.auto_refresh') },
                 { value: 'none', label: t('common.dont_refresh') }
               ]
+            },
+            {
+              key: 'rerun_onboarding',
+              label: t('preference.rerun_onboarding.title'),
+              descriptions: [
+                t('preference.rerun_onboarding.desc.desc_1'),
+              ],
+              type: 'button',
+              buttonProps: {
+                text: t('preference.rerun_onboarding.btn'),
+                onClick: handleRerunOnboarding
+              }
             }
           ]
         },
@@ -146,7 +191,7 @@ const preferenceGroups = computed(() : PreferenceGroup[] => {
                 t('preference.custom_background.desc.desc_2'),
                 {
                   value: t('preference.custom_background.desc.desc_3'),
-                  class: 'text-sub font-small',
+                  class: 'text-sub text-app-xs',
                 },
               ],
               type: 'image-select',
@@ -337,6 +382,47 @@ const preferenceGroups = computed(() : PreferenceGroup[] => {
               hide: !window.electronAPI?.openDevTools,
               type: 'switch',
               require_reload: true
+            },
+            {
+              key: 'receive_third_party_data',
+              label: t('preference.inventory_plugin.receive.title'),
+              hide: !window.wsApi,
+              descriptions: [
+                t('preference.inventory_plugin.receive.desc.desc_1'),
+              ],
+              type: 'switch'
+            },
+            {
+              key: 'inventory_ws_port',
+              label: t('preference.inventory_plugin.port.title'),
+              hide: !window.wsApi || !formUserConfigData.value.receive_third_party_data,
+              type: 'number',
+              min: 1,
+              max: 65535,
+            },
+            {
+              key: 'inventory_ws_token',
+              label: t('preference.inventory_plugin.token.title'),
+              hide: !window.wsApi || !formUserConfigData.value.receive_third_party_data,
+              descriptions: [
+                t('preference.inventory_plugin.token.desc.desc_1'),
+              ],
+              type: 'password',
+            },
+            {
+              key: 'inventory_ws_test_connection',
+              label: t('preference.inventory_plugin.test.title'),
+              hide: !window.wsApi || !formUserConfigData.value.receive_third_party_data,
+              descriptions: inventoryTestDescriptions.value,
+              type: 'button',
+              buttonProps: {
+                text: isTestingInventoryConnection.value
+                  ? t('preference.inventory_plugin.test.testing')
+                  : t('preference.inventory_plugin.test.idle'),
+                loading: isTestingInventoryConnection.value,
+                disabled: isTestingInventoryConnection.value,
+                onClick: handleTestInventoryConnection
+              }
             }
           ]
         },
@@ -354,7 +440,7 @@ const preferenceGroups = computed(() : PreferenceGroup[] => {
                 t('preference.disable_auto_update.desc.desc_2'),
                 {
                   value: t('preference.disable_auto_update.desc.desc_3'),
-                  class: 'color-info',
+                  class: 'text-info',
                 }
               ],
               type: 'switch'
@@ -912,7 +998,7 @@ const currentGroupName = computed(() => {
 
 const currentMenuVal = ref<string>('general')
 const formUserConfigData = ref<UserConfigModel>(deepCopy(fixUserConfig(store.userConfig)))
-const formFuncConfigData = ref<FuncConfigModel>(deepCopy(fixFuncConfig(store.funcConfig, store.userConfig)))
+const formFuncConfigData = ref<FuncConfigModel>(deepCopy(fixFuncConfig(store.funcConfig)))
 
 const onLoad = () => {
   if (props.settingGroup) {
@@ -923,11 +1009,41 @@ const onLoad = () => {
     currentMenuVal.value = 'general'
   }
   formUserConfigData.value = deepCopy(fixUserConfig(store.userConfig))
-  formFuncConfigData.value = deepCopy(fixFuncConfig(store.funcConfig, store.userConfig))
+  formFuncConfigData.value = deepCopy(fixFuncConfig(store.funcConfig))
 }
 
 const handleCheck = () => {
+  const port = Number(formUserConfigData.value.tpd_ws_port)
+  const token = formUserConfigData.value.tpd_ws_token?.trim() ?? ''
+  if (
+    formUserConfigData.value.receive_third_party_data
+    && (!Number.isInteger(port) || port < 1 || port > 65535 || !token)
+  ) {
+    return t('preference.inventory_plugin.message.invalid_settings')
+  }
   return ''
+}
+const handleTestInventoryConnection = async () => {
+  const port = Number(formUserConfigData.value.tpd_ws_port)
+  const token = formUserConfigData.value.tpd_ws_token?.trim() ?? ''
+  if (!Number.isInteger(port) || port < 1 || port > 65535 || !token) {
+    inventoryConnectionTestMessage.value = t('preference.inventory_plugin.message.invalid_settings')
+    NAIVE_UI_MESSAGE.error(inventoryConnectionTestMessage.value)
+    return
+  }
+
+  isTestingInventoryConnection.value = true
+  try {
+    const result = await testInventoryConnection(port, token)
+    inventoryConnectionTestMessage.value = result.message
+    if (result.success) {
+      NAIVE_UI_MESSAGE.success(result.message)
+    } else {
+      NAIVE_UI_MESSAGE.error(result.message)
+    }
+  } finally {
+    isTestingInventoryConnection.value = false
+  }
 }
 const handleSave = async () => {
   // * 检查设置合法性
@@ -942,17 +1058,20 @@ const handleSave = async () => {
   formUserConfigData.value.language_ui ??= 'zh'
   formUserConfigData.value.language_item ??= 'auto'
   formUserConfigData.value.disable_workstate_cache ??= false
+  formUserConfigData.value.receive_third_party_data ??= false
+  formUserConfigData.value.tpd_ws_port = Number(formUserConfigData.value.tpd_ws_port) || 17814
+  formUserConfigData.value.tpd_ws_token ??= ''
   if (formUserConfigData.value.disable_workstate_cache) {
-    formUserConfigData.value.cache_work_state = {}
-    formUserConfigData.value.fthelper_cache_work_state = {}
-    formUserConfigData.value.gatherclock_cache_work_state = {}
-    formUserConfigData.value.workflow_cache_work_state = fixWorkState()
+    formUserConfigData.value.hqwb_cache_work_state = fixHqwbWorkState()
+    formUserConfigData.value.mmhelper_cache_work_state = fixMmHelperWorkState()
+    formUserConfigData.value.gatherclock_cache_work_state = fixGatherclockWorkState()
+    formUserConfigData.value.workflow_cache_work_state = fixWorkflowWorkState()
   }
   const newUserConfig = fixUserConfig(formUserConfigData.value)
   store.setUserConfig(newUserConfig)
 
   // * 处理功能设置
-  const oldFuncConfig = deepCopy(fixFuncConfig(store.funcConfig, store.userConfig))
+  const oldFuncConfig = deepCopy(fixFuncConfig(store.funcConfig))
   if (formFuncConfigData.value.universalis_server !== oldFuncConfig?.universalis_server) {
     formFuncConfigData.value.cache_item_prices = {}
   }
@@ -1165,7 +1284,7 @@ const containerMaxHeight = computed(() => {
     />
 
     <template #action>
-      <div class="modal-submit-container">
+      <div class="app-modal-footer">
         <n-button type="primary" size="large" @click="handleSave">
           <template #icon>
             <n-icon><SaveOutlined /></n-icon>

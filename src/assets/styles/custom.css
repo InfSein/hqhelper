@@ -1,44 +1,7 @@
-/* Display */
-.edge-top-right {
-  position: absolute;
-  top: 0;
-  right: 0;
-}
-
-/* Color */
-.color-success {
-  color: var(--color-primary);
-}
-.color-info {
-  color: var(--color-info);
-}
-.color-warning {
-  color: var(--color-warning);
-}
-.color-error {
-  color: var(--color-error);
-}
-.text-sub {
-  color: var(--color-text-sub);
-}
-
-/* Text */
-.font-small {
-  font-size: calc(var(--n-font-size) - 2px);
-}
-.font-big {
-  font-size: calc(var(--n-font-size) + 2px);
-}
-
 /* Deal Ui */
 .n-square-button {
   width: var(--n-height);
   padding: 0;
-}
-.spin-container {
-  display: flex;
-  align-items: center;
-  gap: 3px;
 }
 
 /* Ui-lib Customs */
@@ -47,14 +10,14 @@
     border: 1px solid transparent !important;
   }
 }
-.card-title-text {
+.card-title__text {
   margin-left: 3px;
   font-size: var(--n-title-font-size);
   font-weight: var(--n-title-font-weight);
 }
-.card-title-extra {
+.card-title__extra {
   margin-left: 5px;
-  font-size: var(--n-font-size);
+  font-size: var(--app-font-size);
 }
 .card-title {
   display: flex;
@@ -68,30 +31,20 @@
     align-self: end;
     margin-left: 10px;
     margin-bottom: 2px;
-    font-size: 14px;
+    font-size: var(--app-font-size-xs);
   }
 }
-.card-title-actions {
+.card-title__actions {
   height: 100%;
   display: flex;
   align-items: baseline;
-  font-size: var(--n-font-size);
+  font-size: var(--app-font-size);
   margin: 3px 0 0 5px;
 }
+
 .no-margin-empty {
   .n-empty__description {
     margin-top: 0 !important;
-  }
-}
-.tab-title {
-  display: flex;
-  align-items: center;
-
-  .n-icon {
-    margin-top: 1px;
-  }
-  span {
-    margin-left: 1px;
   }
 }
 .n-badge {

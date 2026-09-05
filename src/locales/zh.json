@@ -2,17 +2,21 @@
   "about_app": {
     "staff": {
       "contributor": "贡献者",
+      "desc": {
+        "desc_1_1": "HqHelper是开放开源的",
+        "desc_1_2": "项目，任何人都能够参与其中。",
+        "desc_2": "不过，绝大多数的开发·维护·运营工作由下述成员完成：",
+        "desc_3": "另有多位卓越的社区成员为HqHelper的发展贡献了力量。",
+        "desc_4": "来查看贡献者名单。"
+      },
       "jobs": {
-        "etnatker": "贡献了以Teamcraft格式展示材料清单的功能",
         "infsein": "负责全部设计开发工作",
-        "kim": "贡献了初期的UI日语国际化",
-        "nbb": "负责提供游戏数据和托管支持",
+        "nbb": "负责提供技术及托管方面的支持",
         "personal_page": "个人主页：",
-        "wcy": "贡献了初版Windows客户端框架",
         "yakita": "负责UI的日语国际化和前瞻物品名的中文翻译"
       },
       "producer": "制作人",
-      "title": "创作人员"
+      "title": "开源建设"
     },
     "thank_donate": {
       "desc": {
@@ -840,6 +844,7 @@
     }
   },
   "common": {
+    "search": "搜索",
     "account": "账号",
     "add": "添加",
     "add2": "新增",
@@ -876,7 +881,9 @@
       "thank_list": "致谢名单",
       "useful_tools": "实用工具",
       "user_preference": "偏好设置",
-      "workflow": "工作流"
+      "workflow": "工作流",
+      "hqwb": "HQ工作台",
+      "workflow_calc": "配方计算器"
     },
     "appsetting": {
       "appearance": "外观",
@@ -1049,7 +1056,8 @@
       "please_input_val": "请输入{val}",
       "please_wait_for_a_while": "请稍等片刻。",
       "sync_succeed": "同步成功",
-      "cannot_open_same_modal": "无法重复打开弹窗"
+      "cannot_open_same_modal": "无法重复打开弹窗",
+      "app_beta_tooltip": "当前为测试版本，不代表最终效果。"
     },
     "mode": "模式",
     "mquoted_view_statement": "[查看报表]",
@@ -1168,7 +1176,9 @@
     "will_be_named_with_time_when_empty": "不填则默认以时间命名",
     "work_state": "工作状态",
     "filter_item": "筛选物品",
-    "item_filter_input_placeholder": "支持按物品名/ID/品级/版本筛选"
+    "item_filter_input_placeholder": "支持按物品名/ID/品级/版本筛选",
+    "share_code": "分享码",
+    "share_link": "分享链接"
   },
   "contact_us": {
     "feedback": {
@@ -1231,7 +1241,7 @@
   },
   "cost_and_benefit": {
     "tooltip": {
-      "cal_hq_price_here": "此处计入物品的HQ价格。",
+      "cal_hq_price_here": "此处计入物品的HQ价格（无HQ品质时取NQ价格）。",
       "cal_nq_price_here": "此处计入物品的NQ价格。"
     }
   },
@@ -1409,9 +1419,29 @@
     "message": {
       "following_items_can_be_gathered": "以下物品已可采集：",
       "system_notice_denied": "通知权限被拒绝，请检查浏览器的网站权限设置。",
-      "system_notice_not_supported": "当前使用的浏览器或客户端不支持系统通知功能。"
+      "system_notice_not_supported": "当前使用的浏览器或客户端不支持系统通知功能。",
+      "invalid_audio_format": "不支持此音频格式！",
+      "audio_file_too_large": "音频文件过大(不能超过10MB)！",
+      "confirm_clear_custom_audio": "确定要清除已上传的自定义提示音吗？"
     },
     "preference": {
+      "custom_audio": {
+        "title": "自定义提示音",
+        "modal_title": "提示音设置",
+        "sound_select": {
+          "title": "提示音类型",
+          "option": {
+            "default": "默认提示音",
+            "custom": "自定义提示音"
+          }
+        },
+        "upload": "上传音频",
+        "reupload": "重新上传",
+        "test": "试听",
+        "clear": "清除音频",
+        "status_uploaded": "已导入音频：{name}",
+        "status_not_uploaded": "未导入音频文件，将使用默认提示音。"
+      },
       "disable_item_pop": "禁用物品按钮悬浮窗",
       "mention_way": {
         "option": {
@@ -1448,10 +1478,17 @@
     "tooltip": {
       "subscribe_1": "点击此按钮来订阅/取消订阅这个采集品。",
       "subscribe_2": "被订阅的采集品可以采集时，我们会按照您设置的“{setting}”向您发送提醒。"
-    }
+    },
+    "grouptitle_with_patch": "版本{patch}"
   },
   "ingame_inventory": {
     "preference": {
+      "inventory_use_plugin_data": {
+        "desc": {
+          "desc_1": "用第三方数据自动更新背包库存数据，并自动同步报表。"
+        },
+        "title": "接收第三方数据并自动同步"
+      },
       "inventory_other_items_way": {
         "desc": {
           "desc_1": "决定自动同步或手动同步时，对不在背包库存中的物品要如何处理。"
@@ -1567,7 +1604,6 @@
     },
     "text": {
       "attribute_isnq_or_hq_desc": "※ 此处仅展示物品的{val}属性",
-      "basic_info": "[{patch}版本] [{id}]",
       "cannot_hq": "无法制作优质道具",
       "cannot_quick_synthesis": "无法进行简易制作",
       "cannot_switch_hqornq": "物品没有{0}，无法切换",
@@ -1601,6 +1637,8 @@
       "recipe_level_info": "{lv}级{star}{job}配方",
       "reduce_can_get": "精选收藏品形态的该物品可能获得：",
       "reduce_info": "该物品可以通过精选以下道具获得：",
+      "reverse_recipe_lookup": "反查配方",
+      "reverse_recipe_lookup_no_result": "未找到使用该物品作为素材的配方",
       "simulate_craft_bestcraft": "在BestCraft中模拟制作",
       "simulate_craft_teamcraft": "在TeamCraft中模拟制作",
       "timelimited_gatherable": "进行中",
@@ -1808,6 +1846,8 @@
       },
       "title": "选择部件",
       "view_selected": "已选部件",
+      "gear_overview": "部件总览",
+      "gear_overview_no_gear": "该部件无对应装备",
       "warn": {
         "select_job_first": "请先选择职业"
       }
@@ -1822,6 +1862,9 @@
       }
     },
     "select_patch": {
+      "context_menu": {
+        "patch_guide": "版本攻略"
+      },
       "desc": {
         "selected": "已选择版本: {val}"
       },
@@ -1863,7 +1906,49 @@
       "recomm_aetheryte": "推荐传送点"
     }
   },
+  "patch_guide": {
+    "title": "版本攻略",
+    "toc": "快速导航",
+    "invalid_patch": "不支持此版本号",
+    "section": {
+      "legendary_gathering": "新增传说采集点",
+      "trade_items": "新增兑换物",
+      "master_recipe": "新增秘籍半成品",
+      "new_gears": "新增装备",
+      "new_food": "新增食物",
+      "new_medicine": "新增药品"
+    },
+    "gear": {
+      "normal_precraft": "普通半成品",
+      "aethersand": "灵砂",
+      "master_precraft": "秘籍半成品",
+      "crafter_gatherer": "生产采集全套装备",
+      "crafter_total": "能工巧匠总计",
+      "gatherer_total": "大地使者总计",
+      "life_total": "生产采集总需求",
+      "combat_gears": "战斗职业装备",
+      "life_gears": "生产采集装备",
+      "view_mode": "显示模式：",
+      "mode_tile": "平铺模式",
+      "mode_overview": "总览模式"
+    },
+    "table": {
+      "job": "职业"
+    },
+    "empty": "当前版本未检索到此类物品"
+  },
   "preference": {
+    "default_homepage": {
+      "title": "默认首页"
+    },
+    "rerun_onboarding": {
+      "btn": "重新运行向导",
+      "confirm_dialog": "重新运行初始设置向导将重置引导状态并刷新页面，未保存的偏好设置修改将会丢失，是否继续？",
+      "desc": {
+        "desc_1": "重新运行首次访问应用时的初始化引导向导。"
+      },
+      "title": "初始设置向导"
+    },
     "auto_refresh_after_save": {
       "desc": {
         "desc_1": "此设置修改后本次保存便会生效。另外，仅会在需要刷新的时候执行自动刷新。"
@@ -1977,6 +2062,39 @@
       "title": "禁用工作状态记忆"
     },
     "enable_dev_mode": "启用开发者模式",
+    "inventory_plugin": {
+      "receive": {
+        "title": "接收第三方数据",
+        "desc": {
+          "desc_1": "允许HqHelper客户端从外部接收和处理数据。"
+        }
+      },
+      "port": {
+        "title": "WebSocket端口"
+      },
+      "token": {
+        "title": "WebSocket密钥",
+        "desc": {
+          "desc_1": "HqHelper在处理接收的数据前会进行密钥认证，请确认此处填入的密钥与来源签名一致。"
+        }
+      },
+      "test": {
+        "title": "测试连接",
+        "idle": "测试连接",
+        "testing": "正在测试",
+        "status": "当前状态：{status}",
+        "result": "测试结果：{result}"
+      },
+      "status": {
+        "disconnected": "未连接",
+        "connecting": "连接中",
+        "connected": "已连接",
+        "error": "连接错误"
+      },
+      "message": {
+        "invalid_settings": "请填写有效端口和密钥。"
+      }
+    },
     "export": {
       "desc": {
         "desc_1": "现在你可以将本设备的偏好设置/功能设置导出到其他设备了。不包括物品价格等缓存。",
@@ -2428,8 +2546,10 @@
           "error_item_not_found": "第{0}行的物品“{1}”未被HqHelper的数据库收录"
         },
         "tip_1": "可以在此处输入物品清单，将它们批量导入到工作流。",
-        "tip_2": "支持识别多种格式和语言，可参阅下方输入框的示例。"
-      }
+        "tip_2": "支持识别多种格式和语言，可参阅下方输入框的示例。",
+        "title": "物品清单"
+      },
+      "share_code_placeholder": "在此输入分享码"
     },
     "join_in_workflow": {
       "desc": {
@@ -2480,11 +2600,105 @@
       "workflow_name": "工作流名称",
       "workflow_name_default_info": "如果没有为工作流设置名称，则按顺序自动显示为「工作流1~{maxlen}」。",
       "workflow_name_reorder_on_deleted": "删除某一工作流时，其后的所有未命名工作流将重新编号。",
-      "workflow_with_index": "工作流{index}"
+      "workflow_with_index": "工作流{index}",
+      "add_item_to_curr_workflow": {
+        "tip_1": "将该物品添加到当前工作流",
+        "tip_2": "如果已经添加过该物品，则会增加数量"
+      },
+      "notebook_item_not_selected": "请先选择物品",
+      "join_in_curr_workflow": "添加到当前工作流"
     },
     "tooltip": {
       "set_inventory_by_prepared": "将背包库存的数量设置为报表中的“已有”数量。",
       "set_prepared_by_inventory": "将报表中的“已有”数量设置为背包库存的数量。"
+    },
+    "notebook_search": {
+      "placeholder": "搜索物品…",
+      "history": "搜索历史",
+      "empty_history": "暂无搜索历史",
+      "clear_history": "清空历史记录",
+      "material_history_prefix": "素材",
+      "error_empty": "请输入搜索关键字",
+      "error_no_result": "未找到匹配的物品",
+      "error_material_id_too_small": "该物品不支持反查配方"
+    },
+    "share": {
+      "title": "分享工作流",
+      "empty_workflow": "当前工作流没有物品，无法生成分享码",
+      "copy_succeed": "已复制到剪贴板",
+      "import_by_code_failed": "分享码解析失败，请检查分享码是否正确"
+    },
+    "custom_list": {
+      "join_list": "将此清单加入到工作流"
+    }
+  },
+  "recipe": {
+    "notebookgroup": {
+      "other_master_recipes": "秘籍：其他",
+      "furnishing": "房屋",
+      "collectable": "收藏品交易",
+      "other": "其他",
+      "common": "分级配方",
+      "special": "特殊配方",
+      "master": "秘籍配方",
+      "custom_lists": "推荐列表",
+      "skybuilder": "伊修加德重建",
+      "skysteel": "天钢工具",
+      "splendorous": "莫雯工具",
+      "collectable_other": "未归类收藏品"
+    },
+    "notebook": "制作笔记",
+    "text": {
+      "craftsmanship_needs": "需要作业精度达到{0}",
+      "control_needs": "需要加工精度达到{0}"
+    }
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "欢迎使用",
+      "subtitle": "全面进化的现代生产采集辅助工具",
+      "desc_1": "你熟悉的HqHelper，现在更以配方计算器呈现。",
+      "desc_2": "请接受我们的引导，完成基础设置和功能提示。",
+      "start_btn": "开始"
+    },
+    "step_1": {
+      "title": "欢迎",
+      "name": "欢迎"
+    },
+    "step_2": {
+      "title": "基础设置",
+      "name": "基础设置",
+      "desc": "调整语言和主题等基础设置。在这里的修改会立即生效。",
+      "ui_lang": "界面语言",
+      "item_lang": "物品语言",
+      "theme": "外观主题"
+    },
+    "step_3": {
+      "title": "交互指南",
+      "name": "交互指南",
+      "desc": "在HqHelper中，物品按钮/标签是可以交互的：",
+      "feature_hover_title": "悬停详情",
+      "feature_hover_desc": "将鼠标光标悬停在物品上，即可查看其制作配方、材料来源、属性、市场参考价格等。",
+      "feature_menu_title": "右键菜单",
+      "feature_menu_desc": "右键点击物品（移动端为长按），即可呼出功能更加丰富的快捷菜单。",
+      "playground_tip": "试一试！",
+      "button": "按钮",
+      "label": "标签",
+      "cell": "单元格"
+    },
+    "step_4": {
+      "title": "选择默认首页",
+      "name": "选择首页",
+      "desc": "你可以随时在桌面端左上角切换首页。",
+      "hqwb_title": "HQ工作台",
+      "hqwb_desc": "专注于星级HQ的专业工作台，一键统计素材与点数需求。",
+      "workflow_title": "配方计算器（原“工作流”）",
+      "workflow_desc": "自由灵活的现代配方计算器，装载游戏内的全部配方，并提供配方树状拆解、专业报表与流程推荐。"
+    },
+    "btn": {
+      "prev": "上一步",
+      "next": "下一步",
+      "finish": "完成"
     }
   }
 }

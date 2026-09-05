@@ -1,101 +1,35 @@
-<p align="center">
-  <img alt="icon" height="160" src="/docs/image/app-logo.png" />
-</p>
-<h1 align="center"></h1>
+# PLAN
 
-<p align="center">
-  <strong>简体中文</strong>
-  |
-  <a href="/docs/README.ja.md">日本語</a>
-  |
-  <a href="/docs/README.en.md">English</a>
-</p>
+**重构**
+- [ ] `scripts` 中的文件应进行整理和精简
+- [x] `src\assets` 结构调整
+- [x] `src\components` 结构调整
+- [x] `src\composables` 与 `src\tools` 总体性梳理
+- [x] `src\data` 进行迁移/移除
+- [x] `src\models` 进行拆分迁移，丢进types
+- [x] `src\store` 进行代码重构。
+- [x] 审查各个vue文件的inject，权衡是否真的需要它们。
+- [x] `src\variables` 进行迁移/移除
+- [x] 使用 `feature` 模式重新设计项目结构
+- [x] `src\components\main\GearSelectionPanel.vue` 里面的逻辑写的太他妈啥比了，有空了就重写
 
-[![GitHub License](https://img.shields.io/github/license/InfSein/hqhelper?style=flat&logo=github)](/LICENSE) ![GitHub Repo stars](https://img.shields.io/github/stars/InfSein/hqhelper?style=flat&logo=github) ![Github Created At](https://img.shields.io/github/created-at/InfSein/hqhelper?style=flat&logo=github) <br>
-[![CodeFactor](https://www.codefactor.io/repository/github/infsein/hqhelper/badge/dev)](https://www.codefactor.io/repository/github/infsein/hqhelper/overview/dev) [![GitHub commit activity](https://img.shields.io/github/commit-activity/m/InfSein/hqhelper/dev)](https://github.com/InfSein/hqhelper/commits/master) [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/InfSein/hqhelper) <br>
-[![GitHub Release](https://img.shields.io/github/v/release/InfSein/hqhelper?style=flat&logo=github)](https://github.com/InfSein/hqhelper/releases) [![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/InfSein/hqhelper/total?style=flat&logo=github)](https://github.com/InfSein/hqhelper/releases) [![Crowdin](https://badges.crowdin.net/hqhelper/localized.svg)](https://crowdin.com/project/hqhelper) <br>
-[![Based on Vite](https://img.shields.io/badge/Vite-7.3.2-646CFF?style=flat&logo=vite)](https://github.com/vitejs/vite) [![Based on Vue3](https://img.shields.io/badge/Vue-3.5.28-4FC08D?style=flat&logo=vue.js)](https://github.com/vuejs/core) [![Based on TypeScript](https://img.shields.io/badge/TypeScript-5.8.3-3178C6?style=flat&logo=typescript)](https://github.com/microsoft/TypeScript) [![Based on Naive UI](https://img.shields.io/badge/Naive%20UI-2.43.2-008080?style=flat&logo=npm)](https://github.com/tusen-ai/naive-ui)
+**功能**
+- [ ] 解包调整
+  * 输出所有制作笔记收录的配方及关联物品
+  * 数据大小将可能变得过大，需要思考解决方案
+- [x] 主界面路由重构
+  * 将原先的「工作流」转正为应用主界面
+  * 增加一个模块让用户根据制作笔记选定制作配方
+  * 这个模块在原工作流模块的左区放置，通过悬浮按钮/横向滑动进行切换
+  * 允许用户选定「工作流」或「HQ工作台」为默认主页
+  * 默认主页应当作为一个虚拟页面，动态加载用户设置决定显示什么单页组件
+- [x] App 标题栏重制
+  * 常驻显示默认主页切换图标
+- [ ] 右侧区域重制
+  * 右侧空间也要利用起来，放些切换主题、GitHub的按钮
+  * 要先研究一下electron升级之后能否支持更加灵活的拖拽区设置
+- [x] 增加引导弹窗
 
-面向生产采集玩家的秘籍配方制作计算器。
-
-我们将会为你提供《最终幻想XIV》各个版本新增的秘籍HQ装备、食物和爆发药的信息整理和配方计算服务，以及一些其他的生产采集玩家可能比较需要的杂项功能。
-
-## 使用方法
-
-### 在浏览器中使用
-
-#### 正式环境网站
-
-* 主站点：https://infsein.github.io/hqhelper/#/
-* 备用站：https://hqhelper.nbb.fan/#/
-
-> [!TIP]\
-> 对于境内用户而言，访问备用站可能会更快。
-> 建议把列出的站点都试一试，哪个快用哪个。
-
-#### 测试环境网站
-
-* https://beta.hqhelper.nbb.fan/#/
-
-> [!CAUTION]\
-> 顾名思义，仅供测试。
-> 会经常更新，并随时有可能出现较为严重的BUG。
-
-### 以应用形式使用
-
-我们可能会提供各式各样的套壳，但是很难保证效果跟浏览器一样好。
-
-请参阅 [hqhelper-client](https://github.com/InfSein/hqhelper-client) 项目。
-
-### 手动构建
-
-需要安装 `Node.js` 。
-
-```sh
-git clone https://github.com/InfSein/hqhelper.git
-cd hqhelper
-npm i
-npm run dev
-```
-
-## 提供支持
-
-### 关注我们
-
-* **给这个仓库一个Star**
-* **社交媒体**：[微博](https://weibo.com/u/7870808507) | [推特](https://twitter.com/FF14_HqHelper)
-* **NGA主题帖**：<https://bbs.nga.cn/read.php?tid=41510690>
-
-### 参与开发
-
-* **寻找问题**：如果您在使用过程中发现有错误/问题的地方，或是对我们的界面/功能/逻辑有优化的建议，欢迎 [提出议题](https://github.com/InfSein/hqhelper/issues/new) 。
-* **解决问题**：如果您具有前端编程能力，您可以通过发起 [拉取请求](https://github.com/InfSein/hqhelper/pulls) 等方式参与到 `HqHelper` 的开发工作中。代码可能需要遵守通用规范和一些额外村规，具体请参阅我们的 [Wiki](https://github.com/InfSein/hqhelper/wiki) 。
-
-### 提供赞助
-
-* <https://afdian.com/a/infseins>
-
-## 其他
-
-### 版本号说明
-
-版本号遵循 `MAJOR.MINOR.PATCH` 的命名规则。
-
-1. `MAJOR`,`MINOR`,`PATCH` 均为正整数;
-2. `MAJOR` 代表这是第几代 `HqHelper`，同时也标识着适配的 `最终幻想XIV` 资料片版本;
-3. `MINOR` 代表着适配的 `最终幻想XIV` 中等版本 (例如7.1的1);
-4. `PATCH` 代表着在前述 `MAJOR` 和 `MINOR` 约束下，应用更新的第几个版本。
-
-例如，`2.1.17` 代表：
-
-- 第 `2` 代的 `HqHelper`，专为 `最终幻想XIV` 的 `7.x` 资料片版本设计;
-- 适配 `最终幻想XIV` 的第 `1` 个中等版本，即 `7.1`;
-- 在适配 `7.1` 的基础上，更新的第 `17` 个版本。
-
-### 动态概览
-
-![Repobeats analytics image](https://repobeats.axiom.co/api/embed/63a7eccc9d5dbb3887525e67ed8bf2512246388b.svg "Repobeats analytics image")
-
-### Star数量历史
-
-[![Stargazers over time](https://starchart.cc/InfSein/hqhelper.svg?variant=adaptive)](https://starchart.cc/InfSein/hqhelper)
+**杂项**
+- [x] 引入 tailwind
+- [x] 升级 electron

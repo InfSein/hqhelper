@@ -1,35 +1,36 @@
 <script setup lang="ts">
 import { useTemplateRef } from 'vue'
-import { 
+import {
   BackpackFilled,
   DeleteSweepRound,
   SaveOutlined,
 } from '@vicons/material'
-import TooltipButton from '@/components/custom/general/TooltipButton.vue'
-import SettingItem from '@/components/custom/general/SettingItem.vue'
-import ItemSelector from '@/components/custom/item/ItemSelector.vue'
-import ItemSelectTable from '@/components/custom/item/ItemSelectTable.vue'
+import SettingItem from '@/components/ui/SettingItem.vue'
+import TooltipButton from '@/components/ui/TooltipButton.vue'
+import ItemSelector from '@/components/item/ItemSelector.vue'
+import ItemSelectTable from '@/components/item/ItemSelectTable.vue'
 import { useStore } from '@/store'
-import type { PreferenceItem as Setting } from '@/models'
-import { fixFuncConfig, type FuncConfigModel } from '@/models/config-func'
+import { useLocale } from '@/composables/useLocale'
 import { deepCopy } from '@/tools'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
+import { type PreferenceItem as Setting } from '@/types'
+import { fixFuncConfig, type FuncConfigModel } from '@/types/config/func'
 
-const t = inject<(message: string, args?: any) => string>('t')!
 const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
 
 const store = useStore()
+const { t } = useLocale()
 const NAIVE_UI_MESSAGE = useMessage()
 
 const showModal = defineModel<boolean>('show', { required: true })
 
-const formFuncConfigData = ref<FuncConfigModel>(deepCopy(fixFuncConfig(store.funcConfig, store.userConfig)))
+const formFuncConfigData = ref<FuncConfigModel>(deepCopy(fixFuncConfig(store.funcConfig)))
 const formInventoryItems = ref<ItemInfo[]>([])
 
 const modalId = 'modal-inventory'
 
 const onLoad = () => {
-  formFuncConfigData.value = deepCopy(fixFuncConfig(store.funcConfig, store.userConfig))
+  formFuncConfigData.value = deepCopy(fixFuncConfig(store.funcConfig))
   formInventoryItems.value = Object.keys(formFuncConfigData.value.inventory_data).map(_id => {
     const id = Number(_id)
     const item = getItemInfo(id)
@@ -40,37 +41,57 @@ const onLoad = () => {
 }
 
 const inventorySettingItems = computed(() : Setting[] => {
-  return [
-    {
-      key: 'inventory_statement_enable_sync',
-      label: t('ingame_inventory.preference.inventory_statement_enable_sync.title'),
+  const items: Setting[] = []
+  const usePluginDataActive = store.userConfig.receive_third_party_data
+    && formFuncConfigData.value.inventory_use_plugin_data
+
+  if (store.userConfig.receive_third_party_data) {
+    items.push({
+      key: 'inventory_use_plugin_data',
+      label: t('ingame_inventory.preference.inventory_use_plugin_data.title'),
       type: 'switch',
       warnings: [
-        t('ingame_inventory.preference.inventory_statement_enable_sync.desc.desc_1'),
+        t('ingame_inventory.preference.inventory_use_plugin_data.desc.desc_1'),
       ],
-    },
-    {
-      key: 'inventory_workflow_enable_sync',
-      label: t('ingame_inventory.preference.inventory_workflow_enable_sync.title'),
-      type: 'switch',
-      warnings: [
-        t('ingame_inventory.shared.desc.add_button_to_workflow_when_enabled', {
-          f1: t('common.statement'), f2: t('workflow.text.sync_from_inventory')
-        }),
-        t('ingame_inventory.preference.inventory_workflow_enable_sync.desc.desc_1')
-      ],
-    },
-    {
-      key: 'inventory_workflow_enable_sync_reverse',
-      label: t('ingame_inventory.preference.inventory_workflow_enable_sync_reverse.title'),
-      type: 'switch',
-      warnings: [
-        t('ingame_inventory.shared.desc.add_button_to_workflow_when_enabled', {
-          f1: t('common.statement'), f2: t('workflow.text.sync_to_inventory')
-        }),
-        t('ingame_inventory.preference.inventory_workflow_enable_sync_reverse.desc.desc_1')
-      ],
-    },
+    })
+  }
+
+  if (!usePluginDataActive) {
+    items.push(
+      {
+        key: 'inventory_statement_enable_sync',
+        label: t('ingame_inventory.preference.inventory_statement_enable_sync.title'),
+        type: 'switch',
+        warnings: [
+          t('ingame_inventory.preference.inventory_statement_enable_sync.desc.desc_1'),
+        ],
+      },
+      {
+        key: 'inventory_workflow_enable_sync',
+        label: t('ingame_inventory.preference.inventory_workflow_enable_sync.title'),
+        type: 'switch',
+        warnings: [
+          t('ingame_inventory.shared.desc.add_button_to_workflow_when_enabled', {
+            f1: t('common.statement'), f2: t('workflow.text.sync_from_inventory')
+          }),
+          t('ingame_inventory.preference.inventory_workflow_enable_sync.desc.desc_1')
+        ],
+      },
+      {
+        key: 'inventory_workflow_enable_sync_reverse',
+        label: t('ingame_inventory.preference.inventory_workflow_enable_sync_reverse.title'),
+        type: 'switch',
+        warnings: [
+          t('ingame_inventory.shared.desc.add_button_to_workflow_when_enabled', {
+            f1: t('common.statement'), f2: t('workflow.text.sync_to_inventory')
+          }),
+          t('ingame_inventory.preference.inventory_workflow_enable_sync_reverse.desc.desc_1')
+        ],
+      }
+    )
+  }
+
+  items.push(
     {
       key: 'inventory_other_items_way',
       label: t('ingame_inventory.preference.inventory_other_items_way.title'),
@@ -95,8 +116,10 @@ const inventorySettingItems = computed(() : Setting[] => {
       warnings: [
         t('ingame_inventory.preference.inventory_sync_reverse_mode.desc.desc_1'),
       ],
-    },
-  ]
+    }
+  )
+
+  return items
 })
 
 const itemTableFilter = ref('')
@@ -190,7 +213,7 @@ const handleSave = () => {
     </n-tabs>
 
     <template #action>
-      <div class="modal-submit-container">
+      <div class="app-modal-footer">
         <n-button type="primary" size="large" @click="handleSave">
           <template #icon>
             <n-icon><SaveOutlined /></n-icon>

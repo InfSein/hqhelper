@@ -1,17 +1,19 @@
 <script setup lang="ts">
 import {
-  EventNoteFilled,
   CopyAllOutlined,
-  HistoryOutlined, StickyNote2Outlined,
+  EventNoteFilled,
+  HistoryOutlined,
+  StickyNote2Outlined,
 } from '@vicons/material'
+import { useStore } from '@/store'
+import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
+import AppStatus from '@/constants/app'
 import { getChangelogs, type PatchChangeGroup } from '@/data/change-logs'
-import type { UserConfigModel } from '@/models/config-user'
-import AppStatus from '@/variables/app-status'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-const devMode = import.meta.env.DEV
+const store = useStore()
+const { t } = useLocale()
+const { isMobile } = useResponsive()
 
 const showModal = defineModel<boolean>('show', { required: true })
 
@@ -23,10 +25,10 @@ const wrapperStyle = computed(() => {
   }
 })
 const latestPatchNote = computed(() => {
-  return getChangelogs(userConfig.value.language_ui, t)[0]
+  return getChangelogs(store.userConfig.language_ui, t)[0]
 })
 const historyChangelogs = computed(() => {
-  return getChangelogs(userConfig.value.language_ui, t).slice(1)
+  return getChangelogs(store.userConfig.language_ui, t).slice(1)
 })
 const latestPatchNoteNumWidth = computed(() => {
   const maxLengthOfNote = latestPatchNote.value.changes.map(change => change.changes.length).reduce((a, b) => Math.max(a, b), 0)
@@ -84,7 +86,7 @@ const handleCopyLatestPatchNodeMarkdown = () => {
 const handleCopyAllPatchNodeMarkdown = () => {
   const br = '\r\n'
   let content = `# HqHelper CHANGELOG${br}${br}`
-  const allNote = getChangelogs(userConfig.value.language_ui, t)
+  const allNote = getChangelogs(store.userConfig.language_ui, t)
   allNote.forEach(note => {
     content += `## ${note.version} (${note.date})${br}${br}`
     note.changes.forEach(change => {
@@ -112,13 +114,13 @@ const handleSwitchShowHistory = () => {
     max-width="650px"
     :height="isMobile ? '650px' : '620px'"
   >
-    <div v-if="!showHistory" class="wrapper " :style="wrapperStyle">
+    <div v-if="!showHistory" class="flex flex-col gap-2.5 select-text overflow-y-auto" :style="wrapperStyle">
       <n-card embedded size="small" class="h-full" content-style="height: 100%;">
         <div class="wrapper-latest-update">
           <n-h1 prefix="bar" class="latest-update-baseinfo">
             <n-text>v{{ latestPatchNote.version }}</n-text>
             <n-text depth="3" class="date">{{ latestPatchNote.date }}</n-text>
-            <n-text v-if="!isMobile" depth="3" class="data-version">
+            <n-text v-if="!isMobile" depth="3" class="text-app-sm absolute right-0 bottom-0.75">
               ({{ latestPatchGameVerText }})
             </n-text>
           </n-h1>
@@ -150,7 +152,7 @@ const handleSwitchShowHistory = () => {
         </div>
       </n-card>
     </div>
-    <div v-else class="wrapper flex" :style="wrapperStyle">
+    <div v-else class="flex flex-col gap-2.5 select-text overflow-y-auto" :style="wrapperStyle">
       <n-card
         v-for="(patchlog, logIndex) in historyChangelogs"
         :key="patchlog.version"
@@ -188,20 +190,20 @@ const handleSwitchShowHistory = () => {
     </div>
 
     <template #action>
-      <div class="modal-submit-container">
-        <n-button v-if="!showHistory && !isMobile && devMode" type="info" @click="handleCopyLatestPatchNode">
+      <div class="app-modal-footer">
+        <n-button v-if="!showHistory && !isMobile && AppStatus.IsDev" type="info" @click="handleCopyLatestPatchNode">
           <template #icon>
             <n-icon :component="CopyAllOutlined" />
           </template>
           复制
         </n-button>
-        <n-button v-if="!showHistory && !isMobile && devMode" type="info" ghost @click="handleCopyLatestPatchNodeMarkdown">
+        <n-button v-if="!showHistory && !isMobile && AppStatus.IsDev" type="info" ghost @click="handleCopyLatestPatchNodeMarkdown">
           <template #icon>
             <n-icon :component="CopyAllOutlined" />
           </template>
           复制(Markdown)
         </n-button>
-        <!-- <n-button v-if="!showHistory && !isMobile && devMode" type="warning" ghost @click="handleCopyAllPatchNodeMarkdown">
+        <!-- <n-button v-if="!showHistory && !isMobile && AppStatus.IsDev" type="warning" ghost @click="handleCopyAllPatchNodeMarkdown">
           <template #icon>
             <n-icon :component="CopyAllOutlined" />
           </template>
@@ -231,13 +233,6 @@ const handleSwitchShowHistory = () => {
   padding: 0 var(--n-padding-left) var(--n-padding-bottom) var(--n-padding-left);
 }
 /* All */
-.wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  user-select: text;
-  overflow-y: auto;
-}
 .wrapper-latest-update {
   display: flex;
   flex-direction: column;
@@ -250,11 +245,6 @@ const handleSwitchShowHistory = () => {
     .date {
       padding-left: 8px;
       font-size: 14px;
-    }
-    .data-version {
-      font-size: 14px;
-      position: absolute;
-      right: 0; bottom: 3px;
     }
   }
   .latest-update-content {

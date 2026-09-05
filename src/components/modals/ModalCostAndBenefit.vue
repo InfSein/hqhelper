@@ -1,23 +1,23 @@
 <script setup lang='ts'>
-import { 
-  AttachMoneyOutlined
+import {
+  AttachMoneyOutlined,
 } from '@vicons/material'
-import ItemPriceTable from '../custom/item/ItemPriceTable.vue'
-import TooltipText from '../custom/general/TooltipText.vue'
-import HelpButton from '../custom/general/HelpButton.vue'
 import ModalPreferences from './ModalPreferences.vue'
-import useItemPrice from '@/composables/useItemPrice.ts'
+import HelpButton from '@/components/ui/HelpButton.vue'
+import TooltipText from '@/components/ui/TooltipText.vue'
+import ItemPriceTable from '@/components/item/ItemPriceTable.vue'
+import { useStore } from '@/store'
+import { useLocale } from '@/composables/useLocale'
+import { useAppModals } from '@/composables/useAppModals'
+import { useResponsive } from '@/composables/useResponsive'
+import useItemPrice from '@/composables/useItemPrice'
 import type { ItemInfo } from '@/tools/item'
-import type { FuncConfigModel } from '@/models/config-func'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-// const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
-// const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
-const showItemPriceDetail = inject<(items: ItemInfo[]) => void>('showItemPriceDetail')!
-
+const store = useStore()
+const { t } = useLocale()
+const { isMobile } = useResponsive()
 const { calCostAndBenefit } = useItemPrice()
+const { showItemPriceDetail } = useAppModals()
 
 const modalId = 'modal-cost-and-benefits'
 
@@ -38,7 +38,7 @@ const isCostPartial = computed(() => costAndBenefit.value.isCostPartial)
 const isBenefitPartial = computed(() => costAndBenefit.value.isBenefitPartial)
 
 const showItemDetails = computed(() => {
-  return funcConfig.value.costandbenefit_show_item_details
+  return store.funcConfig.costandbenefit_show_item_details
 })
 
 const showPreferencesModal = ref(false)
@@ -69,7 +69,7 @@ const handleShowItemPriceDetail = () => {
         <span class="title">
           {{ t('statistics.group.cost_and_benefit.title') }}
         </span>
-        <div class="card-title-actions">
+        <div class="card-title__actions">
           <a href="javascript:void(0);" @click="handleShowItemPriceDetail">[{{ t('item.price.detail_table.intro') }}]</a>
         </div>
       </div>

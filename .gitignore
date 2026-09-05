@@ -29,13 +29,14 @@ private-folder-alias.json
 # Ai
 .agent
 .agents
-AGENTS.md
 skills-lock.json
+ARCHITECTURE.md
 
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
+!.vscode/public-folder-alias.json
 .idea
 *.suo
 *.ntvs*
