@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { computed, ref, watch, nextTick, h } from 'vue'
-import type { DataTableColumns } from 'naive-ui'
+import { type DataTableColumns, NButton, NIcon, NTooltip } from 'naive-ui'
 import {
   ShieldOutlined,
   HandymanOutlined,
   ViewModuleOutlined,
   TableViewOutlined,
+  SearchOutlined,
 } from '@vicons/material'
 import XivFARImage from '@/components/ui/XivFARImage.vue'
 import ItemSpan from '@/components/item/ItemSpan.vue'
@@ -13,6 +14,7 @@ import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
 import useConfig from '@/composables/useConfig'
 import { useResponsive } from '@/composables/useResponsive'
+import { useAppModals } from '@/composables/useAppModals'
 import { XivJobs, XivRoles, HqData, type XivPatchVer, type XivRoleKey, type XivRole } from '@/assets/data'
 import {
   calcJobGearMaterials,
@@ -32,6 +34,7 @@ const store = useStore()
 const { t } = useLocale()
 const { uiLanguage } = useConfig()
 const { isMobile } = useResponsive()
+const { displayGearOverviewModal } = useAppModals()
 
 // 表格展示模式与切换加载动画状态
 const activeMode = ref<'tile' | 'overview'>(store.userConfig.patchguide_gear_table_mode)
@@ -251,6 +254,7 @@ const getRoleName = (role: XivRole) => {
 }
 
 const precraftChunkSize = computed(() => (isMobile.value ? 1 : 3))
+const aethersandChunkSize = computed(() => (isMobile.value ? 1 : 2))
 
 const chunkArray = <T>(arr: T[], size: number): T[][] => {
   const chunks: T[][] = []
@@ -287,24 +291,81 @@ const renderTilePrecrafts = (items?: ItemInfo[]) => {
   )
 }
 
-// 渲染平铺模式下的灵砂单元格（单列垂直排列）
+// 渲染平铺模式下的灵砂单元格（移动端1个一行，桌面端最多2个一行）
 const renderTileAethersands = (items?: ItemInfo[]) => {
   if (!items || !items.length) {
     return h('span', { class: 'text-sub text-app-xs' }, t('common.nothing'))
   }
+  const chunks = chunkArray(items, aethersandChunkSize.value)
   return h(
     'div',
     { class: 'flex flex-col items-center justify-center gap-1.5 py-1.5' },
-    items.map(item =>
-      h(ItemSpan, {
-        key: item.id,
-        itemInfo: item,
-        amount: item.amount,
-        showAmount: true,
-        imgSize: 18,
-      }),
+    chunks.map((subGroup, sIdx) =>
+      h(
+        'div',
+        { key: sIdx, class: 'flex items-center justify-center gap-3' },
+        subGroup.map(item =>
+          h(ItemSpan, {
+            key: item.id,
+            itemInfo: item,
+            amount: item.amount,
+            showAmount: true,
+            imgSize: 18,
+          }),
+        ),
+      ),
     ),
   )
+}
+
+// 渲染战斗职业单元格（包含职业图标、职业名称、职能以及部件总览放大镜按钮）
+const renderJobCell = (row: CombatTableRow) => {
+  return h('div', { class: 'flex items-center gap-2' }, [
+    XivJobs[row.jobId]
+      ? h(XivFARImage, {
+          size: 32,
+          src: XivJobs[row.jobId].job_icon_url,
+        })
+      : null,
+    h('div', { class: 'flex flex-col' }, [
+      h('span', { class: 'font-bold text-app-sm' }, getJobName(row.jobId)),
+      h(
+        'span',
+        {
+          class: 'text-app-2xs font-medium',
+          style: { color: row.role?.role_color },
+        },
+        getRoleName(row.role),
+      ),
+    ]),
+    h(
+      NTooltip,
+      { trigger: 'hover' },
+      {
+        trigger: () =>
+          h(
+            NButton,
+            {
+              size: 'tiny',
+              quaternary: true,
+              circle: true,
+              class: 'ml-auto shrink-0',
+              onClick: (e: MouseEvent) => {
+                e.stopPropagation()
+                displayGearOverviewModal({
+                  patchVer: props.patchVer,
+                  jobId: row.jobId,
+                })
+              },
+            },
+            {
+              icon: () => h(NIcon, { component: SearchOutlined }),
+            },
+          ),
+        default: () => t('main.select_gear.gear_overview'),
+      },
+    ),
+  ])
 }
 
 // 通用辅助函数：生成总览模式下的二级表头子列
@@ -354,28 +415,8 @@ const combatOverviewColumns = computed<DataTableColumns<CombatTableRow>>(() => [
     title: t('patch_guide.table.job'),
     key: 'job',
     fixed: 'left',
-    width: isMobile.value ? 140 : 160,
-    render(row) {
-      return h('div', { class: 'flex items-center gap-2' }, [
-        XivJobs[row.jobId]
-          ? h(XivFARImage, {
-              size: 32,
-              src: XivJobs[row.jobId].job_icon_url,
-            })
-          : null,
-        h('div', { class: 'flex flex-col' }, [
-          h('span', { class: 'font-bold text-app-sm' }, getJobName(row.jobId)),
-          h(
-            'span',
-            {
-              class: 'text-app-2xs font-medium',
-              style: { color: row.role?.role_color },
-            },
-            getRoleName(row.role),
-          ),
-        ]),
-      ])
-    },
+    width: isMobile.value ? 150 : 170,
+    render: row => renderJobCell(row),
   },
   {
     title: t('patch_guide.gear.normal_precraft'),
@@ -416,7 +457,7 @@ const combatOverviewScrollX = computed(() => {
     Math.max(c.normalPrecrafts.length, 1) +
     Math.max(c.aethersands.length, 1) +
     Math.max(c.masterPrecrafts.length, 1)
-  return (isMobile.value ? 140 : 160) + subColCount * 56
+  return (isMobile.value ? 150 : 170) + subColCount * 56
 })
 
 // 2. 战斗职业平铺模式列定义
@@ -425,28 +466,8 @@ const combatTileColumns = computed<DataTableColumns<CombatTableRow>>(() => [
     title: t('patch_guide.table.job'),
     key: 'job',
     fixed: isMobile.value ? 'left' : undefined,
-    width: isMobile.value ? 130 : 160,
-    render(row) {
-      return h('div', { class: 'flex items-center gap-2' }, [
-        XivJobs[row.jobId]
-          ? h(XivFARImage, {
-              size: 32,
-              src: XivJobs[row.jobId].job_icon_url,
-            })
-          : null,
-        h('div', { class: 'flex flex-col' }, [
-          h('span', { class: 'font-bold text-app-sm' }, getJobName(row.jobId)),
-          h(
-            'span',
-            {
-              class: 'text-app-2xs font-medium',
-              style: { color: row.role?.role_color },
-            },
-            getRoleName(row.role),
-          ),
-        ]),
-      ])
-    },
+    width: isMobile.value ? 150 : 170,
+    render: row => renderJobCell(row),
   },
   {
     title: t('patch_guide.gear.normal_precraft'),
@@ -459,7 +480,7 @@ const combatTileColumns = computed<DataTableColumns<CombatTableRow>>(() => [
     title: t('patch_guide.gear.aethersand'),
     key: 'aethersands',
     align: 'center',
-    width: isMobile.value ? 140 : 160,
+    minWidth: 160,
     render: row => renderTileAethersands(row.materials.aethersands),
   },
   {
@@ -549,7 +570,7 @@ const lifeTileColumns = computed<DataTableColumns<LifeTableRow>>(() => [
     title: t('patch_guide.gear.aethersand'),
     key: 'aethersands',
     align: 'center',
-    width: isMobile.value ? 140 : 160,
+    minWidth: 160,
     render: row => renderTileAethersands(row.materials?.aethersands),
   },
   {

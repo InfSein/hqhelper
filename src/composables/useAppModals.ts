@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import type { ItemInfo } from '@/tools/item'
 import type { MacroGenerateMode } from '@/types/config/func'
+import type { ModalGearOverviewProps } from '@/components/modals/ModalGearOverview.vue'
 import { useStore } from '@/store'
 import { CopyToClipboard } from '@/tools'
 import { useLocale } from './useLocale'
@@ -23,6 +24,9 @@ const showModalCloudSync = ref(false)
 
 const showModalItemPriceDetail = ref(false)
 const modalItemPriceDetailItems = ref<ItemInfo[]>([])
+
+const showModalGearOverview = ref(false)
+const modalGearOverviewData = ref<ModalGearOverviewProps>({})
 
 export function useAppModals() {
   const store = useStore()
@@ -78,6 +82,11 @@ export function useAppModals() {
     showModalItemPriceDetail.value = true
   }
 
+  const displayGearOverviewModal = (options: ModalGearOverviewProps) => {
+    modalGearOverviewData.value = options
+    showModalGearOverview.value = true
+  }
+
   return {
     showCopyMacroModal,
     macroMapValue,
@@ -100,6 +109,10 @@ export function useAppModals() {
     showModalItemPriceDetail,
     modalItemPriceDetailItems,
     showItemPriceDetail,
+
+    showModalGearOverview,
+    modalGearOverviewData,
+    displayGearOverviewModal,
   }
 }
 

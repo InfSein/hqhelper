@@ -29,6 +29,7 @@ const ModalLogin = defineAsyncComponent(() => import('@/components/modals/ModalL
 const ModalCloudSync = defineAsyncComponent(() => import('@/components/modals/ModalCloudSync.vue'))
 const ModalFestivalEgg = defineAsyncComponent(() => import('@/components/modals/ModalFestivalEgg.vue'))
 const ModalItemPriceDetail = defineAsyncComponent(() => import('@/components/modals/ModalItemPriceDetail.vue'))
+const ModalGearOverview = defineAsyncComponent(() => import('@/components/modals/ModalGearOverview.vue'))
 
 const store = useStore()
 const { t, setLocale } = useLocale()
@@ -44,7 +45,8 @@ const {
   showCheckUpdatesModal, displayCheckUpdatesModal,
   showModalLogin, loginAction,
   showModalCloudSync,
-  showModalItemPriceDetail, modalItemPriceDetailItems
+  showModalItemPriceDetail, modalItemPriceDetailItems,
+  showModalGearOverview, modalGearOverviewData
 } = useAppModals()
 
 const locale = computed(() => {
@@ -335,6 +337,14 @@ const naiveUIThemeOverrides = computed(() : GlobalThemeOverrides => {
         <ModalItemPriceDetail
           v-model:show="showModalItemPriceDetail"
           :items="modalItemPriceDetailItems"
+        />
+        <ModalGearOverview
+          v-model:show="showModalGearOverview"
+          :patch-data="modalGearOverviewData.patchData"
+          :patch-ver="modalGearOverviewData.patchVer"
+          :job-id="modalGearOverviewData.jobId"
+          :attire-affix="modalGearOverviewData.attireAffix"
+          :accessory-affix="modalGearOverviewData.accessoryAffix"
         />
       </div>
     </n-message-provider>

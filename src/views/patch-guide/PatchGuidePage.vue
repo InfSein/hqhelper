@@ -41,6 +41,7 @@ const pageTitle = computed(() => {
 
 // 导航栏滚动状态：初始展开，滚动后收起
 const isNavCompact = ref(false)
+const activeSectionId = ref('section-gathering')
 
 let scrollTarget: HTMLElement | Window | null = null
 let ticking = false
@@ -50,6 +51,43 @@ const getScrollTop = () => {
     return scrollTarget.scrollTop
   }
   return window.scrollY || document.documentElement.scrollTop
+}
+
+const updateActiveSection = () => {
+  if (!navItems.value.length) return
+
+  // 检查是否滚动到底部
+  if (scrollTarget) {
+    const isAtBottom = scrollTarget instanceof HTMLElement
+      ? scrollTarget.scrollHeight - scrollTarget.scrollTop - scrollTarget.clientHeight < 30
+      : window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 30
+    if (isAtBottom) {
+      activeSectionId.value = navItems.value[navItems.value.length - 1].id
+      return
+    }
+  }
+
+  const containerTop = (scrollTarget instanceof HTMLElement)
+    ? scrollTarget.getBoundingClientRect().top
+    : 0
+  const headerCard = document.querySelector('#main-container .sticky') as HTMLElement | null
+  const headerBottom = headerCard
+    ? headerCard.getBoundingClientRect().bottom
+    : containerTop + 80
+
+  const threshold = headerBottom + 20
+
+  let current = navItems.value[0].id
+  for (const item of navItems.value) {
+    const el = document.getElementById(item.id)
+    if (el) {
+      const rect = el.getBoundingClientRect()
+      if (rect.top <= threshold) {
+        current = item.id
+      }
+    }
+  }
+  activeSectionId.value = current
 }
 
 const handleScroll = () => {
@@ -62,6 +100,7 @@ const handleScroll = () => {
       } else if (isNavCompact.value && top <= 10) {
         isNavCompact.value = false
       }
+      updateActiveSection()
       ticking = false
     })
     ticking = true
@@ -80,6 +119,7 @@ onMounted(() => {
     window.addEventListener('scroll', handleScroll, { passive: true })
   }
   window.addEventListener('scroll', handleScroll, { passive: true })
+  updateActiveSection()
 })
 
 onBeforeUnmount(() => {
@@ -90,6 +130,7 @@ onBeforeUnmount(() => {
 })
 
 const scrollToSection = (sectionId: string) => {
+  activeSectionId.value = sectionId
   const el = document.getElementById(sectionId)
   if (el) {
     el.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -171,7 +212,8 @@ const navItems = computed(() => [
             v-for="nav in navItems"
             :key="nav.id"
             size="tiny"
-            quaternary
+            :quaternary="activeSectionId !== nav.id"
+            :tertiary="activeSectionId === nav.id"
             class="shrink-0"
             @click="scrollToSection(nav.id)"
           >
