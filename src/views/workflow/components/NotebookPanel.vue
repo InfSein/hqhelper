@@ -773,6 +773,7 @@ defineExpose({
           v-for="job in Object.keys(notebookGroups)"
           :key="job"
           placement="top"
+          :trigger="isMobile ? 'manual' : 'hover'"
         >
           <template #trigger>
             <n-button
@@ -788,7 +789,7 @@ defineExpose({
           </template>
           {{ XivJobs[Number(job)]?.[`job_name_${itemLanguage}`] || XivJobs[Number(job)]?.job_name_zh }}
         </n-tooltip>
-        <n-tooltip placement="top">
+        <n-tooltip placement="top" :trigger="isMobile ? 'manual' : 'hover'">
           <template #trigger>
             <n-button
               class="p-px w-9! h-9!"
@@ -802,7 +803,7 @@ defineExpose({
           </template>
           {{ t('recipe.notebookgroup.custom_lists') }}
         </n-tooltip>
-        <n-tooltip placement="top">
+        <n-tooltip placement="top" :trigger="isMobile ? 'manual' : 'hover'">
           <template #trigger>
             <n-button
               class="p-px w-9! h-9!"
