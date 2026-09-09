@@ -352,6 +352,20 @@ const preferenceGroups = computed(() : PreferenceGroup[] => {
                 { value: 'teamcraft', label: t('preference.item_list_style.option.teamcraft') },
               ]
             },
+            {
+              key: 'workflow_switch_shortcut',
+              label: t('preference.workflow_switch_shortcut.title'),
+              hide: isMobile.value,
+              descriptions: [
+                t('preference.workflow_switch_shortcut.desc.desc_1'),
+              ],
+              type: 'select',
+              options: [
+                { value: 'disabled', label: t('preference.shared.option.disabled') },
+                { value: 'arrow', label: '← / →' },
+                { value: 'ctrl_arrow', label: 'Ctrl+← / Ctrl+→' },
+              ],
+            },
           ]
         },
         /* Performance */

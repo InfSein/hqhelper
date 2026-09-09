@@ -2280,7 +2280,8 @@
       "option": {
         "copy_isearch_macro": "アイテムの検索マクロをコピーする",
         "copy_item_name": "アイテム名をコピーする",
-        "donothing": "何もしない"
+        "donothing": "何もしない",
+        "disabled": "無効"
       },
       "tooltip": {
         "click_to_desc": "クリックして、当オプションの説明を展開または折り畳む"
@@ -2394,6 +2395,18 @@
         "desc_2": "これらの機能が必要ない場合、または旧バージョンのリスト作成のスタイルを好む場合は、このオプションを有効にすることを検討してください。"
       },
       "title": "旧バージョンでリストを作成"
+    },
+    "notebook_item_sortby": {
+      "desc": {
+        "desc_1": "製作手帳のアイテム一覧の並び順を設定します。"
+      },
+      "title": "製作手帳のアイテム並び順"
+    },
+    "workflow_switch_shortcut": {
+      "desc": {
+        "desc_1": "キーボードショートカットでレシピ計算ツールの表示エリアを切り替えます。"
+      },
+      "title": "レシピ計算ツールの切替ショートカット"
     }
   },
   "recipe": {
@@ -2622,7 +2635,8 @@
       "error_no_result": "一致するアイテムが見つかりません",
       "history": "検索履歴",
       "material_history_prefix": "素材",
-      "placeholder": "アイテムを検索…"
+      "placeholder": "アイテムを検索…",
+      "success_count": "{count}件のレシピが見つかりました"
     },
     "recomm_process": "ワークフローのプロセス",
     "share": {
@@ -2667,6 +2681,12 @@
     "tooltip": {
       "set_inventory_by_prepared": "在庫一覧の数量をレポートの「所持数」に設定します。",
       "set_prepared_by_inventory": "レポート内の「所持」数量を「在庫一覧」の数量に設定する"
+    },
+    "notebook_filter": {
+      "all": "すべて"
+    },
+    "notebook_settings": {
+      "title": "製作手帳設定"
     }
   }
 }

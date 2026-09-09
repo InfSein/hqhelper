@@ -2249,7 +2249,8 @@
       "option": {
         "copy_isearch_macro": "复制物品检索宏",
         "copy_item_name": "复制物品名",
-        "donothing": "什么都不做"
+        "donothing": "什么都不做",
+        "disabled": "禁用"
       },
       "tooltip": {
         "click_to_desc": "点击以展开或折叠此设置项的描述"
@@ -2363,6 +2364,18 @@
         "desc_2": "如果你并不需要这些功能，或是更喜欢旧版本制作报表的风格，可以考虑打开此选项。"
       },
       "title": "使用旧版本制作报表"
+    },
+    "notebook_item_sortby": {
+      "desc": {
+        "desc_1": "自定义配方计算器中制作笔记物品列表的排序。"
+      },
+      "title": "制作笔记物品排序"
+    },
+    "workflow_switch_shortcut": {
+      "desc": {
+        "desc_1": "允许你设置键盘快捷键来切换配方计算器的当前区域。"
+      },
+      "title": "配方计算器界面切换快捷键"
     }
   },
   "recomm_process": {
@@ -2620,16 +2633,23 @@
       "material_history_prefix": "素材",
       "error_empty": "请输入搜索关键字",
       "error_no_result": "未找到匹配的物品",
-      "error_material_id_too_small": "该物品不支持反查配方"
+      "error_material_id_too_small": "该物品不支持反查配方",
+      "success_count": "搜索到{count}个配方"
     },
     "share": {
-      "title": "分享工作流",
+      "title": "分享",
       "empty_workflow": "当前工作流没有物品，无法生成分享码",
       "copy_succeed": "已复制到剪贴板",
       "import_by_code_failed": "分享码解析失败，请检查分享码是否正确"
     },
     "custom_list": {
       "join_list": "将此清单加入到工作流"
+    },
+    "notebook_filter": {
+      "all": "全部"
+    },
+    "notebook_settings": {
+      "title": "制作笔记设置"
     }
   },
   "recipe": {

@@ -2280,7 +2280,8 @@
       "option": {
         "copy_isearch_macro": "Copy isearch macro",
         "copy_item_name": "Copy item name",
-        "donothing": "Do nothing"
+        "donothing": "Do nothing",
+        "disabled": "Disabled"
       },
       "tooltip": {
         "click_to_desc": "Click to expand or collapse the description of this setting option."
@@ -2394,6 +2395,18 @@
         "desc_2": "If you dont need to use these features, or you prefer the old version of craft statement, you can consider to turn on this option."
       },
       "title": "Use traditional Craft Statement"
+    },
+    "notebook_item_sortby": {
+      "desc": {
+        "desc_1": "Controls the sorting order of items in the crafting log."
+      },
+      "title": "Crafting log item sort order"
+    },
+    "workflow_switch_shortcut": {
+      "desc": {
+        "desc_1": "Set keyboard shortcuts to switch the active view of the recipe calculator."
+      },
+      "title": "Recipe calculator switch shortcut"
     }
   },
   "recipe": {
@@ -2622,7 +2635,8 @@
       "error_no_result": "No matching items found",
       "history": "Search History",
       "material_history_prefix": "Material",
-      "placeholder": "Search items..."
+      "placeholder": "Search items...",
+      "success_count": "Found {count} recipes"
     },
     "recomm_process": "Workflow Process",
     "share": {
@@ -2667,6 +2681,12 @@
     "tooltip": {
       "set_inventory_by_prepared": "Set the inventory quantity to the 'Prepared' quantity in the statement.",
       "set_prepared_by_inventory": "Set the 'Prepared' quantity in the statement to the quantity of In-game inventory."
+    },
+    "notebook_filter": {
+      "all": "All"
+    },
+    "notebook_settings": {
+      "title": "Crafting Log Settings"
     }
   }
 }

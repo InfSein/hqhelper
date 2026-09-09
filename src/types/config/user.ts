@@ -52,6 +52,8 @@ export interface UserConfigModel {
   item_info_icon_click_event: "none" | "copy_name" | "copy_isearch"
   /** 材料清单格式 */
   item_list_style: "standard" | "tight" | "modern" | "teamcraft"
+  /** 配方计算器切换快捷键 */
+  workflow_switch_shortcut: "disabled" | "arrow" | "ctrl_arrow"
 
   // * performance
   /** 禁用工作状态记忆 */
@@ -83,6 +85,9 @@ export interface UserConfigModel {
   // * patch-guide
   /** 版本攻略中新装备表格的查看模式：'tile' 平铺模式 | 'overview' 总览模式 */
   patchguide_gear_table_mode: 'tile' | 'overview'
+  // * workflow
+  /** 制作笔记：物品列表排序规则 */
+  notebook_item_sortby: "recipeOrder" | "recipeOrderSearch" | "itemId"
   // #endregion
 
   // #region 隐藏的配置项/缓存
@@ -140,6 +145,9 @@ const defaultUserConfig: UserConfigModel = {
 
   // patch-guide
   patchguide_gear_table_mode: 'tile',
+  // workflow
+  workflow_switch_shortcut: 'disabled',
+  notebook_item_sortby: 'recipeOrder',
 
   // hidden options
   last_triggered_egg: 0,

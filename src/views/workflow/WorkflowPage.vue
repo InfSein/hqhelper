@@ -23,7 +23,7 @@ import CraftRecommProcess from '@/components/craft/CraftRecommProcess.vue'
 import CraftStatementsPro from '@/components/craft/CraftStatementsPro.vue'
 import ModalCostAndBenefit from '@/components/modals/ModalCostAndBenefit.vue'
 import NotebookPanel from '@/views/workflow/components/NotebookPanel.vue'
-import ModalShareWorkflow from '@/views/workflow/components/ModalShareWorkflow.vue'
+import ShareWorkflowPop from '@/views/workflow/components/ShareWorkflowPop.vue'
 import ImportItemListPop from '@/views/workflow/components/ImportItemListPop.vue'
 import ModalWorkflowsManage from '@/views/workflow/components/ModalWorkflowsManage.vue'
 import { useStore } from '@/store'
@@ -59,7 +59,6 @@ const preferenceSettingGroup = ref<SettingGroupKey | undefined>(undefined)
 const preferenceAppShowUP = ref(false)
 const preferenceAppShowFP = ref(false)
 const selectedAnaTab = ref('statistics')
-const showShareModal = ref(false)
 
 const headerBlock = ref<HTMLElement>()
 const proStatementInstace = ref<InstanceType<typeof CraftStatementsPro>>()
@@ -84,13 +83,55 @@ const handleWorkflowInventoryChange = (changedItemIds: number[]) => {
   }
 }
 
+const handleKeydown = (e: KeyboardEvent) => {
+  if (isMobile.value) return
+  const shortcutMode = store.userConfig.workflow_switch_shortcut
+  if (shortcutMode === 'disabled') return
+
+  const activeElement = document.activeElement
+  if (
+    activeElement &&
+    (activeElement.tagName === 'INPUT' ||
+      activeElement.tagName === 'TEXTAREA' ||
+      (activeElement as HTMLElement).isContentEditable)
+  ) {
+    return
+  }
+
+  const isLeft = e.key === 'ArrowLeft'
+  const isRight = e.key === 'ArrowRight'
+  if (!isLeft && !isRight) return
+
+  if (shortcutMode === 'arrow') {
+    if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return
+    if (isRight && workState.value.pageView === 'AB') {
+      e.preventDefault()
+      workState.value.pageView = 'BC'
+    } else if (isLeft && workState.value.pageView === 'BC') {
+      e.preventDefault()
+      workState.value.pageView = 'AB'
+    }
+  } else if (shortcutMode === 'ctrl_arrow') {
+    if (!e.ctrlKey || e.altKey || e.shiftKey) return
+    if (isRight && workState.value.pageView === 'AB') {
+      e.preventDefault()
+      workState.value.pageView = 'BC'
+    } else if (isLeft && workState.value.pageView === 'BC') {
+      e.preventDefault()
+      workState.value.pageView = 'AB'
+    }
+  }
+}
+
 onMounted(() => {
   updateHeights()
   window.addEventListener('resize', updateHeights)
+  window.addEventListener('keydown', handleKeydown)
   onInventoryChange(handleWorkflowInventoryChange)
 })
 onBeforeUnmount(() => {
   window.removeEventListener('resize', updateHeights)
+  window.removeEventListener('keydown', handleKeydown)
   offInventoryChange(handleWorkflowInventoryChange)
 })
 const pageHeightVals = computed(() => {
@@ -397,14 +438,15 @@ const setInventoryByStatementPrepared = () => {
                 [{{ t('common.import') }}]
               </a>
             </ImportItemListPop>
-            <a
-              v-show="!selectCardFolded"
-              class="text-app-sm px-0.5 py-px"
-              href="javascript:void(0);"
-              @click="showShareModal = true"
-            >
-              [{{ t('common.share') }}]
-            </a>
+            <ShareWorkflowPop :items="currentWorkflow.targetItems">
+              <a
+                v-show="!selectCardFolded"
+                class="text-app-sm px-0.5 py-px"
+                href="javascript:void(0);"
+              >
+                [{{ t('common.share') }}]
+              </a>
+            </ShareWorkflowPop>
           </template>
           <div class="block items-block">
             <div class="top-actions">
@@ -567,10 +609,6 @@ const setInventoryByStatementPrepared = () => {
       v-model:show="showWorkflowsManageModal"
       v-model:workflows="workState.workflows"
       @after-save="handleFixWorkStateAfterWorkflowsManaged"
-    />
-    <ModalShareWorkflow
-      v-model:show="showShareModal"
-      :items="currentWorkflow.targetItems"
     />
     <ModalCostAndBenefit
       v-model:show="showCostAndBenefitModal"

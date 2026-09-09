@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, h } from 'vue'
 import {
   BookmarkOutlined,
   CloseRound,
@@ -9,7 +9,12 @@ import {
   JoinLeftOutlined,
   PlaylistAddOutlined,
   SearchRound,
+  ChevronLeftOutlined,
+  ChevronRightOutlined,
+  SettingsRound,
+  DoneRound,
 } from '@vicons/material'
+import type { SelectOption } from 'naive-ui'
 import ItemCell from '@/components/item/ItemCell.vue'
 import ItemSpan from '@/components/item/ItemSpan.vue'
 import XivFARImage from '@/components/ui/XivFARImage.vue'
@@ -21,6 +26,8 @@ import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
 import { useAppModals } from '@/composables/useAppModals'
 import { useItemContextMenu } from '@/composables/useItemContextMenu'
+import { useStore } from '@/store'
+import type { PreferenceItem } from '@/types'
 import CommonGroupIcon from '@/assets/icons/game-ui/recipe-notebook/group-common.svg'
 import MasterGroupIcon from '@/assets/icons/game-ui/recipe-notebook/group-master.svg'
 import SpecialGroupIcon from '@/assets/icons/game-ui/recipe-notebook/group-special.svg'
@@ -29,6 +36,7 @@ import { sortRecord } from '@/tools'
 import { getItemInfo, sortItems, getItemNameRevertMap, type ItemInfo } from '@/tools/item'
 import { decodeShareCode } from '@/tools/shareCode'
 
+const store = useStore()
 const { t } = useLocale()
 const { isMobile } = useResponsive()
 const { itemLanguage } = useConfig()
@@ -169,19 +177,20 @@ const notebookGroups = computed(() => {
     group.menus.special = sortRecord(group.menus.special)
     group.menus.master = sortRecord(group.menus.master, true)
     // * 对菜单中的物品进行排序
+    const sortBy = store.userConfig.notebook_item_sortby || 'recipeOrder'
     Object.values(group.menus.common).forEach(menu => {
       Object.values(menu.contentGroups).forEach(contentGroup => {
-        sortItems(contentGroup.items, 'recipeOrder')
+        sortItems(contentGroup.items, sortBy)
       })
     })
     Object.values(group.menus.special).forEach(menu => {
       Object.values(menu.contentGroups).forEach(contentGroup => {
-        sortItems(contentGroup.items, 'recipeOrder')
+        sortItems(contentGroup.items, sortBy)
       })
     })
     Object.values(group.menus.master).forEach(menu => {
       Object.values(menu.contentGroups).forEach(contentGroup => {
-        sortItems(contentGroup.items, 'recipeOrder')
+        sortItems(contentGroup.items, sortBy)
       })
     })
   })
@@ -316,6 +325,9 @@ const handleSearch = (keyword?: string) => {
   isSearchMode.value = true
   isCustomListMode.value = false
 
+  const totalCount = results.reduce((sum, g) => sum + g.items.length, 0)
+  NAIVE_UI_MESSAGE.success(t('workflow.notebook_search.success_count', { count: totalCount }))
+
   // 记录搜索历史 (最多10条，去重且最新排在最前)
   const currentHistory = props.notebookSearchHistory ?? []
   const newHistory = [trimmed, ...currentHistory.filter(h => h !== trimmed)].slice(0, 10)
@@ -378,6 +390,9 @@ const searchByMaterial = (itemOrId: ItemInfo | number) => {
   searchResults.value = results
   isSearchMode.value = true
   isCustomListMode.value = false
+
+  const totalCount = results.reduce((sum, g) => sum + g.items.length, 0)
+  NAIVE_UI_MESSAGE.success(t('workflow.notebook_search.success_count', { count: totalCount }))
 
   if (results[0]?.items?.[0]?.id) {
     emit('update:selectedItem', results[0].items[0].id)
@@ -516,6 +531,138 @@ const displayedNotebookGroups = computed<DisplayedNotebookGroup[]>(() => {
     items: cg.items.map(item => ({ item, amount: 0 })),
   }))
 })
+
+// #region filter and settings
+const selectedUiType = ref<number>(-1)
+const showNotebookSettingsModal = ref(false)
+
+const getItemTypeName = (item: ItemInfo) => {
+  switch (itemLanguage.value) {
+    case 'ja':
+      return item.uiTypeNameJA
+    case 'en':
+      return item.uiTypeNameEN
+    case 'zh':
+    default:
+      return item.uiTypeNameZH
+  }
+}
+
+const filterOptions = computed(() => {
+  const allItems = displayedNotebookGroups.value.flatMap(g => g.items.map(i => i.item))
+  const totalCount = allItems.length
+
+  const categoryMap = new Map<number, {
+    uiTypeId: number
+    uiTypeOrder: number
+    name: string
+    iconUrl: string
+    count: number
+  }>()
+
+  allItems.forEach(item => {
+    const typeId = item.uiTypeId
+    if (!typeId && typeId !== 0) return
+    const existing = categoryMap.get(typeId)
+    if (existing) {
+      existing.count++
+    } else {
+      categoryMap.set(typeId, {
+        uiTypeId: typeId,
+        uiTypeOrder: item.uiTypeOrder ?? 0,
+        name: getItemTypeName(item),
+        iconUrl: item.uiTypeIconUrl,
+        count: 1,
+      })
+    }
+  })
+
+  const sortedCategories = Array.from(categoryMap.values()).sort((a, b) => {
+    return (a.uiTypeOrder - b.uiTypeOrder) || (a.uiTypeId - b.uiTypeId)
+  })
+
+  return [
+    {
+      value: -1,
+      label: t('workflow.notebook_filter.all'),
+      iconUrl: '',
+      count: totalCount,
+    },
+    ...sortedCategories.map(cat => ({
+      value: cat.uiTypeId,
+      label: cat.name,
+      iconUrl: cat.iconUrl,
+      count: cat.count,
+    })),
+  ]
+})
+
+watch(filterOptions, (options) => {
+  if (selectedUiType.value !== -1 && !options.some(o => o.value === selectedUiType.value)) {
+    selectedUiType.value = -1
+  }
+})
+
+const filteredNotebookGroups = computed<DisplayedNotebookGroup[]>(() => {
+  if (selectedUiType.value === -1) {
+    return displayedNotebookGroups.value
+  }
+  return displayedNotebookGroups.value
+    .map(group => ({
+      ...group,
+      items: group.items.filter(entry => entry.item.uiTypeId === selectedUiType.value),
+    }))
+    .filter(group => group.items.length > 0)
+})
+
+const handleFilterPrev = () => {
+  if (filterOptions.value.length <= 1) return
+  const currentIndex = filterOptions.value.findIndex(o => o.value === selectedUiType.value)
+  const prevIndex = (currentIndex - 1 + filterOptions.value.length) % filterOptions.value.length
+  selectedUiType.value = filterOptions.value[prevIndex].value
+}
+
+const handleFilterNext = () => {
+  if (filterOptions.value.length <= 1) return
+  const currentIndex = filterOptions.value.findIndex(o => o.value === selectedUiType.value)
+  const nextIndex = (currentIndex + 1) % filterOptions.value.length
+  selectedUiType.value = filterOptions.value[nextIndex].value
+}
+
+const renderFilterLabel = (option: SelectOption) => {
+  return h(
+    'div',
+    { class: 'flex items-center justify-between w-full gap-1' },
+    [
+      h('div', { class: 'flex items-center gap-0.5 min-w-0' }, [
+        option.iconUrl
+          ? h(XivFARImage, { src: option.iconUrl as string, size: 14, class: 'shrink-0' })
+          : null,
+        h('span', { class: 'truncate' }, option.label as string),
+      ]),
+      h('span', { class: 'text-sub text-app-xs shrink-0 tabular-nums' }, `(${String(option.count ?? 0)})`),
+    ]
+  )
+}
+
+const notebookSortbySetting = computed<PreferenceItem>(() => ({
+  key: 'notebook_item_sortby',
+  label: t('preference.notebook_item_sortby.title'),
+  type: 'select',
+  options: [
+    { value: 'recipeOrder', label: t('preference.processes_craftable_item_sortby.option.crafting_log') },
+    { value: 'recipeOrderSearch', label: t('preference.processes_craftable_item_sortby.option.crafting_log_search') },
+    { value: 'itemId', label: t('game.item_id') },
+  ],
+  descriptions: [
+    t('preference.notebook_item_sortby.desc.desc_1'),
+  ],
+}))
+
+watch(() => store.userConfig.notebook_item_sortby, () => {
+  store.updateUserConfig()
+})
+// #endregion
 // #endregion
 
 // #region item context menu
@@ -614,31 +761,33 @@ defineExpose({
             </div>
             <n-divider class="my-1!" />
             <template v-if="notebookSearchHistory?.length">
-              <div class="flex flex-col gap-0.5 max-h-48 overflow-y-auto pr-0.5">
-                <div
-                  v-for="(item, idx) in notebookSearchHistory"
-                  :key="idx"
-                  class="flex items-center justify-between gap-1 rounded hover:bg-bg-hover px-1 group transition-colors"
-                >
-                  <span
-                    class="flex-1 text-app-xs py-1 truncate cursor-pointer select-none text-text hover:text-primary transition-colors"
-                    @click="handleSearch(item)"
+              <n-scrollbar style="max-height: 192px;" trigger="none">
+                <div class="flex flex-col gap-0.5 pr-1.5">
+                  <div
+                    v-for="(item, idx) in notebookSearchHistory"
+                    :key="idx"
+                    class="flex items-center justify-between gap-1 rounded hover:bg-bg-hover px-1 group transition-colors"
                   >
-                    {{ item }}
-                  </span>
-                  <n-button
-                    quaternary
-                    circle
-                    size="tiny"
-                    class="opacity-60 hover:opacity-100 shrink-0"
-                    @click.stop="handleDeleteHistoryItem(idx)"
-                  >
-                    <template #icon>
-                      <n-icon :size="12"><CloseRound /></n-icon>
-                    </template>
-                  </n-button>
+                    <span
+                      class="flex-1 text-app-xs py-1 truncate cursor-pointer select-none text-text hover:text-primary transition-colors"
+                      @click="handleSearch(item)"
+                    >
+                      {{ item }}
+                    </span>
+                    <n-button
+                      quaternary
+                      circle
+                      size="tiny"
+                      class="opacity-60 hover:opacity-100 shrink-0"
+                      @click.stop="handleDeleteHistoryItem(idx)"
+                    >
+                      <template #icon>
+                        <n-icon :size="12"><CloseRound /></n-icon>
+                      </template>
+                    </n-button>
+                  </div>
                 </div>
-              </div>
+              </n-scrollbar>
               <n-divider class="my-1.5!" />
               <div class="flex justify-end">
                 <n-button
@@ -777,45 +926,88 @@ defineExpose({
         </n-scrollbar>
       </div>
       <div class="flex-1 pl-2 flex" :style="{ height: menuHeight }">
-        <n-scrollbar trigger="none" class="flex-1">
-          <div
-            v-for="group in displayedNotebookGroups"
-            :key="group.key"
-            class="flex flex-col gap-1 pr-3 mb-2"
-          >
-            <div v-if="group.label" class="sticky top-0 z-10 w-full rounded px-1 bg-border">
-              <i class="xiv e032"></i>
-              {{ group.label }}
+        <div class="flex-1 flex flex-col h-full min-w-0">
+          <div class="flex items-center gap-2 justify-between mb-2 pr-3 shrink-0">
+            <div class="w-80 flex items-center gap-1">
+              <n-select
+                v-model:value="selectedUiType"
+                size="small"
+                :options="filterOptions"
+                :render-label="renderFilterLabel"
+                :to="false"
+                class="flex-1 min-w-0"
+              />
+              <n-button
+                size="small"
+                class="n-square-button shrink-0"
+                :disabled="filterOptions.length <= 1"
+                @click="handleFilterPrev"
+              >
+                <template #icon>
+                  <n-icon :size="16"><ChevronLeftOutlined /></n-icon>
+                </template>
+              </n-button>
+              <n-button
+                size="small"
+                class="n-square-button shrink-0"
+                :disabled="filterOptions.length <= 1"
+                @click="handleFilterNext"
+              >
+                <template #icon>
+                  <n-icon :size="16"><ChevronRightOutlined /></n-icon>
+                </template>
+              </n-button>
             </div>
-            <div
-              v-for="entry in group.items"
-              :key="entry.item.id"
-              class="flex gap-1"
+            <n-button
+              size="small"
+              class="n-square-button shrink-0"
+              @click="showNotebookSettingsModal = true"
             >
-              <n-button
-                :type="selectedItem === entry.item.id ? 'primary' : 'default'"
-                class="flex-1 justify-start px-2! py-1! h-auto!"
-                @click="emit('update:selectedItem', entry.item.id)"
-                @contextmenu="handleNotebookItemContextMenu($event, entry.item)"
-              >
-                <ItemCell
-                  :item-info="entry.item"
-                  :amount="entry.amount"
-                  show-item-details
-                />
-              </n-button>
-              <n-button
-                type="info"
-                :ghost="selectedItem !== entry.item.id"
-                class="h-auto!"
-                :title="t('workflow.text.add_item_to_curr_workflow.tip_1') + '\r\n' + t('workflow.text.add_item_to_curr_workflow.tip_2')"
-                @click="emit('add-item', entry.item.id)"
-              >
-                <n-icon :size="18"><PlaylistAddOutlined /></n-icon>
-              </n-button>
-            </div>
+              <template #icon>
+                <n-icon :size="16"><SettingsRound /></n-icon>
+              </template>
+            </n-button>
           </div>
-        </n-scrollbar>
+          <n-scrollbar trigger="none" class="flex-1">
+            <div
+              v-for="group in filteredNotebookGroups"
+              :key="group.key"
+              class="flex flex-col gap-1 pr-3 mb-2"
+            >
+              <div v-if="group.label" class="sticky top-0 z-10 w-full rounded px-1 bg-border">
+                <i class="xiv e032"></i>
+                {{ group.label }}
+              </div>
+              <div
+                v-for="entry in group.items"
+                :key="entry.item.id"
+                class="flex gap-1"
+              >
+                <n-button
+                  :type="selectedItem === entry.item.id ? 'primary' : 'default'"
+                  class="flex-1 justify-start px-2! py-1! h-auto!"
+                  @click="emit('update:selectedItem', entry.item.id)"
+                  @contextmenu="handleNotebookItemContextMenu($event, entry.item)"
+                >
+                  <ItemCell
+                    :item-info="entry.item"
+                    :amount="entry.amount"
+                    show-item-details
+                  />
+                </n-button>
+                <n-button
+                  type="info"
+                  :ghost="selectedItem !== entry.item.id"
+                  class="h-auto!"
+                  :title="t('workflow.text.add_item_to_curr_workflow.tip_1') + '\r\n' + t('workflow.text.add_item_to_curr_workflow.tip_2')"
+                  @click="emit('add-item', entry.item.id)"
+                >
+                  <n-icon :size="18"><PlaylistAddOutlined /></n-icon>
+                </n-button>
+              </div>
+            </div>
+          </n-scrollbar>
+        </div>
         <n-dropdown
           size="small"
           placement="bottom-start"
@@ -954,10 +1146,38 @@ defineExpose({
         </template>
       </n-drawer-content>
     </n-drawer>
+
+    <MyModal
+      v-model:show="showNotebookSettingsModal"
+      :icon="SettingsRound"
+      :title="t('workflow.notebook_settings.title')"
+      max-width="500px"
+    >
+      <div class="py-2">
+        <SettingItem
+          v-model:form-data="store.userConfig"
+          :setting-item="notebookSortbySetting"
+        />
+      </div>
+      <template #action>
+        <div class="app-modal-footer">
+          <n-button type="primary" @click="showNotebookSettingsModal = false">
+            <template #icon>
+              <n-icon><DoneRound /></n-icon>
+            </template>
+            {{ t('common.close') }}
+          </n-button>
+        </div>
+      </template>
+    </MyModal>
   </FoldableCard>
 </template>
 
 <style scoped>
+:deep(.n-select .n-virtual-list.v-vl) {
+  --n-option-height: 28px !important;
+  max-height: calc(var(--n-option-height) * 7.6);
+}
 .search-input-group {
   max-width: 458px;
 }
