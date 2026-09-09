@@ -143,7 +143,7 @@ defineExpose({
         </tr>
       </tbody>
       <tbody v-if="canAdd && (!max || formDataRows.length < max)">
-        <tr>
+        <tr class="add-row">
           <td></td>
           <td>
             <n-button ghost type="info" size="small" @click="handleAddRow">
@@ -179,5 +179,20 @@ defineExpose({
     align-items: center;
     cursor: move;
   }
+
+  tr.add-row td,
+  tr.add-row:hover td {
+    background-color: var(--n-th-color);
+  }
+}
+
+:global(.n-modal) .draggable-table tr.add-row td,
+:global(.n-modal) .draggable-table tr.add-row:hover td {
+  background-color: var(--n-th-color-modal);
+}
+
+:global(.n-popover) .draggable-table tr.add-row td,
+:global(.n-popover) .draggable-table tr.add-row:hover td {
+  background-color: var(--n-th-color-popover);
 }
 </style>

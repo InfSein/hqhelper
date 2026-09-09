@@ -69,7 +69,16 @@ table.n-table.tiny-table {
     padding: 4px;
   }
 }
-table.n-table tbody tr:hover td {
+table.n-table tbody tr:not(.add-row):hover td {
+  background-color: var(--n-th-color-popover);
+}
+table.n-table tr.add-row td {
+  background-color: var(--n-th-color);
+}
+.n-modal table.n-table tr.add-row td {
+  background-color: var(--n-th-color-modal);
+}
+.n-popover table.n-table tr.add-row td {
   background-color: var(--n-th-color-popover);
 }
 .n-data-table-th__title {

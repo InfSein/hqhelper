@@ -70,11 +70,8 @@ const handleCopy = async (content: string) => {
                 readonly
                 :placeholder="t('common.share_code')"
               />
-              <n-button ghost @click="handleCopy(shareCode)">
-                <template #icon>
-                  <n-icon><ContentCopyOutlined /></n-icon>
-                </template>
-                {{ t('common.copy') }}
+              <n-button ghost class="n-square-button" :title="t('common.copy')" @click="handleCopy(shareCode)">
+                <n-icon><ContentCopyOutlined /></n-icon>
               </n-button>
             </n-input-group>
           </div>
@@ -87,11 +84,8 @@ const handleCopy = async (content: string) => {
                 readonly
                 :placeholder="t('common.share_link')"
               />
-              <n-button ghost @click="handleCopy(shareUrl)">
-                <template #icon>
-                  <n-icon><ContentCopyOutlined /></n-icon>
-                </template>
-                {{ t('common.copy') }}
+              <n-button ghost class="n-square-button" :title="t('common.copy')" @click="handleCopy(shareUrl)">
+                <n-icon><ContentCopyOutlined /></n-icon>
               </n-button>
             </n-input-group>
           </div>
