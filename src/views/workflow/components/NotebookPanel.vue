@@ -232,6 +232,12 @@ const isSearchMode = ref(false)
 const searchResults = ref<SearchGroupResult[]>([])
 const showHistoryDrawer = ref(false)
 
+watch(isSearchMode, (val) => {
+  if (!val) {
+    searchKeyword.value = ''
+  }
+})
+
 const matchItem = (item: ItemInfo, pattern: string) => {
   const p = pattern.trim().toLowerCase()
   if (!p) return false
@@ -491,12 +497,14 @@ const handleJobSelect = (job: number) => {
 const handleMenuTabUpdate = (val: 'common' | 'special' | 'master') => {
   if (isCustomListMode.value) return
   isSearchMode.value = false
+  searchKeyword.value = ''
   emit('update:selectedMenu', val)
 }
 
 const handleContentGroupSelect = (menuId: `i_${number}`) => {
   isSearchMode.value = false
   isCustomListMode.value = false
+  searchKeyword.value = ''
   emit('update:selectedContentGroup', menuId)
 }
 
@@ -1153,7 +1161,7 @@ defineExpose({
       :title="t('workflow.notebook_settings.title')"
       max-width="500px"
     >
-      <div class="py-2">
+      <div>
         <SettingItem
           v-model:form-data="store.userConfig"
           :setting-item="notebookSortbySetting"
