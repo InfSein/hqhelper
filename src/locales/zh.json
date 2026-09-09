@@ -2648,6 +2648,13 @@
     "notebook_filter": {
       "all": "全部"
     },
+    "notebook_starred": {
+      "title": "已收藏配方",
+      "star_recipe": "收藏配方",
+      "unstar_recipe": "取消收藏配方",
+      "max_reached": "最多只能收藏{max}个配方",
+      "empty": "暂无收藏配方"
+    },
     "notebook_settings": {
       "title": "制作笔记设置"
     }

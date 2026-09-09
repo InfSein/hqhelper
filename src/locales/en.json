@@ -2685,6 +2685,13 @@
     "notebook_filter": {
       "all": "All"
     },
+    "notebook_starred": {
+      "title": "Starred Recipes",
+      "star_recipe": "Star Recipe",
+      "unstar_recipe": "Unstar Recipe",
+      "max_reached": "You can only star up to {max} recipes",
+      "empty": "No starred recipes yet"
+    },
     "notebook_settings": {
       "title": "Crafting Log Settings"
     }

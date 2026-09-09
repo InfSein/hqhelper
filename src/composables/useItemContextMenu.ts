@@ -7,6 +7,8 @@ import {
   JoinLeftOutlined,
   PlaylistAddOutlined,
   SearchRound,
+  StarRound,
+  StarBorderRound,
 } from '@vicons/material'
 import { CopyToClipboard } from '@/tools'
 import { type ItemInfo } from '@/tools/item'
@@ -14,6 +16,7 @@ import useConfig from '@/composables/useConfig'
 import useUiTools from './useUiTools'
 import { useLocale } from './useLocale'
 import { useAppModals } from './useAppModals'
+import { useStore } from '@/store'
 import { addToCurrentWorkflowKey, reverseRecipeLookupKey } from '@/constants/vue-injects'
 
 export function useItemContextMenu(
@@ -28,6 +31,7 @@ export function useItemContextMenu(
   const NAIVE_UI_MESSAGE = useMessage()
   const { itemLanguage } = useConfig()
   const { renderIcon } = useUiTools()
+  const store = useStore()
 
   const showDropdown = ref(false)
   const dropdownX = ref(0)
@@ -116,6 +120,37 @@ export function useItemContextMenu(
         icon: renderIcon(SearchRound),
         click: () => {
           reverseRecipeLookup?.(itemInfo)
+        }
+      },
+      {
+        type: 'divider',
+        key: 'd-star',
+        show: !!itemInfo?.craftInfo?.recipeId,
+      },
+      {
+        label: store.userConfig.notebook_starred_recipes.includes(itemInfo.id)
+          ? t('workflow.notebook_starred.unstar_recipe')
+          : t('workflow.notebook_starred.star_recipe'),
+        key: 'toggle-star-recipe',
+        show: !!itemInfo?.craftInfo?.recipeId,
+        icon: renderIcon(
+          store.userConfig.notebook_starred_recipes.includes(itemInfo.id)
+            ? StarRound
+            : StarBorderRound
+        ),
+        click: () => {
+          const starredList = store.userConfig.notebook_starred_recipes
+          const idx = starredList.indexOf(itemInfo.id)
+          if (idx >= 0) {
+            starredList.splice(idx, 1)
+          } else {
+            if (starredList.length >= 100) {
+              NAIVE_UI_MESSAGE.warning(t('workflow.notebook_starred.max_reached', { max: 100 }))
+              return
+            }
+            starredList.push(itemInfo.id)
+          }
+          store.updateUserConfig()
         }
       },
       {

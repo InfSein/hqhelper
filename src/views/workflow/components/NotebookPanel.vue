@@ -13,6 +13,8 @@ import {
   ChevronRightOutlined,
   SettingsRound,
   DoneRound,
+  StarRound,
+  StarBorderRound,
 } from '@vicons/material'
 import type { SelectOption } from 'naive-ui'
 import ItemCell from '@/components/item/ItemCell.vue'
@@ -330,6 +332,7 @@ const handleSearch = (keyword?: string) => {
   searchResults.value = results
   isSearchMode.value = true
   isCustomListMode.value = false
+  isStarredMode.value = false
 
   const totalCount = results.reduce((sum, g) => sum + g.items.length, 0)
   NAIVE_UI_MESSAGE.success(t('workflow.notebook_search.success_count', { count: totalCount }))
@@ -396,6 +399,7 @@ const searchByMaterial = (itemOrId: ItemInfo | number) => {
   searchResults.value = results
   isSearchMode.value = true
   isCustomListMode.value = false
+  isStarredMode.value = false
 
   const totalCount = results.reduce((sum, g) => sum + g.items.length, 0)
   NAIVE_UI_MESSAGE.success(t('workflow.notebook_search.success_count', { count: totalCount }))
@@ -467,6 +471,7 @@ const currCustomList = computed<CustomListEntry | undefined>(() => {
 
 const handleEnterCustomListMode = () => {
   isSearchMode.value = false
+  isStarredMode.value = false
   isCustomListMode.value = true
   if (currCustomList.value?.items?.length) {
     emit('update:selectedItem', currCustomList.value.items[0].id)
@@ -488,14 +493,61 @@ const handleJoinCustomList = (entry: CustomListEntry) => {
 }
 // #endregion
 
+// #region starred recipes
+const isStarredMode = ref(false)
+
+const starredItems = computed<ItemInfo[]>(() => {
+  const ids = store.userConfig.notebook_starred_recipes || []
+  const items: ItemInfo[] = []
+  for (const id of ids) {
+    const itemInfo = getItemInfo(id)
+    if (itemInfo && itemInfo.id) {
+      items.push(itemInfo)
+    }
+  }
+  const sortBy = store.userConfig.notebook_item_sortby || 'recipeOrder'
+  sortItems(items, sortBy)
+  return items
+})
+
+const isRecipeStarred = (id: number) => {
+  return store.userConfig.notebook_starred_recipes.includes(id)
+}
+
+const toggleStarRecipe = (id: number) => {
+  const starredList = store.userConfig.notebook_starred_recipes
+  const idx = starredList.indexOf(id)
+  if (idx >= 0) {
+    starredList.splice(idx, 1)
+  } else {
+    if (starredList.length >= 100) {
+      NAIVE_UI_MESSAGE.warning(t('workflow.notebook_starred.max_reached', { max: 100 }))
+      return
+    }
+    starredList.push(id)
+  }
+  store.updateUserConfig()
+}
+
+const handleEnterStarredMode = () => {
+  isSearchMode.value = false
+  isCustomListMode.value = false
+  isStarredMode.value = true
+  if (starredItems.value.length > 0) {
+    emit('update:selectedItem', starredItems.value[0].id)
+  }
+}
+// #endregion
+
 const handleJobSelect = (job: number) => {
   isSearchMode.value = false
   isCustomListMode.value = false
+  isStarredMode.value = false
   emit('update:selectedJob', job)
 }
 
 const handleMenuTabUpdate = (val: 'common' | 'special' | 'master') => {
-  if (isCustomListMode.value) return
+  if (isCustomListMode.value || isStarredMode.value) return
   isSearchMode.value = false
   searchKeyword.value = ''
   emit('update:selectedMenu', val)
@@ -504,6 +556,7 @@ const handleMenuTabUpdate = (val: 'common' | 'special' | 'master') => {
 const handleContentGroupSelect = (menuId: `i_${number}`) => {
   isSearchMode.value = false
   isCustomListMode.value = false
+  isStarredMode.value = false
   searchKeyword.value = ''
   emit('update:selectedContentGroup', menuId)
 }
@@ -524,6 +577,13 @@ const displayedNotebookGroups = computed<DisplayedNotebookGroup[]>(() => {
       label: group.groupLabel,
       items: group.items.map(item => ({ item, amount: 0 })),
     }))
+  }
+  if (isStarredMode.value) {
+    return [{
+      key: 'starred',
+      label: t('workflow.notebook_starred.title'),
+      items: starredItems.value.map(item => ({ item, amount: 0 })),
+    }]
   }
   if (isCustomListMode.value) {
     if (!currCustomList.value) return []
@@ -709,18 +769,25 @@ defineExpose({
     </template>
     <div class="flex flex-wrap items-center justify-between gap-2">
       <div class="flex flex-wrap items-center gap-1.5">
-        <n-button
+        <n-tooltip
           v-for="job in Object.keys(notebookGroups)"
           :key="job"
-          class="p-px w-9! h-9!"
-          :type="!isSearchMode && !isCustomListMode && selectedJob === Number(job) ? 'primary' : 'default'"
-          @click="handleJobSelect(Number(job))"
+          placement="top"
         >
-          <XivFARImage
-            :src="XivJobs[Number(job)].job_icon_url"
-            :size="32"
-          />
-        </n-button>
+          <template #trigger>
+            <n-button
+              class="p-px w-9! h-9!"
+              :type="!isSearchMode && !isCustomListMode && !isStarredMode && selectedJob === Number(job) ? 'primary' : 'default'"
+              @click="handleJobSelect(Number(job))"
+            >
+              <XivFARImage
+                :src="XivJobs[Number(job)].job_icon_url"
+                :size="32"
+              />
+            </n-button>
+          </template>
+          {{ XivJobs[Number(job)]?.[`job_name_${itemLanguage}`] || XivJobs[Number(job)]?.job_name_zh }}
+        </n-tooltip>
         <n-tooltip placement="top">
           <template #trigger>
             <n-button
@@ -734,6 +801,20 @@ defineExpose({
             </n-button>
           </template>
           {{ t('recipe.notebookgroup.custom_lists') }}
+        </n-tooltip>
+        <n-tooltip placement="top">
+          <template #trigger>
+            <n-button
+              class="p-px w-9! h-9!"
+              :type="!isSearchMode && isStarredMode ? 'primary' : 'default'"
+              @click="handleEnterStarredMode"
+            >
+              <n-icon :size="22">
+                <StarRound />
+              </n-icon>
+            </n-button>
+          </template>
+          {{ t('workflow.notebook_starred.title') }}
         </n-tooltip>
       </div>
       <n-input-group class="search-input-group">
@@ -839,10 +920,10 @@ defineExpose({
       <div class="w-48 flex flex-col pr-2" :style="{ height: menuHeight, borderRight: '1px solid var(--color-border)' }">
         <n-tabs
           :value="selectedMenu"
-          :disabled="isCustomListMode"
+          :disabled="isCustomListMode || isStarredMode"
           type="segment" animated
           class="mb-2 transition-opacity"
-          :class="isCustomListMode ? 'opacity-40' : ''"
+          :class="isCustomListMode || isStarredMode ? 'opacity-40' : ''"
           @update:value="handleMenuTabUpdate"
         >
           <n-tab name="common">
@@ -850,7 +931,7 @@ defineExpose({
               <template #trigger>
                 <n-icon
                   :size="18"
-                  :color="isCustomListMode ? 'var(--app-color-text-sub)' : (!isSearchMode && selectedMenu === 'common' ? 'var(--color-primary)' : undefined)"
+                  :color="(isCustomListMode || isStarredMode) ? 'var(--app-color-text-sub)' : (!isSearchMode && selectedMenu === 'common' ? 'var(--color-primary)' : undefined)"
                 >
                   <component :is="CommonGroupIcon" />
                 </n-icon>
@@ -863,7 +944,7 @@ defineExpose({
               <template #trigger>
                 <n-icon
                   :size="18"
-                  :color="isCustomListMode ? 'var(--app-color-text-sub)' : (!isSearchMode && selectedMenu === 'special' ? 'var(--color-primary)' : undefined)"
+                  :color="(isCustomListMode || isStarredMode) ? 'var(--app-color-text-sub)' : (!isSearchMode && selectedMenu === 'special' ? 'var(--color-primary)' : undefined)"
                 >
                   <component :is="SpecialGroupIcon" />
                 </n-icon>
@@ -876,7 +957,7 @@ defineExpose({
               <template #trigger>
                 <n-icon
                   :size="18"
-                  :color="isCustomListMode ? 'var(--app-color-text-sub)' : (!isSearchMode && selectedMenu === 'master' ? 'var(--color-primary)' : undefined)"
+                  :color="(isCustomListMode || isStarredMode) ? 'var(--app-color-text-sub)' : (!isSearchMode && selectedMenu === 'master' ? 'var(--color-primary)' : undefined)"
                 >
                   <component :is="MasterGroupIcon" />
                 </n-icon>
@@ -887,7 +968,16 @@ defineExpose({
         </n-tabs>
         <n-scrollbar trigger="none" class="flex-1">
           <div class="flex flex-col gap-0.5">
-            <template v-if="isCustomListMode">
+            <template v-if="isStarredMode">
+              <n-button
+                size="small"
+                :tertiary="true"
+                class="justify-start truncate"
+              >
+                <span class="truncate">{{ t('workflow.notebook_starred.title') }}</span>
+              </n-button>
+            </template>
+            <template v-else-if="isCustomListMode">
               <div
                 v-for="cl in customLists"
                 :key="cl.index"
@@ -1014,6 +1104,12 @@ defineExpose({
                 </n-button>
               </div>
             </div>
+            <div
+              v-if="filteredNotebookGroups.length === 0"
+              class="h-full flex items-center justify-center py-8"
+            >
+              <n-empty :description="isStarredMode ? t('workflow.notebook_starred.empty') : t('common.no_data')" />
+            </div>
           </n-scrollbar>
         </div>
         <n-dropdown
@@ -1035,8 +1131,26 @@ defineExpose({
             class="h-full"
             content-class="h-full flex flex-col"
           >
-            <div class="flex items-baseline">
+            <div class="flex items-start justify-between gap-2">
               <ItemInfoHeader show-pop :item-info="currSelectedItem" class="flex-1 mt-0!" />
+              <n-tooltip v-if="currSelectedItem?.craftInfo?.recipeId" placement="top">
+                <template #trigger>
+                  <n-button
+                    quaternary
+                    size="small"
+                    class="shrink-0 n-square-button"
+                    @click="toggleStarRecipe(currSelectedItem.id)"
+                  >
+                    <template #icon>
+                      <n-icon :size="20" :color="isRecipeStarred(currSelectedItem.id) ? '#F6CA45' : undefined">
+                        <StarRound v-if="isRecipeStarred(currSelectedItem.id)" />
+                        <StarBorderRound v-else />
+                      </n-icon>
+                    </template>
+                  </n-button>
+                </template>
+                {{ isRecipeStarred(currSelectedItem.id) ? t('workflow.notebook_starred.unstar_recipe') : t('workflow.notebook_starred.star_recipe') }}
+              </n-tooltip>
             </div>
             <div class="h-1" />
             <div class="flex flex-wrap items-center gap-x-2 text-app-xs">

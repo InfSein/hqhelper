@@ -103,6 +103,8 @@ export interface UserConfigModel {
   macromanage_cache_work_state: MacromanageWorkState
   fashioncloth_cache_work_state: FashionclothWorkState
   cshelper_cache_work_state: CsHelperWorkState
+  /** 收藏的配方物品ID列表（最多100个） */
+  notebook_starred_recipes: number[]
   // #endregion
 }
 
@@ -162,6 +164,7 @@ const defaultUserConfig: UserConfigModel = {
   macromanage_cache_work_state: fixMacromanageWorkState(),
   fashioncloth_cache_work_state: fixFashionclothWorkState(),
   cshelper_cache_work_state: fixCsHelperWorkState(),
+  notebook_starred_recipes: [],
 }
 
 // 对密钥做基础编码，避免在缓存中直接裸存。

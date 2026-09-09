@@ -2685,6 +2685,13 @@
     "notebook_filter": {
       "all": "すべて"
     },
+    "notebook_starred": {
+      "title": "お気に入りレシピ",
+      "star_recipe": "レシピをお気に入りに追加",
+      "unstar_recipe": "レシピのお気に入りを解除",
+      "max_reached": "お気に入りに登録できるレシピは最大{max}件です",
+      "empty": "お気に入りのレシピはありません"
+    },
     "notebook_settings": {
       "title": "製作手帳設定"
     }
