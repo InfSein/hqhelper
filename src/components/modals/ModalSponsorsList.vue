@@ -105,7 +105,7 @@ const getSponsorGenContent = (gen: number) => {
     </template>
 
     <div class="wrapper">
-      <div v-if="sponsorLoadingStatus === 'loading'" class="flex items-center gap-1 mt-[5px] ml-[1.2em]">
+      <div v-if="sponsorLoadingStatus === 'loading'" class="flex items-center gap-1 mt-1.25 ml-[1.2em]">
         <n-spin size="small" style="text-indent: initial;" />
         <div>{{ t('common.loading') }}</div>
       </div>

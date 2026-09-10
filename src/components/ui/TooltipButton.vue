@@ -3,14 +3,13 @@ import { type Component } from 'vue'
 import {
   type PopoverTrigger,
 } from 'naive-ui'
-import type { Type } from 'naive-ui/es/button/src/interface'
 import { useResponsive } from '@/composables/useResponsive'
 
 const { isMobile } = useResponsive()
 
 interface TooltipButtonProps {
   size?: "tiny" | "small" | "medium" | "large",
-  type?: Type,
+  type?: "default" | "tertiary" | "primary" | "success" | "info" | "warning" | "error",
   tertiary?: boolean,
   quaternary?: boolean,
   square?: boolean,
