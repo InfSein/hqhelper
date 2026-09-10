@@ -148,7 +148,7 @@ const pageHeightVals = computed(() => {
     }
   } else {
     return {
-      notebookMenu: (contentHeight - 0) + 'px',
+      notebookMenu: (contentHeight - 5) + 'px',
       itemSelectTable: (contentHeight - 65) + 'px',
       statisticsBlock: (contentHeight / 2 - 45),
       statementsBlock: (contentHeight - 50) + 'px',
