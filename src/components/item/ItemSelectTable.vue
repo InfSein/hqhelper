@@ -103,7 +103,7 @@ defineExpose({
 
 <template>
   <div class="table-container" ref="tableContainer">
-    <n-table class="table" size="small" :single-line="false">
+    <n-table class="item-select-table" size="small" :single-line="false">
       <thead>
         <tr>
           <th>{{ t('common.item') }}</th>
@@ -112,7 +112,7 @@ defineExpose({
       </thead>
     </n-table>
     <n-scrollbar ref="scrollbarRef" trigger="none" :style="{ height: contentHeight ?? '450px', 'margin-top': '-2px' }">
-      <n-table class="table" size="small" :single-line="false">
+      <n-table class="item-select-table" size="small" :single-line="false">
         <tbody>
           <tr 
             v-for="item in rows" 
@@ -155,7 +155,7 @@ defineExpose({
 :deep(.n-scrollbar-container) {
   padding: inherit !important;
 }
-.table {
+.item-select-table {
   width: 100%;
 
   th {
@@ -184,7 +184,7 @@ defineExpose({
 
 /* Mobile */
 @media screen and (max-width: 767px) {
-  .table {
+  .item-select-table {
     th:first-child, td:first-child {
       width: 70%;
     }

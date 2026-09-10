@@ -161,7 +161,7 @@ const handleSubmit = () => {
     <div class="wrapper">
       <GroupBox v-if="isMobile" :title="t('main.imexport.import_parts')">
         <n-scrollbar trigger="none" x-scrollable :style="{ width: '100%', height: '300px', 'margin-top': '-2px' }">
-          <n-table class="table" size="small" :single-line="false">
+          <n-table class="import-table" size="small" :single-line="false">
             <thead>
               <tr>
                 <th>{{ t('common.job_or_affix') }}</th>
@@ -198,7 +198,7 @@ const handleSubmit = () => {
         </n-scrollbar>
       </GroupBox>
       <GroupBox v-else :title="t('main.imexport.import_parts')">
-        <n-table class="table" size="small" :single-line="false">
+        <n-table class="import-table" size="small" :single-line="false">
           <thead>
             <tr>
               <th>{{ t('common.job_or_affix') }}</th>
@@ -217,7 +217,7 @@ const handleSubmit = () => {
           </thead>
         </n-table>
         <n-scrollbar trigger="none" :style="{ maxHeight: '350px', 'margin-top': '-2px' }">
-          <n-table class="table" size="small" :single-line="false">
+          <n-table class="import-table" size="small" :single-line="false">
             <tbody>
               <tr v-for="(row, index) in gearRows" :key="index">
                 <td>{{ row[0] }}</td>
@@ -262,7 +262,7 @@ const handleSubmit = () => {
   gap: 15px;
   user-select: text;
 
-  .table {
+  .import-table {
     width: 100%;
 
     th {

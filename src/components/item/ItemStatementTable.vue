@@ -77,7 +77,7 @@ const handleRowClick = (row: StatementRow) => {
 
 <template>
   <div class="table-container" ref="tableContainer">
-    <n-table class="table" size="small" :single-line="false">
+    <n-table class="item-state-table" size="small" :single-line="false">
       <thead>
         <tr @click="selectedItem = undefined">
           <th>
@@ -104,7 +104,7 @@ const handleRowClick = (row: StatementRow) => {
           :style="{ height: contentHeight ?? '450px' }"
           @click="selectedItem = undefined"
         />
-        <n-table class="table" size="small" :single-line="false">
+        <n-table class="item-state-table" size="small" :single-line="false">
           <tbody>
             <tr
               v-for="item in rows.remaining"
@@ -198,7 +198,7 @@ const handleRowClick = (row: StatementRow) => {
 :deep(.n-scrollbar-container) {
   padding: inherit !important;
 }
-.table {
+.item-state-table {
   width: 100%;
 
   th {
@@ -241,7 +241,7 @@ const handleRowClick = (row: StatementRow) => {
     z-index: 1;
     background: transparent;
   }
-  .table {
+  .item-state-table {
     z-index: 2;
     position: relative;
   }
@@ -253,7 +253,7 @@ const handleRowClick = (row: StatementRow) => {
 
 /* Mobile */
 @media screen and (max-width: 767px) {
-  .table {
+  .item-state-table {
     th:first-child, td:first-child {
       width: 46%;
     }

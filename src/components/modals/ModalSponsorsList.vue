@@ -134,7 +134,7 @@ const getSponsorGenContent = (gen: number) => {
             </thead>
           </n-table>
           <n-scrollbar trigger="none" :style="{ height: '400px', 'margin-top': '-2px' }">
-            <n-table class="table" size="small" :single-line="false">
+            <n-table size="small" :single-line="false">
               <tbody>
                 <tr v-for="(sponsor, index) in sponsors" :key="'sponsor-' + index">
                   <td>
