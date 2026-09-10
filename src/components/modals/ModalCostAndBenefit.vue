@@ -29,13 +29,94 @@ interface ModalCostAndBenefitProps {
 }
 const props = defineProps<ModalCostAndBenefitProps>()
 
+const customPriceMode = computed(() => store.funcConfig.costandbenefit_custom_price_enabled)
+
+const toggleCustomPriceMode = () => {
+  store.funcConfig.costandbenefit_custom_price_enabled = !store.funcConfig.costandbenefit_custom_price_enabled
+  store.updateFuncConfig()
+}
+
+// 缓存与当前编辑的自定义价格数据
+const customPriceMap = reactive<Record<number, number>>({})
+
+watch(
+  () => store.funcConfig.cache_custom_item_prices,
+  (val) => {
+    Object.keys(customPriceMap).forEach(key => delete customPriceMap[Number(key)])
+    Object.assign(customPriceMap, val)
+  },
+  { immediate: true, deep: true }
+)
+
+const handlePriceUpdate = (itemId: number, price: number) => {
+  customPriceMap[itemId] = price
+}
+
+const handlePriceSave = (itemId: number, price: number) => {
+  store.funcConfig.cache_custom_item_prices[itemId] = price
+  store.updateFuncConfig()
+}
+
 const costAndBenefit = computed(() => {
   return calCostAndBenefit(props.costItems, props.benefitItems)
 })
-const costInfo = computed(() => costAndBenefit.value.costInfo)
-const benefitInfo = computed(() => costAndBenefit.value.benefitInfo)
-const isCostPartial = computed(() => costAndBenefit.value.isCostPartial)
-const isBenefitPartial = computed(() => costAndBenefit.value.isBenefitPartial)
+
+const customCostAndBenefit = computed(() => {
+  const calcTotal = (items: ItemInfo[], type: 'NQ' | 'HQ') => {
+    let total = 0
+
+    items.forEach(item => {
+      if (customPriceMap[item.id] !== undefined) {
+        total += item.amount * customPriceMap[item.id]
+      } else {
+        const actualType = (type === 'HQ' && !item.hqable) ? 'NQ' : type
+        const p = store.funcConfig.cache_item_prices[item.id]?.[`${store.funcConfig.universalis_priceType}${actualType}`]
+        if (p !== undefined && Math.floor(p) > 0) {
+          total += item.amount * Math.floor(p)
+        }
+        // 物品价格为未知或???时按0来计算
+      }
+    })
+
+    const totalStr = Math.floor(total).toLocaleString()
+
+    return {
+      total: totalStr,
+      partial: false,
+    }
+  }
+
+  const costRes = calcTotal(props.costItems, 'NQ')
+  const benefitRes = calcTotal(props.benefitItems, 'HQ')
+
+  return {
+    costInfo: costRes.total,
+    benefitInfo: benefitRes.total,
+    isCostPartial: costRes.partial,
+    isBenefitPartial: benefitRes.partial,
+  }
+})
+
+const costInfo = computed(() => {
+  return customPriceMode.value
+    ? customCostAndBenefit.value.costInfo
+    : costAndBenefit.value.costInfo
+})
+const benefitInfo = computed(() => {
+  return customPriceMode.value
+    ? customCostAndBenefit.value.benefitInfo
+    : costAndBenefit.value.benefitInfo
+})
+const isCostPartial = computed(() => {
+  return customPriceMode.value
+    ? customCostAndBenefit.value.isCostPartial
+    : costAndBenefit.value.isCostPartial
+})
+const isBenefitPartial = computed(() => {
+  return customPriceMode.value
+    ? customCostAndBenefit.value.isBenefitPartial
+    : costAndBenefit.value.isBenefitPartial
+})
 
 const showItemDetails = computed(() => {
   return store.funcConfig.costandbenefit_show_item_details
@@ -71,6 +152,9 @@ const handleShowItemPriceDetail = () => {
         </span>
         <div class="card-title__actions">
           <a href="javascript:void(0);" @click="handleShowItemPriceDetail">[{{ t('item.price.detail_table.intro') }}]</a>
+          <a href="javascript:void(0);" @click="toggleCustomPriceMode">
+            [{{ customPriceMode ? t('cost_and_benefit.custom_price_off') : t('cost_and_benefit.custom_price_on') }}]
+          </a>
         </div>
       </div>
     </template>
@@ -95,6 +179,10 @@ const handleShowItemPriceDetail = () => {
             :items="costItems"
             :show-item-details="showItemDetails"
             :container-id="modalId"
+            :custom-price-mode="customPriceMode"
+            :custom-prices="customPriceMap"
+            @update:custom-price="handlePriceUpdate"
+            @save:custom-price="handlePriceSave"
           />
         </div>
       </n-tab-pane>
@@ -117,6 +205,10 @@ const handleShowItemPriceDetail = () => {
             :items="benefitItems"
             :show-item-details="showItemDetails"
             :container-id="modalId"
+            :custom-price-mode="customPriceMode"
+            :custom-prices="customPriceMap"
+            @update:custom-price="handlePriceUpdate"
+            @save:custom-price="handlePriceSave"
           />
         </div>
       </n-tab-pane>
@@ -142,6 +234,10 @@ const handleShowItemPriceDetail = () => {
           :items="costItems"
           :show-item-details="showItemDetails"
           :container-id="modalId"
+          :custom-price-mode="customPriceMode"
+          :custom-prices="customPriceMap"
+          @update:custom-price="handlePriceUpdate"
+          @save:custom-price="handlePriceSave"
         />
       </GroupBox>
       <GroupBox>
@@ -162,6 +258,10 @@ const handleShowItemPriceDetail = () => {
           :items="benefitItems"
           :show-item-details="showItemDetails"
           :container-id="modalId"
+          :custom-price-mode="customPriceMode"
+          :custom-prices="customPriceMap"
+          @update:custom-price="handlePriceUpdate"
+          @save:custom-price="handlePriceSave"
         />
       </GroupBox>
     </div>

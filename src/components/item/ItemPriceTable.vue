@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { DataTableColumns } from 'naive-ui'
+import { NInputNumber, type DataTableColumns } from 'naive-ui'
 import ItemCell from './ItemCell.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
@@ -15,8 +15,15 @@ interface ItemPriceTableProps {
   showItemDetails: boolean,
   priceType: 'NQ' | 'HQ',
   containerId?: string,
+  customPriceMode?: boolean,
+  customPrices?: Record<number, number>,
 }
 const props = defineProps<ItemPriceTableProps>()
+
+const emit = defineEmits<{
+  (e: 'update:customPrice', itemId: number, price: number): void
+  (e: 'save:customPrice', itemId: number, price: number): void
+}>()
 
 interface TableRow {
   key: number
@@ -36,12 +43,45 @@ type SortOrder = 'ascend' | 'descend' | false
 const priceSortOrder = ref<SortOrder>(false)
 const subTotalSortOrder = ref<SortOrder>(false)
 
+// 当前正在编辑的临时价格
+const editingPrices = reactive<Record<number, number | null>>({})
+// 记录初次加载时的价格基准（已持久化的自定义价格或 API 价格），用于离开输入框时判断是否确实发生了修改
+const initialPriceMap = ref<Record<number, number | undefined>>({})
+
+const recordInitialPrices = () => {
+  props.items.forEach(item => {
+    if (initialPriceMap.value[item.id] === undefined) {
+      if (props.customPrices?.[item.id] !== undefined) {
+        initialPriceMap.value[item.id] = props.customPrices[item.id]
+      } else {
+        const p = getItemPriceDecimal(item, props.priceType)
+        // 物品价格为未知或???时按0来计算
+        initialPriceMap.value[item.id] = (p !== undefined && Math.floor(p) > 0) ? Math.floor(p) : 0
+      }
+    }
+  })
+}
+
 onMounted(() => {
   const sortBy = store.funcConfig.costandbenefit_item_sort_by
   if (sortBy === 'priceAsc') priceSortOrder.value = 'ascend'
   else if (sortBy === 'priceDesc') priceSortOrder.value = 'descend'
   else if (sortBy === 'subTotalAsc') subTotalSortOrder.value = 'ascend'
   else if (sortBy === 'subTotalDesc') subTotalSortOrder.value = 'descend'
+  recordInitialPrices()
+})
+
+watch(() => props.items, () => {
+  recordInitialPrices()
+}, { immediate: true })
+
+watch(() => props.customPriceMode, (newVal) => {
+  if (newVal) {
+    Object.keys(editingPrices).forEach(key => {
+      delete editingPrices[Number(key)]
+    })
+    recordInitialPrices()
+  }
 })
 
 const tableData = computed<TableRow[]>(() => {
@@ -51,7 +91,7 @@ const tableData = computed<TableRow[]>(() => {
       key: item.id,
       itemInfo: item,
       amount: getItemAmount(item.amount),
-      price: priceInfo
+      price: priceInfo,
     }
   })
 
@@ -63,51 +103,80 @@ const columns = computed<DataTableColumns<TableRow>>(() => [
   {
     title: t('common.item'),
     key: 'item',
-    width: isMobile.value ? '49%' : '46%',
+    width: isMobile.value ? 150 : '46%',
     render(row) {
       return h(ItemCell, {
         itemInfo: row.itemInfo,
         amount: row.itemInfo.amount,
         showItemDetails: props.showItemDetails,
-        itemSpanMaxWidth: isMobile.value ? `${window.innerWidth - 285}px` : '210px',
-        containerId: props.containerId
+        itemSpanMaxWidth: isMobile.value ? '140px' : '210px',
+        containerId: props.containerId,
       })
-    }
+    },
+    fixed: isMobile.value ? 'left' : undefined,
   },
   {
     title: t('common.amount'),
     key: 'amount',
-    width: isMobile.value ? '17%' : '18%',
-    align: 'center'
+    width: isMobile.value ? undefined : '18%',
+    align: 'center',
   },
   {
     title: t('common.unit_price'),
     key: 'price',
-    width: isMobile.value ? '17%' : '18%',
+    width: isMobile.value ? undefined : '18%',
     align: 'center',
     sorter: (rowA, rowB) => rowA.price.rawPrice - rowB.price.rawPrice,
     sortOrder: priceSortOrder.value,
     render(row) {
+      if (props.customPriceMode) {
+        const item = row.itemInfo
+        const currentVal = editingPrices[item.id] ?? props.customPrices?.[item.id] ?? (row.price.rawPrice >= 0 ? row.price.rawPrice : 0)
+        return h(NInputNumber, {
+          size: 'tiny',
+          min: 0,
+          precision: 0,
+          showButton: false,
+          placeholder: '0',
+          value: currentVal,
+          'onUpdate:value': (val: number | null) => {
+            const numericVal = val ?? 0
+            editingPrices[item.id] = numericVal
+            emit('update:customPrice', item.id, numericVal)
+          },
+          onBlur: () => {
+            const baseline = initialPriceMap.value[item.id] ?? 0
+            const finalVal = editingPrices[item.id] ?? props.customPrices?.[item.id] ?? (row.price.rawPrice >= 0 ? row.price.rawPrice : 0)
+            const numericFinal = finalVal ?? 0
+
+            if (numericFinal !== baseline) {
+              emit('save:customPrice', item.id, numericFinal)
+              initialPriceMap.value[item.id] = numericFinal
+            }
+          },
+        })
+      }
+
       return h('span', {
         style: row.price.style,
-        title: row.price.tooltip
+        title: row.price.tooltip,
       }, row.price.price)
-    }
+    },
   },
   {
     title: t('common.subtotal'),
     key: 'subTotal',
-    width: isMobile.value ? '17%' : '18%',
+    width: isMobile.value ? undefined : '18%',
     align: 'center',
     sorter: (rowA, rowB) => rowA.price.rawTotal - rowB.price.rawTotal,
     sortOrder: subTotalSortOrder.value,
     render(row) {
       return h('span', {
         style: row.price.style,
-        title: row.price.tooltip
+        title: row.price.tooltip,
       }, row.price.total)
-    }
-  }
+    },
+  },
 ])
 
 const handleSorterChange = (sorter: any) => {
@@ -121,6 +190,33 @@ const getItemPriceDecimal = (item: ItemInfo, type: 'NQ' | 'HQ') => {
 }
 const getItemPrice = (item: ItemInfo, type: 'NQ' | 'HQ') => {
   const price = getItemPriceDecimal(item, type)
+
+  // 如果处于自定义价格模式，优先读取用户自定义价格；未自定义过的物品若价格为未知或???时按0计算
+  if (props.customPriceMode) {
+    const customVal = editingPrices[item.id] ?? props.customPrices?.[item.id]
+    if (customVal !== undefined) {
+      const p = customVal
+      return {
+        price: p.toLocaleString(),
+        total: (p * item.amount).toLocaleString(),
+        tooltip: '',
+        style: '',
+        rawPrice: p,
+        rawTotal: p * item.amount,
+      }
+    }
+
+    const p = (price !== undefined && Math.floor(price) > 0) ? Math.floor(price) : 0
+    return {
+      price: p.toLocaleString(),
+      total: (p * item.amount).toLocaleString(),
+      tooltip: '',
+      style: '',
+      rawPrice: p,
+      rawTotal: p * item.amount,
+    }
+  }
+
   if (price === undefined) {
     const text = item.tradable ? t('common.unknown') : t('common.untradable')
     return {
@@ -129,7 +225,7 @@ const getItemPrice = (item: ItemInfo, type: 'NQ' | 'HQ') => {
       tooltip: '',
       style: '',
       rawPrice: -1,
-      rawTotal: -1
+      rawTotal: -1,
     }
   } else {
     const p = Math.floor(price)
@@ -141,7 +237,7 @@ const getItemPrice = (item: ItemInfo, type: 'NQ' | 'HQ') => {
       tooltip: p ? '' : tooltipForNoPrice,
       style: p ? '' : styleForNoPrice,
       rawPrice: p,
-      rawTotal: p * item.amount
+      rawTotal: p * item.amount,
     }
   }
 }
@@ -154,37 +250,29 @@ const getItemAmount = (amount: number) => {
 </script>
 
 <template>
-  <div class="table-container">
-    <n-data-table
-      class="table"
+  <n-data-table
+      class="item-price-table"
       size="small"
       :columns="columns"
       :data="tableData"
       :min-height="450"
       :max-height="450"
       :single-line="false"
+      :scroll-x="isMobile ? 360 : undefined"
       @update:sorter="handleSorterChange"
     />
-  </div>
 </template>
 
 <style scoped>
 /* All */
-:deep(.table) {
-  width: 100%;
-
-  th {
-    font-weight: bold;
-  }
-  .n-data-table-td {
-    padding: 6px;
-  }
-  .n-data-table-tbody {
-    /* naive-ui对末行样式进行修正，使其不显示底部边框，但是对这里的固定高度表格来说不适用，因此回滚 */
-    .n-data-table-td.n-data-table-td--last-row {
-      border-bottom: 1px solid var(--n-merged-border-color);
-    }
-  }
+:deep(.n-data-table-td) {
+  padding: 6px;
+}
+:deep(.n-data-table-tbody .n-data-table-td.n-data-table-td--last-row) {
+  border-bottom: 1px solid var(--n-merged-border-color);
+}
+:deep(.n-input-number .n-input__input-el) {
+  text-align: center;
 }
 
 /* Desktop */
@@ -193,16 +281,5 @@ const getItemAmount = (amount: number) => {
 
 /* Mobile */
 @media screen and (max-width: 767px) {
-  :deep(.table) {
-    th:first-child, td:first-child {
-      width: 46% !important;
-    }
-    th:nth-child(2), td:nth-child(2),
-    th:nth-child(3), td:nth-child(3),
-    th:nth-child(4), td:nth-child(4) {
-      width: 18% !important;
-      text-align: center;
-    }
-  }
 }
 </style>

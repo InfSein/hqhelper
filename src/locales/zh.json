@@ -1240,6 +1240,8 @@
     }
   },
   "cost_and_benefit": {
+    "custom_price_on": "开启自定义价格",
+    "custom_price_off": "关闭自定义价格",
     "tooltip": {
       "cal_hq_price_here": "此处计入物品的HQ价格（无HQ品质时取NQ价格）。",
       "cal_nq_price_here": "此处计入物品的NQ价格。"

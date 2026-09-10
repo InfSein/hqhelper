@@ -96,11 +96,15 @@ export interface FuncConfigModel {
   // #region 隐藏的配置项
   workflow_default_join_mode: WorkflowJoinMode
   workflow_default_join_target: number
+  /** 成本/收益分析：是否启用自定义价格模式 */
+  costandbenefit_custom_price_enabled: boolean
   // #endregion
 
   // #region 缓存
   cache_item_prices: Record<number, ItemPriceInfo>
   cache_item_price_histories: Record<number, ApiPriceHistoryInfo>
+  /** 用户自定义物品价格 key:物品ID, value:自定义单价 */
+  cache_custom_item_prices: Record<number, number>
   // #endregion
 }
 
@@ -130,6 +134,7 @@ const defaultFuncConfig: FuncConfigModel = {
   export_item_price: false,
   costandbenefit_show_item_details: false,
   costandbenefit_item_sort_by: 'itemId',
+  costandbenefit_custom_price_enabled: false,
   universalis_showpriceinpop: true,
   universalis_poppricetypes: ['marketLowestPrice', 'purchasePrice'],
   // * 背包库存
@@ -146,6 +151,7 @@ const defaultFuncConfig: FuncConfigModel = {
   // * 缓存
   cache_item_prices: {},
   cache_item_price_histories: {},
+  cache_custom_item_prices: {},
 }
 
 /**

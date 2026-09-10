@@ -1239,6 +1239,8 @@
     }
   },
   "cost_and_benefit": {
+    "custom_price_on": "カスタム価格を有効化",
+    "custom_price_off": "カスタム価格を無効化",
     "tooltip": {
       "cal_hq_price_here": "HQの価格が計算に含まれています（HQがない場合はNQの価格）。",
       "cal_nq_price_here": "NQの価格が計算に含まれています。"
