@@ -2,7 +2,6 @@ import { ref, computed, nextTick, inject } from 'vue'
 import { useMessage } from 'naive-ui'
 import {
   FileCopyOutlined,
-  LanguageOutlined,
   OpenInNewFilled,
   JoinLeftOutlined,
   PlaylistAddOutlined,

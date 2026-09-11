@@ -829,7 +829,7 @@ defineExpose({
             <n-input
               v-model:value="searchKeyword"
               :placeholder="t('workflow.notebook_search.placeholder')"
-              :maxlength="50"
+              :maxlength="100"
               clearable
               @keydown.enter="handleSearch()"
             />
