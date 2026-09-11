@@ -263,9 +263,6 @@ const handleSearch = (keyword?: string) => {
     return
   }
   const trimmed = targetKeyword.trim()
-  if (trimmed.length > 50) {
-    return
-  }
 
   // 检查是否为素材反查前缀
   const materialPrefixMatch = trimmed.match(/^@(?:素材|Material)[:：]\s*(.+)$/i)
