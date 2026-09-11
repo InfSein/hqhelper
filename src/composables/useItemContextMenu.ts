@@ -51,81 +51,42 @@ export function useItemContextMenu(
         }
       },
       {
-        label: t('item.text.copy_other_names'),
+        label: t('item.text.context_title.copy'),
         key: 'copy-other-names',
-        icon: renderIcon(FileCopyOutlined),
         children: [
           {
-            label: t('common.name_zh'),
+            label: t('common.copy_item_zh_name'),
             key: 'copy-zh',
             show: itemLanguage.value !== 'zh',
-            icon: renderIcon(LanguageOutlined),
             click: () => handleCopy(itemInfo.name_zh)
           },
           {
-            label: t('common.name_ja'),
+            label: t('common.copy_item_ja_name'),
             key: 'copy-ja',
             show: itemLanguage.value !== 'ja',
-            icon: renderIcon(LanguageOutlined),
             click: () => handleCopy(itemInfo.name_ja)
           },
           {
-            label: t('common.name_en'),
+            label: t('common.copy_item_en_name'),
             key: 'copy-en',
             show: itemLanguage.value !== 'en',
-            icon: renderIcon(LanguageOutlined),
             click: () => handleCopy(itemInfo.name_en)
-          }
+          },
+          {
+            label: t('preference.shared.option.copy_isearch_macro'),
+            key: 'copy-isearch-macro',
+            click: () => {
+              const name = itemInfo[`name_${itemLanguage.value}`]
+              const copyContent = `/isearch "${name}"`
+              handleCopy(copyContent, t('common.message.copied_with_content', copyContent))
+            }
+          },
         ]
-      },
-      {
-        label: t('preference.shared.option.copy_isearch_macro'),
-        key: 'copy-isearch-macro',
-        icon: renderIcon(FileCopyOutlined),
-        click: () => {
-          const name = itemInfo[`name_${itemLanguage.value}`]
-          const copyContent = `/isearch "${name}"`
-          handleCopy(copyContent, t('common.message.copied_with_content', copyContent))
-        }
-      },
-      {
-        type: 'divider',
-        key: 'd1',
-        show: !!itemInfo?.craftInfo?.recipeId || (!!reverseRecipeLookup && itemInfo.id >= 100)
-      },
-      {
-        label: t('workflow.text.join_in_workflow'),
-        key: 'join-to-workflow',
-        show: !!itemInfo?.craftInfo?.recipeId,
-        icon: renderIcon(JoinLeftOutlined),
-        click: () => {
-          joinItemsToWorkflow({
-            [itemInfo.id]: 1,
-          })
-        }
-      },
-      {
-        label: t('workflow.text.join_in_curr_workflow'),
-        key: 'join-to-curr-workflow',
-        show: !!addToCurrentWorkflow && !!itemInfo?.craftInfo?.recipeId,
-        icon: renderIcon(PlaylistAddOutlined),
-        click: () => {
-          addToCurrentWorkflow?.(itemInfo.id)
-        }
-      },
-      {
-        label: t('item.text.reverse_recipe_lookup'),
-        key: 'reverse-recipe-lookup',
-        show: !!reverseRecipeLookup && itemInfo.id >= 100,
-        icon: renderIcon(SearchRound),
-        click: () => {
-          reverseRecipeLookup?.(itemInfo)
-        }
       },
       {
         type: 'divider',
         key: 'd-star',
-        show: !!itemInfo?.craftInfo?.recipeId,
+        show: !!itemInfo?.craftInfo?.recipeId || (!!reverseRecipeLookup && itemInfo.id >= 100),
       },
       {
         label: store.userConfig.notebook_starred_recipes.includes(itemInfo.id)
@@ -154,6 +115,40 @@ export function useItemContextMenu(
         }
       },
       {
+        label: t('item.text.reverse_recipe_lookup'),
+        key: 'reverse-recipe-lookup',
+        show: !!reverseRecipeLookup && itemInfo.id >= 100,
+        icon: renderIcon(SearchRound),
+        click: () => {
+          reverseRecipeLookup?.(itemInfo)
+        }
+      },
+      {
+        type: 'divider',
+        key: 'd1',
+        show: !!itemInfo?.craftInfo?.recipeId
+      },
+      {
+        label: t('workflow.text.join_in_workflow'),
+        key: 'join-to-workflow',
+        show: !!itemInfo?.craftInfo?.recipeId,
+        icon: renderIcon(JoinLeftOutlined),
+        click: () => {
+          joinItemsToWorkflow({
+            [itemInfo.id]: 1,
+          })
+        }
+      },
+      {
+        label: t('workflow.text.join_in_curr_workflow'),
+        key: 'join-to-curr-workflow',
+        show: !!addToCurrentWorkflow && !!itemInfo?.craftInfo?.recipeId,
+        icon: renderIcon(PlaylistAddOutlined),
+        click: () => {
+          addToCurrentWorkflow?.(itemInfo.id)
+        }
+      },
+      {
         type: 'divider',
         key: 'd3'
       },
@@ -166,52 +161,53 @@ export function useItemContextMenu(
         }
       },
       {
-        label: t('common.open_in.garland2'),
-        key: 'open-in-garland',
-        icon: renderIcon(OpenInNewFilled),
-        click: () => {
-          const domain = itemLanguage.value === 'zh' ? 'garlandtools.cn' : 'www.garlandtools.org'
-          window.open(`https://${domain}/db/#item/${itemInfo.id}`)
-        }
-      },
-      {
-        label: t('common.open_in.gamer_escape'),
-        key: 'open-in-gamerescape',
-        icon: renderIcon(OpenInNewFilled),
-        click: () => {
-          window.open(`https://ffxiv.gamerescape.com/wiki/${itemInfo.name_en.replace(' ', '_')}`)
-        }
-      },
-      {
-        label: t('common.open_in.universalis'),
-        key: 'open-in-universalis',
-        icon: renderIcon(OpenInNewFilled),
-        click: () => {
-          window.open(`https://universalis.app/market/${itemInfo.id}`)
-        }
-      },
-      {
-        type: 'divider',
-        key: 'd3',
-        show: !!itemInfo?.craftInfo?.recipeId
-      },
-      {
-        label: t('item.text.simulate_craft_bestcraft'),
-        key: 'open-in-bestcraft',
-        show: !!itemInfo?.craftInfo?.recipeId,
-        icon: renderIcon(OpenInNewFilled),
-        click: () => {
-          window.open(`https://tnze.yyyy.games/#/recipe?recipeId=${itemInfo?.craftInfo?.recipeId}`)
-        }
-      },
-      {
-        label: t('item.text.simulate_craft_teamcraft'),
-        key: 'open-in-teamcraft',
-        show: !!itemInfo?.craftInfo?.recipeId,
-        icon: renderIcon(OpenInNewFilled),
-        click: () => {
-          window.open(`https://ffxivteamcraft.com/simulator/${itemInfo.id}/${itemInfo?.craftInfo?.recipeId}`)
-        }
+        label: t('item.text.context_title.openin'),
+        key: 'openin-group',
+        children: [
+          {
+            label: t('common.open_in.garland2'),
+            key: 'open-in-garland',
+            click: () => {
+              const domain = itemLanguage.value === 'zh' ? 'garlandtools.cn' : 'www.garlandtools.org'
+              window.open(`https://${domain}/db/#item/${itemInfo.id}`)
+            }
+          },
+          {
+            label: t('common.open_in.gamer_escape'),
+            key: 'open-in-gamerescape',
+            click: () => {
+              window.open(`https://ffxiv.gamerescape.com/wiki/${itemInfo.name_en.replace(' ', '_')}`)
+            }
+          },
+          {
+            label: t('common.open_in.universalis'),
+            key: 'open-in-universalis',
+            click: () => {
+              window.open(`https://universalis.app/market/${itemInfo.id}`)
+            }
+          },
+          {
+            type: 'divider',
+            key: 'openin-group__d1',
+            show: !!itemInfo?.craftInfo?.recipeId
+          },
+          {
+            label: t('item.text.simulate_craft_bestcraft'),
+            key: 'open-in-bestcraft',
+            show: !!itemInfo?.craftInfo?.recipeId,
+            click: () => {
+              window.open(`https://tnze.yyyy.games/#/recipe?recipeId=${itemInfo?.craftInfo?.recipeId}`)
+            }
+          },
+          {
+            label: t('item.text.simulate_craft_teamcraft'),
+            key: 'open-in-teamcraft',
+            show: !!itemInfo?.craftInfo?.recipeId,
+            click: () => {
+              window.open(`https://ffxivteamcraft.com/simulator/${itemInfo.id}/${itemInfo?.craftInfo?.recipeId}`)
+            }
+          },
+        ]
       },
     ]
     return options

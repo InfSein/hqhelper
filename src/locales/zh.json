@@ -1178,7 +1178,10 @@
     "filter_item": "筛选物品",
     "item_filter_input_placeholder": "支持按物品名/ID/品级/版本筛选",
     "share_code": "分享码",
-    "share_link": "分享链接"
+    "share_link": "分享链接",
+    "copy_item_zh_name": "复制中文名",
+    "copy_item_ja_name": "复制日文名",
+    "copy_item_en_name": "复制英文名"
   },
   "contact_us": {
     "feedback": {
@@ -1646,7 +1649,11 @@
       "timelimited_gatherable": "进行中",
       "trade_also_receive": "通过此兑换还可获得",
       "yields_info": "每次制作会产出{val}个成品",
-      "zh_name_is_temp": "该物品国服尚未实装，中文名为临时译名。"
+      "zh_name_is_temp": "该物品国服尚未实装，中文名为临时译名。",
+      "context_title": {
+        "copy": "复制……",
+        "openin": "打开……"
+      }
     }
   },
   "macro_manage": {
