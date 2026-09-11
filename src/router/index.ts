@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory, type RouteRecordRaw } from 'vue-router'
-import MainPage from '@/views/MainPage.vue'
+import HomePage from '@/views/home/HomePage.vue'
 
 /* 
  * 增加路由页面时请注意：
@@ -7,38 +7,50 @@ import MainPage from '@/views/MainPage.vue'
  */
 
 const routes : RouteRecordRaw[] = [
-  { path: '/', component: MainPage },
+  { path: '/', component: HomePage },
+  { 
+    path: '/hqwb', 
+    component: () => import('@/views/main/HqWorkbenchPage.vue') 
+  },
   { 
     path: '/fthelper', 
-    component: () => import('@/views/FoodAndTincPage.vue') 
+    component: () => import('@/views/food-and-tinc/FoodAndTincPage.vue') 
   },
   { 
     path: '/cshelper', 
-    component: () => import('@/views/CollectableSubmissionsPage.vue') 
+    component: () => import('@/views/collectable-submissions/CollectableSubmissionsPage.vue') 
   },
   { 
     path: '/fchelper', 
-    component: () => import('@/views/FashionClothesPage.vue') 
+    component: () => import('@/views/fashion-clothes/FashionClothesPage.vue') 
   },
   { 
     path: '/gatherclock', 
-    component: () => import('@/views/GatherClockPage.vue') 
+    component: () => import('@/views/gatherclock/GatherClockPage.vue') 
   },
   { 
     path: '/workflow', 
-    component: () => import('@/views/WorkflowPage.vue') 
+    component: () => import('@/views/workflow/WorkflowPage.vue') 
+  },
+  { 
+    path: '/share', 
+    component: HomePage 
   },
   { 
     path: '/workflow_process', 
-    component: () => import('@/views/WorkflowProcessPage.vue') 
+    component: () => import('@/views/workflow-process/WorkflowProcessPage.vue') 
   },
   { 
     path: '/download', 
-    component: () => import('@/views/DownloadPage.vue') 
+    component: () => import('@/views/download/DownloadPage.vue') 
   },
   { 
     path: '/macromanage', 
-    component: () => import('@/views/MacroManagePage.vue') 
+    component: () => import('@/views/macro-manage/MacroManagePage.vue') 
+  },
+  { 
+    path: '/patch/:ver', 
+    component: () => import('@/views/patch-guide/PatchGuidePage.vue') 
   },
   {
     path: '/:pathMatch(.*)*',
@@ -47,7 +59,7 @@ const routes : RouteRecordRaw[] = [
       keepAlive: false,
       showTabBar: false
     },
-    component: () => import('@/views/ErrorPage404.vue')
+    component: () => import('@/views/error/ErrorPage404.vue')
   }
 ]
 

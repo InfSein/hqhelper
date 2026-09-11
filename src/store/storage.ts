@@ -7,10 +7,6 @@ export const getItem = <T>(key: string): T | undefined => {
     return undefined
   }
 }
-export const getString = (key: string): string => {
-  const data = window.localStorage.getItem(key)
-  return data ?? ''
-}
 
 export const setItem = (key: string, value: object | string | null) => {
   if (typeof value === 'object') {

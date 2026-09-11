@@ -1,28 +1,23 @@
 <script setup lang="ts">
-import { 
-  AllInclusiveSharp, CopyAllOutlined
+import {
+  AllInclusiveSharp,
+  CopyAllOutlined,
 } from '@vicons/material'
-import CraftRecommProcess from '../custom/general/CraftRecommProcess.vue'
 import ModalPreferences from './ModalPreferences.vue'
-import { type UserConfigModel } from '@/models/config-user'
-import { type FuncConfigModel } from '@/models/config-func'
-import { type ItemInfo } from '@/tools/item'
+import CraftRecommProcess from '@/components/craft/CraftRecommProcess.vue'
+import { useStore } from '@/store'
+import { useLocale } from '@/composables/useLocale'
+import useConfig from '@/composables/useConfig'
 import { CopyToClipboard } from '@/tools'
+import { type ItemInfo } from '@/tools/item'
 import { useFufuCal } from '@/tools/use-fufu-cal'
-import UseConfig from '@/tools/use-config'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-// const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
-// const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
-
+const store = useStore()
+const { t } = useLocale()
+const { itemLanguage } = useConfig()
 const NAIVE_UI_MESSAGE = useMessage()
-const { calRecommProcessGroups } = useFufuCal(userConfig, funcConfig, t)
-const {
-  itemLanguage,
-} = UseConfig(userConfig, funcConfig)
-  
+const { calRecommProcessGroups } = useFufuCal()
+
 const showModal = defineModel<boolean>('show', { required: true })
 const expandedBlocks = ref<Record<number, string[]>>({})
 /** (groupId, (itemId, checked)) */
@@ -59,9 +54,9 @@ const itemGroups = computed(() => {
     props.lv2Items,
     props.lv3Items,
     props.lvBaseItems,
-    funcConfig.value.processes_craftable_item_sortby,
-    funcConfig.value.processes_merge_gatherings,
-    userConfig.value.language_ui,
+    store.funcConfig.processes_craftable_item_sortby,
+    store.funcConfig.processes_merge_gatherings,
+    store.userConfig.language_ui,
     t
   )
 })
@@ -128,7 +123,7 @@ const handleSettingButtonClick = () => {
       <div class="card-title select-none">
         <n-icon><AllInclusiveSharp /></n-icon>
         <span class="title">{{ t('common.appfunc.recomm_process') }}</span>
-        <div class="card-title-actions">
+        <div class="card-title__actions">
           <a href="javascript:void(0);" @click="handleCollapseOrUncollapseAllBlocks">[{{ isBlocksAllCollapsed() ? t('common.expand_all') : t('common.fold_all') }}]</a>
         </div>
       </div>
@@ -143,7 +138,7 @@ const handleSettingButtonClick = () => {
     />
 
     <template #action>
-      <div class="modal-submit-container">
+      <div class="app-modal-footer">
         <n-button type="info" size="large" @click="handleCopyProcesses">
           <template #icon>
             <n-icon><CopyAllOutlined /></n-icon>
@@ -210,7 +205,7 @@ const handleSettingButtonClick = () => {
         display: flex;
         flex-wrap: wrap;
         margin-left: 1em;
-        font-size: calc(var(--n-font-size) - 2px);
+        font-size: var(--app-font-size-xs);
       }
     }
   }

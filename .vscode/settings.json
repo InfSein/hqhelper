@@ -1,11 +1,15 @@
 {
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.patterns": {
     "tsconfig.json": "tsconfig.*.json, env.d.ts, env.*.ts",
-    "vite.config.*": "eslint*, crowdin.yml",
+    "vite.config.*": "eslint*",
     "package.json": "package-lock.json",
     "folder-alias.json": "private-folder-alias.json",
-    "README.md": "CHANGELOG.md, LICENSE"
+    "AGENTS.md": "DESIGN.md, ARCHITECTURE.md",
+    "README.md": "README.*.md, CHANGELOG.md, LICENSE, CONTRIBUTING.md, TODO.md"
   },
   "i18n-ally.localesPaths": [
     "src/locales"

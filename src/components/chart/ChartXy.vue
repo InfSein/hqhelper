@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { VueUiXy, type VueUiXyDatasetItem, type VueUiXyConfig } from "vue-data-ui/vue-ui-xy"
 import "vue-data-ui/style.css"
+import { VueUiXy, type VueUiXyDatasetItem, type VueUiXyConfig } from "vue-data-ui/vue-ui-xy"
+import { useLocale } from '@/composables/useLocale'
 import { formatTimestamp } from "@/tools"
 
-const t = inject<(message: string, args?: any) => string>('t')!
+const { t } = useLocale()
 
 interface ChartXyProps {
   width: number

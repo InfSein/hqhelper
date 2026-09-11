@@ -3,23 +3,23 @@ import {
   TableViewFilled,
 } from '@vicons/material'
 import ChartXy from '../chart/ChartXy.vue'
-import GroupBox from '../templates/GroupBox.vue'
-import ItemPriceLogCell from '../custom/item/ItemPriceLogCell.vue'
-import ItemSelector from '../custom/item/ItemSelector.vue'
+import ItemSelector from '@/components/item/ItemSelector.vue'
+import GroupBox from '@/components/templates/GroupBox.vue'
+import ItemPriceLogCell from '@/components/item/ItemPriceLogCell.vue'
 import { useStore } from '@/store'
-import { fixFuncConfig, itemPriceTypes, type FuncConfigModel, type ItemPriceType } from '@/models/config-func'
-import { useDialog } from '@/tools/dialog'
-import { handleGetPriceError } from '@/tools/error'
+import { useLocale } from '@/composables/useLocale'
+import { useDialog } from '@/composables/useDialog'
+import { useResponsive } from '@/composables/useResponsive'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
-import { ItemPriceApiVersion } from '@/types/item.price.ts'
-import { getItemPriceHistory, getItemPriceInfo } from '@/tools/item.price.ts'
-
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
+import { handleGetPriceError } from '@/tools/error'
+import { getItemPriceHistory, getItemPriceInfo } from '@/tools/item/price'
+import { ItemPriceApiVersion } from '@/types/item/price'
+import { itemPriceTypes, type ItemPriceType } from '@/types/config/func'
 
 const store = useStore()
-const { alertError } = useDialog(t)
+const { t } = useLocale()
+const { alertError } = useDialog()
+const { isMobile } = useResponsive()
 
 const showModal = defineModel<boolean>('show', { required: true })
 
@@ -56,30 +56,29 @@ const loadItemPrices = async (forceUpdate = false) => {
   try {
     const itemsToLoad = props.items.filter(item => {
       if (forceUpdate) return true
-      const expiresAfter = Date.now() - funcConfig.value.universalis_expireTime
-      const priceInfo = funcConfig.value.cache_item_prices[item.id]
+      const expiresAfter = Date.now() - store.funcConfig.universalis_expireTime
+      const priceInfo = store.funcConfig.cache_item_prices[item.id]
       return !(priceInfo && priceInfo.listAll && priceInfo.updateTime > expiresAfter
         && priceInfo.v && priceInfo.v >= ItemPriceApiVersion)
     }).map(item => item.id)
     const itemPrices = await getItemPriceInfo(
       [...new Set(itemsToLoad)],
-      funcConfig.value.universalis_server,
+      store.funcConfig.universalis_server,
       true,
     )
     const itemPriceHistory = await getItemPriceHistory(
       [...new Set(itemsToLoad)],
-      funcConfig.value.universalis_server,
+      store.funcConfig.universalis_server,
     )
-    const newConfig = funcConfig.value
     Object.keys(itemPrices).forEach(id => {
       const itemID = Number(id)
-      newConfig.cache_item_prices[itemID] = itemPrices[itemID]
+      store.funcConfig.cache_item_prices[itemID] = itemPrices[itemID]
     })
     Object.keys(itemPriceHistory).forEach(id => {
       const itemID = Number(id)
-      newConfig.cache_item_price_histories[itemID] = itemPriceHistory[itemID]
+      store.funcConfig.cache_item_price_histories[itemID] = itemPriceHistory[itemID]
     })
-    await store.setFuncConfig(fixFuncConfig(newConfig, store.userConfig))
+    store.updateFuncConfig()
   } catch (error: any) {
     const errMsg = handleGetPriceError(error, t)
     await alertError(t('common.message.get_price_failed') + '\n' + errMsg)
@@ -108,7 +107,7 @@ const currItemInfo = computed(() => getItemInfo(currItem.value))
 
 // #region 价格总表
 const itemPriceInfo = computed(() => {
-  const priceInfo = funcConfig.value.cache_item_prices[currItem.value]
+  const priceInfo = store.funcConfig.cache_item_prices[currItem.value]
   const prices = itemPriceTypes.map(priceType => {
     const priceNq = Math.floor(priceInfo?.[`${priceType}NQ`] ?? 0)
     const priceHq = Math.floor(priceInfo?.[`${priceType}HQ`] ?? 0)
@@ -146,7 +145,7 @@ const itemPriceInfo = computed(() => {
   return prices
 })
 const priceChartDataset = computed(() => {
-  const logs = funcConfig.value.cache_item_price_histories?.[currItem.value]?.entries
+  const logs = store.funcConfig.cache_item_price_histories?.[currItem.value]?.entries
   if (!logs) return []
   return logs.sort((a, b) => a.timestamp - b.timestamp).filter(ph => {
     if (pageConfig.chartShowType === 'hq') {
@@ -177,14 +176,14 @@ const getLogShowTypeName = (type: logShowType) => {
 const logEmptyInfo = computed(() => {
   if (!currItem.value) {
     return t('item.price.detail_table.empty.no_item_selected')
-  } else if (!funcConfig.value.cache_item_prices[currItem.value]?.listAll) {
+  } else if (!store.funcConfig.cache_item_prices[currItem.value]?.listAll) {
     return t('item.price.detail_table.empty.no_data')
   } else {
     return ''
   }
 })
 const marketBoardList = computed(() => {
-  const itemPriceInfo = funcConfig.value.cache_item_prices[currItem.value]
+  const itemPriceInfo = store.funcConfig.cache_item_prices[currItem.value]
   if (!itemPriceInfo?.marketListing) return []
   return itemPriceInfo.marketListing.filter(mi => {
     if (pageConfig.marketShowType === 'hq') {
@@ -197,8 +196,8 @@ const marketBoardList = computed(() => {
   })
 })
 const purchaseHistoryList = computed(() => {
-  const itemPriceInfo = funcConfig.value.cache_item_prices[currItem.value]
-  const history = funcConfig.value.cache_item_price_histories[currItem.value]?.entries || itemPriceInfo?.purchaseHistory
+  const itemPriceInfo = store.funcConfig.cache_item_prices[currItem.value]
+  const history = store.funcConfig.cache_item_price_histories[currItem.value]?.entries || itemPriceInfo?.purchaseHistory
   if (!history) return []
   return history.filter(ph => {
     if (pageConfig.purchaseShowType === 'hq') {

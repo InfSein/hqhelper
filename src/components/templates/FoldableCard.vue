@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { type Component } from 'vue'
 import {
-  KeyboardArrowUpRound, KeyboardArrowDownRound,
-  KeyboardArrowLeftRound, KeyboardArrowRightRound
+  KeyboardArrowDownRound,
+  KeyboardArrowLeftRound,
+  KeyboardArrowRightRound,
+  KeyboardArrowUpRound,
 } from '@vicons/material'
 import { useStore } from '@/store/index'
-import { type UserConfigModel } from '@/models/config-user'
+import { useLocale } from '@/composables/useLocale'
 
 const store = useStore()
-
-const t = inject<(message: string, args?: any) => string>('t')!
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
+const { t } = useLocale()
 
 interface FoldableCardProps {
   cardKey: string
@@ -35,8 +35,8 @@ const emit = defineEmits([
   'onCardFoldStatusChanged'
 ])
 
-const ui_fold_cache = userConfig.value.cache_ui_fold ?? {}
-const foldOnDefault : boolean = !userConfig.value.disable_workstate_cache && (ui_fold_cache[props.cardKey] ?? false)
+const ui_fold_cache = store.userConfig.cache_ui_fold ?? {}
+const foldOnDefault : boolean = !store.userConfig.disable_workstate_cache && (ui_fold_cache[props.cardKey] ?? false)
 
 const folded = ref(foldOnDefault)
 const folderIcon = shallowRef(KeyboardArrowUpRound)
@@ -60,7 +60,7 @@ const folderText = computed(() => {
 
 const cardClasses = computed(() => {
   return [
-    (userConfig.value.custom_background && !props.disableGlass) ? 'glasscard' : ''
+    (store.userConfig.custom_background && !props.disableGlass) ? 'glasscard' : ''
   ].join(' ')
 })
 const cardContentStyles = computed(() => {
@@ -84,10 +84,10 @@ updateUi()
 emit('onCardFoldStatusChanged', folded.value)
 
 const updateCache = () => {
-  const _ui_fold_cache = userConfig.value.cache_ui_fold ?? {} // refresh to avoid mutation
+  const _ui_fold_cache = store.userConfig.cache_ui_fold ?? {} // refresh to avoid mutation
   _ui_fold_cache[props.cardKey] = folded.value
-  userConfig.value.cache_ui_fold = _ui_fold_cache
-  store.setUserConfig(userConfig.value)
+  store.userConfig.cache_ui_fold = _ui_fold_cache
+  store.updateUserConfig()
 }
 
 const handleFoldOrExpand = () => {
@@ -106,10 +106,10 @@ defineExpose({
   <n-card :id="'card-'+cardKey" :size="cardSize" :class="cardClasses" :content-style="cardContentStyles" embedded :bordered="showCardBorder">
     <template #header>
       <slot name="header">{{ title }}</slot>
-      <span v-if="description" class="description">{{ description }}</span>
+      <span v-if="description" class="ml-2.5 text-app-sm">{{ description }}</span>
     </template>
     <template #header-extra>
-      <div class="extra-header-container">
+      <div class="app-extra-header">
         <n-button
           v-for="(btn, btnIndex) in extraHeaderButtons"
           :key="btnIndex"
@@ -135,12 +135,4 @@ defineExpose({
 </template>
 
 <style scoped>
-.description {
-  margin-left: 10px;
-  font-size: 14px;
-}
-.extra-header-container {
-  display: flex;
-  align-items: center;
-}
 </style>
