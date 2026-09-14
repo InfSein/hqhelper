@@ -21,7 +21,7 @@ import { useNbbCal } from '@/tools/use-nbb-cal'
 import type { ItemGroup } from '@/types/item'
 import { fixWorkState, type WorkState } from '@/types/workstate/gatherclock'
 import useIdb from '@/utils/app.idb'
-import EorzeaTime from '@/utils/game.et'
+import { getTimeLimitRemain } from '@/views/gatherclock/utils/dealTimeLimit'
 
 const store = useStore()
 const { t } = useLocale()
@@ -35,7 +35,16 @@ const {
   uiLanguage, itemLanguage,
 } = useConfig()
 
-const gatherData = computed(() => {
+const workState = ref<WorkState>(fixWorkState())
+const starItems = computed(() => workState.value.starItems)
+const subscribedItems = computed(() => workState.value.subscribedItems)
+const starIdSet = computed(() => new Set(starItems.value))
+const subscribedIdSet = computed(() => new Set(subscribedItems.value))
+
+const limitedGatheringsMap = computed(() => {
+  // 依赖语言配置更新
+  void itemLanguage.value
+  void uiLanguage.value
   const limitedGatherings = getLimitedGatherings()
   const allItems : Record<number, ItemInfo> = {}
   for (const patch in limitedGatherings) {
@@ -43,12 +52,19 @@ const gatherData = computed(() => {
       allItems[itemInfo.id] = itemInfo
     })
   }
+  return {
+    limitedGatherings,
+    allItems,
+  }
+})
 
+const gatherData = computed(() => {
+  const { limitedGatherings, allItems } = limitedGatheringsMap.value
   const data : ItemGroup[] = []
 
   // 收藏的物品
   const stars : ItemInfo[] = []
-  workState.value.starItems.forEach(itemID => {
+  starItems.value.forEach(itemID => {
     if (allItems[itemID]) {
       stars.push(allItems[itemID])
     } else {
@@ -58,12 +74,12 @@ const gatherData = computed(() => {
   data.push({
     title: t('common.favorited'),
     key: 'stars',
-    items: stars
+    items: stars,
   })
 
   // 订阅的物品
   const subscribed : ItemInfo[] = []
-  workState.value.subscribedItems.forEach(itemID => {
+  subscribedItems.value.forEach(itemID => {
     if (allItems[itemID]) {
       subscribed.push(allItems[itemID])
     } else {
@@ -73,7 +89,7 @@ const gatherData = computed(() => {
   data.push({
     title: t('gather_clock.text.subscribed'),
     key: 'subscribed',
-    items: subscribed
+    items: subscribed,
   })
 
   for (const key in limitedGatherings) {
@@ -82,17 +98,17 @@ const gatherData = computed(() => {
     if (il) {
       title = t('gather_clock.grouptitle_with_patch_and_il', {
         patch: patch,
-        il: il
+        il: il,
       })
     } else {
       title = t('gather_clock.grouptitle_with_patch', {
-        patch: patch
+        patch: patch,
       })
     }
     data.push({
       title: title,
       key: key,
-      items: limitedGatherings[key]
+      items: limitedGatherings[key],
     })
   }
 
@@ -105,7 +121,6 @@ const canPinWindow = computed(() => {
   return appMode.value === 'overlay' && !!window.electronAPI?.toggleAlwaysOnTop
 })
 
-const workState = ref<WorkState>(fixWorkState())
 const showAlarmMacroExportModal = ref(false)
 const showAudioConfigModal = ref(false)
 const idb = useIdb()
@@ -264,59 +279,6 @@ if (!disable_workstate_cache) {
   }, {deep: true})
 }
 
-const dealTimeLimit = (start: string, end: string) => {
-  let progressStatus : 'info' | 'warning' | 'error' = 'info'
-  let progressPercentage = 0
-  let canGather = false
-  let remainET = 99999
-  let remainLT : string | undefined = undefined
-  let ltClass = 'text-app-xs'
-  let ltTitle = ''
-  try {
-    const parseTime = (time: string) => time.split(':').reduce((acc, val, idx) => acc + parseInt(val) * [60, 1][idx], 0)
-    const s = parseTime(start)
-    const e = parseTime(end)
-    const c = currentET.value.hour * 60 + currentET.value.minute
-    let ls = 0
-    if (c >= s && c < e) {
-      canGather = true
-      progressPercentage = (c - s) / (e - s) * 100
-      remainET = e - c
-      ls = Math.floor(EorzeaTime.EorzeaMinute2LocalSecond(remainET))
-      if (ls < 30) {
-        ltClass += ' text-error'
-      } else if (ls < 60) {
-        ltClass += ' text-warning'
-      }
-      ltTitle = '剩余可采集时间'
-    } else {
-      progressPercentage = 0
-      remainET = s - c
-      if (remainET < 0) {
-        remainET += 1440
-      }
-      ls = Math.floor(EorzeaTime.EorzeaMinute2LocalSecond(remainET))
-      ltClass += ' text-sub'
-      ltTitle = '距离变得可采集的剩余时间'
-    }
-    remainLT = t('common.remain_with_colon')
-    if (ls >= 60) {
-      remainLT += t('common.val_minutes', Math.floor(ls / 60))
-    }
-    remainLT += t('common.val_seconds', ls % 60)
-  } catch (err) {
-    console.error(err)
-    progressStatus = 'error'; progressPercentage = 100
-  }
-  return {
-    canGather: canGather,
-    status: progressStatus,
-    percentage: progressPercentage,
-    remainLT, ltClass, ltTitle,
-    remainET
-  }
-}
-
 const handleSubscribeButtonClick = (itemInfo : ItemInfo) => {
   if (workState.value.subscribedItems.includes(itemInfo.id)) {
     workState.value.subscribedItems = workState.value.subscribedItems.filter(id => id !== itemInfo.id)
@@ -332,7 +294,7 @@ const handleStarButtonClick = (itemInfo : ItemInfo) => {
   }
 }
 
-const getQuickOperateOptions = () => {
+const quickOperateOptions = computed(() => {
   const starOptions = gatherData.value.filter(
     item => item.key !== 'stars' && item.items.length
   ).map(data => {
@@ -350,7 +312,7 @@ const getQuickOperateOptions = () => {
             }
           })
         }
-      }
+      },
     }
   })
   const subscribeOptions = gatherData.value.filter(
@@ -370,7 +332,7 @@ const getQuickOperateOptions = () => {
             }
           })
         }
-      }
+      },
     }
   })
 
@@ -380,7 +342,7 @@ const getQuickOperateOptions = () => {
     disabled: workState.value.starItems.length === 0,
     click: () => {
       workState.value.starItems = []
-    }
+    },
   }
   const optionUnsubscribeAll = {
     label: t('gather_clock.text.unsubscribe_all'),
@@ -388,11 +350,11 @@ const getQuickOperateOptions = () => {
     disabled: workState.value.subscribedItems.length === 0,
     click: () => {
       workState.value.subscribedItems = []
-    }
+    },
   }
 
   const divider = {
-    type: 'divider'
+    type: 'divider',
   }
 
   if (isMobile.value) {
@@ -401,7 +363,7 @@ const getQuickOperateOptions = () => {
       optionUnstarAll,
       divider,
       ...subscribeOptions,
-      optionUnsubscribeAll
+      optionUnsubscribeAll,
     ]
   } else {
     return [
@@ -409,8 +371,8 @@ const getQuickOperateOptions = () => {
         label: t('common.favorite.title'),
         key: 'group-star',
         children: [
-          ...starOptions
-        ]
+          ...starOptions,
+        ],
       },
       optionUnstarAll,
       divider,
@@ -418,13 +380,13 @@ const getQuickOperateOptions = () => {
         label: t('gather_clock.text.subscribe'),
         key: 'group-subscribe',
         children: [
-          ...subscribeOptions
-        ]
+          ...subscribeOptions,
+        ],
       },
-      optionUnsubscribeAll
+      optionUnsubscribeAll,
     ]
   }
-}
+})
 const handleQuickOperateOptionSelect = (key: string | number, option: any) => {
   if (option?.click) {
     option.click()
@@ -433,45 +395,72 @@ const handleQuickOperateOptionSelect = (key: string | number, option: any) => {
   }
 }
 
-const getSortedItems = (items: ItemInfo[]) => {
-  switch (workState.value.orderBy) {
+const currentPatchGroup = computed(() => {
+  return gatherData.value.find(patch => patch.key === workState.value.patch)
+})
+
+const currentETMinutes = computed(() => {
+  return currentET.value.hour * 60 + currentET.value.minute
+})
+
+const sortedCurrentItems = computed(() => {
+  const items = currentPatchGroup.value?.items
+  if (!items || !items.length) return []
+
+  const orderBy = workState.value.orderBy
+  const pinGatherable = workState.value.pinGatherableItems
+  const currentMinutes = currentETMinutes.value
+
+  const isItemGatherable = (item: ItemInfo) => {
+    return item.gatherInfo?.timeLimitInfo?.some(limit => {
+      return getTimeLimitRemain(limit.start, limit.end, currentMinutes).canGather
+    }) ?? false
+  }
+
+  // 浅拷贝避免就地修改数据源数组
+  const list = items.slice()
+
+  switch (orderBy) {
     case 'gatherStartTimeAsc': // 根据最小的开始时间增序排序
-      return items.sort((a, b) => {
-        let startA = 99, startB = 99
+      return list.sort((a, b) => {
+        let startA = 99
+        let startB = 99
         a.gatherInfo.timeLimitInfo.forEach(limit => {
           startA = Math.min(startA, Number(limit.start.split(':')[0]))
         })
         b.gatherInfo.timeLimitInfo.forEach(limit => {
           startB = Math.min(startB, Number(limit.start.split(':')[0]))
         })
-        if (workState.value.pinGatherableItems) {
+        if (pinGatherable) {
           if (isItemGatherable(a)) startA -= 999
           if (isItemGatherable(b)) startB -= 999
         }
         return startA - startB
       })
     case 'remainingTimeAsc': // 根据剩余时间增序排序
-      return items.sort((a, b) => {
-        let aGatherable = false, bGatherable = false
-        let aRemain = 99999, bRemain = 99999
+      return list.sort((a, b) => {
+        let aGatherable = false
+        let bGatherable = false
+        let aRemain = 99999
+        let bRemain = 99999
         a.gatherInfo.timeLimitInfo.forEach(limit => {
-          const dtResult = dealTimeLimit(limit.start, limit.end)
-          if (dtResult.canGather) {
+          const res = getTimeLimitRemain(limit.start, limit.end, currentMinutes)
+          if (res.canGather) {
             aGatherable = true
-            aRemain = dtResult.remainET
+            aRemain = res.remainET
             return // 道具可采集时置顶
           } else {
-            aRemain = Math.min(aRemain, dtResult.remainET)
+            aRemain = Math.min(aRemain, res.remainET)
           }
         })
         b.gatherInfo.timeLimitInfo.forEach(limit => {
-          const dtResult = dealTimeLimit(limit.start, limit.end)
-          if (dtResult.canGather) {
+          const res = getTimeLimitRemain(limit.start, limit.end, currentMinutes)
+          if (res.canGather) {
             bGatherable = true
-            bRemain = dtResult.remainET
+            bRemain = res.remainET
             return // 道具可采集时置顶
           } else {
-            bRemain = Math.min(bRemain, dtResult.remainET)
+            bRemain = Math.min(bRemain, res.remainET)
           }
         })
         if (aGatherable) aRemain -= 99999
@@ -479,9 +468,10 @@ const getSortedItems = (items: ItemInfo[]) => {
         return aRemain - bRemain
       })
     default: // 默认为itemID增序排序
-      return items.sort((a, b) => {
-        if (workState.value.pinGatherableItems) {
-          let _a = a.id, _b = b.id
+      return list.sort((a, b) => {
+        if (pinGatherable) {
+          let _a = a.id
+          let _b = b.id
           if (isItemGatherable(a)) _a -= 999
           if (isItemGatherable(b)) _b -= 999
           return _a - _b
@@ -490,14 +480,7 @@ const getSortedItems = (items: ItemInfo[]) => {
         }
       })
   }
-  function isItemGatherable(item: ItemInfo) {
-    let gatherable = false
-    item.gatherInfo.timeLimitInfo.forEach(limit => {
-      gatherable ||= dealTimeLimit(limit.start, limit.end).canGather
-    })
-    return gatherable
-  }
-}
+})
 
 const getItemName = (itemInfo: ItemInfo) => {
   switch (itemLanguage.value) {
@@ -585,7 +568,7 @@ const handleShowAlarmMacroExportModal = () => {
           <n-form-item :label="t('main.select_gear.quick_operate.title')">
             <n-dropdown
               placement="bottom-start"
-              :options="getQuickOperateOptions()"
+              :options="quickOperateOptions"
               @select="handleQuickOperateOptionSelect"
             >
               <n-button>{{ t('common.click_here_show_menu') }}</n-button>
@@ -627,32 +610,27 @@ const handleShowAlarmMacroExportModal = () => {
         marginTop: '3px',
         marginBottom: isVerticalOverlay ? '5px' : '12px'
       }" />
-      <template
-        v-for="patch in gatherData"
-        :key="patch.key"
-      >
-        <n-el v-if="workState.patch === patch.key">
-          <div v-if="!patch.items?.length" class="flex items-center justify-center w-full" :style="isMobile ? 'min-height: 300px;' : ''">
-            <n-empty size="large" :description="t('gather_clock.text.no_items')" />
-          </div>
-          <n-grid cols="1 600:2 900:3 1200:4 1500:5 1900:6" :x-gap="5" :y-gap="5">
-            <n-grid-item
-              v-for="item in getSortedItems(patch.items)"
-              :key="item.id"
-            >
-              <GatherItemCard
-                :ban-item-pop="workState.banItemPop"
-                :show-map="workState.showMap"
-                :item="item"
-                :subscribed-items="workState.subscribedItems"
-                :star-items="workState.starItems"
-                @on-star-button-click="handleStarButtonClick"
-                @on-subscribe-button-click="handleSubscribeButtonClick"
-              />
-            </n-grid-item>
-          </n-grid>
-        </n-el>
-      </template>
+      <n-el v-if="currentPatchGroup">
+        <div v-if="!sortedCurrentItems.length" class="flex items-center justify-center w-full" :style="isMobile ? 'min-height: 300px;' : ''">
+          <n-empty size="large" :description="t('gather_clock.text.no_items')" />
+        </div>
+        <n-grid cols="1 600:2 900:3 1200:4 1500:5 1900:6" :x-gap="5" :y-gap="5">
+          <n-grid-item
+            v-for="item in sortedCurrentItems"
+            :key="item.id"
+          >
+            <GatherItemCard
+              :ban-item-pop="workState.banItemPop"
+              :show-map="workState.showMap"
+              :item="item"
+              :is-subscribed="subscribedIdSet.has(item.id)"
+              :is-starred="starIdSet.has(item.id)"
+              @on-star-button-click="handleStarButtonClick"
+              @on-subscribe-button-click="handleSubscribeButtonClick"
+            />
+          </n-grid-item>
+        </n-grid>
+      </n-el>
     </n-card>
 
     <ModalAlarmMacroExport

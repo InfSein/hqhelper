@@ -85,8 +85,8 @@ const handleStarButtonClick = (itemInfo: ItemInfo) => {
             :ban-item-pop="workState.banItemPop"
             :show-map="workState.showMap"
             :item="item"
-            :subscribed-items="workState.subscribedItems"
-            :star-items="workState.starItems"
+            :is-subscribed="workState.subscribedItems.includes(item.id)"
+            :is-starred="workState.starItems.includes(item.id)"
             @on-star-button-click="handleStarButtonClick"
             @on-subscribe-button-click="handleSubscribeButtonClick"
           />

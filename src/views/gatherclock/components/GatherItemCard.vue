@@ -16,7 +16,7 @@ import { useResponsive } from '@/composables/useResponsive'
 import { XivJobs, type XivJob } from '@/assets/data'
 import { type ItemInfo } from '@/tools/item'
 import { XivMaps } from '@/tools/game/map'
-import EorzeaTime from '@/utils/game.et'
+import { dealTimeLimit } from '@/views/gatherclock/utils/dealTimeLimit'
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()
@@ -29,14 +29,25 @@ interface GatherItemCardProps {
   banItemPop: boolean
   showMap: boolean
   item: ItemInfo
-  subscribedItems: number[]
-  starItems: number[]
+  isSubscribed?: boolean
+  isStarred?: boolean
+  subscribedItems?: number[]
+  starItems?: number[]
 }
 const props = defineProps<GatherItemCardProps>()
 const emits = defineEmits([
   'onSubscribeButtonClick',
   'onStarButtonClick',
 ])
+
+const isSubscribed = computed(() => {
+  if (props.isSubscribed !== undefined) return props.isSubscribed
+  return props.subscribedItems?.includes(props.item.id) ?? false
+})
+const isStarred = computed(() => {
+  if (props.isStarred !== undefined) return props.isStarred
+  return props.starItems?.includes(props.item.id) ?? false
+})
 
 const getJobName = (jobInfo: XivJob) => {
   switch (uiLanguage.value) {
@@ -64,62 +75,10 @@ const getItemGatherLocation = (itemInfo: ItemInfo) => {
   return t('item.text.quoted_position', { x: itemInfo.gatherInfo.posX.toFixed(1), y: itemInfo.gatherInfo.posY.toFixed(1) })
 }
 
-const dealTimeLimit = (start: string, end: string) => {
-  let progressStatus : 'info' | 'warning' | 'error' = 'info'
-  let progressPercentage = 0
-  let canGather = false
-  let remainET = 99999
-  let remainLT : string | undefined = undefined
-  let ltClass = 'text-app-xs'
-  let ltTitle = ''
-  try {
-    const parseTime = (time: string) => time.split(':').reduce((acc, val, idx) => acc + parseInt(val) * [60, 1][idx], 0)
-    const s = parseTime(start)
-    const e = parseTime(end)
-    const c = currentET.value.hour * 60 + currentET.value.minute
-    let ls = 0
-    if (c >= s && c < e) {
-      canGather = true
-      progressPercentage = (c - s) / (e - s) * 100
-      remainET = e - c
-      ls = Math.floor(EorzeaTime.EorzeaMinute2LocalSecond(remainET))
-      if (ls < 30) {
-        ltClass += ' text-error'
-      } else if (ls < 60) {
-        ltClass += ' text-warning'
-      }
-      ltTitle = '剩余可采集时间'
-    } else {
-      progressPercentage = 0
-      remainET = s - c
-      if (remainET < 0) {
-        remainET += 1440
-      }
-      ls = Math.floor(EorzeaTime.EorzeaMinute2LocalSecond(remainET))
-      ltClass += ' text-sub'
-      ltTitle = '距离变得可采集的剩余时间'
-    }
-    remainLT = t('common.remain_with_colon')
-    if (ls >= 60) {
-      remainLT += t('common.val_minutes', Math.floor(ls / 60))
-    }
-    remainLT += t('common.val_seconds', ls % 60)
-  } catch (err) {
-    console.error(err)
-    progressStatus = 'error'; progressPercentage = 100
-  }
-  return {
-    canGather: canGather,
-    status: progressStatus,
-    percentage: progressPercentage,
-    remainLT, ltClass, ltTitle,
-    remainET
-  }
-}
-
 const timeLimitInfo = computed(() => {
+  const currentMinutes = currentET.value.hour * 60 + currentET.value.minute
   return props.item.gatherInfo.timeLimitInfo.map(tli => {
-    const dl = dealTimeLimit(tli.start, tli.end)
+    const dl = dealTimeLimit(tli.start, tli.end, currentMinutes, t)
     return {
       ...tli,
       ...dl,
@@ -150,7 +109,7 @@ const handleStarButtonClick = (item: ItemInfo) => {
         <template #trigger>
           <n-button class="btn-alarm" @click="handleSubscribeButtonClick(item)">
             <template #icon>
-              <n-icon v-if="subscribedItems.includes(item.id)" color="#A80ABF">
+              <n-icon v-if="isSubscribed" color="#A80ABF">
                 <NotificationsRound />
               </n-icon>
               <n-icon v-else color="#A80ABF">
@@ -166,7 +125,7 @@ const handleStarButtonClick = (item: ItemInfo) => {
         <template #trigger>
           <n-button class="btn-star" @click="handleStarButtonClick(item)">
             <template #icon>
-              <n-icon v-if="starItems.includes(item.id)" color="#F6CA45">
+              <n-icon v-if="isStarred" color="#F6CA45">
                 <StarRound />
               </n-icon>
               <n-icon v-else color="#F6CA45">

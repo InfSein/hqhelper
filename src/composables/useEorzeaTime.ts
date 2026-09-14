@@ -6,8 +6,13 @@ let timerStarted = false
 
 export function useEorzeaTime() {
   if (!timerStarted) {
+    let lastTimeStamp = currentET.value.timeStamp
     setInterval(() => {
-      currentET.value = new EorzeaTime()
+      const newET = new EorzeaTime()
+      if (newET.timeStamp !== lastTimeStamp) {
+        lastTimeStamp = newET.timeStamp
+        currentET.value = newET
+      }
     }, 200)
     timerStarted = true
   }
