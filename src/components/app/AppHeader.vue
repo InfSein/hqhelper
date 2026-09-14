@@ -438,7 +438,11 @@ const menuData = computed(() => {
           hide: !!window.electronAPI || !!window.androidAPI,
           description: t('appheader.menu.tooltip.download_client'),
           click: () => {
-            window.open('https://download.hqhelper.com', '_blank')
+            const params = [
+              `lang=${store.userConfig.language_ui}`,
+              `theme=${theme.value}`,
+            ].join('&')
+            window.open(`https://download.hqhelper.com?${params}`, '_blank')
           }
         },
       ],
