@@ -48,6 +48,71 @@ const editingPrices = reactive<Record<number, number | null>>({})
 // 记录初次加载时的价格基准（已持久化的自定义价格或 API 价格），用于离开输入框时判断是否确实发生了修改
 const initialPriceMap = ref<Record<number, number | undefined>>({})
 
+const getItemPriceDecimal = (item: ItemInfo, type: 'NQ' | 'HQ') => {
+  const actualType = (type === 'HQ' && !item.hqable) ? 'NQ' : type
+  return store.funcConfig.cache_item_prices[item.id]?.[`${store.funcConfig.universalis_priceType}${actualType}`]
+}
+
+const getItemPrice = (item: ItemInfo, type: 'NQ' | 'HQ') => {
+  const price = getItemPriceDecimal(item, type)
+
+  // 如果处于自定义价格模式，优先读取用户自定义价格；未自定义过的物品若价格为未知或???时按0计算
+  if (props.customPriceMode) {
+    const customVal = editingPrices[item.id] ?? props.customPrices?.[item.id]
+    if (customVal !== undefined) {
+      const p = customVal
+      return {
+        price: p.toLocaleString(),
+        total: (p * item.amount).toLocaleString(),
+        tooltip: '',
+        style: '',
+        rawPrice: p,
+        rawTotal: p * item.amount,
+      }
+    }
+
+    const p = (price !== undefined && Math.floor(price) > 0) ? Math.floor(price) : 0
+    return {
+      price: p.toLocaleString(),
+      total: (p * item.amount).toLocaleString(),
+      tooltip: '',
+      style: '',
+      rawPrice: p,
+      rawTotal: p * item.amount,
+    }
+  }
+
+  if (price === undefined) {
+    const text = item.tradable ? t('common.unknown') : t('common.untradable')
+    return {
+      price: text,
+      total: text,
+      tooltip: '',
+      style: '',
+      rawPrice: -1,
+      rawTotal: -1,
+    }
+  } else {
+    const p = Math.floor(price)
+    const tooltipForNoPrice = t('item.price.no_price_received') + '\n' + t('item.price.no_price_received_reason')
+    const styleForNoPrice = 'cursor: help; text-decoration: underline dashed gray;'
+    return {
+      price: p ? p.toLocaleString() : '???',
+      total: p ? (p * item.amount).toLocaleString() : '???',
+      tooltip: p ? '' : tooltipForNoPrice,
+      style: p ? '' : styleForNoPrice,
+      rawPrice: p,
+      rawTotal: p * item.amount,
+    }
+  }
+}
+
+const getItemAmount = (amount: number) => {
+  return store.userConfig.item_amount_use_comma
+    ? amount.toLocaleString()
+    : amount
+}
+
 const recordInitialPrices = () => {
   props.items.forEach(item => {
     if (initialPriceMap.value[item.id] === undefined) {
@@ -182,70 +247,6 @@ const columns = computed<DataTableColumns<TableRow>>(() => [
 const handleSorterChange = (sorter: any) => {
   priceSortOrder.value = (sorter && sorter.columnKey === 'price') ? sorter.order : false
   subTotalSortOrder.value = (sorter && sorter.columnKey === 'subTotal') ? sorter.order : false
-}
-
-const getItemPriceDecimal = (item: ItemInfo, type: 'NQ' | 'HQ') => {
-  const actualType = (type === 'HQ' && !item.hqable) ? 'NQ' : type
-  return store.funcConfig.cache_item_prices[item.id]?.[`${store.funcConfig.universalis_priceType}${actualType}`]
-}
-const getItemPrice = (item: ItemInfo, type: 'NQ' | 'HQ') => {
-  const price = getItemPriceDecimal(item, type)
-
-  // 如果处于自定义价格模式，优先读取用户自定义价格；未自定义过的物品若价格为未知或???时按0计算
-  if (props.customPriceMode) {
-    const customVal = editingPrices[item.id] ?? props.customPrices?.[item.id]
-    if (customVal !== undefined) {
-      const p = customVal
-      return {
-        price: p.toLocaleString(),
-        total: (p * item.amount).toLocaleString(),
-        tooltip: '',
-        style: '',
-        rawPrice: p,
-        rawTotal: p * item.amount,
-      }
-    }
-
-    const p = (price !== undefined && Math.floor(price) > 0) ? Math.floor(price) : 0
-    return {
-      price: p.toLocaleString(),
-      total: (p * item.amount).toLocaleString(),
-      tooltip: '',
-      style: '',
-      rawPrice: p,
-      rawTotal: p * item.amount,
-    }
-  }
-
-  if (price === undefined) {
-    const text = item.tradable ? t('common.unknown') : t('common.untradable')
-    return {
-      price: text,
-      total: text,
-      tooltip: '',
-      style: '',
-      rawPrice: -1,
-      rawTotal: -1,
-    }
-  } else {
-    const p = Math.floor(price)
-    const tooltipForNoPrice = t('item.price.no_price_received') + '\n' + t('item.price.no_price_received_reason')
-    const styleForNoPrice = 'cursor: help; text-decoration: underline dashed gray;'
-    return {
-      price: p ? p.toLocaleString() : '???',
-      total: p ? (p * item.amount).toLocaleString() : '???',
-      tooltip: p ? '' : tooltipForNoPrice,
-      style: p ? '' : styleForNoPrice,
-      rawPrice: p,
-      rawTotal: p * item.amount,
-    }
-  }
-}
-
-const getItemAmount = (amount: number) => {
-  return store.userConfig.item_amount_use_comma
-    ? amount.toLocaleString()
-    : amount
 }
 </script>
 
