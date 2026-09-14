@@ -2,7 +2,7 @@
 </script>
 
 <template>
-  <div class="tree">
+  <div class="relative w-3.75 h-3.75">
     <div class="star"></div>
     <div class="leaves"></div>
     <div class="trunk"></div>
@@ -10,12 +10,6 @@
 </template>
 
 <style scoped>
-.tree {
-  position: relative;
-  width: 15px;
-  height: 15px;
-}
-
 /* 星星 */
 .star {
   position: absolute;
@@ -27,7 +21,6 @@
   clip-path: polygon(50% 0%, 61% 38%, 98% 38%, 68% 59%, 79% 95%, 50% 75%, 21% 95%, 32% 59%, 2% 38%, 39% 38%);
   z-index: 1000;
 }
-
 /* 树叶 */
 .leaves {
   position: absolute;
@@ -38,7 +31,6 @@
   background-color: green;
   clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
 }
-
 /* 树干 */
 .trunk {
   position: absolute;

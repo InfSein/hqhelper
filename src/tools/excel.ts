@@ -3,10 +3,10 @@ import * as XLSX from 'xlsx'
 import {
   XivJobs, XivGearAffixes
 } from '@/assets/data'
-import { attireAffixes, accessoryAffixes, type GearSelections, type AttireAffix, type AccessoryAffix, fixGearSelections } from "@/models/gears"
+import { attireAffixes, accessoryAffixes, type GearSelections, type AttireAffix, type AccessoryAffix, fixGearSelections } from "@/types/game/gear"
 import { getItemInfo, type ItemInfo } from './item'
 import type { StatementData } from './use-fufu-cal'
-import type { ItemPriceInfo } from '@/types/item.price'
+import type { ItemPriceInfo } from '@/types/item/price'
 
 export const export2Excel = (
   gearSelections: GearSelections,
@@ -401,7 +401,8 @@ export const export2Excel = (
   
     craftTargets.forEach(item => {
       if (item.amount) {
-        let price = item_price_map[item.id][`${price_type}HQ`]
+        const qualityType = !item.hqable ? 'NQ' : 'HQ'
+        let price = item_price_map[item.id][`${price_type}${qualityType}`]
         if (price) price = Math.floor(price)
         const subtotal = price === undefined ? t('common.unknown') : (price*item.amount).toString()
         tableData.push([

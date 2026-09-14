@@ -7,7 +7,7 @@ import {
   type XivPatchVer,
 } from '@/assets/data'
 import { Cal } from './nbb-cal-v5'
-import type { GearSelections } from '@/models/gears'
+import type { GearSelections } from '@/types/game/gear'
 import { getItemInfo, type ItemInfo } from './item'
 
 export function useNbbCal() {
@@ -159,11 +159,19 @@ export function useNbbCal() {
     for (const itemID in XivUnpackedGatheringItems) {
       const id = Number(itemID)
       if (XivUnpackedGatheringItems[id].popTime) { // 是限时物品
-        if (id < 36630) continue // 手动过滤掉7.0之前的
         if (!getItem(id)) continue // 过滤掉没有数据的
         const itemInfo = getItemInfo(id)
-        const itemLevel = itemInfo.itemLevel <= 690 ? '~690' : itemInfo.itemLevel
-        const key = itemInfo.patch + '-' + itemLevel
+        if (!itemInfo?.gatherInfo?.timeLimitInfo) continue
+        const itemPatch = itemInfo.patch
+        let key = ''
+        if (!itemPatch.startsWith('8.')) {
+          let expansion = itemPatch.split('.')[0]
+          if (expansion === '1') expansion = '2'
+          key = expansion + '.x'
+        } else {
+          const itemLevel = itemInfo.itemLevel <= 820 ? '~820' : itemInfo.itemLevel
+          key = itemInfo.patch + '-' + itemLevel
+        }
         if (!map[key]) map[key] = []
         map[key].push(itemInfo)
       }
