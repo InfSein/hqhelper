@@ -1094,11 +1094,11 @@ defineExpose({
                 <n-button
                   type="info"
                   :ghost="selectedItem !== entry.item.id"
-                  class="h-auto!"
+                  class="w-10! h-auto! px-1!"
                   :title="t('workflow.text.add_item_to_curr_workflow.tip_1') + '\r\n' + t('workflow.text.add_item_to_curr_workflow.tip_2')"
                   @click="emit('add-item', entry.item.id)"
                 >
-                  <n-icon :size="18"><PlaylistAddOutlined /></n-icon>
+                  <n-icon :size="20"><PlaylistAddOutlined /></n-icon>
                 </n-button>
               </div>
             </div>

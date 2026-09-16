@@ -45,12 +45,6 @@ const getItemAlarmCount = (itemId: number) => {
   return item.gatherInfo?.timeLimitInfo?.length || 0
 }
 
-const currentAlarmCount = computed(() => {
-  return itemTreeCheckedKeys.value.reduce((total, id) => {
-    return total + getItemAlarmCount(id)
-  }, 0)
-})
-
 const handleItemTreeSelectedKeysUpdate = (keys: Array<string | number>) => {
   const itemIds: number[] = []
   keys.forEach(key => {

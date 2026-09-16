@@ -1,6 +1,6 @@
 import { useLocale } from '@/composables/useLocale'
 import useConfig from '@/composables/useConfig'
-import { XivAttributes, XivJobs, type XivJob } from '@/assets/data'
+import { XivAttributes, type XivJob } from '@/assets/data'
 import type { ItemInfo } from '@/tools/item'
 import type { ItemPriceType } from '@/types/config/func'
 
