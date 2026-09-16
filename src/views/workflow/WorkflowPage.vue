@@ -421,6 +421,7 @@ const setInventoryByStatementPrepared = () => {
           v-model:selected-content-group="workState.selectedContentGroup"
           v-model:selected-item="workState.selectedItem"
           v-model:notebook-search-history="workState.notebookSearchHistory"
+          v-model:is-operation-mode="workState.isOperationMode"
           :menu-height="pageHeightVals.notebookMenu"
           @add-item="handleAddNotebookItem"
         />

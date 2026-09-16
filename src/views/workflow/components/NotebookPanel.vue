@@ -15,6 +15,7 @@ import {
   DoneRound,
   StarRound,
   StarBorderRound,
+  TouchAppRound,
 } from '@vicons/material'
 import type { SelectOption } from 'naive-ui'
 import ItemCell from '@/components/item/ItemCell.vue'
@@ -536,6 +537,10 @@ const handleEnterStarredMode = () => {
 }
 // #endregion
 
+// #region operation mode
+const isOperationMode = defineModel<boolean>('isOperationMode', { default: false })
+// #endregion
+
 const handleJobSelect = (job: number) => {
   isSearchMode.value = false
   isCustomListMode.value = false
@@ -1054,15 +1059,27 @@ defineExpose({
                 </template>
               </n-button>
             </div>
-            <n-button
-              size="small"
-              class="n-square-button shrink-0"
-              @click="showNotebookSettingsModal = true"
-            >
-              <template #icon>
-                <n-icon :size="16"><SettingsRound /></n-icon>
-              </template>
-            </n-button>
+            <div class="flex items-center gap-1 shrink-0">
+              <n-button
+                size="small"
+                class="n-square-button shrink-0"
+                :type="isOperationMode ? 'primary' : 'default'"
+                @click="isOperationMode = !isOperationMode"
+              >
+                <template #icon>
+                  <n-icon :size="16"><TouchAppRound /></n-icon>
+                </template>
+              </n-button>
+              <n-button
+                size="small"
+                class="n-square-button shrink-0"
+                @click="showNotebookSettingsModal = true"
+              >
+                <template #icon>
+                  <n-icon :size="16"><SettingsRound /></n-icon>
+                </template>
+              </n-button>
+            </div>
           </div>
           <n-scrollbar trigger="none" class="flex-1">
             <div
@@ -1081,7 +1098,7 @@ defineExpose({
               >
                 <n-button
                   :type="selectedItem === entry.item.id ? 'primary' : 'default'"
-                  class="flex-1 justify-start px-2! py-1! h-auto!"
+                  class="flex-1 justify-start px-2! py-1! h-auto! min-w-0"
                   @click="emit('update:selectedItem', entry.item.id)"
                   @contextmenu="handleNotebookItemContextMenu($event, entry.item)"
                 >
@@ -1092,9 +1109,22 @@ defineExpose({
                   />
                 </n-button>
                 <n-button
+                  v-if="isOperationMode"
+                  class="w-10! h-auto! px-1! shrink-0"
+                  :type="isRecipeStarred(entry.item.id) ? 'warning' : 'default'"
+                  :ghost="true"
+                  :title="isRecipeStarred(entry.item.id) ? t('workflow.notebook_starred.unstar_recipe') : t('workflow.notebook_starred.star_recipe')"
+                  @click.stop="toggleStarRecipe(entry.item.id)"
+                >
+                  <n-icon :size="20" :color="isRecipeStarred(entry.item.id) ? '#F6CA45' : undefined">
+                    <StarRound v-if="isRecipeStarred(entry.item.id)" />
+                    <StarBorderRound v-else />
+                  </n-icon>
+                </n-button>
+                <n-button
                   type="info"
                   :ghost="selectedItem !== entry.item.id"
-                  class="w-10! h-auto! px-1!"
+                  class="w-10! h-auto! px-1! shrink-0"
                   :title="t('workflow.text.add_item_to_curr_workflow.tip_1') + '\r\n' + t('workflow.text.add_item_to_curr_workflow.tip_2')"
                   @click="emit('add-item', entry.item.id)"
                 >

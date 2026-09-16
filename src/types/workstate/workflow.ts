@@ -46,6 +46,8 @@ export interface WorkState {
   workflows: Workflow[];
   /** 制作笔记搜索历史（最多保留10条） */
   notebookSearchHistory: string[];
+  /** 制作笔记是否处于操作模式 */
+  isOperationMode: boolean;
 }
 export const defaultWorkState: WorkState = {
   pageView: 'AB',
@@ -56,6 +58,7 @@ export const defaultWorkState: WorkState = {
   currentWorkflow: 0,
   workflows: [getDefaultWorkflow()],
   notebookSearchHistory: [],
+  isOperationMode: false,
 }
 
 export const fixWorkState = (state?: WorkState) : WorkState => {
@@ -66,5 +69,6 @@ export const fixWorkState = (state?: WorkState) : WorkState => {
     }
   })
   _state.notebookSearchHistory ??= []
+  _state.isOperationMode ??= false
   return _state
 }
