@@ -26,7 +26,9 @@ export interface WorkState {
   /** 是否将整个窗口置顶 (限v5及以上的客户端使用) */
   pinWindow: boolean
   /** 通知方式 */
-  notifyMode: "none" | "system_noti" | "audio"
+  notifyMode: "none" | "system_noti" | "audio" | "bark"
+  /** Bark 推送地址 */
+  barkUrl: string
   /** 提示音类型 */
   soundSelect?: "default" | "custom"
   /** 已上传的自定义提示音文件名 */
@@ -50,6 +52,7 @@ const defaultWorkState: WorkState = {
   patch: '',
   pinWindow: false,
   notifyMode: "none",
+  barkUrl: "",
   soundSelect: "default",
   customAudioName: "",
   orderBy: "remainingTimeAsc",
@@ -70,6 +73,7 @@ export const fixWorkState = (state?: WorkState): WorkState => {
   _state.alarmMacroOptions = fixAlarmMacroOptions(_state.alarmMacroOptions)
   _state.soundSelect ??= 'default'
   _state.customAudioName ??= ''
+  _state.barkUrl ??= ''
   if (_state.starItems?.length > _VAR_GATHERCLOCK_MAX_STARRED) {
     _state.starItems = _state.starItems.slice(0, _VAR_GATHERCLOCK_MAX_STARRED)
   }

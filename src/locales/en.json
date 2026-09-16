@@ -1447,9 +1447,19 @@
         "title": "Custom Sound",
         "upload": "Upload Audio"
       },
+      "bark": {
+        "empty_url": "Please enter your Bark Server URL first",
+        "test_btn": "Test Push",
+        "test_failed": "Failed to send test push: {err}",
+        "test_message": "This is a test notification from HqHelper Gather Clock.",
+        "test_success": "Test push sent successfully!",
+        "url_placeholder": "e.g. https://api.day.app/your_key/",
+        "url_title": "Bark Server URL"
+      },
       "disable_item_pop": "Disable Item Popups",
       "mention_way": {
         "option": {
+          "bark": "Bark",
           "sound": "Sound",
           "system_notice": "System Notification"
         },

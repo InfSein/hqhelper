@@ -1451,9 +1451,19 @@
         "status_uploaded": "已导入音频：{name}",
         "status_not_uploaded": "未导入音频文件，将使用默认提示音。"
       },
+      "bark": {
+        "empty_url": "请先输入Bark推送地址",
+        "test_btn": "测试",
+        "test_failed": "测试推送失败：{err}",
+        "test_message": "这是来自HqHelper采集时钟的测试通知。",
+        "test_success": "测试推送发送成功！",
+        "url_placeholder": "如：https://api.day.app/your_key/",
+        "url_title": "Bark推送地址"
+      },
       "disable_item_pop": "禁用物品按钮悬浮窗",
       "mention_way": {
         "option": {
+          "bark": "Bark",
           "sound": "提示音",
           "system_notice": "系统通知"
         },

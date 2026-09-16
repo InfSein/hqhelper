@@ -33,3 +33,14 @@
 **杂项**
 - [x] 引入 tailwind
 - [x] 升级 electron
+
+## 搜索记录
+
+### 采集时钟增加 Bark 推送提醒
+- **需求**：采集时钟提醒方式增加 Bark，并提供“Bark推送地址”配置项。
+- **技术调研**：
+  - 参考来源：[Finb/Bark](https://github.com/Finb/Bark)、[Finb/bark-server](https://github.com/Finb/bark-server)、[Bark 官方文档与 API V2](https://bark.day.app/#/)
+  - Bark 支持 HTTP GET 与 POST 请求，其中 REST API V2 支持发送 JSON 负载（包含 `title`、`body`、`icon`、`group` 等）。
+  - Bark 官方服务器（`https://api.day.app`）原生支持 CORS 跨域请求（`access-control-allow-origin: *`），可在 Web 前端、Electron 和移动端直接发起 `fetch`。
+  - 用户配置格式兼容完整 URL（如 `https://api.day.app/{device_key}/`、自建服务器地址）以及纯 `device_key` 格式。
+

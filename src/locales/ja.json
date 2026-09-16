@@ -1447,9 +1447,19 @@
         "title": "カスタム通知音",
         "upload": "音声のアップロード"
       },
+      "bark": {
+        "empty_url": "Barkプッシュアドレスを入力してください",
+        "test_btn": "テスト送信",
+        "test_failed": "テストプッシュの送信に失敗しました：{err}",
+        "test_message": "これは HqHelper 採集時計からのテスト通知です。",
+        "test_success": "テストプッシュを送信しました！",
+        "url_placeholder": "例：https://api.day.app/your_key/",
+        "url_title": "Barkプッシュアドレス"
+      },
       "disable_item_pop": "アイテムボタンのツールチップを隠す",
       "mention_way": {
         "option": {
+          "bark": "Bark",
           "sound": "通知音",
           "system_notice": "システム通知"
         },

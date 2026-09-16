@@ -27,6 +27,7 @@ import {
 } from '@/types/workstate/gatherclock'
 import useIdb from '@/utils/app.idb'
 import { getTimeLimitRemain } from '@/views/gatherclock/utils/dealTimeLimit'
+import { sendBarkNotification } from '@/views/gatherclock/utils/bark'
 
 const store = useStore()
 const NAIVE_UI_MESSAGE = useMessage()
@@ -146,8 +147,32 @@ const notifyModeOptions = computed(() => {
       label: t('gather_clock.preference.mention_way.option.sound'),
       value: 'audio'
     },
+    {
+      label: t('gather_clock.preference.mention_way.option.bark'),
+      value: 'bark'
+    },
   ]
 })
+const isTestingBark = ref(false)
+const handleTestBark = async () => {
+  if (!workState.value.barkUrl?.trim()) {
+    NAIVE_UI_MESSAGE.warning(t('gather_clock.preference.bark.empty_url'))
+    return
+  }
+  isTestingBark.value = true
+  try {
+    await sendBarkNotification(workState.value.barkUrl, {
+      title: `HqHelper - ${t('common.appfunc.gather_clock')}`,
+      body: t('gather_clock.preference.bark.test_message'),
+      group: 'HqHelper',
+    })
+    NAIVE_UI_MESSAGE.success(t('gather_clock.preference.bark.test_success'))
+  } catch (err: any) {
+    NAIVE_UI_MESSAGE.error(t('gather_clock.preference.bark.test_failed', { err: err?.message || err }))
+  } finally {
+    isTestingBark.value = false
+  }
+}
 const itemSortOptions = computed(() => {
   return [
     {
@@ -244,6 +269,8 @@ const handleNotify = (itemsNeedAlarm: ItemInfo[]) => {
     })
   } else if (workState.value.notifyMode === 'audio') {
     playClockAudio()
+  } else if (workState.value.notifyMode === 'bark') {
+    pushBarkNotification(itemsNeedAlarm)
   }
 
   async function playClockAudio() {
@@ -259,6 +286,31 @@ const handleNotify = (itemsNeedAlarm: ItemInfo[]) => {
       }
     }
     playAudio('./audio/FFXIV_Incoming_Tell_2.mp3')
+  }
+
+  async function pushBarkNotification(items: ItemInfo[]) {
+    if (!workState.value.barkUrl?.trim()) {
+      console.warn('Bark URL is not configured')
+      return
+    }
+    try {
+      const bodyText = items.map(item => {
+        let text = `${getItemName(item)}: ${getJobName(XivJobs[item.gatherInfo.jobId])} | ${getPlaceName(item)} ${getItemGatherLocation(item)}`
+        if (item.gatherInfo.recommAetheryte) {
+          text += ' | ' + t('map.text.recomm_aetheryte') + ' - ' + item.gatherInfo.recommAetheryte?.[`name_${itemLanguage.value}`]
+        }
+        return text
+      }).join('\n')
+
+      await sendBarkNotification(workState.value.barkUrl, {
+        title: t('gather_clock.message.following_items_can_be_gathered'),
+        body: bodyText,
+        group: 'HqHelper',
+        icon: items[0]?.iconUrl,
+      })
+    } catch (err) {
+      console.error('Failed to send Bark notification:', err)
+    }
   }
 }
 
@@ -582,6 +634,18 @@ const handleShowAlarmMacroExportModal = () => {
           </n-form-item>
           <n-form-item v-if="workState.notifyMode === 'audio'" :label="t('gather_clock.preference.custom_audio.title')">
             <n-button @click="showAudioConfigModal = true">{{ t('common.click_here') }}</n-button>
+          </n-form-item>
+          <n-form-item v-if="workState.notifyMode === 'bark'" :label="t('gather_clock.preference.bark.url_title')" style="min-width: 280px;">
+            <n-input-group>
+              <n-input
+                v-model:value="workState.barkUrl"
+                :placeholder="t('gather_clock.preference.bark.url_placeholder')"
+                clearable
+              />
+              <n-button :loading="isTestingBark" @click="handleTestBark">
+                {{ t('gather_clock.preference.bark.test_btn') }}
+              </n-button>
+            </n-input-group>
           </n-form-item>
           <n-form-item :label="t('gather_clock.preference.sort_by.title')" style="min-width: 200px;">
             <n-select v-model:value="workState.orderBy" :options="itemSortOptions" :render-option="optionsRenderer" />
