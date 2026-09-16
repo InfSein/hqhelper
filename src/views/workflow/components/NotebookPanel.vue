@@ -1105,7 +1105,7 @@ defineExpose({
                         </n-checkbox>
                         <n-checkbox value="star_recipe">
                           <span class="inline-flex items-center gap-1">
-                            <n-icon :size="16" color="#F6CA45"><StarRound /></n-icon>
+                            <n-icon :size="16"><StarBorderRound /></n-icon>
                             <span>{{ t('workflow.notebook_settings.star_recipe') }}</span>
                           </span>
                         </n-checkbox>
