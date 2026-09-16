@@ -17,11 +17,11 @@ import useConfig from '@/composables/useConfig'
 import { useAppModals } from '@/composables/useAppModals'
 import { useEorzeaTime } from '@/composables/useEorzeaTime'
 import { useResponsive } from '@/composables/useResponsive'
-import { XivItemRemarks, XivJobs, type XivJob, XivAttributes } from '@/assets/data'
-import { getItemInfo, type ItemInfo } from '@/tools/item'
+import { useItemLocale } from '@/composables/useItemLocale'
+import { XivItemRemarks, XivJobs } from '@/assets/data'
+import { getItemInfo, calculateGatherThresholds, type ItemInfo } from '@/tools/item'
 import { handleGetPriceError } from '@/tools/error'
 import { getItemPriceInfo } from '@/tools/item/price'
-import type { ItemPriceType } from '@/types/config/func'
 
 const store = useStore()
 const { t } = useLocale()
@@ -32,6 +32,14 @@ const { showItemPriceDetail } = useAppModals()
 const {
   uiLanguage, itemLanguage,
 } = useConfig()
+const {
+  getItemName,
+  getItemTypeName,
+  getJobName,
+  getAttrName,
+  getPlaceName,
+  getPriceTypeName,
+} = useItemLocale()
 
 interface ItemPopProps {
   /** 道具信息 */
@@ -63,26 +71,6 @@ onMounted(() => {
   }
 })
 
-const getJobName = (jobInfo: XivJob) => {
-  switch (uiLanguage.value) {
-    case 'ja':
-      return jobInfo?.job_name_ja || t('common.unknown')
-    case 'en':
-      return jobInfo?.job_name_en || t('common.unknown')
-    case 'zh':
-    default:
-      return jobInfo?.job_name_zh || t('common.unknown')
-  }
-}
-
-const getItemName = () => {
-  switch (itemLanguage.value) {
-    case 'zh':
-      return props.itemInfo.name_zh || '未翻译的物品'
-    default:
-      return props.itemInfo[`name_${itemLanguage.value}`]
-  }
-}
 const getItemDescriptions = () => {
   let description = ''
   switch (itemLanguage.value) {
@@ -99,7 +87,7 @@ const getItemDescriptions = () => {
   // 处理颜色字符
   description = description.replace(/\{\{color\|id=(\d+)\|([^}]+)\}\}/g, (match, id, text) => {
     let color = ''
-    if (id == 504) color = 'orange'
+    if (id == 504) color = 'var(--app-color-warning)'
 
     if (color) {
       return `<span style="color: ${color}">${text}</span>`
@@ -112,35 +100,6 @@ const getItemDescriptions = () => {
 
   const descs = description.split('<br>')
   return `<p>${descs.join('</p><p>')}</p>`
-}
-const getItemTypeName = () => {
-  switch (itemLanguage.value) {
-    case 'ja':
-      return props.itemInfo.uiTypeNameJA
-    case 'en':
-      return props.itemInfo.uiTypeNameEN
-    case 'zh':
-    default:
-      return props.itemInfo.uiTypeNameZH
-  }
-}
-const getAttrName = (attrId: number) => {
-  const attr = XivAttributes[attrId]
-  if (!attr) {
-    return t('common.unknown')
-  }
-  return attr[`name_${uiLanguage.value}`]
-}
-const getPlaceName = () => {
-  switch (itemLanguage.value) {
-    case 'ja':
-      return props.itemInfo.gatherInfo?.placeNameJA
-    case 'en':
-      return props.itemInfo.gatherInfo?.placeNameEN
-    case 'zh':
-    default:
-      return props.itemInfo.gatherInfo?.placeNameZH
-  }
 }
 const itemHasHQ = computed(() => {
   if (props.itemInfo.tempAttrsProvided?.length) {
@@ -173,104 +132,22 @@ const itemTempAttrTexts = computed(() : string[] => {
 })
 const itemGatherDifficulty = computed(() => {
   if (!props.itemInfo.gatherInfo?.difficulty) return undefined
-
-  const [diffGather, diffPerception] = props.itemInfo.gatherInfo.difficulty
-  const diffText = diffGather !== diffPerception
-    ? t('item.text.gathering_detail_type1', [diffGather, diffPerception])
-    : t('item.text.gathering_detail_type2', [diffGather])
-  
-  const processThreshold = (threshold: { field: string; value: number; upstair?: boolean; }, keyval: number) => {
-    const func = threshold.upstair ? Math.ceil : Math.floor
-    return { ...threshold, value: func(threshold.value * keyval) }
-  }
-  const gatherThresholds = [
-    {
-      field: t('item.gather_threshold.must_gain'),
-      value: 0.8,
-    },
-    ...(
-      !props.itemInfo.collectable ? [
-        {
-          field: t('item.gather_threshold.yield_plus', [2]),
-          value: 0.9,
-        },
-        {
-          field: t('item.gather_threshold.yield_plus', [3]),
-          value: 1.1,
-        },
-      ] : []
-    ),
-    ...(
-      props.itemInfo.collectable ? [
-        {
-          field: t('item.gather_threshold.scour_base_gain', [200]),
-          value: 0.95,
-          upstair: true,
-        },
-        {
-          field: t('item.gather_threshold.meticulous_rate', [25]),
-          value: 1,
-        },
-      ] : []
-    )
-  ].map(threshold => processThreshold(threshold, diffGather))
-  const perceptionThresholds = [
-    ...(
-      !props.itemInfo.collectable ? [
-        {
-          field: t('item.gather_threshold.boon_rate', [30]),
-          value: 0.95,
-          upstair: true,
-        },
-        {
-          field: t('item.gather_threshold.boon_rate', [60]),
-          value: 1.5,
-          upstair: true,
-        },
-      ] : []
-    ),
-    ...(
-      props.itemInfo.collectable ? [
-        {
-          field: t('item.gather_threshold.scrutiny_multi', [125]),
-          value: 0.95,
-          upstair: true,
-        },
-        {
-          field: t('item.gather_threshold.intuition_rate', [40]),
-          value: 1,
-        },
-      ] : []
-    ),
-  ].map(threshold => processThreshold(threshold, diffPerception))
-
-  return {
-    diffGather, diffPerception,
-    diffText,
-    gatherThresholds, perceptionThresholds,
-  }
+  return calculateGatherThresholds(
+    props.itemInfo.gatherInfo.difficulty,
+    props.itemInfo.collectable,
+    t,
+  )
 })
 const itemCraftRequires = computed(() => {
   const requires : {
-    id: number;
-    count: number;
+    id: number
+    count: number
   }[] = []
   if (store.userConfig.item_pop_craft_show_crystals) {
     requires.push(...props.itemInfo.craftRequireCrystals)
   }
   requires.push(...props.itemInfo.craftRequires)
   return requires
-})
-const itemTailDescriptions = computed(() => {
-  const descriptions : string[] = []
-  // if (itemLanguage.value === 'zh') {
-  //   if (props.itemInfo.usedZHTemp) {
-  //     descriptions.push(t('item.text.zh_name_is_temp'))
-  //   } else if (props.itemInfo.chsOffline) {
-  //     descriptions.push(t('item.text.not_installed_in_chs'))
-  //   }
-  // }
-  return descriptions
 })
 interface RenderedTradeCost {
   costId: number
@@ -332,7 +209,7 @@ const openInAngler = () => {
     case 'zh': lang = 'cn'; break
     case 'ja': lang = 'jp'; break
   }
-  const name = getItemName()
+  const name = getItemName(props.itemInfo)
   const domain = `https://${lang}.ff14angler.com/`
   window.open(`${domain}?search=${name}`)
 }
@@ -383,18 +260,6 @@ const itemPriceInfo = computed(() => {
       priceStrNq, priceStrHq,
       priceNq, tipNq, styleNq,
       priceHq, tipHq, styleHq
-    }
-    function getPriceTypeName(ptype: ItemPriceType) {
-      switch (ptype) {
-        case 'averagePrice': return t('preference.universalis_price_type.option.average')
-        case 'currentAveragePrice': return t('preference.universalis_price_type.option.curr_average')
-        case 'minPrice': return t('preference.universalis_price_type.option.min')
-        case 'maxPrice': return t('preference.universalis_price_type.option.max')
-        case 'purchasePrice': return t('preference.universalis_price_type.option.purchase_average.title')
-        case 'marketLowestPrice': return t('preference.universalis_price_type.option.market_min.title')
-        case 'marketPrice': return t('preference.universalis_price_type.option.market_average.title')
-        default: return t('common.unknown')
-      }
     }
   })
 
@@ -453,7 +318,7 @@ const handleOnScroll = (e: Event) => {
     <template #trigger>
       <slot />
     </template>
-    <div class="select-text" @mousedown.stop>
+    <div class="select-text mb-2" @mousedown.stop>
       <ItemInfoHeader
         :item-info="itemInfo"
         :show-hq-switcher="showHqSwitcherInHeader"
@@ -470,7 +335,7 @@ const handleOnScroll = (e: Event) => {
             :src="itemInfo.uiTypeIconUrl"
             :size="14"
           />
-          <p>{{ getItemTypeName() }}</p>
+          <p>{{ getItemTypeName(itemInfo) }}</p>
         </div>
         <div class="item-attribute">
           Patch {{ itemInfo.patch }}
@@ -644,7 +509,7 @@ const handleOnScroll = (e: Event) => {
               <div class="item">
                 <LocationSpan
                   :place-id="itemInfo.gatherInfo.placeID"
-                  :place-name="getPlaceName()"
+                  :place-name="getPlaceName(itemInfo)"
                   :coordinate-x="itemInfo.gatherInfo.posX"
                   :coordinate-y="itemInfo.gatherInfo.posY"
                   :pop-trigger="innerPopTrigger"
@@ -867,7 +732,7 @@ const handleOnScroll = (e: Event) => {
                 <a
                   :disabled="refreshingItemPrice"
                   style="padding: 0; margin-left: 3px; display: flex; line-height: 1;"
-                  :style="refreshingItemPrice ? 'cursor: not-allowed; color: gray;' : 'cursor: pointer;'"
+                  :style="refreshingItemPrice ? 'cursor: not-allowed; color: var(--app-color-text-sub);' : 'cursor: pointer;'"
                   @click="refreshItemPrice"
                 >
                   <n-icon :size="12"><RefreshOutlined /></n-icon>
@@ -916,12 +781,6 @@ const handleOnScroll = (e: Event) => {
           </div>
           <!-- 插槽，目前好像没用到 -->
           <slot name="extra-descriptions" />
-          <!-- 注 -->
-          <div class="tail-descriptions">
-            <p v-for="(desc, index) in itemTailDescriptions" :key="'tail-descriptions' + index">
-              {{ t('common.note_x', itemTailDescriptions.length === 1 ? '' : index + 1) }}{{ desc }}
-            </p>
-          </div>
         </div>
       </n-scrollbar>
     </div>
@@ -1090,11 +949,6 @@ const handleOnScroll = (e: Event) => {
       flex-wrap: wrap;
       font-size: var(--app-font-size-xs);
     }
-  }
-  .tail-descriptions {
-    margin-top: 5px;
-    font-size: var(--app-font-size-xs);
-    line-height: 1;
   }
 }
 </style>

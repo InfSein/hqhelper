@@ -5,18 +5,16 @@ import {
 import ItemPop from './ItemPop.vue'
 import XivFARImage from '@/components/ui/XivFARImage.vue'
 import { useStore } from '@/store'
-import useConfig from '@/composables/useConfig'
 import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
 import { useItemContextMenu } from '@/composables/useItemContextMenu'
+import { useItemLocale } from '@/composables/useItemLocale'
 import type { ItemInfo } from '@/tools/item'
 
 const store = useStore()
 const { t } = useLocale()
 const { isMobile } = useResponsive()
-const {
-  itemLanguage,
-} = useConfig()
+const { getItemName, getItemSubName } = useItemLocale()
 
 interface ItemInfoHeaderProps {
   itemInfo: ItemInfo
@@ -38,6 +36,7 @@ const onToggleHq = () => {
   hq.value = !hq.value
 }
 
+const itemName = computed(() => getItemName(props.itemInfo))
 const switcherTip = computed(() => {
   if (!props.showHqSwitcher) return ''
   return [
@@ -47,27 +46,6 @@ const switcherTip = computed(() => {
       : t('item.text.click_to_switch_hqornq'),
   ].join('\r\n')
 })
-
-const getItemName = () => {
-  switch (itemLanguage.value) {
-    case 'zh':
-      return props.itemInfo.name_zh || '未翻译的物品'
-    default:
-      return props.itemInfo[`name_${itemLanguage.value}`]
-  }
-}
-/** 获取物品副名称(即其他语言的名称) */
-const getItemSubName = () => {
-  switch (itemLanguage.value) {
-    case 'ja':
-      return props.itemInfo.name_en
-    case 'en':
-      return props.itemInfo.name_ja
-    case 'zh':
-    default:
-      return props.itemInfo.name_ja + ' / ' + props.itemInfo.name_en
-  }
-}
 
 // #region 右键菜单相关
 
@@ -100,12 +78,11 @@ const popTrigger = computed(() => {
 
 const handleItemIconClick = async () => {
   const action = store.userConfig.item_info_icon_click_event
-  const itemName = getItemName()
   let copyContent = ''
   if (action === 'copy_name') {
-    copyContent = itemName
+    copyContent = itemName.value
   } else if (action === 'copy_isearch') {
-    copyContent = `/isearch "${itemName}"`
+    copyContent = `/isearch "${itemName.value}"`
   } else {
     // do nothing
   }
@@ -128,7 +105,7 @@ const handleItemIconClick = async () => {
     />
     <div class="item-names">
       <div class="main">
-        <span>{{ getItemName() }}</span>
+        <span>{{ itemName }}</span>
         <span
           v-if="showHqSwitcher"
           class="hq-switcher"
@@ -163,7 +140,7 @@ const handleItemIconClick = async () => {
           </n-icon>
         </ItemPop>
       </div>
-      <div class="sub text-sub">{{ getItemSubName() }}</div>
+      <div class="sub text-sub">{{ getItemSubName(itemInfo) }}</div>
     </div>
     <n-dropdown
       size="small"

@@ -8,14 +8,14 @@ import ItemPop from './ItemPop.vue'
 import XivFARImage from '@/components/ui/XivFARImage.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
-import useConfig from '@/composables/useConfig'
+import { useItemLocale } from '@/composables/useItemLocale'
 import { useItemContextMenu } from '@/composables/useItemContextMenu'
 import { XivJobs } from '@/assets/data'
 import { type ItemInfo } from '@/tools/item'
 
 const store = useStore()
 const { t } = useLocale()
-const { itemLanguage } = useConfig()
+const { getItemName } = useItemLocale()
 
 interface ItemButtonProps {
   /** 道具信息 */
@@ -62,14 +62,7 @@ interface ItemButtonProps {
 }
 const props = defineProps<ItemButtonProps>()
 
-const getItemName = () => {
-  switch (itemLanguage.value) {
-    case 'zh':
-      return props.itemInfo.name_zh || '未翻译的物品'
-    default:
-      return props.itemInfo[`name_${itemLanguage.value}`]
-  }
-}
+const itemName = computed(() => getItemName(props.itemInfo))
 const itemAmount = computed(() => {
   return store.userConfig.item_amount_use_comma
     ? props.itemInfo.amount.toLocaleString()
@@ -115,12 +108,11 @@ const {
 
 const handleItemButtonClick = async () => {
   const action = store.userConfig.item_button_click_event
-  const itemName = getItemName()
   let copyContent = ''
   if (action === 'copy_name') {
-    copyContent = itemName
+    copyContent = itemName.value
   } else if (action === 'copy_isearch') {
-    copyContent = `/isearch "${itemName}"`
+    copyContent = `/isearch "${itemName.value}"`
   } else {
     // do nothing
   }
@@ -176,7 +168,7 @@ const handleItemButtonClick = async () => {
                 :lazy="iconLazy"
               />
               <div class="whitespace-nowrap overflow-hidden text-ellipsis">
-                {{ getItemName() }}
+                {{ itemName }}
               </div>
             </div>
             <div v-if="showAmount" class="text-end">
@@ -224,106 +216,6 @@ const handleItemButtonClick = async () => {
 }
 .item-button {
   padding: 1px;
-}
-.item-popover {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-
-  .base-info {
-    display: flex;
-    align-items: flex-start;
-    gap: 5px;
-    margin-top: 2%;
-
-    .item-names {
-      .main span {
-        line-height: 1;
-        font-size: var(--app-font-size-xl);
-      }
-      .sub,
-      .main span.extra-name {
-        line-height: 1;
-        font-size: var(--app-font-size-xs);
-      }
-    }
-  }
-  .item-divider {
-    margin: 0 2px;
-  }
-  .item-descriptions {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-
-    .item-attributes {
-      display: flex;
-      align-items: center;
-      gap: 3px;
-      line-height: 1;
-      flex-wrap: wrap;
-
-      .item-type {
-        display: flex;
-        align-items: center;
-        gap: 1px;
-      }
-      .item-type::before { content: "["; }
-      .item-type::after { content: "]"; }
-    }
-    .main-descriptions {
-      text-indent: 1em;
-      line-height: 1.2;
-    }
-    .temp-attr-descriptions {
-      line-height: 1.2;
-
-      .title {
-        margin-top: 2px;
-      }
-      .content {
-        margin-left: 1em;
-      }
-      .content .block p::before {
-        content: "· ";
-      }
-      .extra {
-        font-size: var(--app-font-size-xs);
-        margin: 2px 0 5px;
-      }
-    }
-    .description-block {
-      line-height: 1.2;
-
-      .title {
-        font-weight: bold;
-
-        .extra {
-          margin-left: 3px;
-          font-weight: normal;
-          font-size: var(--app-font-size-xs);
-        }
-      }
-      .content .item {
-        margin-left: 1em;
-        display: flex;
-        align-items: center;
-        gap: 3px;
-      }
-      .content .other-attrs,
-      .content.extra {
-        display: flex;
-        gap: 5px;
-        flex-wrap: wrap;
-        font-size: var(--app-font-size-xs);
-      }
-    }
-    .tail-descriptions {
-      margin-top: 5px;
-      font-size: var(--app-font-size-xs);
-      line-height: 1;
-    }
-  }
 }
 
 /* Mobile only */

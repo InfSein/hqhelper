@@ -9,10 +9,12 @@ import { useLocale } from '@/composables/useLocale'
 import useConfig from '@/composables/useConfig'
 import { useResponsive } from '@/composables/useResponsive'
 import { useItemContextMenu } from '@/composables/useItemContextMenu'
+import { useItemLocale } from '@/composables/useItemLocale'
 import { type ItemInfo } from '@/tools/item'
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()
+const { getItemName } = useItemLocale()
 
 const store = useStore()
 const {
@@ -71,14 +73,7 @@ onMounted(() => {
   calculateUi()
 })
 
-const getItemName = () => {
-  switch (itemLanguage.value) {
-    case 'zh':
-      return props.itemInfo.name_zh || '未翻译的物品'
-    default:
-      return props.itemInfo[`name_${itemLanguage.value}`]
-  }
-}
+const itemName = computed(() => getItemName(props.itemInfo))
 const itemAmount = computed(() => {
   const _amount = props.amount ?? 0
   return store.userConfig.item_amount_use_comma
@@ -137,12 +132,11 @@ const containerStyle = computed(() => {
 
 const handleItemIconClick = async () => {
   const action = store.userConfig.item_info_icon_click_event
-  const itemName = getItemName()
   let copyContent = ''
   if (action === 'copy_name') {
-    copyContent = itemName
+    copyContent = itemName.value
   } else if (action === 'copy_isearch') {
-    copyContent = `/isearch "${itemName}"`
+    copyContent = `/isearch "${itemName.value}"`
   } else {
     // do nothing
   }
@@ -163,11 +157,11 @@ const handleItemIconClick = async () => {
         :size="imgSize ?? 14"
         :src="itemInfo"
         :lazy="iconLazy"
-        :title="(hideName && hidePopIcon) ? getItemName() : ''"
+        :title="(hideName && hidePopIcon) ? itemName : ''"
       />
       <div class="item-text-container">
         <span v-show="!hideName" class="item-name">
-          {{ hideName ? '' : getItemName() }}
+          {{ hideName ? '' : itemName }}
         </span>
         <span v-if="!hideName && showAmount">&nbsp;</span>
         <span v-show="showAmount" ref="itemAmountNode" class="item-amount">
