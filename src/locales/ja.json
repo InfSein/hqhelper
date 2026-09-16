@@ -2709,7 +2709,9 @@
       "empty": "お気に入りのレシピはありません"
     },
     "notebook_settings": {
-      "title": "製作手帳設定"
+      "title": "製作手帳設定",
+      "custom_action_buttons": "操作ボタンのカスタマイズ",
+      "star_recipe": "お気に入り登録/解除ボタン"
     }
   }
 }

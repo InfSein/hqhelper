@@ -2679,7 +2679,13 @@
       "empty": "暂无收藏配方"
     },
     "notebook_settings": {
-      "title": "制作笔记设置"
+      "title": "制作笔记设置",
+      "custom_action_buttons": "自定义物品列表操作按钮",
+      "star_recipe": "收藏/取消收藏"
+    },
+    "notebook_actions": {
+      "previous": "查看上一类",
+      "next": "查看下一类"
     }
   },
   "recipe": {

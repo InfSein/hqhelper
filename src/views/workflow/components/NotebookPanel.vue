@@ -12,10 +12,8 @@ import {
   ChevronLeftOutlined,
   ChevronRightOutlined,
   SettingsRound,
-  DoneRound,
   StarRound,
   StarBorderRound,
-  TouchAppRound,
 } from '@vicons/material'
 import type { SelectOption } from 'naive-ui'
 import ItemCell from '@/components/item/ItemCell.vue'
@@ -30,7 +28,6 @@ import { useResponsive } from '@/composables/useResponsive'
 import { useAppModals } from '@/composables/useAppModals'
 import { useItemContextMenu } from '@/composables/useItemContextMenu'
 import { useStore } from '@/store'
-import type { PreferenceItem } from '@/types'
 import CommonGroupIcon from '@/assets/icons/game-ui/recipe-notebook/group-common.svg'
 import MasterGroupIcon from '@/assets/icons/game-ui/recipe-notebook/group-master.svg'
 import SpecialGroupIcon from '@/assets/icons/game-ui/recipe-notebook/group-special.svg'
@@ -537,10 +534,6 @@ const handleEnterStarredMode = () => {
 }
 // #endregion
 
-// #region operation mode
-const isOperationMode = defineModel<boolean>('isOperationMode', { default: false })
-// #endregion
-
 const handleJobSelect = (job: number) => {
   isSearchMode.value = false
   isCustomListMode.value = false
@@ -604,7 +597,6 @@ const displayedNotebookGroups = computed<DisplayedNotebookGroup[]>(() => {
 
 // #region filter and settings
 const selectedUiType = ref<number>(-1)
-const showNotebookSettingsModal = ref(false)
 
 const getItemTypeName = (item: ItemInfo) => {
   switch (itemLanguage.value) {
@@ -715,23 +707,27 @@ const renderFilterLabel = (option: SelectOption) => {
   )
 }
 
-const notebookSortbySetting = computed<PreferenceItem>(() => ({
-  key: 'notebook_item_sortby',
-  label: t('preference.notebook_item_sortby.title'),
-  type: 'select',
-  options: [
-    { value: 'recipeOrder', label: t('preference.processes_craftable_item_sortby.option.crafting_log') },
-    { value: 'recipeOrderSearch', label: t('preference.processes_craftable_item_sortby.option.crafting_log_search') },
-    { value: 'itemId', label: t('game.item_id') },
-  ],
-  descriptions: [
-    t('preference.notebook_item_sortby.desc.desc_1'),
-  ],
-}))
+const sortOptions = computed(() => [
+  { value: 'recipeOrder', label: t('preference.processes_craftable_item_sortby.option.crafting_log') },
+  { value: 'recipeOrderSearch', label: t('preference.processes_craftable_item_sortby.option.crafting_log_search') },
+  { value: 'itemId', label: t('game.item_id') },
+])
 
-watch(() => store.userConfig.notebook_item_sortby, () => {
+const handleSortbyChange = (val: 'recipeOrder' | 'recipeOrderSearch' | 'itemId') => {
+  store.userConfig.notebook_item_sortby = val
   store.updateUserConfig()
-})
+}
+
+const handleActionButtonsChange = (val: (string | number)[]) => {
+  const validValues = val.filter((v): v is 'reverse_lookup' | 'star_recipe' | 'add_to_workflow' =>
+    v === 'reverse_lookup' || v === 'star_recipe' || v === 'add_to_workflow'
+  )
+  if (!validValues.includes('add_to_workflow')) {
+    validValues.push('add_to_workflow')
+  }
+  store.userConfig.notebook_action_buttons = validValues
+  store.updateUserConfig()
+}
 // #endregion
 // #endregion
 
@@ -1042,6 +1038,7 @@ defineExpose({
                 size="small"
                 class="n-square-button shrink-0"
                 :disabled="filterOptions.length <= 1"
+                :title="t('workflow.notebook_actions.previous')"
                 @click="handleFilterPrev"
               >
                 <template #icon>
@@ -1052,6 +1049,7 @@ defineExpose({
                 size="small"
                 class="n-square-button shrink-0"
                 :disabled="filterOptions.length <= 1"
+                :title="t('workflow.notebook_actions.next')"
                 @click="handleFilterNext"
               >
                 <template #icon>
@@ -1060,25 +1058,68 @@ defineExpose({
               </n-button>
             </div>
             <div class="flex items-center gap-1 shrink-0">
-              <n-button
-                size="small"
-                class="n-square-button shrink-0"
-                :type="isOperationMode ? 'primary' : 'default'"
-                @click="isOperationMode = !isOperationMode"
+              <n-popover
+                trigger="click"
+                placement="bottom-end"
+                style="width: 220px;"
               >
-                <template #icon>
-                  <n-icon :size="16"><TouchAppRound /></n-icon>
+                <template #trigger>
+                  <n-button
+                    size="small"
+                    class="n-square-button shrink-0"
+                    :title="t('workflow.notebook_settings.title')"
+                  >
+                    <template #icon>
+                      <n-icon :size="16"><SettingsRound /></n-icon>
+                    </template>
+                  </n-button>
                 </template>
-              </n-button>
-              <n-button
-                size="small"
-                class="n-square-button shrink-0"
-                @click="showNotebookSettingsModal = true"
-              >
-                <template #icon>
-                  <n-icon :size="16"><SettingsRound /></n-icon>
-                </template>
-              </n-button>
+                <div class="flex flex-col p-1">
+                  <div class="flex items-center gap-0.75 text-app-xl">
+                    <n-icon :size="16"><SettingsRound /></n-icon>
+                    <span>{{ t('workflow.notebook_settings.title') }}</span>
+                  </div>
+                  <n-divider class="mt-0! mb-1!" />
+                  <div>
+                    <div class="font-bold">{{ t('preference.notebook_item_sortby.title') }}</div>
+                    <n-select
+                      v-model:value="store.userConfig.notebook_item_sortby"
+                      size="small"
+                      :options="sortOptions"
+                      @update:value="handleSortbyChange"
+                    />
+                  </div>
+                  <div class="mt-2">
+                    <div class="font-bold">{{ t('workflow.notebook_settings.custom_action_buttons') }}</div>
+                    <n-checkbox-group
+                      size="small"
+                      v-model:value="store.userConfig.notebook_action_buttons"
+                      @update:value="handleActionButtonsChange"
+                    >
+                      <div class="flex flex-col mt-1 pl-2">
+                        <n-checkbox value="reverse_lookup">
+                          <span class="inline-flex items-center gap-1">
+                            <n-icon :size="16"><SearchRound /></n-icon>
+                            <span>{{ t('item.text.reverse_recipe_lookup') }}</span>
+                          </span>
+                        </n-checkbox>
+                        <n-checkbox value="star_recipe">
+                          <span class="inline-flex items-center gap-1">
+                            <n-icon :size="16" color="#F6CA45"><StarRound /></n-icon>
+                            <span>{{ t('workflow.notebook_settings.star_recipe') }}</span>
+                          </span>
+                        </n-checkbox>
+                        <n-checkbox value="add_to_workflow" disabled>
+                          <span class="inline-flex items-center gap-1">
+                            <n-icon :size="16"><PlaylistAddOutlined /></n-icon>
+                            <span>{{ t('workflow.text.join_in_curr_workflow') }}</span>
+                          </span>
+                        </n-checkbox>
+                      </div>
+                    </n-checkbox-group>
+                  </div>
+                </div>
+              </n-popover>
             </div>
           </div>
           <n-scrollbar trigger="none" class="flex-1">
@@ -1109,7 +1150,17 @@ defineExpose({
                   />
                 </n-button>
                 <n-button
-                  v-if="isOperationMode"
+                  v-if="store.userConfig.notebook_action_buttons?.includes('reverse_lookup')"
+                  class="w-10! h-auto! px-1! shrink-0"
+                  :title="t('item.text.reverse_recipe_lookup')"
+                  @click.stop="searchByMaterial(entry.item)"
+                >
+                  <template #icon>
+                    <n-icon :size="20"><SearchRound /></n-icon>
+                  </template>
+                </n-button>
+                <n-button
+                  v-if="store.userConfig.notebook_action_buttons?.includes('star_recipe')"
                   class="w-10! h-auto! px-1! shrink-0"
                   :type="isRecipeStarred(entry.item.id) ? 'warning' : 'default'"
                   :ghost="true"
@@ -1296,30 +1347,6 @@ defineExpose({
         </template>
       </n-drawer-content>
     </n-drawer>
-
-    <MyModal
-      v-model:show="showNotebookSettingsModal"
-      :icon="SettingsRound"
-      :title="t('workflow.notebook_settings.title')"
-      max-width="500px"
-    >
-      <div>
-        <SettingItem
-          v-model:form-data="store.userConfig"
-          :setting-item="notebookSortbySetting"
-        />
-      </div>
-      <template #action>
-        <div class="app-modal-footer">
-          <n-button type="primary" @click="showNotebookSettingsModal = false">
-            <template #icon>
-              <n-icon><DoneRound /></n-icon>
-            </template>
-            {{ t('common.close') }}
-          </n-button>
-        </div>
-      </template>
-    </MyModal>
   </FoldableCard>
 </template>
 

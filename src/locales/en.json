@@ -2709,7 +2709,9 @@
       "empty": "No starred recipes yet"
     },
     "notebook_settings": {
-      "title": "Crafting Log Settings"
+      "title": "Crafting Log Settings",
+      "custom_action_buttons": "Customize Action Buttons",
+      "star_recipe": "Star/Unstar Button"
     }
   }
 }

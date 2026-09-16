@@ -88,6 +88,8 @@ export interface UserConfigModel {
   // * workflow
   /** 制作笔记：物品列表排序规则 */
   notebook_item_sortby: "recipeOrder" | "recipeOrderSearch" | "itemId"
+  /** 制作笔记：物品列表操作按钮显示配置 */
+  notebook_action_buttons: ("reverse_lookup" | "star_recipe" | "add_to_workflow")[]
   // #endregion
 
   // #region 隐藏的配置项/缓存
@@ -150,6 +152,7 @@ const defaultUserConfig: UserConfigModel = {
   // workflow
   workflow_switch_shortcut: 'disabled',
   notebook_item_sortby: 'recipeOrder',
+  notebook_action_buttons: ['add_to_workflow'],
 
   // hidden options
   last_triggered_egg: 0,
@@ -232,6 +235,10 @@ export const fixUserConfig = (config?: UserConfigModel) => {
   config.macromanage_cache_work_state = fixMacromanageWorkState(config.macromanage_cache_work_state)
   config.fashioncloth_cache_work_state = fixFashionclothWorkState(config.fashioncloth_cache_work_state)
   config.cshelper_cache_work_state = fixCsHelperWorkState(config.cshelper_cache_work_state)
+
+  if (config.notebook_action_buttons && !config.notebook_action_buttons.includes('add_to_workflow')) {
+    config.notebook_action_buttons.push('add_to_workflow')
+  }
 
   // 处理其他的设置项
   return assignDefaults(defaultUserConfig, config || {}) as UserConfigModel
