@@ -1413,15 +1413,19 @@
       },
       "title": "アラームマクロ",
       "tooltip": {
-        "alarm_name_length": "アラーム名は20文字の制限があり、長すぎる部分は切り捨てられます。"
+        "alarm_name_length": "アラーム名は20文字の制限があり、長すぎる部分は切り捨てられます。",
+        "max_alarms_limit": "出力できるアラームマクロは最大{max}件までです（一部のアイテムには複数の採集時間帯があります）。"
       }
     },
     "grouptitle_with_patch_and_il": "パッチ{patch}（アイテムレベル{il}）",
     "message": {
+      "alarm_macro_limit_reached": "出力するアラームマクロの件数は最大{max}件までです。",
       "audio_file_too_large": "ファイルサイズが大きすぎます。10MB未満の音声ファイルをアップロードしてください。",
       "confirm_clear_custom_audio": "アップロードしたカスタム通知音を削除してもよろしいですか？",
       "following_items_can_be_gathered": "現在採集可能になったアイテム：",
       "invalid_audio_format": "サポートされていない音声形式です。一般的な音声ファイル（mp3、wav、oggなど）をアップロードしてください。",
+      "star_limit_reached": "お気に入りに登録できるアイテムは最大{max}個までです。",
+      "subscribe_limit_reached": "リマインド登録できるアイテムは最大{max}個までです。",
       "system_notice_denied": "リマインド権限が拒否されました。ブラウザのサイト権限設定を確認してください。",
       "system_notice_not_supported": "現在使用中のブラウザまたはクライアントがシステム通知機能をサポートしていません。"
     },

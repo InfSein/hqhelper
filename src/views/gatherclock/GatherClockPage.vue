@@ -19,11 +19,17 @@ import { playAudio } from '@/tools'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
 import { useNbbCal } from '@/tools/use-nbb-cal'
 import type { ItemGroup } from '@/types/item'
-import { fixWorkState, type WorkState } from '@/types/workstate/gatherclock'
+import {
+  fixWorkState,
+  type WorkState,
+  _VAR_GATHERCLOCK_MAX_STARRED,
+  _VAR_GATHERCLOCK_MAX_SUBSCRIBED,
+} from '@/types/workstate/gatherclock'
 import useIdb from '@/utils/app.idb'
 import { getTimeLimitRemain } from '@/views/gatherclock/utils/dealTimeLimit'
 
 const store = useStore()
+const NAIVE_UI_MESSAGE = useMessage()
 const { t } = useLocale()
 const { appMode } = useAppMode()
 const { alertError } = useDialog()
@@ -283,6 +289,10 @@ const handleSubscribeButtonClick = (itemInfo : ItemInfo) => {
   if (workState.value.subscribedItems.includes(itemInfo.id)) {
     workState.value.subscribedItems = workState.value.subscribedItems.filter(id => id !== itemInfo.id)
   } else {
+    if (workState.value.subscribedItems.length >= _VAR_GATHERCLOCK_MAX_SUBSCRIBED) {
+      NAIVE_UI_MESSAGE.warning(t('gather_clock.message.subscribe_limit_reached', { max: _VAR_GATHERCLOCK_MAX_SUBSCRIBED }))
+      return
+    }
     workState.value.subscribedItems.push(itemInfo.id)
   }
 }
@@ -290,6 +300,10 @@ const handleStarButtonClick = (itemInfo : ItemInfo) => {
   if (workState.value.starItems.includes(itemInfo.id)) {
     workState.value.starItems = workState.value.starItems.filter(id => id !== itemInfo.id)
   } else {
+    if (workState.value.starItems.length >= _VAR_GATHERCLOCK_MAX_STARRED) {
+      NAIVE_UI_MESSAGE.warning(t('gather_clock.message.star_limit_reached', { max: _VAR_GATHERCLOCK_MAX_STARRED }))
+      return
+    }
     workState.value.starItems.push(itemInfo.id)
   }
 }
@@ -306,11 +320,19 @@ const quickOperateOptions = computed(() => {
         if (itemsAllStared) {
           workState.value.starItems = workState.value.starItems.filter(id => !data.items.map(item => item.id).includes(id))
         } else {
+          let hasExceeded = false
           data.items.forEach(item => {
             if (!workState.value.starItems.includes(item.id)) {
-              workState.value.starItems.push(item.id)
+              if (workState.value.starItems.length < _VAR_GATHERCLOCK_MAX_STARRED) {
+                workState.value.starItems.push(item.id)
+              } else {
+                hasExceeded = true
+              }
             }
           })
+          if (hasExceeded) {
+            NAIVE_UI_MESSAGE.warning(t('gather_clock.message.star_limit_reached', { max: _VAR_GATHERCLOCK_MAX_STARRED }))
+          }
         }
       },
     }
@@ -326,11 +348,19 @@ const quickOperateOptions = computed(() => {
         if (itemsAllAlarmed) {
           workState.value.subscribedItems = workState.value.subscribedItems.filter(id => !data.items.map(item => item.id).includes(id))
         } else {
+          let hasExceeded = false
           data.items.forEach(item => {
             if (!workState.value.subscribedItems.includes(item.id)) {
-              workState.value.subscribedItems.push(item.id)
+              if (workState.value.subscribedItems.length < _VAR_GATHERCLOCK_MAX_SUBSCRIBED) {
+                workState.value.subscribedItems.push(item.id)
+              } else {
+                hasExceeded = true
+              }
             }
           })
+          if (hasExceeded) {
+            NAIVE_UI_MESSAGE.warning(t('gather_clock.message.subscribe_limit_reached', { max: _VAR_GATHERCLOCK_MAX_SUBSCRIBED }))
+          }
         }
       },
     }

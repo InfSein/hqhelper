@@ -14,13 +14,17 @@ import { useResponsive } from '@/composables/useResponsive'
 import { XivJobs, type XivJob } from '@/assets/data'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
 import type { ItemGroup } from '@/types/item/index'
-import type { AlarmMacroOptions } from '@/types/workstate/gatherclock'
+import {
+  type AlarmMacroOptions,
+  _VAR_GATHERCLOCK_MAX_ALARM_MACRO,
+} from '@/types/workstate/gatherclock'
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()
 const {
   uiLanguage, itemLanguage,
 } = useConfig()
+const NAIVE_UI_MESSAGE = useMessage()
 
 const showModal = defineModel<boolean>('show', { required: true })
 const alarmMacroOptions = defineModel<AlarmMacroOptions>('options', { required: true })
@@ -33,15 +37,66 @@ const props = defineProps<ModalAlarmMacroExportProps>()
 
 const wrapper = ref<HTMLElement>()
 
+const treeCheckedKeys = ref<Array<string | number>>([])
 const itemTreeCheckedKeys = ref<number[]>([])
+
+const getItemAlarmCount = (itemId: number) => {
+  const item = getItemInfo(itemId)
+  return item.gatherInfo?.timeLimitInfo?.length || 0
+}
+
+const currentAlarmCount = computed(() => {
+  return itemTreeCheckedKeys.value.reduce((total, id) => {
+    return total + getItemAlarmCount(id)
+  }, 0)
+})
+
 const handleItemTreeSelectedKeysUpdate = (keys: Array<string | number>) => {
-  itemTreeCheckedKeys.value = []
+  const itemIds: number[] = []
   keys.forEach(key => {
     const itemId = parseInt(key as string)
-    if (itemId && !itemTreeCheckedKeys.value.includes(itemId)) {
-      itemTreeCheckedKeys.value.push(itemId)
+    if (itemId && !itemIds.includes(itemId)) {
+      itemIds.push(itemId)
     }
   })
+
+  // 优先保留原先已勾选的物品，仅对新加入的物品做容量限制
+  const existing = itemTreeCheckedKeys.value.filter(id => itemIds.includes(id))
+  const newlyAdded = itemIds.filter(id => !itemTreeCheckedKeys.value.includes(id))
+
+  const resultItemIds: number[] = []
+  let totalAlarms = 0
+  let hasExceeded = false
+
+  for (const id of existing) {
+    const count = getItemAlarmCount(id)
+    if (totalAlarms + count <= _VAR_GATHERCLOCK_MAX_ALARM_MACRO) {
+      resultItemIds.push(id)
+      totalAlarms += count
+    } else {
+      hasExceeded = true
+    }
+  }
+
+  for (const id of newlyAdded) {
+    const count = getItemAlarmCount(id)
+    if (totalAlarms + count <= _VAR_GATHERCLOCK_MAX_ALARM_MACRO) {
+      resultItemIds.push(id)
+      totalAlarms += count
+    } else {
+      hasExceeded = true
+    }
+  }
+
+  if (hasExceeded) {
+    NAIVE_UI_MESSAGE.warning(t('gather_clock.message.alarm_macro_limit_reached', { max: _VAR_GATHERCLOCK_MAX_ALARM_MACRO }))
+    itemTreeCheckedKeys.value = resultItemIds
+    treeCheckedKeys.value = resultItemIds
+    return
+  }
+
+  itemTreeCheckedKeys.value = resultItemIds
+  treeCheckedKeys.value = keys
 }
 const itemTreeData = computed(() => {
   const treeData : TreeOption[] = []
@@ -103,7 +158,7 @@ const macro = computed(() => {
     }
 
     if (alarmName.length > 20) {
-      alarmName = alarmName.slice(0, 20);  // 截取前20个字符
+      alarmName = alarmName.slice(0, 20) // 截取前20个字符
     }
 
     item.gatherInfo.timeLimitInfo.forEach(timeLimit => {
@@ -157,7 +212,21 @@ const getPlaceName = (itemInfo : ItemInfo) => {
     <div class="wrapper" ref="wrapper">
       <GroupBox id="select-items">
         <template #title>
-          <span class="title">{{ t('common.select_item') }}</span>
+          <div class="flex items-center gap-1">
+            <span class="title">{{ t('common.select_item') }}</span>
+            <n-popover :trigger="isMobile ? 'click' : 'hover'">
+              <template #trigger>
+                <div style="min-width: fit-content; display: flex; align-items: center; cursor: pointer;">
+                  <n-icon :size="14" style="display: flex;">
+                    <HelpOutlineRound />
+                  </n-icon>
+                </div>
+              </template>
+              <div>
+                {{ t('gather_clock.export_alarm_macro.tooltip.max_alarms_limit', { max: _VAR_GATHERCLOCK_MAX_ALARM_MACRO }) }}
+              </div>
+            </n-popover>
+          </div>
         </template>
         <n-tree
           block-line
@@ -166,7 +235,7 @@ const getPlaceName = (itemInfo : ItemInfo) => {
           :selectable="false"
           :data="itemTreeData.treeData"
           :default-expanded-keys="itemTreeData.autoExpandKeys"
-          :default-checked-keys="[]"
+          :checked-keys="treeCheckedKeys"
           @update:checked-keys="handleItemTreeSelectedKeysUpdate"
           :style="{
             maxHeight: isMobile ? 'unset' : '365px',

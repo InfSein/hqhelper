@@ -1413,15 +1413,19 @@
       },
       "title": "Export Alarm Macro",
       "tooltip": {
-        "alarm_name_length": "Alarm names are limited to 20 characters and will be truncated."
+        "alarm_name_length": "Alarm names are limited to 20 characters and will be truncated.",
+        "max_alarms_limit": "You can export up to {max} alarms (some items have multiple gathering time slots)."
       }
     },
     "grouptitle_with_patch_and_il": "Patch {patch} (IL{il})",
     "message": {
+      "alarm_macro_limit_reached": "You can export up to {max} alarms in the macro.",
       "audio_file_too_large": "Audio file is too large. Please upload a file smaller than 10MB.",
       "confirm_clear_custom_audio": "Are you sure you want to clear the uploaded custom sound?",
       "following_items_can_be_gathered": "Following items can be gathered:",
       "invalid_audio_format": "Unsupported audio format. Please upload common audio files (e.g. mp3, wav, ogg).",
+      "star_limit_reached": "You can favorite up to {max} items.",
+      "subscribe_limit_reached": "You can subscribe up to {max} items.",
       "system_notice_denied": "Notification permission denied. Please check browser settings.",
       "system_notice_not_supported": "Your browser/device does not support system notifications."
     },

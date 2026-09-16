@@ -61,10 +61,20 @@ const defaultWorkState: WorkState = {
   subscribedItems: [],
 }
 
+export const _VAR_GATHERCLOCK_MAX_STARRED = 30
+export const _VAR_GATHERCLOCK_MAX_SUBSCRIBED = 30
+export const _VAR_GATHERCLOCK_MAX_ALARM_MACRO = 30
+
 export const fixWorkState = (state?: WorkState): WorkState => {
   const _state = assignDefaults(defaultWorkState, state || {}) as WorkState
   _state.alarmMacroOptions = fixAlarmMacroOptions(_state.alarmMacroOptions)
   _state.soundSelect ??= 'default'
   _state.customAudioName ??= ''
+  if (_state.starItems?.length > _VAR_GATHERCLOCK_MAX_STARRED) {
+    _state.starItems = _state.starItems.slice(0, _VAR_GATHERCLOCK_MAX_STARRED)
+  }
+  if (_state.subscribedItems?.length > _VAR_GATHERCLOCK_MAX_SUBSCRIBED) {
+    _state.subscribedItems = _state.subscribedItems.slice(0, _VAR_GATHERCLOCK_MAX_SUBSCRIBED)
+  }
   return _state
 }

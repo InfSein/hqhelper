@@ -1417,17 +1417,21 @@
       },
       "title": "导出闹钟宏",
       "tooltip": {
-        "alarm_name_length": "闹钟名具有20个字的限制，过长的部分会被截断。"
+        "alarm_name_length": "闹钟名具有20个字的限制，过长的部分会被截断。",
+        "max_alarms_limit": "单次最多可导出{max}条闹钟宏"
       }
     },
     "grouptitle_with_patch_and_il": "版本{patch} ({il}品级)",
     "message": {
-      "following_items_can_be_gathered": "以下物品已可采集：",
-      "system_notice_denied": "通知权限被拒绝，请检查浏览器的网站权限设置。",
-      "system_notice_not_supported": "当前使用的浏览器或客户端不支持系统通知功能。",
-      "invalid_audio_format": "不支持此音频格式！",
+      "alarm_macro_limit_reached": "导出的闹钟宏数量不能超过{max}条",
       "audio_file_too_large": "音频文件过大(不能超过10MB)！",
-      "confirm_clear_custom_audio": "确定要清除已上传的自定义提示音吗？"
+      "confirm_clear_custom_audio": "确定要清除已上传的自定义提示音吗？",
+      "following_items_can_be_gathered": "以下物品已可采集：",
+      "invalid_audio_format": "不支持此音频格式！",
+      "star_limit_reached": "最多只能收藏{max}个物品",
+      "subscribe_limit_reached": "最多只能订阅{max}个物品",
+      "system_notice_denied": "通知权限被拒绝，请检查浏览器的网站权限设置。",
+      "system_notice_not_supported": "当前使用的浏览器或客户端不支持系统通知功能。"
     },
     "preference": {
       "custom_audio": {
