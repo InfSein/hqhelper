@@ -1259,9 +1259,16 @@ defineExpose({
               <ItemSpan span-max-width="180px" :img-size="12" :item-info="getItemInfo(currSelectedItem.craftInfo.masterRecipeId)" class="gap-0.5!" />
             </div>
             <n-divider class="my-1!" />
-            <div class="font-bold">配方需求</div>
+            <div class="font-bold ml-1 pb-0.5">
+              {{ t('recipe.recipe_requirement') }}
+            </div>
             <n-scrollbar class="ml-1 flex-1">
-              <ItemRecipeTree :level="0" :item="currSelectedItem" :amount="1" />
+              <ItemRecipeTree
+                :level="0"
+                :item="currSelectedItem"
+                :amount="1"
+                show-root-tree
+              />
             </n-scrollbar>
             <n-divider class="my-1!" />
             <div class="flex justify-end gap-2">

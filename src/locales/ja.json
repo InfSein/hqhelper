@@ -2451,6 +2451,7 @@
     }
   },
   "recipe": {
+    "recipe_requirement": "製作素材",
     "notebookgroup": {
       "custom_lists": "おすすめリスト",
       "other_master_recipes": "秘伝書:その他"

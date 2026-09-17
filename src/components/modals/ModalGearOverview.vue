@@ -291,6 +291,7 @@ const gearGroups = computed<SlotGroup[]>(() => [
                     :amount="1"
                     :level="0"
                     :container-id="modalId"
+                    show-root-tree
                   />
                 </div>
               </div>

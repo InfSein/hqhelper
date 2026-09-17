@@ -8,8 +8,12 @@ interface ItemRecipeTreeProps {
   amount: number
   level: number
   containerId?: string
+  showRootTree?: boolean
 }
-const props = defineProps<ItemRecipeTreeProps>()
+const props = withDefaults(defineProps<ItemRecipeTreeProps>(), {
+  containerId: undefined,
+  showRootTree: false,
+})
 
 const itemCraftRequires = computed(() => {
   const requires : {
@@ -41,24 +45,25 @@ const itemCraftRequires = computed(() => {
         class="relative"
       >
         <!-- 树枝线条 -->
-        <template v-if="level !== 0">
+        <template v-if="level !== 0 || showRootTree">
           <!-- 垂直线条 -->
           <div 
-            class="absolute left-2 top-0 border-l border-(--color-text-sub) opacity-50"
+            class="absolute left-2 top-0 border-l border-sub opacity-50"
             :class="index === itemCraftRequires.length - 1 ? 'h-2.75' : 'bottom-0'"
           ></div>
           <!-- 水平线条 -->
           <div 
-            class="absolute left-2 top-2.75 w-3 border-t border-(--color-text-sub) opacity-50"
+            class="absolute left-2 top-2.75 w-3 border-t border-sub opacity-50"
           ></div>
         </template>
 
-        <div :class="level !== 0 ? 'pl-6' : ''">
+        <div :class="(level !== 0 || showRootTree) ? 'pl-6' : ''">
           <ItemRecipeTree
             :item="require.requireItem"
             :amount="require.needAmount"
             :level="level + 1"
             :container-id="containerId"
+            :show-root-tree="showRootTree"
           />
         </div>
       </div>

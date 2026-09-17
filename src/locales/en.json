@@ -2451,6 +2451,7 @@
     }
   },
   "recipe": {
+    "recipe_requirement": "Recipe Requirements",
     "notebookgroup": {
       "custom_lists": "Recommended Lists",
       "other_master_recipes": "Other Master Recipes"
