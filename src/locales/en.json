@@ -1177,7 +1177,16 @@
     "warn": "Warning",
     "weibo": "Weibo",
     "will_be_named_with_time_when_empty": "Defaults to time if empty",
-    "work_state": "Work State"
+    "work_state": "Work State",
+    "search_overlay": {
+      "placeholder": "Search items (name, ID, iL, patch, etc.)...",
+      "input_hint": "Type item name, ID, item level, or patch to search",
+      "no_match": "No matching items found",
+      "results_count": "Found {count} items",
+      "navigate": "Navigate",
+      "select": "Select",
+      "close": "Close"
+    }
   },
   "contact_us": {
     "feedback": {
@@ -1427,7 +1436,11 @@
       "star_limit_reached": "You can favorite up to {max} items.",
       "subscribe_limit_reached": "You can subscribe up to {max} items.",
       "system_notice_denied": "Notification permission denied. Please check browser settings.",
-      "system_notice_not_supported": "Your browser/device does not support system notifications."
+      "system_notice_not_supported": "Your browser/device does not support system notifications.",
+      "starred": "Starred \"{name}\"",
+      "unstarred": "Unstarred \"{name}\"",
+      "subscribed": "Tracked \"{name}\"",
+      "unsubscribed": "Untracked \"{name}\""
     },
     "preference": {
       "custom_audio": {
@@ -1488,11 +1501,23 @@
       "un_star_all": "Unstar All",
       "un_star_with_item": "Unstar \"{val}\"",
       "unsubscribe_all": "Untrack All",
-      "unsubscribe_with_item": "Untrack \"{val}\""
+      "unsubscribe_with_item": "Untrack \"{val}\"",
+      "star": "Star",
+      "un_star": "Unstar",
+      "unsubscribe": "Untrack"
     },
     "tooltip": {
       "subscribe_1": "Click to track/untrack this item.",
       "subscribe_2": "When the tracked item is gatherable, we will send you a notification according to your \"{setting}\" setting."
+    },
+    "search": {
+      "placeholder": "Search gather clock items (name, ID, iL, patch, map)...",
+      "input_hint": "Type name, ID, iL, patch, or map to start searching",
+      "no_match": "No matching gather clock items found",
+      "results_count": "Found {count} items",
+      "navigate": "Navigate",
+      "select": "Select",
+      "close": "Close"
     }
   },
   "ingame_inventory": {

@@ -33,6 +33,7 @@ interface GatherItemCardProps {
   isStarred?: boolean
   subscribedItems?: number[]
   starItems?: number[]
+  highlight?: boolean
 }
 const props = defineProps<GatherItemCardProps>()
 const emits = defineEmits([
@@ -95,7 +96,12 @@ const handleStarButtonClick = (item: ItemInfo) => {
 </script>
 
 <template>
-  <div class="item-card">
+  <div
+    :id="'gather-item-card-' + item.id"
+    class="item-card"
+    :class="{ highlighted: props.highlight }"
+    :data-item-id="item.id"
+  >
     <div class="title">
       <ItemButton
         :item-info="item"
@@ -216,6 +222,21 @@ const handleStarButtonClick = (item: ItemInfo) => {
 .item-card:hover {
   box-shadow: 0 0 10px var(--primary-color);
   border-color: var(--primary-color);
+}
+.item-card.highlighted {
+  border-color: var(--color-primary, #18a058) !important;
+  box-shadow: 0 0 0 3px rgba(24, 160, 88, 0.4), 0 0 16px rgba(24, 160, 88, 0.6) !important;
+  animation: card-highlight-pulse 0.8s ease-in-out infinite alternate;
+}
+@keyframes card-highlight-pulse {
+  from {
+    box-shadow: 0 0 0 2px rgba(24, 160, 88, 0.3), 0 0 8px rgba(24, 160, 88, 0.4);
+    transform: scale(1);
+  }
+  to {
+    box-shadow: 0 0 0 4px rgba(24, 160, 88, 0.6), 0 0 20px rgba(24, 160, 88, 0.8);
+    transform: scale(1.02);
+  }
 }
 .item-card {
   height: 100%;

@@ -8,9 +8,17 @@ import {
   SearchRound,
   StarRound,
   StarBorderRound,
+  AccessAlarmsOutlined,
+  NotificationsRound,
+  NotificationsNoneRound,
 } from '@vicons/material'
 import { CopyToClipboard } from '@/tools'
-import { type ItemInfo } from '@/tools/item'
+import { getItemInfo as getItemInfoHelper, type ItemInfo } from '@/tools/item'
+import {
+  _VAR_GATHERCLOCK_MAX_STARRED,
+  _VAR_GATHERCLOCK_MAX_SUBSCRIBED,
+  fixWorkState as fixGatherClockWorkState,
+} from '@/types/workstate/gatherclock'
 import useConfig from '@/composables/useConfig'
 import useUiTools from './useUiTools'
 import { useLocale } from './useLocale'
@@ -35,6 +43,62 @@ export function useItemContextMenu(
   const showDropdown = ref(false)
   const dropdownX = ref(0)
   const dropdownY = ref(0)
+
+  const isGatherClockItem = computed(() => {
+    const itemInfo = getItemInfo()
+    if (!itemInfo?.id) return false
+    if (itemInfo.gatherInfo?.timeLimitInfo?.length) return true
+    const fullItem = getItemInfoHelper(itemInfo.id)
+    return !!fullItem?.gatherInfo?.timeLimitInfo?.length
+  })
+
+  const getItemDisplayName = (item: ItemInfo) => {
+    return item[`name_${itemLanguage.value}`] || item.name_zh || item.name_ja || item.name_en || ''
+  }
+
+  const toggleGatherClockStar = (itemId: number) => {
+    if (!store.userConfig.gatherclock_cache_work_state) {
+      store.userConfig.gatherclock_cache_work_state = fixGatherClockWorkState()
+    }
+    const gcState = store.userConfig.gatherclock_cache_work_state
+    if (!gcState.starItems) gcState.starItems = []
+    const idx = gcState.starItems.indexOf(itemId)
+    const currentItem = getItemInfo()
+    if (idx >= 0) {
+      gcState.starItems.splice(idx, 1)
+      NAIVE_UI_MESSAGE.success(t('gather_clock.message.unstarred', { name: getItemDisplayName(currentItem) }))
+    } else {
+      if (gcState.starItems.length >= _VAR_GATHERCLOCK_MAX_STARRED) {
+        NAIVE_UI_MESSAGE.warning(t('gather_clock.message.star_limit_reached', { max: _VAR_GATHERCLOCK_MAX_STARRED }))
+        return
+      }
+      gcState.starItems.push(itemId)
+      NAIVE_UI_MESSAGE.success(t('gather_clock.message.starred', { name: getItemDisplayName(currentItem) }))
+    }
+    store.updateUserConfig()
+  }
+
+  const toggleGatherClockSubscribe = (itemId: number) => {
+    if (!store.userConfig.gatherclock_cache_work_state) {
+      store.userConfig.gatherclock_cache_work_state = fixGatherClockWorkState()
+    }
+    const gcState = store.userConfig.gatherclock_cache_work_state
+    if (!gcState.subscribedItems) gcState.subscribedItems = []
+    const idx = gcState.subscribedItems.indexOf(itemId)
+    const currentItem = getItemInfo()
+    if (idx >= 0) {
+      gcState.subscribedItems.splice(idx, 1)
+      NAIVE_UI_MESSAGE.success(t('gather_clock.message.unsubscribed', { name: getItemDisplayName(currentItem) }))
+    } else {
+      if (gcState.subscribedItems.length >= _VAR_GATHERCLOCK_MAX_SUBSCRIBED) {
+        NAIVE_UI_MESSAGE.warning(t('gather_clock.message.subscribe_limit_reached', { max: _VAR_GATHERCLOCK_MAX_SUBSCRIBED }))
+        return
+      }
+      gcState.subscribedItems.push(itemId)
+      NAIVE_UI_MESSAGE.success(t('gather_clock.message.subscribed', { name: getItemDisplayName(currentItem) }))
+    }
+    store.updateUserConfig()
+  }
 
   const dropdownOptions = computed(() => {
     const itemInfo = getItemInfo()
@@ -121,6 +185,43 @@ export function useItemContextMenu(
         click: () => {
           reverseRecipeLookup?.(itemInfo)
         }
+      },
+      {
+        type: 'divider',
+        key: 'd-gatherclock',
+        show: isGatherClockItem.value,
+      },
+      {
+        label: t('common.appfunc.gather_clock'),
+        key: 'gather-clock-group',
+        show: isGatherClockItem.value,
+        icon: renderIcon(AccessAlarmsOutlined),
+        children: [
+          {
+            label: store.userConfig.gatherclock_cache_work_state?.starItems?.includes(itemInfo.id)
+              ? t('gather_clock.text.un_star')
+              : t('gather_clock.text.star'),
+            key: 'toggle-gatherclock-star',
+            icon: renderIcon(
+              store.userConfig.gatherclock_cache_work_state?.starItems?.includes(itemInfo.id)
+                ? StarRound
+                : StarBorderRound
+            ),
+            click: () => toggleGatherClockStar(itemInfo.id),
+          },
+          {
+            label: store.userConfig.gatherclock_cache_work_state?.subscribedItems?.includes(itemInfo.id)
+              ? t('gather_clock.text.unsubscribe')
+              : t('gather_clock.text.subscribe'),
+            key: 'toggle-gatherclock-subscribe',
+            icon: renderIcon(
+              store.userConfig.gatherclock_cache_work_state?.subscribedItems?.includes(itemInfo.id)
+                ? NotificationsRound
+                : NotificationsNoneRound
+            ),
+            click: () => toggleGatherClockSubscribe(itemInfo.id),
+          },
+        ],
       },
       {
         type: 'divider',

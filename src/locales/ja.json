@@ -1177,7 +1177,16 @@
     "warn": "注意",
     "weibo": "Weibo",
     "will_be_named_with_time_when_empty": "入力しない場合はデフォルトで時間で命名されます",
-    "work_state": "作業状態"
+    "work_state": "作業状態",
+    "search_overlay": {
+      "placeholder": "アイテムを検索（名前、ID、IL、パッチなど）...",
+      "input_hint": "アイテム名、ID、アイテムレベル、パッチを入力して検索",
+      "no_match": "一致するアイテムが見つかりませんでした",
+      "results_count": "{count} 件のアイテムが見つかりました",
+      "navigate": "移動",
+      "select": "選択",
+      "close": "閉じる"
+    }
   },
   "contact_us": {
     "feedback": {
@@ -1427,7 +1436,11 @@
       "star_limit_reached": "お気に入りに登録できるアイテムは最大{max}個までです。",
       "subscribe_limit_reached": "リマインド登録できるアイテムは最大{max}個までです。",
       "system_notice_denied": "リマインド権限が拒否されました。ブラウザのサイト権限設定を確認してください。",
-      "system_notice_not_supported": "現在使用中のブラウザまたはクライアントがシステム通知機能をサポートしていません。"
+      "system_notice_not_supported": "現在使用中のブラウザまたはクライアントがシステム通知機能をサポートしていません。",
+      "starred": "「{name}」をお気に入りに登録しました",
+      "unstarred": "「{name}」のお気に入りを解除しました",
+      "subscribed": "「{name}」をフォローしました",
+      "unsubscribed": "「{name}」のフォローを解除しました"
     },
     "preference": {
       "custom_audio": {
@@ -1488,11 +1501,23 @@
       "un_star_all": "すべてのお気に入りを解除する",
       "un_star_with_item": "「{val}」のお気に入りを解除",
       "unsubscribe_all": "すべてのフォローを解除",
-      "unsubscribe_with_item": "「{val}」のフォローを解除"
+      "unsubscribe_with_item": "「{val}」のフォローを解除",
+      "star": "お気に入りに登録",
+      "un_star": "お気に入りを解除",
+      "unsubscribe": "フォローを解除"
     },
     "tooltip": {
       "subscribe_1": "このボタンをクリックすると、この採集品をサブスクリプション/サブスクリプション解除できます。",
       "subscribe_2": "フォローした採集品が採集可能になったら、「{setting}」に従って通知を送信します。"
+    },
+    "search": {
+      "placeholder": "採集時計アイテムを検索（名前、ID、IL、パッチ、マップなど）...",
+      "input_hint": "名前、ID、IL、パッチ、またはマップを入力して検索",
+      "no_match": "一致する採集時計アイテムが見つかりませんでした",
+      "results_count": "{count} 件のアイテムが見つかりました",
+      "navigate": "移動",
+      "select": "選択",
+      "close": "閉じる"
     }
   },
   "ingame_inventory": {

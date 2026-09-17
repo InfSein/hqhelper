@@ -1117,6 +1117,14 @@
     "rule": "规则",
     "save": "保存",
     "save_succeed": "保存成功",
+    "search_overlay": {
+      "input_hint": "输入关键字开始搜索",
+      "navigate": "导航",
+      "no_match": "没有找到匹配的物品",
+      "placeholder": "搜索物品（名称/ID/品级/版本）...",
+      "results_count": "找到{count}个结果",
+      "select": "选择"
+    },
     "select_all": "全选",
     "select_invert": "反选",
     "select_item": "选择物品",
@@ -1483,6 +1491,15 @@
     "remain_time": {
       "tooltip": "现可采集物品的剩余可采集时间 / 未可采集物品距离变得可采集的剩余时间"
     },
+    "search": {
+      "close": "关闭",
+      "input_hint": "输入物品名称、ID、品级、版本或地图开始搜索",
+      "navigate": "导航",
+      "no_match": "未找到匹配的采集时钟物品",
+      "placeholder": "搜索采集时钟物品（名称、ID、品级、版本、地图等）...",
+      "results_count": "找到 {count} 个物品",
+      "select": "选择"
+    },
     "text": {
       "no_items": "没有物品",
       "star_with_item": "收藏“{val}”",
@@ -1492,7 +1509,10 @@
       "un_star_all": "全部取消收藏",
       "un_star_with_item": "取消收藏“{val}”",
       "unsubscribe_all": "全部取消订阅",
-      "unsubscribe_with_item": "取消订阅“{val}”"
+      "unsubscribe_with_item": "取消订阅“{val}”",
+      "star": "收藏",
+      "un_star": "取消收藏",
+      "unsubscribe": "取消订阅"
     },
     "tooltip": {
       "subscribe_1": "点击此按钮来订阅/取消订阅这个采集品。",

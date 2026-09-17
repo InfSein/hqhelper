@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import {
   AccessAlarmsOutlined,
+  SearchRound,
 } from '@vicons/material'
 import RouterCard from '@/components/ui/RouterCard.vue'
 import GatherItemCard from '@/views/gatherclock/components/GatherItemCard.vue'
 import ModalAudioConfig from '@/views/gatherclock/components/ModalAudioConfig.vue'
 import ModalAlarmMacroExport from '@/views/gatherclock/components/ModalAlarmMacroExport.vue'
+import SearchOverlay from '@/components/app/SearchOverlay.vue'
 import { useStore } from '@/store'
 import useConfig from '@/composables/useConfig'
 import { useDialog } from '@/composables/useDialog'
@@ -47,6 +49,45 @@ const starItems = computed(() => workState.value.starItems)
 const subscribedItems = computed(() => workState.value.subscribedItems)
 const starIdSet = computed(() => new Set(starItems.value))
 const subscribedIdSet = computed(() => new Set(subscribedItems.value))
+
+const showSearchOverlay = ref(false)
+const highlightItemId = ref<number | null>(null)
+
+const allGatherClockItems = computed(() => {
+  return Object.values(limitedGatheringsMap.value.allItems)
+})
+
+const handleSearchItemSelect = async (item: ItemInfo) => {
+  let targetTabKey = ''
+  if (currentPatchGroup.value?.items.some(i => i.id === item.id)) {
+    targetTabKey = workState.value.patch
+  } else {
+    const foundGroup = gatherData.value.find(
+      g => g.key !== 'stars' && g.key !== 'subscribed' && g.items.some(i => i.id === item.id)
+    )
+    if (foundGroup) {
+      targetTabKey = foundGroup.key
+    }
+  }
+
+  if (targetTabKey && workState.value.patch !== targetTabKey) {
+    workState.value.patch = targetTabKey
+  }
+
+  await nextTick()
+  setTimeout(() => {
+    const el = document.getElementById(`gather-item-card-${item.id}`) || document.querySelector(`[data-item-id="${item.id}"]`)
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+    highlightItemId.value = item.id
+    setTimeout(() => {
+      if (highlightItemId.value === item.id) {
+        highlightItemId.value = null
+      }
+    }, 2000)
+  }, 100)
+}
 
 const limitedGatheringsMap = computed(() => {
   // 依赖语言配置更新
@@ -202,9 +243,17 @@ watch(
   }
 )
 
+const handleGlobalKeydown = (e: KeyboardEvent) => {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+    e.preventDefault()
+    showSearchOverlay.value = !showSearchOverlay.value
+  }
+}
+
 const alarmedET = ref<number>(0)
 const alarmInterval = ref<number | undefined>(undefined)
 onMounted(() => {
+  window.addEventListener('keydown', handleGlobalKeydown)
   if (alarmInterval.value === undefined) {
     alarmInterval.value = setInterval(() => {
       // 根据当前ET判断是否需要提醒
@@ -235,6 +284,7 @@ onMounted(() => {
   }
 })
 onBeforeUnmount(() => {
+  window.removeEventListener('keydown', handleGlobalKeydown)
   if (alarmInterval.value !== undefined) {
     clearInterval(alarmInterval.value)
   }
@@ -336,6 +386,26 @@ if (!disable_workstate_cache) {
     }
   }, {deep: true})
 }
+
+// 响应外部（如右键菜单）对采集时钟收藏/订阅状态的修改
+watch(
+  () => [
+    store.userConfig.gatherclock_cache_work_state?.starItems,
+    store.userConfig.gatherclock_cache_work_state?.subscribedItems,
+  ],
+  () => {
+    const storeState = store.userConfig.gatherclock_cache_work_state
+    if (storeState) {
+      if (storeState.starItems && JSON.stringify(workState.value.starItems) !== JSON.stringify(storeState.starItems)) {
+        workState.value.starItems = [...storeState.starItems]
+      }
+      if (storeState.subscribedItems && JSON.stringify(workState.value.subscribedItems) !== JSON.stringify(storeState.subscribedItems)) {
+        workState.value.subscribedItems = [...storeState.subscribedItems]
+      }
+    }
+  },
+  { deep: true }
+)
 
 const handleSubscribeButtonClick = (itemInfo : ItemInfo) => {
   if (workState.value.subscribedItems.includes(itemInfo.id)) {
@@ -675,30 +745,43 @@ const handleShowAlarmMacroExportModal = () => {
       </div>
     </FoldableCard>
     <n-card embedded :bordered="false" :class="store.userConfig.custom_background ? 'glasscard' : ''" :content-style="isVerticalOverlay ? 'padding: 1em 0.5em;' : undefined">
-      <div class="title-actions">
-        <n-button
-          v-for="patch in gatherData"
-          :key="patch.key"
-          :type="workState.patch === patch.key ? 'primary' : undefined"
-          :size="isVerticalOverlay ? 'tiny' : undefined"
-          @click="workState.patch = patch.key"
-        >
-          <div class="tab-title">
-            <span v-if="patch.key === 'stars'">
-              <i class="xiv e05d"></i>
-            </span>
-            <span v-else-if="patch.key === 'subscribed'">
-              <i class="xiv e05f"></i>
-            </span>
-            <span v-else-if="patch.key.includes('~690')">
-              <i class="xiv collectables"></i>
-            </span>
-            <span v-else>
-              <i class="xiv timer"></i>
-            </span>
-            <span>{{ patch.title }}</span>
-          </div>
-        </n-button>
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <div class="title-actions">
+          <n-button
+            v-for="patch in gatherData"
+            :key="patch.key"
+            :type="workState.patch === patch.key ? 'primary' : undefined"
+            :size="isVerticalOverlay ? 'tiny' : undefined"
+            @click="workState.patch = patch.key"
+          >
+            <div class="tab-title">
+              <span v-if="patch.key === 'stars'">
+                <i class="xiv e05d"></i>
+              </span>
+              <span v-else-if="patch.key === 'subscribed'">
+                <i class="xiv e05f"></i>
+              </span>
+              <span v-else-if="patch.key.includes('~690')">
+                <i class="xiv collectables"></i>
+              </span>
+              <span v-else>
+                <i class="xiv timer"></i>
+              </span>
+              <span>{{ patch.title }}</span>
+            </div>
+          </n-button>
+        </div>
+        <div class="shrink-0">
+          <n-button
+            :size="isVerticalOverlay ? 'tiny' : undefined"
+            @click="showSearchOverlay = true"
+          >
+            <template #icon>
+              <n-icon><SearchRound /></n-icon>
+            </template>
+            <span>{{ t('common.search') }}</span>
+          </n-button>
+        </div>
       </div>
       <n-divider style="margin-top: 3px; margin-bottom: 12px;" :style="{
         marginTop: '3px',
@@ -719,6 +802,7 @@ const handleShowAlarmMacroExportModal = () => {
               :item="item"
               :is-subscribed="subscribedIdSet.has(item.id)"
               :is-starred="starIdSet.has(item.id)"
+              :highlight="highlightItemId === item.id"
               @on-star-button-click="handleStarButtonClick"
               @on-subscribe-button-click="handleSubscribeButtonClick"
             />
@@ -737,6 +821,15 @@ const handleShowAlarmMacroExportModal = () => {
       v-model:show="showAudioConfigModal"
       v-model:sound-select="workState.soundSelect"
       v-model:custom-audio-name="workState.customAudioName"
+    />
+
+    <SearchOverlay
+      v-model:show="showSearchOverlay"
+      :items="allGatherClockItems"
+      :placeholder="t('gather_clock.search.placeholder')"
+      :input-hint="t('gather_clock.search.input_hint')"
+      :no-match-hint="t('gather_clock.search.no_match')"
+      @select="handleSearchItemSelect"
     />
 
     <n-back-top />

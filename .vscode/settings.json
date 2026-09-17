@@ -16,6 +16,7 @@
   ],
   "i18n-ally.sourceLanguage": "zh",
   "i18n-ally.keystyle": "nested",
+  "i18n-ally.sortKeys": false,
   "tailwindCSS.experimental.classRegex": [
     ["cn\\(([^)]*)\\)", "(?:'|\"|`)([^']|\"|`*)(?:'|\"|`)"]
   ]
