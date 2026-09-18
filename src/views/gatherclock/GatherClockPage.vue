@@ -750,7 +750,7 @@ const handleShowAlarmMacroExportModal = () => {
           <n-form-item :label="t('gather_clock.preference.sort_by.title')" style="min-width: 200px;">
             <n-select v-model:value="workState.orderBy" :options="itemSortOptions" :render-option="optionsRenderer" />
           </n-form-item>
-          <n-form-item :label="t('gather_clock.preference.pin_gatherable_items')">
+          <n-form-item v-if="workState.orderBy !== 'remainingTimeAsc'" :label="t('gather_clock.preference.pin_gatherable_items')">
             <n-switch v-model:value="workState.pinGatherableItems" />
           </n-form-item>
           <n-form-item :label="t('gather_clock.preference.disable_item_pop')">
@@ -768,7 +768,7 @@ const handleShowAlarmMacroExportModal = () => {
               <n-button>{{ t('common.click_here_show_menu') }}</n-button>
             </n-dropdown>
           </n-form-item>
-          <n-form-item :label="t('gather_clock.export_alarm_macro.title')">
+          <n-form-item v-if="!isVerticalOverlay" :label="t('gather_clock.export_alarm_macro.title')">
             <n-button @click="handleShowAlarmMacroExportModal">{{ t('common.click_here') }}</n-button>
           </n-form-item>
         </n-form>
