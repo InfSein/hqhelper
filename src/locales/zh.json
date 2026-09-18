@@ -2671,13 +2671,18 @@
     },
     "notebook_search": {
       "placeholder": "搜索物品…",
+      "help_button_title": "搜索帮助",
+      "help_dialog_title": "搜索说明",
+      "help_dialog_content": "可以直接输入物品名（任意语言）、ID、品级或版本搜索。\n还可以以@开头进行高级搜索：\n◈ 按版本搜索：\n► @版本:7.0 或 @版本:7.0~7.1\n◈ 按ID搜索：\n► @ID:36012 或 @ID:36012~36015\n◈ 按品级搜索：\n► @IL:670 或 @IL:670~700\n◈ 素材反查：\n► @素材:物品名或ID\n注：搜索范围不能太大，最多只能匹配1,000条结果。",
       "history": "搜索历史",
       "empty_history": "暂无搜索历史",
       "clear_history": "清空历史记录",
       "material_history_prefix": "素材",
       "error_empty": "请输入搜索关键字",
+      "error_invalid_format": "搜索指令格式不正确",
       "error_no_result": "未找到匹配的物品",
       "error_material_id_too_small": "该物品不支持反查配方",
+      "error_too_many_results": "搜索结果超过 1000 条（共 {count} 条），请缩小搜索范围",
       "success_count": "搜索到{count}个配方"
     },
     "share": {

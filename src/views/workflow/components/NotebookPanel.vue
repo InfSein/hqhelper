@@ -5,6 +5,7 @@ import {
   CloseRound,
   DeleteSweepRound,
   HistoryRound,
+  InfoOutlined,
   OpenInNewFilled,
   JoinLeftOutlined,
   PlaylistAddOutlined,
@@ -27,6 +28,7 @@ import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
 import { useAppModals } from '@/composables/useAppModals'
 import { useItemContextMenu } from '@/composables/useItemContextMenu'
+import { useDialog } from '@/composables/useDialog'
 import { useStore } from '@/store'
 import CommonGroupIcon from '@/assets/icons/game-ui/recipe-notebook/group-common.svg'
 import MasterGroupIcon from '@/assets/icons/game-ui/recipe-notebook/group-master.svg'
@@ -40,6 +42,7 @@ const store = useStore()
 const { t } = useLocale()
 const { isMobile } = useResponsive()
 const { itemLanguage } = useConfig()
+const { alertInfo } = useDialog()
 const NAIVE_UI_MESSAGE = useMessage()
 
 const props = defineProps<{
@@ -253,6 +256,157 @@ const matchItem = (item: ItemInfo, pattern: string) => {
   return false
 }
 
+/**
+ * 尝试将版本字符串解析为数字
+ * 版本号如 7.0、7.05、7.1 等可以解析为标准浮点数
+ * 若存在意外值（如包含非数字字符 "7.0a"），尝试提取有效数字前缀；若完全没有数字则返回 null
+ */
+const parsePatchNumber = (val: string): number | null => {
+  if (!val) return null
+  const trimmed = val.trim()
+  const num = Number(trimmed)
+  if (!isNaN(num) && isFinite(num)) {
+    return num
+  }
+  const match = trimmed.match(/^(\d+(?:\.\d+)?)/)
+  if (match) {
+    const floatNum = parseFloat(match[1])
+    if (!isNaN(floatNum) && isFinite(floatNum)) {
+      return floatNum
+    }
+  }
+  return null
+}
+
+/**
+ * 根据搜索关键字构建物品匹配函数
+ * 支持普通搜索与高级指令：@版本、@ID、@IL
+ */
+const getItemMatcher = (trimmed: string): ((item: ItemInfo) => boolean) | null => {
+  // 1. 版本匹配指令：@版本: / @Patch: / @パッチ:
+  const patchPrefixMatch = trimmed.match(/^@(?:版本|Patch|パッチ)(?:[:：]\s*(.*))?$/i)
+  if (patchPrefixMatch) {
+    const rawVal = patchPrefixMatch[1]?.trim()
+    if (!rawVal) {
+      NAIVE_UI_MESSAGE.error(t('workflow.notebook_search.error_invalid_format'))
+      return null
+    }
+    const rangeParts = rawVal.split(/[~～]/)
+    if (rangeParts.length === 2) {
+      const startStr = rangeParts[0].trim()
+      const endStr = rangeParts[1].trim()
+      if (!startStr || !endStr) {
+        NAIVE_UI_MESSAGE.error(t('workflow.notebook_search.error_invalid_format'))
+        return null
+      }
+      const startNum = parsePatchNumber(startStr)
+      const endNum = parsePatchNumber(endStr)
+      if (startNum !== null && endNum !== null) {
+        const min = Math.min(startNum, endNum)
+        const max = Math.max(startNum, endNum)
+        return (item: ItemInfo) => {
+          const itemNum = parsePatchNumber(item.patch)
+          if (itemNum !== null) {
+            return itemNum >= min && itemNum <= max
+          }
+          // 兜底：若物品版本非标准数字，使用字典序比较
+          const pStr = (item.patch ?? '').trim()
+          const [minStr, maxStr] = startStr.localeCompare(endStr) <= 0 ? [startStr, endStr] : [endStr, startStr]
+          return pStr.localeCompare(minStr) >= 0 && pStr.localeCompare(maxStr) <= 0
+        }
+      }
+      // 兜底：若输入范围包含非标准数字
+      const [minStr, maxStr] = startStr.localeCompare(endStr) <= 0 ? [startStr, endStr] : [endStr, startStr]
+      return (item: ItemInfo) => {
+        const pStr = (item.patch ?? '').trim()
+        return pStr.localeCompare(minStr) >= 0 && pStr.localeCompare(maxStr) <= 0
+      }
+    } else if (rangeParts.length === 1) {
+      const targetStr = rawVal.toLowerCase()
+      const targetNum = parsePatchNumber(rawVal)
+      return (item: ItemInfo) => {
+        const pStr = (item.patch ?? '').trim().toLowerCase()
+        if (pStr === targetStr) return true
+        if (targetNum !== null) {
+          const itemNum = parsePatchNumber(item.patch)
+          if (itemNum !== null && itemNum === targetNum) return true
+        }
+        return false
+      }
+    } else {
+      NAIVE_UI_MESSAGE.error(t('workflow.notebook_search.error_invalid_format'))
+      return null
+    }
+  }
+
+  // 2. ID 匹配指令：@ID: / @id:
+  const idPrefixMatch = trimmed.match(/^@ID(?:[:：]\s*(.*))?$/i)
+  if (idPrefixMatch) {
+    const rawVal = idPrefixMatch[1]?.trim()
+    if (!rawVal) {
+      NAIVE_UI_MESSAGE.error(t('workflow.notebook_search.error_invalid_format'))
+      return null
+    }
+    const rangeParts = rawVal.split(/[~～]/)
+    if (rangeParts.length === 2) {
+      const s = parseInt(rangeParts[0].trim(), 10)
+      const e = parseInt(rangeParts[1].trim(), 10)
+      if (isNaN(s) || isNaN(e)) {
+        NAIVE_UI_MESSAGE.error(t('workflow.notebook_search.error_invalid_format'))
+        return null
+      }
+      const min = Math.min(s, e)
+      const max = Math.max(s, e)
+      return (item: ItemInfo) => item.id >= min && item.id <= max
+    } else if (rangeParts.length === 1) {
+      const targetId = parseInt(rawVal, 10)
+      if (isNaN(targetId)) {
+        NAIVE_UI_MESSAGE.error(t('workflow.notebook_search.error_invalid_format'))
+        return null
+      }
+      return (item: ItemInfo) => item.id === targetId
+    } else {
+      NAIVE_UI_MESSAGE.error(t('workflow.notebook_search.error_invalid_format'))
+      return null
+    }
+  }
+
+  // 3. 品级匹配指令：@IL: / @ILv: / @品级:
+  const ilPrefixMatch = trimmed.match(/^@(?:IL|ILv|品级)(?:[:：]\s*(.*))?$/i)
+  if (ilPrefixMatch) {
+    const rawVal = ilPrefixMatch[1]?.trim()
+    if (!rawVal) {
+      NAIVE_UI_MESSAGE.error(t('workflow.notebook_search.error_invalid_format'))
+      return null
+    }
+    const rangeParts = rawVal.split(/[~～]/)
+    if (rangeParts.length === 2) {
+      const s = parseInt(rangeParts[0].trim(), 10)
+      const e = parseInt(rangeParts[1].trim(), 10)
+      if (isNaN(s) || isNaN(e)) {
+        NAIVE_UI_MESSAGE.error(t('workflow.notebook_search.error_invalid_format'))
+        return null
+      }
+      const min = Math.min(s, e)
+      const max = Math.max(s, e)
+      return (item: ItemInfo) => item.itemLevel >= min && item.itemLevel <= max
+    } else if (rangeParts.length === 1) {
+      const targetIL = parseInt(rawVal, 10)
+      if (isNaN(targetIL)) {
+        NAIVE_UI_MESSAGE.error(t('workflow.notebook_search.error_invalid_format'))
+        return null
+      }
+      return (item: ItemInfo) => item.itemLevel === targetIL
+    } else {
+      NAIVE_UI_MESSAGE.error(t('workflow.notebook_search.error_invalid_format'))
+      return null
+    }
+  }
+
+  // 4. 普通搜索
+  return (item: ItemInfo) => matchItem(item, trimmed)
+}
+
 const handleSearch = (keyword?: string) => {
   const targetKeyword = typeof keyword === 'string' ? keyword : searchKeyword.value
   searchKeyword.value = targetKeyword
@@ -292,6 +446,11 @@ const handleSearch = (keyword?: string) => {
     }
   }
 
+  const matcher = getItemMatcher(trimmed)
+  if (!matcher) {
+    return
+  }
+
   const results: SearchGroupResult[] = []
   const menuTypes: ('common' | 'special' | 'master')[] = ['common', 'special', 'master']
 
@@ -303,7 +462,7 @@ const handleSearch = (keyword?: string) => {
       const menus = group.menus[menuType]
       Object.values(menus).forEach(menu => {
         Object.values(menu.contentGroups).forEach(cg => {
-          const matched = cg.items.filter(item => matchItem(item, trimmed))
+          const matched = cg.items.filter(item => matcher(item))
           if (matched.length > 0) {
             const groupLabel = cg.name && cg.name !== menu.name
               ? `${jobName} / ${menu.name} / ${cg.name}`
@@ -319,8 +478,15 @@ const handleSearch = (keyword?: string) => {
     })
   })
 
-  if (results.length === 0) {
+  const totalCount = results.reduce((sum, g) => sum + g.items.length, 0)
+
+  if (totalCount === 0) {
     NAIVE_UI_MESSAGE.error(t('workflow.notebook_search.error_no_result'))
+    return
+  }
+
+  if (totalCount > 1000) {
+    NAIVE_UI_MESSAGE.warning(t('workflow.notebook_search.error_too_many_results', { count: totalCount }))
     return
   }
 
@@ -329,7 +495,6 @@ const handleSearch = (keyword?: string) => {
   isCustomListMode.value = false
   isStarredMode.value = false
 
-  const totalCount = results.reduce((sum, g) => sum + g.items.length, 0)
   NAIVE_UI_MESSAGE.success(t('workflow.notebook_search.success_count', { count: totalCount }))
 
   // 记录搜索历史 (最多10条，去重且最新排在最前)
@@ -385,8 +550,15 @@ const searchByMaterial = (itemOrId: ItemInfo | number) => {
     })
   })
 
-  if (results.length === 0) {
+  const totalCount = results.reduce((sum, g) => sum + g.items.length, 0)
+
+  if (totalCount === 0) {
     NAIVE_UI_MESSAGE.error(t('item.text.reverse_recipe_lookup_no_result'))
+    return
+  }
+
+  if (totalCount > 1000) {
+    NAIVE_UI_MESSAGE.warning(t('workflow.notebook_search.error_too_many_results', { count: totalCount }))
     return
   }
 
@@ -396,7 +568,6 @@ const searchByMaterial = (itemOrId: ItemInfo | number) => {
   isCustomListMode.value = false
   isStarredMode.value = false
 
-  const totalCount = results.reduce((sum, g) => sum + g.items.length, 0)
   NAIVE_UI_MESSAGE.success(t('workflow.notebook_search.success_count', { count: totalCount }))
 
   if (results[0]?.items?.[0]?.id) {
@@ -422,6 +593,13 @@ const handleDeleteHistoryItem = (targetIndex: number) => {
 
 const handleClearAllHistory = () => {
   emit('update:notebookSearchHistory', [])
+}
+
+const handleShowSearchHelp = () => {
+  alertInfo({
+    title: t('workflow.notebook_search.help_dialog_title'),
+    content: t('workflow.notebook_search.help_dialog_content'),
+  })
 }
 
 // #region custom lists
@@ -822,18 +1000,23 @@ defineExpose({
             <div>{{ t('common.search') }}</div>
           </div>
         </n-input-group-label>
-        <n-tooltip :trigger="isMobile ? 'manual' : 'hover'" placement="bottom">
-          <template #trigger>
-            <n-input
-              v-model:value="searchKeyword"
-              :placeholder="t('workflow.notebook_search.placeholder')"
-              :maxlength="100"
-              clearable
-              @keydown.enter="handleSearch()"
-            />
+        <n-input
+          v-model:value="searchKeyword"
+          :placeholder="t('workflow.notebook_search.placeholder')"
+          :maxlength="100"
+          clearable
+          @keydown.enter="handleSearch()"
+        />
+        <!-- 搜索说明信息按钮 -->
+        <n-button
+          class="n-square-button"
+          :title="t('workflow.notebook_search.help_button_title')"
+          @click="handleShowSearchHelp"
+        >
+          <template #icon>
+            <n-icon :size="16"><InfoOutlined /></n-icon>
           </template>
-          {{ t('common.item_search_input_placeholder') }}
-        </n-tooltip>
+        </n-button>
         <!-- 桌面端搜索历史 -->
         <n-popover v-if="!isMobile" trigger="hover" placement="bottom-end">
           <template #trigger>
