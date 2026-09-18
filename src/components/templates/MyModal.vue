@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { type Component } from 'vue'
 import {
-  SettingsSharp
+  SettingsSharp,
 } from '@vicons/material'
+import { useLocale } from '@/composables/useLocale'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-// const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-// const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
+const { t } = useLocale()
 
 const showModal = defineModel<boolean>('show', { required: true })
 interface MyModalProps {
@@ -40,6 +39,12 @@ const emit = defineEmits([
   'onLoad',
   'onSettingButtonClicked'
 ])
+
+onMounted(() => {
+  if (showModal.value) {
+    emit('onLoad')
+  }
+})
 
 watch(showModal, async (newVal, oldVal) => {
   if (newVal && !oldVal) {
@@ -97,7 +102,7 @@ const handleShowFuncPreference = () => {
     </template>
 
     <template #header-extra>
-      <div class="extra-header-container">
+      <div class="app-extra-header">
         <n-button
           v-for="(btn, btnIndex) in extraHeaderButtons"
           :key="btnIndex"
