@@ -1512,7 +1512,8 @@
       "unsubscribe_with_item": "取消订阅“{val}”",
       "star": "收藏",
       "un_star": "取消收藏",
-      "unsubscribe": "取消订阅"
+      "unsubscribe": "取消订阅",
+      "view_in_gather_clock": "在采集时钟中查看"
     },
     "tooltip": {
       "subscribe_1": "点击此按钮来订阅/取消订阅这个采集品。",

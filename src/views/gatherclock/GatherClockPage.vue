@@ -32,6 +32,8 @@ import { getTimeLimitRemain } from '@/views/gatherclock/utils/dealTimeLimit'
 import { sendBarkNotification } from '@/views/gatherclock/utils/bark'
 
 const store = useStore()
+const route = useRoute()
+const router = useRouter()
 const NAIVE_UI_MESSAGE = useMessage()
 const { t } = useLocale()
 const { appMode } = useAppMode()
@@ -53,41 +55,6 @@ const subscribedIdSet = computed(() => new Set(subscribedItems.value))
 const showSearchOverlay = ref(false)
 const highlightItemId = ref<number | null>(null)
 
-const allGatherClockItems = computed(() => {
-  return Object.values(limitedGatheringsMap.value.allItems)
-})
-
-const handleSearchItemSelect = async (item: ItemInfo) => {
-  let targetTabKey = ''
-  if (currentPatchGroup.value?.items.some(i => i.id === item.id)) {
-    targetTabKey = workState.value.patch
-  } else {
-    const foundGroup = gatherData.value.find(
-      g => g.key !== 'stars' && g.key !== 'subscribed' && g.items.some(i => i.id === item.id)
-    )
-    if (foundGroup) {
-      targetTabKey = foundGroup.key
-    }
-  }
-
-  if (targetTabKey && workState.value.patch !== targetTabKey) {
-    workState.value.patch = targetTabKey
-  }
-
-  await nextTick()
-  setTimeout(() => {
-    const el = document.getElementById(`gather-item-card-${item.id}`) || document.querySelector(`[data-item-id="${item.id}"]`)
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'center' })
-    }
-    highlightItemId.value = item.id
-    setTimeout(() => {
-      if (highlightItemId.value === item.id) {
-        highlightItemId.value = null
-      }
-    }, 2000)
-  }, 100)
-}
 
 const limitedGatheringsMap = computed(() => {
   // 依赖语言配置更新
@@ -162,6 +129,68 @@ const gatherData = computed(() => {
 
   return data
 })
+
+const allGatherClockItems = computed(() => {
+  return Object.values(limitedGatheringsMap.value.allItems)
+})
+
+/**
+ * 选中对应选项卡并滚动高亮指定物品
+ */
+const locateItem = async (target: ItemInfo | number): Promise<boolean> => {
+  const item = typeof target === 'number'
+    ? limitedGatheringsMap.value.allItems[target]
+    : target
+  if (!item?.id) return false
+
+  let targetTabKey = ''
+  if (currentPatchGroup.value?.items.some(i => i.id === item.id)) {
+    targetTabKey = workState.value.patch
+  } else {
+    const foundGroup = gatherData.value.find(
+      g => g.key !== 'stars' && g.key !== 'subscribed' && g.items.some(i => i.id === item.id)
+    )
+    if (foundGroup) {
+      targetTabKey = foundGroup.key
+    }
+  }
+
+  if (targetTabKey && workState.value.patch !== targetTabKey) {
+    workState.value.patch = targetTabKey
+  }
+
+  await nextTick()
+  setTimeout(() => {
+    const el = document.getElementById(`gather-item-card-${item.id}`) || document.querySelector(`[data-item-id="${item.id}"]`)
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+    highlightItemId.value = item.id
+    setTimeout(() => {
+      if (highlightItemId.value === item.id) {
+        highlightItemId.value = null
+      }
+    }, 2000)
+  }, 100)
+
+  return true
+}
+
+const handleRouteItem = async () => {
+  const itemParam = route.query.item
+  if (!itemParam) return
+  const itemId = Number(itemParam)
+  if (itemId && !isNaN(itemId)) {
+    const success = await locateItem(itemId)
+    if (success) {
+      const restQuery = { ...route.query }
+      delete restQuery.item
+      router.replace({ query: restQuery })
+    }
+  }
+}
+
+watch(() => route.query.item, handleRouteItem)
 const isVerticalOverlay = computed(() => {
   return isMobile.value && appMode.value === 'overlay'
 })
@@ -254,6 +283,7 @@ const alarmedET = ref<number>(0)
 const alarmInterval = ref<number | undefined>(undefined)
 onMounted(() => {
   window.addEventListener('keydown', handleGlobalKeydown)
+  handleRouteItem()
   if (alarmInterval.value === undefined) {
     alarmInterval.value = setInterval(() => {
       // 根据当前ET判断是否需要提醒
@@ -829,7 +859,7 @@ const handleShowAlarmMacroExportModal = () => {
       :placeholder="t('gather_clock.search.placeholder')"
       :input-hint="t('gather_clock.search.input_hint')"
       :no-match-hint="t('gather_clock.search.no_match')"
-      @select="handleSearchItemSelect"
+      @select="locateItem"
     />
 
     <n-back-top />

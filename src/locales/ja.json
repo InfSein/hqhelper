@@ -1504,7 +1504,8 @@
       "unsubscribe_with_item": "「{val}」のフォローを解除",
       "star": "お気に入りに登録",
       "un_star": "お気に入りを解除",
-      "unsubscribe": "フォローを解除"
+      "unsubscribe": "フォローを解除",
+      "view_in_gather_clock": "採集時計で確認"
     },
     "tooltip": {
       "subscribe_1": "このボタンをクリックすると、この採集品をサブスクリプション/サブスクリプション解除できます。",

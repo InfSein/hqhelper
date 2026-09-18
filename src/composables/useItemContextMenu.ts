@@ -39,6 +39,8 @@ export function useItemContextMenu(
   const { itemLanguage } = useConfig()
   const { renderIcon } = useUiTools()
   const store = useStore()
+  const route = useRoute()
+  const router = useRouter()
 
   const showDropdown = ref(false)
   const dropdownX = ref(0)
@@ -220,6 +222,18 @@ export function useItemContextMenu(
                 : NotificationsNoneRound
             ),
             click: () => toggleGatherClockSubscribe(itemInfo.id),
+          },
+          {
+            label: t('gather_clock.text.view_in_gather_clock'),
+            key: 'view-in-gatherclock',
+            show: route?.path !== '/gatherclock',
+            icon: renderIcon(OpenInNewFilled),
+            click: () => {
+              router.push({
+                path: '/gatherclock',
+                query: { item: String(itemInfo.id) },
+              })
+            },
           },
         ],
       },

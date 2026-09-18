@@ -1504,7 +1504,8 @@
       "unsubscribe_with_item": "Untrack \"{val}\"",
       "star": "Star",
       "un_star": "Unstar",
-      "unsubscribe": "Untrack"
+      "unsubscribe": "Untrack",
+      "view_in_gather_clock": "View in Gather Clock"
     },
     "tooltip": {
       "subscribe_1": "Click to track/untrack this item.",
