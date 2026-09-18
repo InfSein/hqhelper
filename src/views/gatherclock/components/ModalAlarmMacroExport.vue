@@ -40,6 +40,12 @@ const wrapper = ref<HTMLElement>()
 const treeCheckedKeys = ref<Array<string | number>>([])
 const itemTreeCheckedKeys = ref<number[]>([])
 
+const handleClearSelection = () => {
+  treeCheckedKeys.value = []
+  itemTreeCheckedKeys.value = []
+  NAIVE_UI_MESSAGE.success(t('common.cleared'))
+}
+
 const getItemAlarmCount = (itemId: number) => {
   const item = getItemInfo(itemId)
   return item.gatherInfo?.timeLimitInfo?.length || 0
@@ -123,7 +129,8 @@ const itemTreeData = computed(() => {
     keys.push(groupKey)
   })
 
-  const autoExpandKeys = treeData.slice(-2).map(element => element.key!)
+  // 最后 x 个分组（对应最新的几个版本）默认展开
+  const autoExpandKeys = treeData.slice(-1).map(element => element.key!)
 
   return {
     treeData,
@@ -199,10 +206,19 @@ const getPlaceName = (itemInfo : ItemInfo) => {
   <MyModal
     v-model:show="showModal"
     :id="modalId"
-    :icon="CodeSharp"
-    :title="t('gather_clock.export_alarm_macro.title')"
     max-width="730px"
   >
+    <template #header>
+      <div class="card-title select-none">
+        <n-icon><CodeSharp /></n-icon>
+        <span class="title">
+          {{ t('gather_clock.export_alarm_macro.title') }}
+        </span>
+        <div class="card-title__actions">
+          <a href="javascript:void(0);" @click="handleClearSelection">[{{ t('common.clear_selected') }}]</a>
+        </div>
+      </div>
+    </template>
     <div class="wrapper" ref="wrapper">
       <GroupBox id="select-items">
         <template #title>
@@ -339,6 +355,10 @@ const getPlaceName = (itemInfo : ItemInfo) => {
 
 /* Mobile */
 @media (max-width: 768px) {
+  .card-title__actions {
+    flex-basis: 100%;
+  }
+
   .wrapper {
     display: flex;
     flex-direction: column;
