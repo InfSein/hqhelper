@@ -2745,5 +2745,23 @@
       "custom_action_buttons": "操作ボタンのカスタマイズ",
       "star_recipe": "お気に入り登録/解除ボタン"
     }
+  },
+  "eorzea_time_modal": {
+    "title": "エオルゼア時間",
+    "local_time": "地球時間",
+    "eorzea_time": "エオルゼア時間",
+    "next_local_time": "次回到達時の地球時間",
+    "lt_to_et": "地球時間 ➔ エオルゼア時間",
+    "et_to_lt": "エオルゼア時間 ➔ 次回地球時間",
+    "set_to_now": "現在時刻",
+    "set_to_current_et": "現在のET",
+    "set_to_next_hour": "次の正時ET",
+    "hour_suffix": "時",
+    "minute_suffix": "分",
+    "copy": "コピー",
+    "copied": "クリップボードにコピーしました",
+    "copy_lt_to_et_content": "{lt}に対応するエオルゼア時間：{et}",
+    "copy_et_to_lt_content": "エオルゼア時間{et}の次回到達時刻：{lt}",
+    "eorzea_date": "第{year}星暦{month}月{day}日"
   }
 }

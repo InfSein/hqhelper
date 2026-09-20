@@ -2745,5 +2745,23 @@
       "custom_action_buttons": "Customize Action Buttons",
       "star_recipe": "Star/Unstar Button"
     }
+  },
+  "eorzea_time_modal": {
+    "title": "Eorzea Time",
+    "local_time": "Local Time",
+    "eorzea_time": "Eorzea Time",
+    "next_local_time": "Next Local Time",
+    "lt_to_et": "Local Time ➔ Eorzea Time",
+    "et_to_lt": "Eorzea Time ➔ Next Local Time",
+    "set_to_now": "Now",
+    "set_to_current_et": "Current ET",
+    "set_to_next_hour": "Next O'clock ET",
+    "hour_suffix": "h",
+    "minute_suffix": "m",
+    "copy": "Copy",
+    "copied": "Copied to clipboard",
+    "copy_lt_to_et_content": "Eorzea Time for {lt}: {et}",
+    "copy_et_to_lt_content": "Next arrival of Eorzea Time {et} is at: {lt}",
+    "eorzea_date": "Astral Era Year {year}, Month {month}, Day {day}"
   }
 }

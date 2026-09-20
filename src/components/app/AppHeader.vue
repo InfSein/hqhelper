@@ -43,6 +43,7 @@ import ModalContactUs from '@/components/modals/ModalContactUs.vue'
 import ModalInventory from '@/components/modals/ModalInventory.vue'
 import ModalChangeLogs from '@/components/modals/ModalChangeLogs.vue'
 import ModalPreferences from '@/components/modals/ModalPreferences.vue'
+import ModalEtTool from '@/components/modals/ModalEtTool.vue'
 import router from '@/router'
 import { useStore } from '@/store'
 import useConfig from '@/composables/useConfig'
@@ -105,6 +106,7 @@ const showAboutAppModal = ref(false)
 const showContactModal = ref(false)
 const showChangeLogsModal = ref(false)
 const showDonateModal = ref(false)
+const showEtToolModal = ref(false)
 
 interface MyMenuItem {
   key: string
@@ -828,7 +830,7 @@ const handleSwitchHomePage = (target: 'hqwb' | 'workflow') => {
 
         <n-popover :trigger="isMobile ? 'click' : 'hover'" :keep-alive-on-hover="isMobile">
           <template #trigger>
-            <p>
+            <p class="cursor-pointer" @click="showEtToolModal = true">
               <span v-if="isChina"><i class="xiv eorzea-time-chs"></i></span>
               <span v-else><i class="xiv eorzea-time"></i></span>
               <span class="time-text">{{ currentET.gameTime }}</span>
@@ -932,6 +934,7 @@ const handleSwitchHomePage = (target: 'hqwb' | 'workflow') => {
     <ModalContactUs v-model:show="showContactModal" />
     <ModalChangeLogs v-model:show="showChangeLogsModal" />
     <ModalDonate v-model:show="showDonateModal" />
+    <ModalEtTool v-model:show="showEtToolModal" />
   </div>
 </template>
 

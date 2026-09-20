@@ -2783,5 +2783,22 @@
       "next": "下一步",
       "finish": "完成"
     }
+  },
+  "eorzea_time_modal": {
+    "title": "艾欧泽亚时间",
+    "local_time": "本地时间",
+    "eorzea_time": "艾欧泽亚时间",
+    "next_local_time": "下次到达时的本地时间",
+    "lt_to_et": "本地时间 ➔ 艾欧泽亚时间",
+    "et_to_lt": "艾欧泽亚时间 ➔ 下次到达的本地时间",
+    "set_to_now": "设为当前",
+    "set_to_current_et": "当前",
+    "set_to_next_hour": "下个整点",
+    "hour_suffix": "时",
+    "minute_suffix": "分",
+    "copy_lt_to_et_content": "「{lt}」对应的艾欧泽亚时间是：「{et}」",
+    "copy_et_to_lt_content": "下一次到达艾欧泽亚时间「{et}」是在：「{lt}」",
+    "eorzea_date": "星历{year}年{month}月{day}日",
+    "current_time": "当前时间"
   }
 }

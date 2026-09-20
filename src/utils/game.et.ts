@@ -119,6 +119,27 @@ class EorzeaTime {
   public static EorzeaMinute2LocalSecond = (eorzeaMinute: number) => {
     return eorzeaMinute * EorzeaTime.TimeRate / EorzeaTime.MinutesOfHour
   }
+
+  /**
+   * 计算从当前（或指定时刻）起，下一次到达指定艾欧泽亚时间（小时、分钟）的本地时间。
+   * @param targetHour 目标艾欧泽亚小时 (0~23)
+   * @param targetMinute 目标艾欧泽亚分钟 (0~59)
+   * @param fromDate 起始基准本地时间，默认为当前时间
+   */
+  public static getNextLocalTime = (targetHour: number, targetMinute: number, fromDate: Date = new Date()): Date => {
+    const currentET = new EorzeaTime(fromDate)
+    const currentETTotalMinutes = currentET.timeStamp
+    const currentETMinuteOfDay = (currentET.hour * 60 + currentET.minute) % 1440
+    const targetETMinuteOfDay = ((Math.floor(targetHour) % 24) * 60 + (Math.floor(targetMinute) % 60)) % 1440
+
+    let diff = targetETMinuteOfDay - currentETMinuteOfDay
+    if (diff <= 0) {
+      diff += 1440
+    }
+    const targetTotalMinutes = currentETTotalMinutes + diff
+    const targetMs = Math.ceil(targetTotalMinutes * EorzeaTime.TimeRate * 1000 / EorzeaTime.MinutesOfHour)
+    return new Date(targetMs)
+  }
 }
 
 export default EorzeaTime
