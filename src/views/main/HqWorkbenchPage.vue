@@ -8,7 +8,7 @@ import GearSelectionPanel from '@/views/main/components/GearSelectionPanel.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
 import { XivJobRoleMap, type XivPatchVer } from '@/assets/data';
-import { useNbbCal } from '@/tools/use-nbb-cal'
+import { useAppCore } from '@/composables/useAppCore'
 import { fixGearSelections } from '@/types/game/gear'
 import type { AttireAffix, AccessoryAffix, GearSelections } from '@/types/game/gear'
 import type { WorkState } from '@/types/workstate/hqworkbench'
@@ -16,7 +16,7 @@ import type { WorkState } from '@/types/workstate/hqworkbench'
 const store = useStore()
 const { t } = useLocale()
 const NAIVE_UI_MESSAGE = useMessage()
-const { calGearSelections, getSpecialItems, getPatchData } = useNbbCal()
+const { calGearSelections, getSpecialItems, getPatchData } = useAppCore()
 
 const workState = ref<WorkState>({
   patch: undefined,
@@ -60,6 +60,7 @@ const handleJobButtonDupliClick = () => {
 const showModalJoinInWorkflow = ref(false)
 const workflowItems = computed(() => {
   const items : Record<number, number> = {}
+  if (!statistics.value) return items
   Object.values(statistics.value.ls).forEach((stat: any) => {
     items[stat.id] = stat.need
   })

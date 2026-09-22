@@ -9,12 +9,12 @@ import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
 import { type ItemInfo } from '@/tools/item'
-import { useFufuCal } from '@/tools/use-fufu-cal'
+import { useAppCore } from '@/composables/useAppCore'
 
 const store = useStore()
 const { t } = useLocale()
 const { isMobile } = useResponsive()
-const { getProStatementData, calRecommProcessData } = useFufuCal()
+const { getProStatementData, calRecommProcessData } = useAppCore()
 
 const showModal = defineModel<boolean>('show', { required: true })
 const showRecommendedProcessesModal = ref(false)

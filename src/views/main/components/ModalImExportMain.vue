@@ -16,7 +16,7 @@ import { useLocale } from '@/composables/useLocale'
 import { XivPatchVers, type XivPatchVer } from '@/assets/data'
 import type { ItemInfo } from '@/tools/item'
 import { export2Excel, importExcel } from '@/tools/excel'
-import { useFufuCal } from '@/tools/use-fufu-cal'
+import { useAppCore } from '@/composables/useAppCore'
 import type { GearSelections } from '@/types/game/gear'
 import type { ItemPriceInfo } from '@/types/item/price'
 
@@ -25,7 +25,7 @@ const updateItemPrices = inject<() => Promise<void>>('updateItemPrices')!
 const store = useStore()
 const { t } = useLocale()
 const NAIVE_UI_MESSAGE = useMessage()
-const { getStatementData } = useFufuCal()
+const { getStatementData } = useAppCore()
 
 const showModal = defineModel<boolean>('show', { required: true })
 const onLoad = () => {

@@ -10,12 +10,12 @@ import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
 import { useAppMode } from '@/composables/useAppMode'
 import { HqData } from '@/assets/data'
-import { useNbbCal } from '@/tools/use-nbb-cal'
+import { useAppCore } from '@/composables/useAppCore'
 
 const store = useStore()
 const { t } = useLocale()
 const { appMode } = useAppMode()
-const { calItems } = useNbbCal()
+const { calItems } = useAppCore()
 const NAIVE_UI_MESSAGE = useMessage()
 
 const workState = ref({

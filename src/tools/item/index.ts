@@ -12,9 +12,9 @@ export interface CalculatedItem {
   /** 物品的UI组 */
   uc: number
   // * 还有一些暂时不知道什么作用的
-  pc: number
-  mkc: number
-  rid: string[]
+  pc?: number
+  mkc?: number
+  rid?: string[] | number | number[]
 }
 const phItem : XivUnpackedItem = {
   id: 0,
@@ -50,7 +50,9 @@ import {
   XivGatheringBonuses,
   XivUnpackedTradeMap,
   type ItemTradeInfo,
-  XivUnpackedCollectableSubmissions
+  XivUnpackedCollectableSubmissions,
+  HqData,
+  type XivPatchVer,
 } from '@/assets/data'
 import {
   XivMaps, type XivMapAetheryteInfo,
@@ -58,10 +60,41 @@ import {
   getNearestAetheryte,
 } from '@/tools/game/map'
 import { deepCopy, range } from '@/tools'
-import { useNbbCal } from '@/tools/use-nbb-cal'
 import { getImgCdnUrl } from '@/tools/game'
+import type { CalResultItem } from '@/types/core'
 
-const { getReduceMap, getReduceMapReverted } = useNbbCal()
+/**
+ * 获取可以精选的道具映射表
+ * key: 精选所得道具的 itemID, value: 精选来源的 itemID 数组
+ */
+const getReduceMap = () => {
+  const map: Record<number, number[]> = {}
+  for (const patch in HqData.patches) {
+    const reduces = HqData.patches[patch as XivPatchVer]?.reduces
+    Object.entries(reduces ?? {}).forEach(([k, v]) => {
+      map[Number(k)] = v
+    })
+  }
+  return map
+}
+
+/**
+ * 获取反转的精选映射表
+ * key: 精选来源的 itemID, value: 精选所得道具的 itemID
+ */
+const getReduceMapReverted = () => {
+  const map: Record<number, number> = {}
+  for (const patch in HqData.patches) {
+    const reduces = HqData.patches[patch as XivPatchVer]?.reduces
+    Object.entries(reduces ?? {}).forEach(([k, v]) => {
+      v.forEach(v2 => {
+        map[v2] = Number(k)
+      })
+    })
+  }
+  return map
+}
+
 const reduceMap = getReduceMap()
 const revertedReduceMap = getReduceMapReverted()
 
@@ -294,7 +327,7 @@ export interface ItemInfo {
  * @param item 物品ID或是`nbb-cal`传入的物品信息
  * @returns 处理后的道具信息
  */
-export const getItemInfo = (item: `${number}` | number | CalculatedItem) => {
+export const getItemInfo = (item: `${number}` | number | CalculatedItem | CalResultItem) => {
   // * 尝试从items表中获取物品完整信息
   let itemID = 0, itemAmount = 0
   if (typeof item === 'number' || typeof item === 'string') {

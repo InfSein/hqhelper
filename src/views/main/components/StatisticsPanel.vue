@@ -12,13 +12,13 @@ import { useResponsive } from '@/composables/useResponsive'
 import { useCostAndBenefit } from '@/composables/useCostAndBenefit'
 import { XivUnpackedTradeMap, type XivPatchVer } from '@/assets/data'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
-import { useFufuCal } from '@/tools/use-fufu-cal'
+import { useAppCore } from '@/composables/useAppCore'
 import type { GearSelections } from '@/types/game/gear'
 
 const store = useStore()
 const { t } = useLocale()
 const { isMobile } = useResponsive()
-const { getStatementData } = useFufuCal()
+const { getStatementData } = useAppCore()
 
 interface StatisticsPanelProps {
   patchSelected: XivPatchVer | undefined,

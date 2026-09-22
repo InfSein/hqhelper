@@ -1,16 +1,20 @@
 import { computed, watch, type ComputedRef } from 'vue'
 import { useStore } from '@/store'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
-import { useNbbCal } from '@/tools/use-nbb-cal'
-import { useFufuCal } from '@/tools/use-fufu-cal'
+import { useAppCore } from '@/composables/useAppCore'
 import { useLocale } from '@/composables/useLocale'
 import type { Workflow } from '@/types/workstate/workflow'
 
 export function useWorkflowStatistics(currentWorkflow: ComputedRef<Workflow>) {
   const store = useStore()
   const { t } = useLocale()
-  const { calItems } = useNbbCal()
-  const { getStatementData, getProStatementData, calRecommProcessData, calRecommProcessGroups } = useFufuCal()
+  const {
+    calItems,
+    getStatementData,
+    getProStatementData,
+    calRecommProcessData,
+    calRecommProcessGroups,
+  } = useAppCore()
 
   const craftTargetsArray = computed(() => {
     const items: ItemInfo[] = []

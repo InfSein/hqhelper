@@ -3,7 +3,7 @@ import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
 import { useDialog } from '@/composables/useDialog'
 import { handleGetPriceError } from '@/tools/error'
-import type { StatementData } from '@/tools/use-fufu-cal'
+import type { StatementData } from '@/types/core'
 import useItemPrice from './useItemPrice'
 import { getItemPriceInfo } from '@/tools/item/price'
 

@@ -10,13 +10,13 @@ import { useLocale } from '@/composables/useLocale'
 import useConfig from '@/composables/useConfig'
 import { CopyToClipboard } from '@/tools'
 import { type ItemInfo } from '@/tools/item'
-import { useFufuCal } from '@/tools/use-fufu-cal'
+import { useAppCore } from '@/composables/useAppCore'
 
 const store = useStore()
 const { t } = useLocale()
 const { itemLanguage } = useConfig()
 const NAIVE_UI_MESSAGE = useMessage()
-const { calRecommProcessGroups } = useFufuCal()
+const { calRecommProcessGroups } = useAppCore()
 
 const showModal = defineModel<boolean>('show', { required: true })
 const expandedBlocks = ref<Record<number, string[]>>({})

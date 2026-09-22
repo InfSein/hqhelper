@@ -11,7 +11,7 @@ import {
   type HqDataVer,
 } from '@/assets/data'
 import { getItemInfo, sortItems, type ItemInfo } from '@/tools/item'
-import { useNbbCal } from '@/tools/use-nbb-cal'
+import { useAppCore } from '@/composables/useAppCore'
 import { fixGearSelections, type AttireAffix, type AccessoryAffix, type GearSelections } from '@/types/game/gear'
 
 /**
@@ -267,7 +267,7 @@ export const calcJobGearMaterials = (
   gears.wrist[accessory] = 1
   gears.rings[accessory] = 2
 
-  const { calGearSelections } = useNbbCal()
+  const { calGearSelections } = useAppCore()
   const statistics = calGearSelections(gears, patchVer as XivPatchVer)
 
   return extractMaterials(statistics, patchData)
@@ -306,7 +306,7 @@ export const calcCrafterGearMaterials = (
   gears.wrist[crafterAcc] = 1
   gears.rings[crafterAcc] = 2
 
-  const { calGearSelections } = useNbbCal()
+  const { calGearSelections } = useAppCore()
   const statistics = calGearSelections(gears, patchVer as XivPatchVer)
 
   return extractMaterials(statistics, patchData)
@@ -345,7 +345,7 @@ export const calcGathererGearMaterials = (
   gears.wrist[gathererAcc] = 1
   gears.rings[gathererAcc] = 2
 
-  const { calGearSelections } = useNbbCal()
+  const { calGearSelections } = useAppCore()
   const statistics = calGearSelections(gears, patchVer as XivPatchVer)
 
   return extractMaterials(statistics, patchData)

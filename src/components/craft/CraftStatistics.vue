@@ -4,7 +4,7 @@ import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
-import { useNbbCal } from '@/tools/use-nbb-cal'
+import { useAppCore } from '@/composables/useAppCore'
 
 const { t } = useLocale()
 const store = useStore()
@@ -17,7 +17,7 @@ interface CraftStatisticsProps {
 }
 const props = defineProps<CraftStatisticsProps>()
 
-const { calItems } = useNbbCal()
+const { calItems } = useAppCore()
 
 const statistics = computed(() => {
   const value = calItems(props.itemSelected)

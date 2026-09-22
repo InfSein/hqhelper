@@ -7,7 +7,7 @@ import { useStore } from '@/store'
 import { useResponsive } from '@/composables/useResponsive'
 import { deepCopy } from '@/tools'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
-import type { ProStatementBlock } from '@/tools/use-fufu-cal'
+import type { ProStatementBlock } from '@/types/core'
 
 const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
 
