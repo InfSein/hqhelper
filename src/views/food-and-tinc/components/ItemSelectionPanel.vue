@@ -19,8 +19,8 @@ const itemSelected = defineModel<Record<number, number>>('itemSelected', { requi
 
 const emits = defineEmits(['joinWorkflow'])
 
-const { getFoodAndTincs_v2 } = useAppCore()
-const foodAndTincs = computed(() => getFoodAndTincs_v2())
+const { getFtData } = useAppCore()
+const foodAndTincs = computed(() => getFtData())
 
 const handleClearSelections = () => {
   for (const id in itemSelected.value) {

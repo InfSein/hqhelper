@@ -1,10 +1,20 @@
 import type { ItemInfo } from "@/tools/item"
 
 /**
- * 计算引擎输入条目元组格式
- * [道具ID, 数量, 配方ID, 是否已勾选/已完成, (可选)特殊跳过标记]
+ * 计算引擎输入条目
  */
-export type CalInputEntry = [number, number, number, boolean, boolean?]
+export interface CalInputEntry {
+  /** 道具ID */
+  itemId: number,
+  /** 数量 */
+  count: number,
+  /** 配方ID */
+  recipeId: number,
+  /** 是否已勾选/已完成 */
+  checked: boolean,
+  /** (可选)特殊跳过标记 */
+  skip?: boolean,
+}
 
 /**
  * 递归计算展开中单项物品的信息

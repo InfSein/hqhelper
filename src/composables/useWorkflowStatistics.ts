@@ -1,13 +1,9 @@
 import { computed, watch, type ComputedRef } from 'vue'
-import { useStore } from '@/store'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
 import { useAppCore } from '@/composables/useAppCore'
-import { useLocale } from '@/composables/useLocale'
 import type { Workflow } from '@/types/workstate/workflow'
 
 export function useWorkflowStatistics(currentWorkflow: ComputedRef<Workflow>) {
-  const store = useStore()
-  const { t } = useLocale()
   const {
     calItems,
     getStatementData,
@@ -56,7 +52,7 @@ export function useWorkflowStatistics(currentWorkflow: ComputedRef<Workflow>) {
       lv1Items,
       lv2Items,
       lv3Items,
-      lvBaseItems
+      lvBaseItems,
     } = recommProcessData.value
     return calRecommProcessGroups(
       craftTargets,
@@ -64,10 +60,6 @@ export function useWorkflowStatistics(currentWorkflow: ComputedRef<Workflow>) {
       lv2Items,
       lv3Items,
       lvBaseItems,
-      store.funcConfig.processes_craftable_item_sortby,
-      store.funcConfig.processes_merge_gatherings,
-      store.userConfig.language_ui,
-      t
     )
   })
 

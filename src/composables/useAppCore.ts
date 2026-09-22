@@ -5,7 +5,6 @@ import {
   XivJobs,
   XivUnpackedGatheringItems,
   XivUnpackedItems,
-  XivUnpackedRecipes,
   type XivPatchVer,
 } from '@/assets/data'
 import type { GearSelections } from '@/types/game/gear'
@@ -19,272 +18,8 @@ import type {
 } from '@/types/core'
 import { getItemInfo, sortItems, type ItemInfo } from '@/tools/item'
 import { deepCopy } from '@/tools'
-
-// #region 模块级缓存与数据映射
-
-let cachedRecipeMap: Record<number, number> | null = null
-
-/**
- * 获取物品 ID 到首个配方 ID 的映射表
- */
-function getRecipeMap(): Record<number, number> {
-  if (!cachedRecipeMap) {
-    const map: Record<number, number> = {}
-    Object.values(XivUnpackedItems).forEach(item => {
-      if (item.rids?.length) {
-        map[item.id] = item.rids[0]
-      }
-    })
-    cachedRecipeMap = map
-  }
-  return cachedRecipeMap
-}
-
-// #endregion
-
-// #region 纯函数核心计算引擎
-
-/**
- * 处理顶层制作目标队列
- */
-function expandTopLevel(
-  calMap: Record<string, CalInputEntry>,
-  shipArr: number[] = [],
-): Record<string, CalResultItem> {
-  const result: Record<string, CalResultItem> = {}
-
-  for (const id in calMap) {
-    const numId = Number(id)
-    if (shipArr.includes(numId)) continue
-    // 特殊场景跳过标记
-    if (calMap[id].length === 5 && calMap[id][4]) continue
-
-    const need = calMap[id][1]
-    const recipeId = calMap[id][2]
-    const checked = calMap[id][3]
-    const recipe = XivUnpackedRecipes[recipeId]
-    const item = XivUnpackedItems[numId]
-
-    if (!item) continue
-
-    if (recipe) {
-      const pc = recipe.yields
-      let mkc = Math.floor(need / pc)
-      mkc += (need % pc) > 0 ? 1 : 0
-
-      result[id] = {
-        id: numId,
-        rid: recipeId,
-        checked,
-        job: recipe.job,
-        name: item.name,
-        icon: item.icon,
-        desc: item.desc,
-        uc: item.uc,
-        need,
-        mkc,
-        pc,
-      }
-    } else {
-      result[id] = {
-        id: numId,
-        checked,
-        rid: [],
-        name: item.name,
-        icon: item.icon,
-        desc: item.desc,
-        uc: item.uc,
-        need,
-        mkc: 0,
-      }
-    }
-  }
-
-  return result
-}
-
-/**
- * 逐级展开材料（支持水晶与常规素材）
- */
-function expandMaterials(
-  itemTemMap: Record<string, CalResultItem>,
-  hideCluster = false,
-  shipArr: number[] = [],
-): Record<string, CalResultItem> {
-  const reMap: Record<string, CalResultItem> = {}
-
-  for (const id in itemTemMap) {
-    if (itemTemMap[id].checked === true) continue
-
-    let rid = itemTemMap[id].rid
-    if (rid === undefined || (Array.isArray(rid) && rid.length === 0)) {
-      continue
-    }
-    if (Array.isArray(rid)) {
-      rid = rid[0]
-    }
-
-    const recipe = XivUnpackedRecipes[rid]
-    if (!recipe) continue
-
-    const material = recipe.materials
-    const shard = recipe.crystals
-    const mkc = itemTemMap[id].mkc
-
-    // 展开水晶类
-    for (let i = 0; i < shard.length; i += 2) {
-      if (hideCluster) continue
-      const shardId = shard[i]
-      if (shardId <= 0) continue
-
-      const item = XivUnpackedItems[shardId]
-      if (!item) continue
-
-      const count = mkc * shard[i + 1]
-      const shardKey = String(shardId)
-
-      if (reMap[shardKey]) {
-        reMap[shardKey].need += count
-      } else {
-        reMap[shardKey] = {
-          id: shardId,
-          rid: [],
-          icon: item.icon,
-          name: item.name,
-          desc: item.desc,
-          uc: item.uc,
-          need: count,
-          mkc: 0,
-          pc: 1,
-        }
-      }
-    }
-
-    // 展开常规材料
-    for (let j = 0; j < material.length; j += 2) {
-      const itemId = material[j]
-      if (shipArr.includes(Number(itemId))) continue
-
-      const item = XivUnpackedItems[itemId]
-      if (!item) continue
-
-      const count = mkc * material[j + 1]
-      const itemKey = String(itemId)
-
-      if (reMap[itemKey]) {
-        reMap[itemKey].need += count
-      } else {
-        reMap[itemKey] = {
-          id: itemId,
-          rid: item.rids,
-          name: item.name,
-          icon: item.icon,
-          desc: item.desc,
-          uc: item.uc,
-          need: count,
-          mkc: 0,
-          pc: 1,
-        }
-      }
-    }
-  }
-
-  // 针对展开出的有配方的材料，计算其生产次数与产出
-  for (const k in reMap) {
-    const item = reMap[k]
-    let mkc1 = 0
-    const need1 = item.need
-    let pc1 = 0
-
-    const rid = item.rid
-    const firstRid = Array.isArray(rid) ? rid[0] : rid
-    if (firstRid) {
-      const targetRecipe = XivUnpackedRecipes[firstRid]
-      if (targetRecipe) {
-        pc1 = targetRecipe.yields
-        mkc1 = Math.floor(need1 / pc1)
-        mkc1 += (need1 % pc1) > 0 ? 1 : 0
-      }
-    }
-
-    reMap[k].mkc = mkc1
-    reMap[k].pc = pc1
-  }
-
-  return reMap
-}
-
-/**
- * 汇总基础素材（无法再进一步分解的素材）
- */
-function accumulateBaseMaterials(
-  temmap: Record<string, CalResultItem>,
-  sumMap02: Record<string, CalResultItem>,
-): Record<string, CalResultItem> {
-  for (const id in temmap) {
-    if (temmap[id].checked === true) continue
-
-    const num = temmap[id].need
-    const rid = temmap[id].rid
-
-    if (rid === undefined || (Array.isArray(rid) && rid.length === 0)) {
-      if (sumMap02[id]) {
-        sumMap02[id].need += num
-      } else {
-        sumMap02[id] = {
-          id: Number(id),
-          name: temmap[id].name,
-          icon: temmap[id].icon,
-          desc: temmap[id].desc,
-          uc: temmap[id].uc,
-          need: num,
-          mkc: 0,
-        }
-      }
-    }
-  }
-  return sumMap02
-}
-
-/**
- * 递归配方展开计算主函数
- */
-function doCal(
-  calMap: Record<string, CalInputEntry>,
-  hideCluster = false,
-  shipArr0: number[] = [],
-  shipArr1: number[] = [],
-  shipArr2: number[] = [],
-  shipArr3: number[] = [],
-  shipArr4: number[] = [],
-): CalResult {
-  const sumMap0 = expandTopLevel(calMap, shipArr0)
-  const sumMap1 = expandMaterials(sumMap0, hideCluster, shipArr1)
-  const sumMap2 = expandMaterials(sumMap1, hideCluster, shipArr2)
-  const sumMap3 = expandMaterials(sumMap2, hideCluster, shipArr3)
-  const sumMap4 = expandMaterials(sumMap3, hideCluster, shipArr4)
-  const sumMap5 = expandMaterials(sumMap4, hideCluster)
-
-  let sumMap02: Record<string, CalResultItem> = {}
-  sumMap02 = accumulateBaseMaterials(sumMap1, sumMap02)
-  sumMap02 = accumulateBaseMaterials(sumMap2, sumMap02)
-  sumMap02 = accumulateBaseMaterials(sumMap3, sumMap02)
-  sumMap02 = accumulateBaseMaterials(sumMap4, sumMap02)
-  sumMap02 = accumulateBaseMaterials(sumMap5, sumMap02)
-
-  const re: CalResult = {
-    ls: sumMap0,
-    lv1: sumMap1,
-    lv2: sumMap2,
-    lv3: sumMap3,
-    lv4: sumMap4,
-    lv5: sumMap5,
-    lvBase: sumMap02,
-  }
-  return JSON.parse(JSON.stringify(re))
-}
-
-// #endregion
+import { getRecipeMap } from '@/tools/recipe/cache'
+import { doCal } from '@/tools/recipe/engine'
 
 /**
  * 核心算法与配方计算 Composable
@@ -305,7 +40,12 @@ export function useAppCore() {
       const count = selections[item]
       if (!count) continue
       const itemId = Number(item)
-      calMap[item] = [itemId, count, recipeMap[itemId], false]
+      calMap[item] = {
+        itemId,
+        count,
+        recipeId: recipeMap[itemId],
+        checked: false,
+      }
     }
     return doCal(calMap)
   }
@@ -327,7 +67,12 @@ export function useAppCore() {
         if (gear[jobId] > 0) {
           const item = patchData?.[gearKey]?.[jobId]
           if (item) {
-            out[item] = [item, gear[jobId], recipeMap[item], false]
+            out[item] = {
+              itemId: item,
+              count: gear[jobId],
+              recipeId: recipeMap[item],
+              checked: false,
+            }
           } else if (item !== 0) {
             console.warn('wrong index?', gearKey, jobId)
           }
@@ -359,7 +104,7 @@ export function useAppCore() {
   /**
    * 获取食药列表（按版本分组）
    */
-  const getFoodAndTincs_v2 = () => {
+  const getFtData = () => {
     const data = {} as Record<string, {
       count: number
       foods: ItemInfo[]
@@ -381,7 +126,7 @@ export function useAppCore() {
       data[p].count++
     }
 
-    HqData.meals.forEach(itemID => {
+    HqData.meals?.forEach(itemID => {
       dealItem(itemID, 'foods')
     })
     HqData.medicines?.forEach(itemID => {
@@ -425,7 +170,7 @@ export function useAppCore() {
    * 获取查看报表需要的数据
    * @param statistics 通过配方展开计算获得的统计数据
    */
-  const getStatementData = (statistics: any): StatementData => {
+  const getStatementData = (statistics: CalResult): StatementData => {
     const craftTargets: ItemInfo[] = []
     const materialsLv1: ItemInfo[] = []
     const materialsLv2: ItemInfo[] = []
@@ -452,7 +197,7 @@ export function useAppCore() {
       materialsLvBase,
     }
 
-    function processStatistics(_in: any, out: ItemInfo[]) {
+    function processStatistics(_in: Record<string, CalResultItem>, out: ItemInfo[]) {
       const ignoreCrystal = store.funcConfig.statement_ignore_crystals
       for (const id in _in) {
         const item = getItemInfo(_in[id])
@@ -624,11 +369,9 @@ export function useAppCore() {
     lv2Items: ItemInfo[],
     lv3Items: ItemInfo[],
     lvBaseItems: ItemInfo[],
-    processes_craftable_item_sortby: string,
-    processes_merge_gatherings: boolean,
-    language_ui: "zh" | "en" | "ja",
-    tFn: (message: string, args?: any) => string,
   ) => {
+    const language_ui = store.userConfig.language_ui
+
     const itemsGatherableCommon: ItemInfo[] = []
     const itemsGatherableLimited: ItemInfo[] = []
     const aethersands: ItemInfo[] = []
@@ -769,7 +512,7 @@ export function useAppCore() {
         const jobId = Number(_jobID)
         const job = XivJobs[jobId]
         const items = craftings[jobId]
-        if (processes_craftable_item_sortby === 'recipeOrder') {
+        if (store.funcConfig.processes_craftable_item_sortby === 'recipeOrder') {
           sortItems(items, 'recipeOrder')
         }
         groups.push({
@@ -783,21 +526,21 @@ export function useAppCore() {
 
     const insituTp = { job: '{job}' }
 
-    if (processes_merge_gatherings) {
-      dealGatherings(itemsGatherableCommon, 'common', tFn('recomm_process.group.common_gathering', insituTp), 'map', {
+    if (store.funcConfig.processes_merge_gatherings) {
+      dealGatherings(itemsGatherableCommon, 'common', t('recomm_process.group.common_gathering', insituTp), 'map', {
         iconUrl: './ui/gathering.png',
       })
-      dealGatherings(itemsGatherableLimited, 'limited', tFn('recomm_process.group.time_limited_gathering', insituTp), 'start-time', {
+      dealGatherings(itemsGatherableLimited, 'limited', t('recomm_process.group.time_limited_gathering', insituTp), 'start-time', {
         iconUrl: './ui/gathering-limited.png',
       })
     } else {
-      dealGatherings(itemsGatherableCommon, 'common', tFn('recomm_process.group.gather_common_with_job', insituTp), 'map')
-      dealGatherings(itemsGatherableLimited, 'limited', tFn('recomm_process.group.gather_time_limited_with_job', insituTp), 'start-time')
+      dealGatherings(itemsGatherableCommon, 'common', t('recomm_process.group.gather_common_with_job', insituTp), 'map')
+      dealGatherings(itemsGatherableLimited, 'limited', t('recomm_process.group.gather_time_limited_with_job', insituTp), 'start-time')
     }
     if (aethersands.length) {
       groups.push({
         type: 'aethersand',
-        title: tFn('recomm_process.group.aethersand'),
+        title: t('recomm_process.group.aethersand'),
         icon: './ui/reduce.png',
         items: aethersands,
       })
@@ -805,7 +548,7 @@ export function useAppCore() {
     if (itemsTradable.length) {
       groups.push({
         type: 'trade-tomescript',
-        title: tFn('recomm_process.group.trade'),
+        title: t('recomm_process.group.trade'),
         icon: './ui/important-item.png',
         items: itemsTradable,
       })
@@ -813,27 +556,25 @@ export function useAppCore() {
     if (itemsOtherCollectable.length) {
       groups.push({
         type: 'other',
-        title: tFn('recomm_process.group.other'),
+        title: t('recomm_process.group.other'),
         icon: './ui/bag.png',
         items: itemsOtherCollectable,
       })
     }
-    dealCraftings(itemsPrePrePrecraft, 'prepreprecraft', tFn('recomm_process.group.pre_pre_precraft', insituTp))
-    dealCraftings(itemsPrePrecraft, 'preprecraft', tFn('recomm_process.group.pre_precraft', insituTp))
-    dealCraftings(itemsPrecraft, 'precraft', tFn('recomm_process.group.precraft', insituTp))
-    dealCraftings(itemsTarget, 'target', tFn('recomm_process.group.craft', insituTp))
+    dealCraftings(itemsPrePrePrecraft, 'prepreprecraft', t('recomm_process.group.pre_pre_precraft', insituTp))
+    dealCraftings(itemsPrePrecraft, 'preprecraft', t('recomm_process.group.pre_precraft', insituTp))
+    dealCraftings(itemsPrecraft, 'precraft', t('recomm_process.group.precraft', insituTp))
+    dealCraftings(itemsTarget, 'target', t('recomm_process.group.craft', insituTp))
 
     return groups
   }
 
   return {
-    doCal,
     calItems,
     calGearSelections,
-    getRecipeMap,
     getPatchData,
     getSpecialItems,
-    getFoodAndTincs_v2,
+    getFtData,
     getLimitedGatherings,
     getStatementData,
     getProStatementData,
