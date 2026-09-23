@@ -17,12 +17,9 @@ import { useResponsive } from '@/composables/useResponsive'
 import { useAppModals } from '@/composables/useAppModals'
 import { XivJobs, XivRoles, HqData, type XivPatchVer, type XivRoleKey, type XivRole } from '@/assets/data'
 import {
-  calcJobGearMaterials,
-  calcCrafterGearMaterials,
-  calcGathererGearMaterials,
-  mergeCategorizedMaterials,
+  usePatchGuide,
   type CategorizedMaterials,
-} from '@/tools/game/patch-guide'
+} from '../composables/usePatchGuide'
 import type { ItemInfo } from '@/tools/item'
 
 interface NewGearsSectionProps {
@@ -35,6 +32,12 @@ const { t } = useLocale()
 const { uiLanguage } = useConfig()
 const { isMobile } = useResponsive()
 const { displayGearOverviewModal } = useAppModals()
+const {
+  calcJobGearMaterials,
+  calcCrafterGearMaterials,
+  calcGathererGearMaterials,
+  mergeCategorizedMaterials,
+} = usePatchGuide()
 
 // 表格展示模式与切换加载动画状态
 const activeMode = ref<'tile' | 'overview'>(store.userConfig.patchguide_gear_table_mode)

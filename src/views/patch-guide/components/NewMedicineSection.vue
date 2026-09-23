@@ -8,7 +8,7 @@ import useConfig from '@/composables/useConfig'
 import { useResponsive } from '@/composables/useResponsive'
 import { XivAttributes } from '@/assets/data'
 import { type ItemInfo } from '@/tools/item'
-import { getPatchMedicines } from '@/tools/game/patch-guide'
+import { getPatchMedicines } from '../composables/usePatchGuide'
 
 interface NewMedicineSectionProps {
   patchVer: string

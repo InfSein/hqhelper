@@ -4,7 +4,7 @@ import { CurrencyExchangeOutlined } from '@vicons/material'
 import ItemSpan from '@/components/item/ItemSpan.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
-import { getPatchTradeItems } from '@/tools/game/patch-guide'
+import { getPatchTradeItems } from '../composables/usePatchGuide'
 
 interface TradeItemsSectionProps {
   patchVer: string

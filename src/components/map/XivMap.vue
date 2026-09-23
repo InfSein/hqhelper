@@ -38,6 +38,7 @@ const getAetheryteName = (aetheryte: XivMapAetheryteInfo) => {
         class="pointer-events-none"
         :size="mapSize"
         :src="mapData.map_src"
+        alt=" "
       />
       <div class="absolute top-0 left-0 w-full h-full pointer-events-none">
         <!-- 目的地旗帜 -->

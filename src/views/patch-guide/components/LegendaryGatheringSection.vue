@@ -5,7 +5,7 @@ import GatherItemCard from '@/views/gatherclock/components/GatherItemCard.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
 import { type ItemInfo } from '@/tools/item'
-import { getPatchLegendaryGatherings } from '@/tools/game/patch-guide'
+import { getPatchLegendaryGatherings } from '../composables/usePatchGuide'
 import { fixWorkState, type WorkState } from '@/types/workstate/gatherclock'
 
 interface LegendaryGatheringSectionProps {

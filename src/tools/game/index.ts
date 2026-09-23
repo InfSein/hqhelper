@@ -21,18 +21,6 @@ export const getPatchData = (patch: XivPatchVer = '7.0') => {
 }
 
 /**
- * 获取特殊道具（灵砂与炼金药）
- */
-export const getSpecialItems = (patch: XivPatchVer = '7.0') => {
-  const data = HqData.patches[patch]
-
-  return {
-    aethersands: Object.keys(data?.reduces ?? []).map(Number),
-    alkahests: data?.alkahests,
-  }
-}
-
-/**
  * 获取食药列表（按版本分组）
  */
 export const getFtData = () => {

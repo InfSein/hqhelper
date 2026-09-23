@@ -45,7 +45,7 @@ const showBiColorItemsInTomeScriptButton = computed(() => {
 const currentStatistics = computed(() => props.statistics ?? emptyStatementData)
 const lvBaseItems = computed(() => currentStatistics.value.materialsLvBase)
 
-const classified = computed(() => classifyMaterials(lvBaseItems.value))
+const materials = computed(() => classifyMaterials(lvBaseItems.value))
 
 /** 
  * 要高亮显示的素材组。
@@ -75,6 +75,7 @@ const reagents = computed(() => {
   if (crafts[4].id === 0) crafts.pop()
   return crafts
 })
+const reagentsBtnColors = ['#FF8080', '#8080FF', '#FFC080', '#00BFFF', '#40E0D0'] // 刚巧耐智意
 
 const tomeScriptItems = computed(() => {
   const items = {} as Record<number, ItemInfo[]>
@@ -141,23 +142,6 @@ const aethersands = computed(() => {
   return sands
 })
 
-/**
- * 表示限时采集品统计。
- */
-const gatheringsTimed = computed(() => classified.value.gatherableLimited)
-
-/**
- * 表示非限时(常规)采集品统计。
- */
-const gatheringsCommon = computed(() => classified.value.gatherableCommon)
-
-/**
- * 表示碎晶/水晶/晶簇统计。
- */
-const crystals = computed(() => classified.value.crystals)
-
-const reagentsBtnColors = ['#FF8080', '#8080FF', '#FFC080', '#00BFFF', '#40E0D0'] // 刚巧耐智意
-
 const showStatementModal = ref(false)
 const showProStatementModal = ref(false)
 const showStatement = () => {
@@ -174,10 +158,10 @@ const importExportData = computed(() => {
     gearSelections: props.gearSelections,
     statistics: currentStatistics.value,
     tomeScriptItems: tomeScriptItems.value,
-    normalGathering: gatheringsCommon.value,
-    limitedGathering: gatheringsTimed.value,
+    normalGathering: materials.value.gatherableCommon,
+    limitedGathering: materials.value.gatherableLimited,
     aethersands: aethersands.value,
-    crystals: crystals.value,
+    crystals: materials.value.crystals,
     ui_lang: store.userConfig.language_ui,
     item_lang: store.userConfig.language_item === 'auto'
       ? store.userConfig.language_ui
@@ -296,7 +280,7 @@ provide('updateItemPrices', updateItemPrices)
               <n-collapse-item :title="t('statistics.group.gatherings.common')" name="gatheringsCommon">
                 <div class="item-collapsed-container">
                   <ItemList
-                    :items="gatheringsCommon"
+                    :items="materials.gatherableCommon"
                     :list-height="isMobile ? undefined : 320"
                     :show-collector-icon="!store.userConfig.hide_collector_icons"
                   />
@@ -305,7 +289,7 @@ provide('updateItemPrices', updateItemPrices)
               <n-collapse-item :title="t('statistics.group.gatherings.time_limited')" name="gatheringsTimed">
                 <div class="item-collapsed-container">
                   <ItemList
-                    :items="gatheringsTimed"
+                    :items="materials.gatherableLimited"
                     :list-height="isMobile ? undefined : 320"
                     :show-collector-icon="!store.userConfig.hide_collector_icons"
                   />
@@ -314,7 +298,7 @@ provide('updateItemPrices', updateItemPrices)
               <n-collapse-item :title="t('game.crystal')" name="crystals">
                 <div class="item-collapsed-container">
                   <ItemList
-                    :items="crystals"
+                    :items="materials.crystals"
                     :list-height="isMobile ? undefined : 320"
                   />
                 </div>

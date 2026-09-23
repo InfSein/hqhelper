@@ -35,42 +35,19 @@ const materialTargetDescription = computed(() => {
   ]
 })
 
-/**
- * 表示要展示的半成品。
- */
 const precrafts = computed(() => {
   return lv1Items.value.filter(item => item.craftInfo?.jobId)
 })
 
-const classified = computed(() => classifyMaterials(materialTarget.value))
-
-/**
- * 表示需要用亚拉戈神典石或工票兑换的道具。
- */
-const tomeScriptItems = computed(() => classified.value.tradable)
-
-/**
- * 表示碎晶/水晶/晶簇统计。
- */
-const crystals = computed(() => classified.value.crystals)
+const materials = computed(() => classifyMaterials(materialTarget.value))
 
 /**
  * 表示限时采集品统计（包括灵砂）。
  */
 const gatheringsTimed = computed(() => [
-  ...classified.value.aethersands,
-  ...classified.value.gatherableLimited,
+  ...materials.value.aethersands,
+  ...materials.value.gatherableLimited,
 ])
-
-/**
- * 表示非限时(常规)采集品统计。
- */
-const gatheringsCommon = computed(() => classified.value.gatherableCommon)
-
-/**
- * 表示其他道具统计。
- */
-const otherMaterials = computed(() => classified.value.other)
 </script>
 
 <template>
@@ -92,7 +69,7 @@ const otherMaterials = computed(() => classified.value.other)
     >
       <div>
         <ItemList
-          :items="tomeScriptItems"
+          :items="materials.tomeScriptItems"
           :list-height="listHeight ?? (isMobile ? undefined : 245)"
         />
       </div>
@@ -104,7 +81,7 @@ const otherMaterials = computed(() => classified.value.other)
     >
       <div>
         <ItemList
-          :items="crystals"
+          :items="materials.crystals"
           :list-height="listHeight ?? (isMobile ? undefined : 245)"
         />
       </div>
@@ -116,7 +93,7 @@ const otherMaterials = computed(() => classified.value.other)
     >
       <div>
         <ItemList
-          :items="gatheringsCommon"
+          :items="materials.gatherableCommon"
           :list-height="listHeight ?? (isMobile ? undefined : 245)"
           :show-collector-icon="!store.userConfig.hide_collector_icons"
         />
@@ -145,7 +122,7 @@ const otherMaterials = computed(() => classified.value.other)
     >
       <div>
         <ItemList
-          :items="otherMaterials"
+          :items="materials.other"
           :list-height="listHeight ?? (isMobile ? undefined : 245)"
           :show-collector-icon="!store.userConfig.hide_collector_icons"
         />

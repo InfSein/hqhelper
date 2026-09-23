@@ -9,7 +9,7 @@ import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
 import { XivJobRoleMap, type XivPatchVer } from '@/assets/data'
 import { useAppCore } from '@/composables/useAppCore'
-import { getPatchData, getSpecialItems } from '@/tools/game'
+import { getPatchData } from '@/tools/game'
 import { fixGearSelections } from '@/types/game/gear'
 import type { AttireAffix, AccessoryAffix, GearSelections } from '@/types/game/gear'
 import type { WorkState } from '@/types/workstate/hqworkbench'
@@ -97,8 +97,11 @@ const patchData = computed(() => {
 const statistics = computed(() => {
   return calGearSelections(workState.value.gears, (workState.value.patch || '7.0') as XivPatchVer)
 })
-const specialItems = computed(() => {
-  return getSpecialItems((workState.value.patch || '7.0') as XivPatchVer)
+const aethersands = computed(() => {
+  return Object.keys(patchData.value?.reduces ?? []).map(Number)
+})
+const alkahests = computed(() => {
+  return patchData.value?.alkahests
 })
 </script>
 
@@ -141,8 +144,8 @@ const specialItems = computed(() => {
           class="h-full"
           :patch-selected="workState.patch"
           :statistics="statistics"
-          :aethersand-gatherings="specialItems.aethersands"
-          :alkahests="specialItems.alkahests"
+          :aethersand-gatherings="aethersands"
+          :alkahests="alkahests"
           :gear-selections="workState.gears"
         />
       </n-grid-item>

@@ -9,7 +9,7 @@ export interface ClassifiedMaterials {
   /** 灵砂 */
   aethersands: ItemInfo[]
   /** 点数/工票兑换道具 */
-  tradable: ItemInfo[]
+  tomeScriptItems: ItemInfo[]
   /** 碎晶/水晶/晶簇 */
   crystals: ItemInfo[]
   /** 其他道具（怪物掉落/杂项） */
@@ -25,7 +25,7 @@ export function classifyMaterials(items: ItemInfo[]): ClassifiedMaterials {
     gatherableCommon: [],
     gatherableLimited: [],
     aethersands: [],
-    tradable: [],
+    tomeScriptItems: [],
     crystals: [],
     other: [],
   }
@@ -42,14 +42,14 @@ export function classifyMaterials(items: ItemInfo[]): ClassifiedMaterials {
     } else if (item.isAethersand || item.canReduceFrom?.length) {
       result.aethersands.push(item)
     } else if (item.tradeInfo?.costId) {
-      result.tradable.push(item)
+      result.tomeScriptItems.push(item)
     } else {
       result.other.push(item)
     }
   })
 
   // 兑换道具按货币 ID 与游戏内商店顺序重排
-  result.tradable.sort((a, b) =>
+  result.tomeScriptItems.sort((a, b) =>
     (a.tradeInfo!.costId - b.tradeInfo!.costId) ||
     (a.uiTypeOrder - b.uiTypeOrder) ||
     (a.sortOrder - b.sortOrder) ||
