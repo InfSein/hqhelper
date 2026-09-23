@@ -13,7 +13,7 @@ import {
   NotificationsNoneRound,
 } from '@vicons/material'
 import { CopyToClipboard } from '@/tools'
-import { getItemInfo as getItemInfoHelper } from '@/tools/item'
+import { getItemInfo } from '@/tools/item'
 import type { ItemInfo } from '@/types/item'
 import {
   _VAR_GATHERCLOCK_MAX_STARRED,
@@ -28,7 +28,7 @@ import { useStore } from '@/store'
 import { addToCurrentWorkflowKey, reverseRecipeLookupKey } from '@/constants/vue-injects'
 
 export function useItemContextMenu(
-  getItemInfo: () => ItemInfo,
+  getItem: () => ItemInfo,
   containerId?: string | (() => string | undefined)
 ) {
   const { t } = useLocale()
@@ -48,10 +48,10 @@ export function useItemContextMenu(
   const dropdownY = ref(0)
 
   const isGatherClockItem = computed(() => {
-    const itemInfo = getItemInfo()
+    const itemInfo = getItem()
     if (!itemInfo?.id) return false
     if (itemInfo.gatherInfo?.timeLimitInfo?.length) return true
-    const fullItem = getItemInfoHelper(itemInfo.id)
+    const fullItem = getItemInfo(itemInfo.id)
     return !!fullItem?.gatherInfo?.timeLimitInfo?.length
   })
 
@@ -66,7 +66,7 @@ export function useItemContextMenu(
     const gcState = store.userConfig.gatherclock_cache_work_state
     if (!gcState.starItems) gcState.starItems = []
     const idx = gcState.starItems.indexOf(itemId)
-    const currentItem = getItemInfo()
+    const currentItem = getItem()
     if (idx >= 0) {
       gcState.starItems.splice(idx, 1)
       NAIVE_UI_MESSAGE.success(t('gather_clock.message.unstarred', { name: getItemDisplayName(currentItem) }))
@@ -88,7 +88,7 @@ export function useItemContextMenu(
     const gcState = store.userConfig.gatherclock_cache_work_state
     if (!gcState.subscribedItems) gcState.subscribedItems = []
     const idx = gcState.subscribedItems.indexOf(itemId)
-    const currentItem = getItemInfo()
+    const currentItem = getItem()
     if (idx >= 0) {
       gcState.subscribedItems.splice(idx, 1)
       NAIVE_UI_MESSAGE.success(t('gather_clock.message.unsubscribed', { name: getItemDisplayName(currentItem) }))
@@ -104,7 +104,7 @@ export function useItemContextMenu(
   }
 
   const dropdownOptions = computed(() => {
-    const itemInfo = getItemInfo()
+    const itemInfo = getItem()
     if (!itemInfo.id) return []
     const options = [
       {
