@@ -3,16 +3,16 @@ import {
   XivUnpackedRecipes,
 } from '@/assets/data'
 import type {
-  CalInputEntry,
-  CalResult,
-  CalResultItem,
+  RecipeCalculateInputEntry,
+  RecipeCalculateResult,
+  RecipeCalculateResultItem,
 } from '@/types/core'
 
 /**
  * 将材料累加到结果映射表中
  */
 function addMaterialToMap(
-  reMap: Record<string, CalResultItem>,
+  reMap: Record<string, RecipeCalculateResultItem>,
   itemId: number,
   count: number,
   rids?: number[],
@@ -42,10 +42,10 @@ function addMaterialToMap(
  * 处理顶层制作目标队列
  */
 export function expandTopLevel(
-  calMap: Record<string, CalInputEntry>,
+  calMap: Record<string, RecipeCalculateInputEntry>,
   shipArr: number[] = [],
-): Record<string, CalResultItem> {
-  const result: Record<string, CalResultItem> = {}
+): Record<string, RecipeCalculateResultItem> {
+  const result: Record<string, RecipeCalculateResultItem> = {}
 
   for (const id in calMap) {
     const entry = calMap[id]
@@ -104,11 +104,11 @@ export function expandTopLevel(
  * 逐级展开材料（支持水晶与常规素材）
  */
 export function expandMaterials(
-  itemTemMap: Record<string, CalResultItem>,
+  itemTemMap: Record<string, RecipeCalculateResultItem>,
   hideCluster = false,
   shipArr: number[] = [],
-): Record<string, CalResultItem> {
-  const reMap: Record<string, CalResultItem> = {}
+): Record<string, RecipeCalculateResultItem> {
+  const reMap: Record<string, RecipeCalculateResultItem> = {}
 
   for (const id in itemTemMap) {
     if (itemTemMap[id].checked === true) continue
@@ -176,9 +176,9 @@ export function expandMaterials(
  * 汇总基础素材（无法再进一步分解的素材）
  */
 export function accumulateBaseMaterials(
-  temmap: Record<string, CalResultItem>,
-  sumMap02: Record<string, CalResultItem>,
-): Record<string, CalResultItem> {
+  temmap: Record<string, RecipeCalculateResultItem>,
+  sumMap02: Record<string, RecipeCalculateResultItem>,
+): Record<string, RecipeCalculateResultItem> {
   for (const id in temmap) {
     if (temmap[id].checked === true) continue
 
@@ -208,25 +208,25 @@ export function accumulateBaseMaterials(
  * 递归配方展开计算主函数
  */
 export function doCal(
-  calMap: Record<string, CalInputEntry>,
+  calMap: Record<string, RecipeCalculateInputEntry>,
   hideCluster = false,
   shipArr0: number[] = [],
   shipArr1: number[] = [],
   shipArr2: number[] = [],
   shipArr3: number[] = [],
   shipArr4: number[] = [],
-): CalResult {
+): RecipeCalculateResult {
   const shipArrs = [shipArr1, shipArr2, shipArr3, shipArr4, []]
   const sumMap0 = expandTopLevel(calMap, shipArr0)
 
-  const lvMaps: Record<string, CalResultItem>[] = []
+  const lvMaps: Record<string, RecipeCalculateResultItem>[] = []
   let currentMap = sumMap0
   for (let i = 0; i < 5; i++) {
     currentMap = expandMaterials(currentMap, hideCluster, shipArrs[i])
     lvMaps.push(currentMap)
   }
 
-  let sumMap02: Record<string, CalResultItem> = {}
+  let sumMap02: Record<string, RecipeCalculateResultItem> = {}
   for (const lvMap of lvMaps) {
     sumMap02 = accumulateBaseMaterials(lvMap, sumMap02)
   }

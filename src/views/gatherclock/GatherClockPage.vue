@@ -19,7 +19,7 @@ import { useResponsive } from '@/composables/useResponsive'
 import { XivJobs, type XivJob } from '@/assets/data'
 import { playAudio } from '@/tools'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
-import { useAppCore } from '@/composables/useAppCore'
+import { getLimitedGatherings } from '@/tools/game'
 import type { ItemGroup } from '@/types/item'
 import {
   fixWorkState,
@@ -41,7 +41,6 @@ const { alertError } = useDialog()
 const { isMobile } = useResponsive()
 const { currentET } = useEorzeaTime()
 const { optionsRenderer } = useUiTools()
-const { getLimitedGatherings } = useAppCore()
 const {
   uiLanguage, itemLanguage,
 } = useConfig()

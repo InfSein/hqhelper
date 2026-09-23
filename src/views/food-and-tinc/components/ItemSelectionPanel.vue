@@ -9,7 +9,7 @@ import TooltipButton from '@/components/ui/TooltipButton.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
 import { getItemInfo, type ItemInfo } from '@/tools/item'
-import { useAppCore } from '@/composables/useAppCore'
+import { getFtData } from '@/tools/game'
 
 const store = useStore()
 const { t } = useLocale()
@@ -19,7 +19,6 @@ const itemSelected = defineModel<Record<number, number>>('itemSelected', { requi
 
 const emits = defineEmits(['joinWorkflow'])
 
-const { getFtData } = useAppCore()
 const foodAndTincs = computed(() => getFtData())
 
 const handleClearSelections = () => {

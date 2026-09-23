@@ -3,7 +3,7 @@ import type { ItemInfo } from "@/tools/item"
 /**
  * 计算引擎输入条目
  */
-export interface CalInputEntry {
+export interface RecipeCalculateInputEntry {
   /** 道具ID */
   itemId: number,
   /** 数量 */
@@ -19,7 +19,7 @@ export interface CalInputEntry {
 /**
  * 递归计算展开中单项物品的信息
  */
-export interface CalResultItem {
+export interface RecipeCalculateResultItem {
   id: number
   rid?: number | number[]
   name: string[]
@@ -36,21 +36,21 @@ export interface CalResultItem {
 /**
  * 递归配方展开计算的完整结果结构
  */
-export interface CalResult {
+export interface RecipeCalculateResult {
   /** 目标制品队列 */
-  ls: Record<string, CalResultItem>
+  ls: Record<string, RecipeCalculateResultItem>
   /** 1级材料（直接素材） */
-  lv1: Record<string, CalResultItem>
+  lv1: Record<string, RecipeCalculateResultItem>
   /** 2级材料（半成品下级素材） */
-  lv2: Record<string, CalResultItem>
+  lv2: Record<string, RecipeCalculateResultItem>
   /** 3级材料 */
-  lv3: Record<string, CalResultItem>
+  lv3: Record<string, RecipeCalculateResultItem>
   /** 4级材料 */
-  lv4: Record<string, CalResultItem>
+  lv4: Record<string, RecipeCalculateResultItem>
   /** 5级材料 */
-  lv5: Record<string, CalResultItem>
+  lv5: Record<string, RecipeCalculateResultItem>
   /** 基础素材汇总统计 */
-  lvBase: Record<string, CalResultItem>
+  lvBase: Record<string, RecipeCalculateResultItem>
 }
 
 /**

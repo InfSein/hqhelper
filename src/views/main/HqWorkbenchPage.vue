@@ -7,8 +7,9 @@ import AppAnnouncements from '@/views/main/components/AppAnnouncements.vue'
 import GearSelectionPanel from '@/views/main/components/GearSelectionPanel.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
-import { XivJobRoleMap, type XivPatchVer } from '@/assets/data';
+import { XivJobRoleMap, type XivPatchVer } from '@/assets/data'
 import { useAppCore } from '@/composables/useAppCore'
+import { getPatchData, getSpecialItems } from '@/tools/game'
 import { fixGearSelections } from '@/types/game/gear'
 import type { AttireAffix, AccessoryAffix, GearSelections } from '@/types/game/gear'
 import type { WorkState } from '@/types/workstate/hqworkbench'
@@ -16,7 +17,7 @@ import type { WorkState } from '@/types/workstate/hqworkbench'
 const store = useStore()
 const { t } = useLocale()
 const NAIVE_UI_MESSAGE = useMessage()
-const { calGearSelections, getSpecialItems, getPatchData } = useAppCore()
+const { calGearSelections } = useAppCore()
 
 const workState = ref<WorkState>({
   patch: undefined,
