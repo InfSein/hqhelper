@@ -26,12 +26,8 @@ export function useWorkflowStatistics(currentWorkflow: ComputedRef<Workflow>) {
     return items
   })
 
-  const statistics = computed(() => {
-    return calItems(currentWorkflow.value.targetItems)
-  })
-
   const statementData = computed(() => {
-    return statistics.value
+    return calItems(currentWorkflow.value.targetItems)
   })
 
   const proStatementData = computed(() => {
@@ -117,7 +113,6 @@ export function useWorkflowStatistics(currentWorkflow: ComputedRef<Workflow>) {
 
   return {
     craftTargetsArray,
-    statistics,
     statementData,
     proStatementData,
     recommProcessData,
