@@ -523,7 +523,7 @@ const setInventoryByStatementPrepared = () => {
                   </div>
                 </template>
                 <CraftStatistics
-                  :item-selected="currentWorkflow.targetItems"
+                  :statistics="statementData"
                   :list-height="pageHeightVals.statisticsBlock"
                 />
               </n-tab-pane>

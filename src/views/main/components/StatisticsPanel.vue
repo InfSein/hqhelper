@@ -10,21 +10,30 @@ import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
 import { useCostAndBenefit } from '@/composables/useCostAndBenefit'
-import { XivUnpackedTradeMap, type XivPatchVer } from '@/assets/data'
-import { getItemInfo, type ItemInfo } from '@/tools/item'
-import { useAppCore } from '@/composables/useAppCore'
+import { type XivPatchVer } from '@/assets/data'
+import { getItemInfo, classifyMaterials, type ItemInfo } from '@/tools/item'
+import type { StatementData } from '@/types/core'
 import type { GearSelections } from '@/types/game/gear'
 
 const store = useStore()
 const { t } = useLocale()
 const { isMobile } = useResponsive()
-const { getStatementData } = useAppCore()
+
+const emptyStatementData: StatementData = {
+  craftTargets: [],
+  materialsLv1: [],
+  materialsLv2: [],
+  materialsLv3: [],
+  materialsLv4: [],
+  materialsLv5: [],
+  materialsLvBase: [],
+}
 
 interface StatisticsPanelProps {
-  patchSelected: XivPatchVer | undefined,
-  statistics: any,
-  aethersandGatherings: number[] | undefined,
-  alkahests: number[] | undefined,
+  patchSelected: XivPatchVer | undefined
+  statistics: StatementData | undefined
+  aethersandGatherings: number[] | undefined
+  alkahests: number[] | undefined
   gearSelections: GearSelections
 }
 const props = defineProps<StatisticsPanelProps>()
@@ -33,18 +42,10 @@ const showBiColorItemsInTomeScriptButton = computed(() => {
   return store.userConfig?.tomescript_show_bicolor_items ?? false
 })
 
-const lvBaseItems = computed(() => {
-  const items = []
-  for (const id in props.statistics.lvBase) {
-    try {
-      const item = getItemInfo(props.statistics.lvBase[id])
-      items.push(item)
-    } catch (error) {
-      console.warn('[compute.lvBaseItems] Error processing item ' + id + ':', error)
-    }
-  }
-  return items
-})
+const currentStatistics = computed(() => props.statistics ?? emptyStatementData)
+const lvBaseItems = computed(() => currentStatistics.value.materialsLvBase)
+
+const classified = computed(() => classifyMaterials(lvBaseItems.value))
 
 /** 
  * 要高亮显示的素材组。
@@ -55,15 +56,21 @@ const lvBaseItems = computed(() => {
 const reagents = computed(() => {
   const placeHolder = getItemInfo(0)
   if (!props.alkahests?.length) {
-    return [placeHolder,placeHolder,placeHolder,placeHolder]
+    return [placeHolder, placeHolder, placeHolder, placeHolder]
   }
-  const crafts = []
+  const crafts: ItemInfo[] = []
   props.alkahests.forEach(alkahest => {
-    const item = props.statistics.lv1[alkahest.toString()] ?? alkahest
-    crafts.push(getItemInfo(item))
+    const found = currentStatistics.value.materialsLv1.find(item => item.id === alkahest)
+    if (found) {
+      crafts.push(found)
+    } else {
+      const item = getItemInfo(alkahest)
+      item.amount = 0
+      crafts.push(item)
+    }
   })
   while (crafts.length < 5) {
-    crafts.push(placeHolder);
+    crafts.push(placeHolder)
   }
   if (crafts[4].id === 0) crafts.pop()
   return crafts
@@ -71,52 +78,40 @@ const reagents = computed(() => {
 
 const tomeScriptItems = computed(() => {
   const items = {} as Record<number, ItemInfo[]>
-  for (const id in props.statistics.lvBase) {
-    try {
-      const _id = parseInt(id)
-      if (props.aethersandGatherings?.length && props.aethersandGatherings.includes(_id)) continue
-      const itemTradeInfo = XivUnpackedTradeMap[_id]
-      if (itemTradeInfo) {
-        const costId = itemTradeInfo.costId
-        if (!showBiColorItemsInTomeScriptButton.value && costId === 26807) continue // 处理双色宝石
-        if (!items[costId]) items[costId] = []
-        const item = props.statistics.lvBase[id]
-        items[costId].push(getItemInfo(item))
-      }
-    } catch (error) {
-      console.warn('[compute.tomeScriptItems] Error processing item ' + id + ':', error)
+  currentStatistics.value.materialsLvBase.forEach(item => {
+    if (props.aethersandGatherings?.length && props.aethersandGatherings.includes(item.id)) return
+    if (item.tradeInfo?.costId) {
+      const costId = item.tradeInfo.costId
+      if (!showBiColorItemsInTomeScriptButton.value && costId === 26807) return // 处理双色宝石
+      items[costId] ??= []
+      items[costId].push(item)
     }
-  }
+  })
   // 根据道具商店兑换顺序重组排序
   for (const costId in items) {
     const _costId = Number(costId)
-    items[_costId] = items[_costId].sort((a, b) => 
+    items[_costId].sort((a, b) => 
       (a.uiTypeOrder - b.uiTypeOrder) ||
       (a.sortOrder - b.sortOrder) ||
-      (a.id - b.id)
+      (a.id - b.id),
     )
   }
   return items
 })
 
 const precrafts = computed(() => {
-  const common = []; const master = []
-  for (const id in props.statistics.lv1) {
-    try {
-      const itemCalculated = props.statistics.lv1[id]
-      const item = getItemInfo(itemCalculated)
-      if (item.craftInfo?.recipeId) {
-        if (item.craftInfo.masterRecipeId) {
-          if (props.alkahests?.includes(item.id)) continue
-          master.push(item)
-        } else {
-          common.push(item)
-        }
+  const common: ItemInfo[] = []
+  const master: ItemInfo[] = []
+  currentStatistics.value.materialsLv1.forEach(item => {
+    if (item.craftInfo?.recipeId) {
+      if (item.craftInfo.masterRecipeId) {
+        if (props.alkahests?.includes(item.id)) return
+        master.push(item)
+      } else {
+        common.push(item)
       }
-    } catch (error) {
-      console.warn('[compute.commonPrecrafts] Error processing item ' + id + ':', error)
     }
-  }
+  })
   return {
     commonPrecrafts: common,
     masterPrecrafts: master,
@@ -131,54 +126,35 @@ const aethersands = computed(() => {
   if (!props.aethersandGatherings?.length) {
     return [] as ItemInfo[]
   }
-  const aethersands : ItemInfo[] = []
+  const sands: ItemInfo[] = []
   props.aethersandGatherings.forEach(ag => {
     if (props.alkahests?.includes(ag)) return // 忽略特殊秘籍半成品：炼金幻水
-    const item = props.statistics.lvBase[ag.toString()] ?? ag
-    aethersands.push(getItemInfo(item))
+    const found = currentStatistics.value.materialsLvBase.find(item => item.id === ag)
+    if (found) {
+      sands.push(found)
+    } else {
+      const item = getItemInfo(ag)
+      item.amount = 0
+      sands.push(item)
+    }
   })
-  return aethersands
+  return sands
 })
 
 /**
  * 表示限时采集品统计。
  */
-const gatheringsTimed = computed(() => {
-  const gathers : ItemInfo[] = []
-  lvBaseItems.value.forEach(item => {
-    if (item.gatherInfo?.timeLimitInfo?.length) {
-      gathers.push(item)
-    }
-  })
-  return gathers
-})
+const gatheringsTimed = computed(() => classified.value.gatherableLimited)
 
 /**
  * 表示非限时(常规)采集品统计。
  */
-const gatheringsCommon = computed(() => {
-  const gathers : ItemInfo[] = []
-  lvBaseItems.value.forEach(item => {
-    if (item.gatherInfo?.placeID && !item.gatherInfo.timeLimitInfo?.length) {
-      gathers.push(item)
-    }
-  })
-  return gathers
-})
+const gatheringsCommon = computed(() => classified.value.gatherableCommon)
 
 /**
  * 表示碎晶/水晶/晶簇统计。
  */
-const crystals = computed(() => {
-  const _crystals = []
-  for (const id in props.statistics.lvBase) {
-    const item = props.statistics.lvBase[id]
-    if (item?.uc === 59) { // * 参见src\assets\data\xiv-item-types.json
-      _crystals.push(getItemInfo(item))
-    }
-  }
-  return _crystals
-})
+const crystals = computed(() => classified.value.crystals)
 
 const reagentsBtnColors = ['#FF8080', '#8080FF', '#FFC080', '#00BFFF', '#40E0D0'] // 刚巧耐智意
 
@@ -191,14 +167,12 @@ const showStatement = () => {
     showProStatementModal.value = true
   }
 }
-const statementData = computed(() => {
-  return getStatementData(props.statistics)
-})
+const statementData = computed(() => currentStatistics.value)
 
 const importExportData = computed(() => {
   return {
     gearSelections: props.gearSelections,
-    statistics: props.statistics,
+    statistics: currentStatistics.value,
     tomeScriptItems: tomeScriptItems.value,
     normalGathering: gatheringsCommon.value,
     limitedGathering: gatheringsTimed.value,

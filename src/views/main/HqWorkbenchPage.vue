@@ -60,10 +60,10 @@ const handleJobButtonDupliClick = () => {
 
 const showModalJoinInWorkflow = ref(false)
 const workflowItems = computed(() => {
-  const items : Record<number, number> = {}
+  const items: Record<number, number> = {}
   if (!statistics.value) return items
-  Object.values(statistics.value.ls).forEach((stat: any) => {
-    items[stat.id] = stat.need
+  statistics.value.craftTargets.forEach(item => {
+    items[item.id] = item.amount
   })
   return items
 })

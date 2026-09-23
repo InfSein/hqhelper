@@ -104,9 +104,9 @@ const statistics = computed(() => {
 
 const showModalJoinInWorkflow = ref(false)
 const workflowItems = computed(() => {
-  const items : Record<number, number> = {}
-  Object.values(statistics.value.ls).forEach((stat: any) => {
-    items[stat.id] = stat.need
+  const items: Record<number, number> = {}
+  statistics.value.craftTargets.forEach(item => {
+    items[item.id] = item.amount
   })
   return items
 })

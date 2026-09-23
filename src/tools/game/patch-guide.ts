@@ -12,6 +12,7 @@ import {
 } from '@/assets/data'
 import { getItemInfo, sortItems, type ItemInfo } from '@/tools/item'
 import { useAppCore } from '@/composables/useAppCore'
+import type { StatementData } from '@/types/core'
 import { fixGearSelections, type AttireAffix, type AccessoryAffix, type GearSelections } from '@/types/game/gear'
 
 /**
@@ -181,9 +182,9 @@ export interface CategorizedMaterials {
 }
 
 /**
- * 辅助方法：从 nbb-cal 结果中归类素材
+ * 辅助方法：从算法计算结果中归类素材
  */
-const extractMaterials = (statistics: any, patchData: HqDataVer | null): CategorizedMaterials => {
+const extractMaterials = (statistics: StatementData | undefined, patchData: HqDataVer | null): CategorizedMaterials => {
   const normalPrecrafts: ItemInfo[] = []
   const masterPrecrafts: ItemInfo[] = []
   const aethersands: ItemInfo[] = []
@@ -192,11 +193,9 @@ const extractMaterials = (statistics: any, patchData: HqDataVer | null): Categor
     return { normalPrecrafts, aethersands, masterPrecrafts }
   }
 
-  // 从 lv1 中提取半成品（普通半成品与秘籍半成品）
-  for (const id in statistics.lv1) {
-    const itemCalculated = statistics.lv1[id]
-    const item = getItemInfo(itemCalculated)
-    if (item.isCrystal) continue
+  // 从 materialsLv1 中提取半成品（普通半成品与秘籍半成品）
+  statistics.materialsLv1.forEach(item => {
+    if (item.isCrystal) return
     if (item.craftInfo?.recipeId) {
       if (item.craftInfo.masterRecipeId) {
         masterPrecrafts.push(item)
@@ -204,18 +203,15 @@ const extractMaterials = (statistics: any, patchData: HqDataVer | null): Categor
         normalPrecrafts.push(item)
       }
     }
-  }
+  })
 
-  // 从 lvBase 中提取灵砂（通过 isAethersand 或 patchData.reduces 判断）
+  // 从 materialsLvBase 中提取灵砂（通过 isAethersand 或 patchData.reduces 判断）
   const reducesAethersandIds = Object.keys(patchData?.reduces ?? {}).map(Number)
-  for (const id in statistics.lvBase) {
-    const itemCalculated = statistics.lvBase[id]
-    const item = getItemInfo(itemCalculated)
-    const numId = Number(id)
-    if (item.isAethersand || reducesAethersandIds.includes(numId)) {
+  statistics.materialsLvBase.forEach(item => {
+    if (item.isAethersand || reducesAethersandIds.includes(item.id)) {
       aethersands.push(item)
     }
-  }
+  })
 
   // 统一排序
   sortItems(normalPrecrafts, 'recipeOrder')

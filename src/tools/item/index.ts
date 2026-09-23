@@ -591,3 +591,4 @@ export const getItemInfo = (item: `${number}` | number | CalculatedItem | Recipe
 }
 
 export * from './gather'
+export * from './classify'

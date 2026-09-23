@@ -3,51 +3,22 @@ import ItemList from '@/components/item/ItemList.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
-import { getItemInfo, type ItemInfo } from '@/tools/item'
-import { useAppCore } from '@/composables/useAppCore'
+import { classifyMaterials } from '@/tools/item'
+import type { StatementData } from '@/types/core'
 
 const { t } = useLocale()
 const store = useStore()
 const { isMobile } = useResponsive()
 
 interface CraftStatisticsProps {
-  itemSelected: Record<number, number>
+  statistics: StatementData
   hidePrecraftMaterials?: boolean
   listHeight?: number
 }
 const props = defineProps<CraftStatisticsProps>()
 
-const { calItems } = useAppCore()
-
-const statistics = computed(() => {
-  const value = calItems(props.itemSelected)
-  return value
-})
-
-const lv1Items = computed(() => {
-  const items = []
-  for (const id in statistics.value.lv1) {
-    try {
-      const item = getItemInfo(statistics.value.lv1[id])
-      items.push(item)
-    } catch (error) {
-      console.warn('[compute.lv1Items] Error processing item ' + id + ':', error)
-    }
-  }
-  return items
-})
-const lvBaseItems = computed(() => {
-  const items = []
-  for (const id in statistics.value.lvBase) {
-    try {
-      const item = getItemInfo(statistics.value.lvBase[id])
-      items.push(item)
-    } catch (error) {
-      console.warn('[compute.lvBaseItems] Error processing item ' + id + ':', error)
-    }
-  }
-  return items
-})
+const lv1Items = computed(() => props.statistics.materialsLv1)
+const lvBaseItems = computed(() => props.statistics.materialsLvBase)
 
 const materialTarget = computed(() => {
   if (props.hidePrecraftMaterials) {
@@ -60,7 +31,7 @@ const materialTargetDescription = computed(() => {
   return [
     props.hidePrecraftMaterials
       ? t('statistics.group_tooltip.common_material_lv1')
-      : t('statistics.group_tooltip.common_material_lvbase')
+      : t('statistics.group_tooltip.common_material_lvbase'),
   ]
 })
 
@@ -68,91 +39,38 @@ const materialTargetDescription = computed(() => {
  * 表示要展示的半成品。
  */
 const precrafts = computed(() => {
-  const crafts : ItemInfo[] = []
-  lv1Items.value.forEach(item => {
-    if (item.craftInfo?.jobId) {
-      crafts.push(item)
-    }
-  })
-  return crafts
+  return lv1Items.value.filter(item => item.craftInfo?.jobId)
 })
+
+const classified = computed(() => classifyMaterials(materialTarget.value))
 
 /**
  * 表示需要用亚拉戈神典石或工票兑换的道具。
  */
-const tomeScriptItems = computed(() => {
-  const items : ItemInfo[] = []
-  materialTarget.value.forEach(material => {
-    if (material.isAethersand) return
-    if (material.gatherInfo?.jobId) return
-    if (!material.tradeInfo) return
-    items.push(material)
-  })
-  return items
-})
+const tomeScriptItems = computed(() => classified.value.tradable)
 
 /**
  * 表示碎晶/水晶/晶簇统计。
  */
-const crystals = computed(() => {
-  const _crystals : ItemInfo[] = []
-  materialTarget.value.forEach(material => {
-    if (material.isCrystal) {
-      _crystals.push(material)
-    }
-  })
-  return _crystals
-})
+const crystals = computed(() => classified.value.crystals)
 
 /**
- * 表示限时采集品统计。
- * 包括灵砂。
+ * 表示限时采集品统计（包括灵砂）。
  */
-const gatheringsTimed = computed(() => {
-  const aethersands : ItemInfo[] = []
-  const gathers : ItemInfo[] = []
-
-  materialTarget.value.forEach(material => {
-    if (material.isAethersand) {
-      aethersands.push(material)
-    }
-    if (material.gatherInfo?.timeLimitInfo?.length) {
-      gathers.push(material)
-    }
-  })
-
-  return [...aethersands, ...gathers]
-})
+const gatheringsTimed = computed(() => [
+  ...classified.value.aethersands,
+  ...classified.value.gatherableLimited,
+])
 
 /**
  * 表示非限时(常规)采集品统计。
  */
-const gatheringsCommon = computed(() => {
-  const gathers : ItemInfo[] = []
-  materialTarget.value.forEach(material => {
-    if (material.gatherInfo?.placeID && !material.gatherInfo.timeLimitInfo?.length) {
-      gathers.push(material)
-    }
-  })
-  return gathers
-})
+const gatheringsCommon = computed(() => classified.value.gatherableCommon)
 
 /**
  * 表示其他道具统计。
  */
-const otherMaterials = computed(() => {
-  const items : ItemInfo[] = []
-  materialTarget.value.forEach(material => {
-    if (material.isAethersand) return
-    if (material.craftInfo?.jobId) return
-    if (material.gatherInfo?.placeID) return
-    if (material.tradeInfo) return
-    if (material.isCrystal) return
-    if (material.gatherInfo) return
-    items.push(material)
-  })
-  return items
-})
+const otherMaterials = computed(() => classified.value.other)
 </script>
 
 <template>

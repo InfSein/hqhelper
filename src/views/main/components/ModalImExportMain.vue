@@ -16,7 +16,7 @@ import { useLocale } from '@/composables/useLocale'
 import { XivPatchVers, type XivPatchVer } from '@/assets/data'
 import type { ItemInfo } from '@/tools/item'
 import { export2Excel, importExcel } from '@/tools/excel'
-import { useAppCore } from '@/composables/useAppCore'
+import type { StatementData } from '@/types/core'
 import type { GearSelections } from '@/types/game/gear'
 import type { ItemPriceInfo } from '@/types/item/price'
 
@@ -25,7 +25,6 @@ const updateItemPrices = inject<() => Promise<void>>('updateItemPrices')!
 const store = useStore()
 const { t } = useLocale()
 const NAIVE_UI_MESSAGE = useMessage()
-const { getStatementData } = useAppCore()
 
 const showModal = defineModel<boolean>('show', { required: true })
 const onLoad = () => {
@@ -33,15 +32,15 @@ const onLoad = () => {
 }
 
 interface ModalImportExportMainProps {
-  gearSelections: GearSelections | undefined,
-  statistics: any,
-  tomeScriptItems: Record<number, ItemInfo[]>,
-  normalGathering: ItemInfo[],
-  limitedGathering: ItemInfo[],
-  aethersands: ItemInfo[],
-  crystals: ItemInfo[],
-  ui_lang: 'zh' | 'ja' | 'en',
-  item_lang: 'zh' | 'ja' | 'en',
+  gearSelections: GearSelections | undefined
+  statistics: StatementData
+  tomeScriptItems: Record<number, ItemInfo[]>
+  normalGathering: ItemInfo[]
+  limitedGathering: ItemInfo[]
+  aethersands: ItemInfo[]
+  crystals: ItemInfo[]
+  ui_lang: 'zh' | 'ja' | 'en'
+  item_lang: 'zh' | 'ja' | 'en'
   patchSelected: XivPatchVer | undefined
 }
 const props = defineProps<ModalImportExportMainProps>()
@@ -89,10 +88,9 @@ const handleExportExcel = async () => {
     props.ui_lang,
     props.item_lang,
     t,
-    getStatementData,
     fileName.value ? fileName.value + '.xlsx' : undefined,
     item_price_map,
-    store.funcConfig.universalis_priceType
+    store.funcConfig.universalis_priceType,
   )
   exporting.value = false
 }

@@ -124,7 +124,7 @@ const handleCopyAsMacro = async () => {
     :style="{ maxWidth: isMobile ? 'unset' : '320px' }"
   >
     <template #trigger>
-      <n-button class="w-full h-full p-1" :style="btnStyle" :title="t('common.tomescript')">
+      <n-button class="w-full h-full p-1.25" :style="btnStyle" :title="t('common.tomescript')">
         <div class="flex w-full flex-col text-right">
           <p class="truncate">{{ t('common.tomescript') }}</p>
           <div class="tome-scripts">

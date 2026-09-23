@@ -14,7 +14,7 @@ import type {
   ProStatementBlock,
   StatementData,
 } from '@/types/core'
-import { getItemInfo, sortItems, type ItemInfo } from '@/tools/item'
+import { getItemInfo, sortItems, groupCraftablesByJob, type ItemInfo } from '@/tools/item'
 import { getRecipeMap } from '@/tools/recipe/cache'
 import { doCal } from '@/tools/recipe/engine'
 
@@ -47,7 +47,30 @@ function collectCalResultToMap(
   return map
 }
 
-interface ClassifiedMaterials {
+/** 将引擎计算结果转换为 UI 就绪的 StatementData */
+function rawToStatementData(raw: RecipeCalculateResult): StatementData {
+  const fieldMapping: [keyof RecipeCalculateResult, keyof StatementData][] = [
+    ['ls', 'craftTargets'],
+    ['lv1', 'materialsLv1'],
+    ['lv2', 'materialsLv2'],
+    ['lv3', 'materialsLv3'],
+    ['lv4', 'materialsLv4'],
+    ['lv5', 'materialsLv5'],
+    ['lvBase', 'materialsLvBase'],
+  ]
+
+  const result = {} as StatementData
+  for (const [calKey, statKey] of fieldMapping) {
+    const items: ItemInfo[] = []
+    for (const id in raw[calKey]) {
+      items.push(getItemInfo(raw[calKey][id]))
+    }
+    result[statKey] = items
+  }
+  return result
+}
+
+interface ProcessClassifiedMaterials {
   gatherableCommon: ItemInfo[]
   gatherableLimited: ItemInfo[]
   aethersands: ItemInfo[]
@@ -55,9 +78,12 @@ interface ClassifiedMaterials {
   otherCollectable: ItemInfo[]
 }
 
-/** 将基础素材按获取方式分类 */
-function classifyBaseMaterials(lvBaseItems: ItemInfo[]): ClassifiedMaterials {
-  const result: ClassifiedMaterials = {
+/**
+ * 推荐流程专用：将基础素材按获取方式分类（排除水晶）
+ * 推荐流程中不展示水晶分组，因此水晶在此显式过滤
+ */
+function classifyBaseMaterialsForProcess(lvBaseItems: ItemInfo[]): ProcessClassifiedMaterials {
+  const result: ProcessClassifiedMaterials = {
     gatherableCommon: [],
     gatherableLimited: [],
     aethersands: [],
@@ -77,6 +103,7 @@ function classifyBaseMaterials(lvBaseItems: ItemInfo[]): ClassifiedMaterials {
     } else if (item.tradeInfo?.costId) {
       result.tradable.push(item)
     } else if (!item.isCrystal) {
+      // 显式排除水晶，其余归入其他采集/获取
       result.otherCollectable.push(item)
     }
   })
@@ -89,23 +116,6 @@ function classifyBaseMaterials(lvBaseItems: ItemInfo[]): ClassifiedMaterials {
   )
 
   return result
-}
-
-/** 将可制作物品按职业 ID 分组（合并同 ID 数量） */
-function groupCraftablesByJob(items: ItemInfo[]): Record<number, ItemInfo[]> {
-  const groups: Record<number, ItemInfo[]> = {}
-  items.forEach(item => {
-    if (!item.craftInfo?.jobId) return
-    const jobId = item.craftInfo.jobId
-    groups[jobId] ??= []
-    const existing = groups[jobId].find(i => i.id === item.id)
-    if (existing) {
-      existing.amount += item.amount
-    } else {
-      groups[jobId].push({ ...item })
-    }
-  })
-  return groups
 }
 
 /** 采集物品排序（按地图或限时开始时间） */
@@ -148,10 +158,9 @@ export function useAppCore() {
   const recipeMap = getRecipeMap()
 
   /**
-   * 直接通过 itemMap 计算所需道具
-   * @param selections key: 道具 id, value: 数量
+   * 内部纯算法调用：直接调用计算引擎返回中间结构体
    */
-  const calItems = (selections: Record<number, number>): RecipeCalculateResult => {
+  const calItemsRaw = (selections: Record<number, number>): RecipeCalculateResult => {
     const calMap: Record<string, RecipeCalculateInputEntry> = {}
     for (const item in selections) {
       const count = selections[item]
@@ -168,9 +177,23 @@ export function useAppCore() {
   }
 
   /**
-   * 计算指定装备选择所需的素材统计
+   * 计算指定物品选择所需的素材统计
+   * @param selections key: 道具 id, value: 数量
+   * @returns UI 就绪的分层 ItemInfo 数据
    */
-  const calGearSelections = (input: GearSelections, patch: XivPatchVer = '7.0'): RecipeCalculateResult | undefined => {
+  const calItems = (selections: Record<number, number>): StatementData => {
+    const raw = calItemsRaw(selections)
+    return rawToStatementData(raw)
+  }
+
+  /**
+   * 计算指定装备选择所需的素材统计
+   * @returns UI 就绪的分层 ItemInfo 数据
+   */
+  const calGearSelections = (
+    input: GearSelections,
+    patch: XivPatchVer = '7.0',
+  ): StatementData | undefined => {
     const patchData = HqData.patches[patch]
     if (!patchData) {
       return undefined
@@ -196,37 +219,8 @@ export function useAppCore() {
         }
       }
     }
-    return doCal(out)
-  }
-
-  /**
-   * 获取查看报表需要的数据
-   * @param statistics 通过配方展开计算获得的统计数据
-   */
-  const getStatementData = (statistics: RecipeCalculateResult): StatementData => {
-    const ignoreCrystal = store.funcConfig.statement_ignore_crystals
-
-    const fieldMapping: [keyof RecipeCalculateResult, keyof StatementData][] = [
-      ['ls', 'craftTargets'],
-      ['lv1', 'materialsLv1'],
-      ['lv2', 'materialsLv2'],
-      ['lv3', 'materialsLv3'],
-      ['lv4', 'materialsLv4'],
-      ['lv5', 'materialsLv5'],
-      ['lvBase', 'materialsLvBase'],
-    ]
-
-    const result = {} as StatementData
-    for (const [calKey, statKey] of fieldMapping) {
-      const items: ItemInfo[] = []
-      for (const id in statistics[calKey]) {
-        const item = getItemInfo(statistics[calKey][id])
-        if (ignoreCrystal && item.isCrystal) continue
-        items.push(item)
-      }
-      result[statKey] = items
-    }
-    return result
+    const raw = doCal(out)
+    return rawToStatementData(raw)
   }
 
   /**
@@ -252,14 +246,14 @@ export function useAppCore() {
     const targetItemsForCal = deductPrepared(targetItems, itemsPrepared.craftTarget)
 
     // 计算一级素材
-    const statisticsForLv1 = calItems(targetItemsForCal)
+    const statisticsForLv1 = calItemsRaw(targetItemsForCal)
     const lv1Items = collectCalResultToMap(statisticsForLv1.lv1, ignoreCrystal)
 
     // 扣减已准备的一级素材
     const lv1ItemsForCal = deductPrepared(lv1Items, itemsPrepared.materialsLv1)
 
     // 计算基础素材
-    const statistics = calItems(lv1ItemsForCal)
+    const statistics = calItemsRaw(lv1ItemsForCal)
     const baseItems = collectCalResultToMap(statistics.lvBase, ignoreCrystal)
 
     // 一级素材中无配方的道具直接计入基础素材
@@ -317,7 +311,7 @@ export function useAppCore() {
     const craftTargets = dealItemMapToItemList(targetItemsForCal)
     const lv1Items = dealItemMapToItemList(lv1ItemsForCal)
 
-    const statistics = calItems(lv1ItemsForCal)
+    const statistics = calItemsRaw(lv1ItemsForCal)
     const lv2Map = collectCalResultToMap(statistics.lv1, false)
     const lv3Map = collectCalResultToMap(statistics.lv2, false)
 
@@ -362,8 +356,8 @@ export function useAppCore() {
     const language_ui = store.userConfig.language_ui
     const groups: RecommItemGroup[] = []
 
-    // 1. 基础素材分类
-    const classified = classifyBaseMaterials(lvBaseItems)
+    // 1. 基础素材分类（推荐流程专用：排除水晶）
+    const classified = classifyBaseMaterialsForProcess(lvBaseItems)
 
     // 2. 半成品/成品按职业分组
     const itemsPrePrePrecraft = groupCraftablesByJob(lv3Items)
@@ -503,7 +497,6 @@ export function useAppCore() {
   return {
     calItems,
     calGearSelections,
-    getStatementData,
     getProStatementData,
     calRecommProcessData,
     calRecommProcessGroups,

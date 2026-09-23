@@ -6,7 +6,6 @@ import type { Workflow } from '@/types/workstate/workflow'
 export function useWorkflowStatistics(currentWorkflow: ComputedRef<Workflow>) {
   const {
     calItems,
-    getStatementData,
     getProStatementData,
     calRecommProcessData,
     calRecommProcessGroups,
@@ -31,7 +30,7 @@ export function useWorkflowStatistics(currentWorkflow: ComputedRef<Workflow>) {
   })
 
   const statementData = computed(() => {
-    return getStatementData(statistics.value)
+    return statistics.value
   })
 
   const proStatementData = computed(() => {
