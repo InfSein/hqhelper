@@ -3,7 +3,7 @@ import ItemList from '@/components/item/ItemList.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
-import { classifyMaterials } from '@/tools/item'
+import { classifyMaterials } from '@/tools/item/classify'
 import type { StatementData } from '@/types/core'
 
 const { t } = useLocale()

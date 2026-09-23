@@ -1,20 +1,5 @@
 import type { ItemInfo } from '@/types/item'
 
-const phItem : XivUnpackedItem = {
-  id: 0,
-  need: 0,
-  icon: -1,
-  name: ['','',''],
-  desc: ['','',''],
-  uc: -1,
-  pc: -1,
-  mkc: -1,
-  rids: [], ilv: -1, sc: 0, so: 0, hqable: false, rarity: 0,
-  dye: 0, act: 0, tradable: false, collectable: false, reduce: false,
-  elv: 0, ms: 0, bpm: [], spm: [], 
-  jobs: 0, jd: false, p: '', apm: []
-}
-
 import {
   XivUnpackedGatheringItems,
   XivUnpackedItems, type XivUnpackedItem,
@@ -141,16 +126,29 @@ export const getItemInfo = (item: `${number}` | number | RecipeCalculateResultIt
     itemAmount = item.need
   }
 
-  let _item : XivUnpackedItem
+  let _item : XivUnpackedItem = {
+    id: 0,
+    need: 0,
+    icon: -1,
+    name: ['','',''],
+    desc: ['','',''],
+    uc: -1,
+    pc: -1,
+    mkc: -1,
+    rids: [], ilv: -1, sc: 0, so: 0, hqable: false, rarity: 0,
+    dye: 0, act: 0, tradable: false, collectable: false, reduce: false,
+    elv: 0, ms: 0, bpm: [], spm: [], 
+    jobs: 0, jd: false, p: '', apm: []
+  }
+
   let itemValid = true
-  if (!itemID) {
-    _item = deepCopy(phItem)
-  } else {
-    if (!XivUnpackedItems?.[itemID]) {
+  if (itemID) {
+    if (XivUnpackedItems?.[itemID]) {
+      _item = deepCopy(XivUnpackedItems?.[itemID])
+    } else {
       itemValid = false
       console.log('[开发提示] 此物品在items表中缺失:', item)
     }
-    _item = deepCopy(XivUnpackedItems?.[itemID] || phItem)
     _item.id = itemID
   }
 
@@ -173,7 +171,7 @@ export const getItemInfo = (item: `${number}` | number | RecipeCalculateResultIt
   itemInfo.descEN = _item.desc[1]
   itemInfo.descZH = _item.desc[2]
   itemInfo.classJobId = _item.jobs
-  itemInfo.patch = _item.p || '7.3'
+  itemInfo.patch = _item.p || '???'
   itemInfo.hqable = _item.hqable
   itemInfo.tradable = _item.tradable && !_item.collectable
   itemInfo.collectable = _item.collectable
@@ -393,6 +391,3 @@ export const getItemInfo = (item: `${number}` | number | RecipeCalculateResultIt
   // * 组装完毕，返回结果
   return itemInfo
 }
-
-export * from './gather'
-export * from './classify'

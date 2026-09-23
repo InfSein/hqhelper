@@ -1,10 +1,10 @@
-export interface GatherThreshold {
+interface GatherThreshold {
   field: string
   value: number
   upstair?: boolean
 }
 
-export interface GatherThresholdResult {
+interface GatherThresholdResult {
   diffGather: number
   diffPerception: number
   diffText: string

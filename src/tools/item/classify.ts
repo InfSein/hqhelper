@@ -1,7 +1,7 @@
 import type { ItemInfo } from '@/types/item'
 
 /** 基础素材按获取方式的分类结果 */
-export interface ClassifiedMaterials {
+interface ClassifiedMaterials {
   /** 常规采集 */
   gatherableCommon: ItemInfo[]
   /** 限时采集 */

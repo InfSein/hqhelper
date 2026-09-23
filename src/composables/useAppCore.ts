@@ -14,7 +14,8 @@ import type {
   ProStatementBlock,
   StatementData,
 } from '@/types/core'
-import { getItemInfo, sortItems, groupCraftablesByJob } from '@/tools/item'
+import { getItemInfo, sortItems } from '@/tools/item'
+import { groupCraftablesByJob } from '@/tools/item/classify'
 import { getRecipeMap } from '@/tools/recipe/cache'
 import { doCal } from '@/tools/recipe/engine'
 
