@@ -13,7 +13,6 @@ import {
   NotificationsNoneRound,
 } from '@vicons/material'
 import { CopyToClipboard } from '@/tools'
-import { getItemInfo } from '@/tools/item'
 import type { ItemInfo } from '@/types/item'
 import {
   _VAR_GATHERCLOCK_MAX_STARRED,
@@ -49,10 +48,7 @@ export function useItemContextMenu(
 
   const isGatherClockItem = computed(() => {
     const itemInfo = getItem()
-    if (!itemInfo?.id) return false
-    if (itemInfo.gatherInfo?.timeLimitInfo?.length) return true
-    const fullItem = getItemInfo(itemInfo.id)
-    return !!fullItem?.gatherInfo?.timeLimitInfo?.length
+    return !!(itemInfo?.id && itemInfo.gatherInfo?.timeLimitInfo?.length)
   })
 
   const getItemDisplayName = (item: ItemInfo) => {
