@@ -20,7 +20,7 @@ import {
   usePatchGuide,
   type CategorizedMaterials,
 } from '../composables/usePatchGuide'
-import type { ItemInfo } from '@/tools/item'
+import type { ItemInfo } from '@/types/item'
 
 interface NewGearsSectionProps {
   patchVer: string

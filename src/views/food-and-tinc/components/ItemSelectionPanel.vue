@@ -8,7 +8,8 @@ import ItemStepper from '@/components/item/ItemStepper.vue'
 import TooltipButton from '@/components/ui/TooltipButton.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
-import { getItemInfo, type ItemInfo } from '@/tools/item'
+import { getItemInfo } from '@/tools/item'
+import type { ItemInfo } from '@/types/item'
 import { getFtData } from '@/tools/game'
 
 const store = useStore()

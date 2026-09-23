@@ -5,7 +5,8 @@ import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
 import { objectEqual } from '@/tools'
-import { getItemInfo, type ItemInfo, type StatementRow } from '@/tools/item'
+import { getItemInfo } from '@/tools/item'
+import type { ItemInfo, StatementRow } from '@/types/item'
 
 const store = useStore()
 const { t } = useLocale()

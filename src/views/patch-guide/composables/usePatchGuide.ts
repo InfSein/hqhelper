@@ -10,7 +10,8 @@ import {
   type XivPatchVer,
   type HqDataVer,
 } from '@/assets/data'
-import { getItemInfo, sortItems, type ItemInfo } from '@/tools/item'
+import { getItemInfo, sortItems } from '@/tools/item'
+import type { ItemInfo } from '@/types/item'
 import { useAppCore } from '@/composables/useAppCore'
 import type { StatementData } from '@/types/core'
 import { fixGearSelections, type AttireAffix, type AccessoryAffix, type GearSelections } from '@/types/game/gear'

@@ -11,7 +11,7 @@ import { useLocale } from '@/composables/useLocale'
 import { useAppModals } from '@/composables/useAppModals'
 import { useResponsive } from '@/composables/useResponsive'
 import useItemPrice from '@/composables/useItemPrice'
-import type { ItemInfo } from '@/tools/item'
+import type { ItemInfo } from '@/types/item'
 
 const store = useStore()
 const { t } = useLocale()

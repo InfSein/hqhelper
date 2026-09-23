@@ -6,7 +6,8 @@ import ItemStatementTable from '@/components/item/ItemStatementTable.vue'
 import { useStore } from '@/store'
 import { useResponsive } from '@/composables/useResponsive'
 import { deepCopy } from '@/tools'
-import { getItemInfo, type ItemInfo } from '@/tools/item'
+import { getItemInfo } from '@/tools/item'
+import type { ItemInfo } from '@/types/item'
 import type { ProStatementBlock } from '@/types/core'
 
 const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})

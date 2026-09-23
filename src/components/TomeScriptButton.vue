@@ -9,7 +9,8 @@ import useConfig from '@/composables/useConfig'
 import { useAppModals } from '@/composables/useAppModals'
 import { useResponsive } from '@/composables/useResponsive'
 import { XivUnpackedTradeMap } from '@/assets/data'
-import { getItemInfo, type ItemInfo } from '@/tools/item'
+import { getItemInfo } from '@/tools/item'
+import type { ItemInfo } from '@/types/item'
 import type { MacroGenerateMode } from '@/types/config/func'
 
 const store = useStore()

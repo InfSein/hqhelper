@@ -1,4 +1,4 @@
-import type { ItemInfo } from './index'
+import type { ItemInfo } from '@/types/item'
 
 /** 基础素材按获取方式的分类结果 */
 export interface ClassifiedMaterials {

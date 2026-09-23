@@ -1,5 +1,6 @@
 import { computed, watch, type ComputedRef } from 'vue'
-import { getItemInfo, type ItemInfo } from '@/tools/item'
+import { getItemInfo } from '@/tools/item'
+import type { ItemInfo } from '@/types/item'
 import { useAppCore } from '@/composables/useAppCore'
 import type { Workflow } from '@/types/workstate/workflow'
 

@@ -6,7 +6,7 @@ import ItemList from '@/components/item/ItemList.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
-import type { ItemInfo } from '@/tools/item'
+import type { ItemInfo } from '@/types/item'
 
 const { t } = useLocale()
 const store = useStore()

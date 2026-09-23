@@ -4,7 +4,8 @@ import {
   XivUnpackedItems,
   type XivPatchVer,
 } from '@/assets/data'
-import { getItemInfo, type ItemInfo } from '@/tools/item'
+import { getItemInfo } from '@/tools/item'
+import type { ItemInfo } from '@/types/item'
 
 export const getImgCdnUrl = (iconID: number, isHq = false) => {
   const CDN_ICON = 'https://icon.nbbjack.com/'

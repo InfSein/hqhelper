@@ -8,7 +8,7 @@ import CraftRecommProcess from '@/components/craft/CraftRecommProcess.vue'
 import { useLocale } from '@/composables/useLocale'
 import useConfig from '@/composables/useConfig'
 import { CopyToClipboard } from '@/tools'
-import { type ItemInfo } from '@/tools/item'
+import type { ItemInfo } from '@/types/item'
 import { useAppCore } from '@/composables/useAppCore'
 
 const { t } = useLocale()

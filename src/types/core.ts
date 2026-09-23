@@ -1,4 +1,4 @@
-import type { ItemInfo } from "@/tools/item"
+import type { ItemInfo } from '@/types/item'
 
 /**
  * 计算引擎输入条目

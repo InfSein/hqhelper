@@ -8,7 +8,7 @@ import ButtonCopyAsMacro from '@/components/craft/ButtonCopyAsMacro.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
 import useConfig from '@/composables/useConfig'
-import { type ItemInfo } from '@/tools/item'
+import type { ItemInfo } from '@/types/item'
 
 const store = useStore()
 const { t } = useLocale()

@@ -11,7 +11,7 @@ import { useLocale } from '@/composables/useLocale'
 import { useItemLocale } from '@/composables/useItemLocale'
 import { useItemContextMenu } from '@/composables/useItemContextMenu'
 import { XivJobs } from '@/assets/data'
-import { type ItemInfo } from '@/tools/item'
+import type { ItemInfo } from '@/types/item'
 
 const store = useStore()
 const { t } = useLocale()

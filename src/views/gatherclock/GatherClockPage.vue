@@ -18,9 +18,9 @@ import { useEorzeaTime } from '@/composables/useEorzeaTime'
 import { useResponsive } from '@/composables/useResponsive'
 import { XivJobs, type XivJob } from '@/assets/data'
 import { playAudio } from '@/tools'
-import { getItemInfo, type ItemInfo } from '@/tools/item'
+import { getItemInfo } from '@/tools/item'
+import type { ItemInfo, ItemGroup } from '@/types/item'
 import { getLimitedGatherings } from '@/tools/game'
-import type { ItemGroup } from '@/types/item'
 import {
   fixWorkState,
   type WorkState,

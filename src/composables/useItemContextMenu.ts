@@ -13,7 +13,8 @@ import {
   NotificationsNoneRound,
 } from '@vicons/material'
 import { CopyToClipboard } from '@/tools'
-import { getItemInfo as getItemInfoHelper, type ItemInfo } from '@/tools/item'
+import { getItemInfo as getItemInfoHelper } from '@/tools/item'
+import type { ItemInfo } from '@/types/item'
 import {
   _VAR_GATHERCLOCK_MAX_STARRED,
   _VAR_GATHERCLOCK_MAX_SUBSCRIBED,

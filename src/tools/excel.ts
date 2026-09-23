@@ -4,7 +4,8 @@ import {
   XivJobs, XivGearAffixes
 } from '@/assets/data'
 import { attireAffixes, accessoryAffixes, type GearSelections, type AttireAffix, type AccessoryAffix, fixGearSelections } from "@/types/game/gear"
-import { getItemInfo, type ItemInfo } from './item'
+import { getItemInfo } from './item'
+import type { ItemInfo } from '@/types/item'
 import type { StatementData } from '@/types/core'
 import type { ItemPriceInfo } from '@/types/item/price'
 

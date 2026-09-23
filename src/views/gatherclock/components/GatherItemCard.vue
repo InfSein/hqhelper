@@ -14,7 +14,7 @@ import { useLocale } from '@/composables/useLocale'
 import { useEorzeaTime } from '@/composables/useEorzeaTime'
 import { useResponsive } from '@/composables/useResponsive'
 import { XivJobs, type XivJob } from '@/assets/data'
-import { type ItemInfo } from '@/tools/item'
+import type { ItemInfo } from '@/types/item'
 import { XivMaps } from '@/tools/game/map'
 import { dealTimeLimit } from '@/views/gatherclock/utils/dealTimeLimit'
 

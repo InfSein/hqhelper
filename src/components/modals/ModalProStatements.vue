@@ -8,7 +8,7 @@ import CraftStatementsPro from '@/components/craft/CraftStatementsPro.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
-import { type ItemInfo } from '@/tools/item'
+import type { ItemInfo } from '@/types/item'
 import { useAppCore } from '@/composables/useAppCore'
 
 const store = useStore()

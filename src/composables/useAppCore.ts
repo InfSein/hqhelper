@@ -6,7 +6,7 @@ import {
   type XivPatchVer,
 } from '@/assets/data'
 import type { GearSelections } from '@/types/game/gear'
-import type { RecommItemGroup } from '@/types/item'
+import type { RecommItemGroup, ItemInfo } from '@/types/item'
 import type {
   RecipeCalculateInputEntry,
   RecipeCalculateResult,
@@ -14,7 +14,7 @@ import type {
   ProStatementBlock,
   StatementData,
 } from '@/types/core'
-import { getItemInfo, sortItems, groupCraftablesByJob, type ItemInfo } from '@/tools/item'
+import { getItemInfo, sortItems, groupCraftablesByJob } from '@/tools/item'
 import { getRecipeMap } from '@/tools/recipe/cache'
 import { doCal } from '@/tools/recipe/engine'
 

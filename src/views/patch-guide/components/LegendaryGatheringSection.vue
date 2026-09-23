@@ -4,7 +4,7 @@ import { AccessAlarmsOutlined } from '@vicons/material'
 import GatherItemCard from '@/views/gatherclock/components/GatherItemCard.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
-import { type ItemInfo } from '@/tools/item'
+import type { ItemInfo } from '@/types/item'
 import { getPatchLegendaryGatherings } from '../composables/usePatchGuide'
 import { fixWorkState, type WorkState } from '@/types/workstate/gatherclock'
 
