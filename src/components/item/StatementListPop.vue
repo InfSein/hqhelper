@@ -9,7 +9,7 @@ import { useLocale } from '@/composables/useLocale'
 import useConfig from '@/composables/useConfig'
 import { useResponsive } from '@/composables/useResponsive'
 import { CopyToClipboard, deepCopy } from '@/tools'
-import type { ItemInfo, StatementRow } from '@/tools/item'
+import type { ItemInfo, StatementRow } from '@/types/item'
 
 const store = useStore()
 const { t } = useLocale()

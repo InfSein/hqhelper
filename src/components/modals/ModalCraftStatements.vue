@@ -6,7 +6,7 @@ import ModalPreferences from './ModalPreferences.vue'
 import CraftStatements from '@/components/craft/CraftStatements.vue'
 import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
-import type { ItemInfo } from '@/tools/item'
+import type { ItemInfo } from '@/types/item'
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()

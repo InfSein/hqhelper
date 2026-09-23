@@ -5,7 +5,7 @@ import {
 import useConfig from '@/composables/useConfig'
 import { useLocale } from '@/composables/useLocale'
 import { useAppModals } from '@/composables/useAppModals'
-import type { ItemInfo } from '@/tools/item'
+import type { ItemInfo } from '@/types/item'
 import type { MacroGenerateMode } from '@/types/config/func'
 
 const NAIVE_UI_MESSAGE = useMessage()

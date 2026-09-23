@@ -10,9 +10,25 @@ import {
   type XivPatchVer,
   type HqDataVer,
 } from '@/assets/data'
-import { getItemInfo, sortItems, type ItemInfo } from '@/tools/item'
-import { useNbbCal } from '@/tools/use-nbb-cal'
+import { getItemInfo, sortItems } from '@/tools/item'
+import type { ItemInfo } from '@/types/item'
+import { useAppCore } from '@/composables/useAppCore'
+import type { StatementData } from '@/types/core'
 import { fixGearSelections, type AttireAffix, type AccessoryAffix, type GearSelections } from '@/types/game/gear'
+
+export interface PatchTradeGroup {
+  costItem: ItemInfo
+  items: {
+    targetItem: ItemInfo
+    costCount: number
+  }[]
+}
+
+export interface CategorizedMaterials {
+  normalPrecrafts: ItemInfo[]
+  aethersands: ItemInfo[]
+  masterPrecrafts: ItemInfo[]
+}
 
 /**
  * 判断物品所属版本是否与指定版本相匹配
@@ -50,14 +66,6 @@ export const getPatchLegendaryGatherings = (patchVer: string): ItemInfo[] => {
     if (aStart !== bStart) return aStart.localeCompare(bStart)
     return (a.gatherInfo.jobId - b.gatherInfo.jobId) || (a.id - b.id)
   })
-}
-
-export interface PatchTradeGroup {
-  costItem: ItemInfo
-  items: {
-    targetItem: ItemInfo
-    costCount: number
-  }[]
 }
 
 /**
@@ -174,16 +182,10 @@ export const getPatchMedicines = (patchVer: string): ItemInfo[] => {
   return items.sort((a, b) => (b.itemLevel - a.itemLevel) || (a.id - b.id))
 }
 
-export interface CategorizedMaterials {
-  normalPrecrafts: ItemInfo[]
-  aethersands: ItemInfo[]
-  masterPrecrafts: ItemInfo[]
-}
-
 /**
- * 辅助方法：从 nbb-cal 结果中归类素材
+ * 辅助方法：从算法计算结果中归类素材
  */
-const extractMaterials = (statistics: any, patchData: HqDataVer | null): CategorizedMaterials => {
+const extractMaterials = (statistics: StatementData | undefined, patchData: HqDataVer | null): CategorizedMaterials => {
   const normalPrecrafts: ItemInfo[] = []
   const masterPrecrafts: ItemInfo[] = []
   const aethersands: ItemInfo[] = []
@@ -192,11 +194,9 @@ const extractMaterials = (statistics: any, patchData: HqDataVer | null): Categor
     return { normalPrecrafts, aethersands, masterPrecrafts }
   }
 
-  // 从 lv1 中提取半成品（普通半成品与秘籍半成品）
-  for (const id in statistics.lv1) {
-    const itemCalculated = statistics.lv1[id]
-    const item = getItemInfo(itemCalculated)
-    if (item.isCrystal) continue
+  // 从 materialsLv1 中提取半成品（普通半成品与秘籍半成品）
+  statistics.materialsLv1.forEach(item => {
+    if (item.isCrystal) return
     if (item.craftInfo?.recipeId) {
       if (item.craftInfo.masterRecipeId) {
         masterPrecrafts.push(item)
@@ -204,18 +204,15 @@ const extractMaterials = (statistics: any, patchData: HqDataVer | null): Categor
         normalPrecrafts.push(item)
       }
     }
-  }
+  })
 
-  // 从 lvBase 中提取灵砂（通过 isAethersand 或 patchData.reduces 判断）
+  // 从 materialsLvBase 中提取灵砂（通过 isAethersand 或 patchData.reduces 判断）
   const reducesAethersandIds = Object.keys(patchData?.reduces ?? {}).map(Number)
-  for (const id in statistics.lvBase) {
-    const itemCalculated = statistics.lvBase[id]
-    const item = getItemInfo(itemCalculated)
-    const numId = Number(id)
-    if (item.isAethersand || reducesAethersandIds.includes(numId)) {
+  statistics.materialsLvBase.forEach(item => {
+    if (item.isAethersand || reducesAethersandIds.includes(item.id)) {
       aethersands.push(item)
     }
-  }
+  })
 
   // 统一排序
   sortItems(normalPrecrafts, 'recipeOrder')
@@ -227,128 +224,6 @@ const extractMaterials = (statistics: any, patchData: HqDataVer | null): Categor
     aethersands,
     masterPrecrafts,
   }
-}
-
-/**
- * 计算指定版本某一个战斗职业一整套装备所需素材
- */
-export const calcJobGearMaterials = (
-  patchVer: string,
-  jobId: number,
-): CategorizedMaterials | null => {
-  const patchData = HqData.patches[patchVer as XivPatchVer]
-  if (!patchData || !patchData.mainHand?.[jobId]) {
-    return null
-  }
-
-  const role = XivJobRoleMap[jobId]
-  if (!role) return null
-
-  const gears: GearSelections = fixGearSelections()
-
-  // 主手与副手
-  gears.mainHand[jobId] = 1
-  if (patchData.offHand?.[jobId]) {
-    gears.offHand[jobId] = 1
-  }
-
-  // 五件防具
-  const attire = role.attire as AttireAffix
-  gears.headAttire[attire] = 1
-  gears.bodyAttire[attire] = 1
-  gears.handsAttire[attire] = 1
-  gears.legsAttire[attire] = 1
-  gears.feetAttire[attire] = 1
-
-  // 饰品（耳、项、腕各1，戒2）
-  const accessory = role.accessory as AccessoryAffix
-  gears.earrings[accessory] = 1
-  gears.necklace[accessory] = 1
-  gears.wrist[accessory] = 1
-  gears.rings[accessory] = 2
-
-  const { calGearSelections } = useNbbCal()
-  const statistics = calGearSelections(gears, patchVer as XivPatchVer)
-
-  return extractMaterials(statistics, patchData)
-}
-
-/**
- * 计算指定版本生产职业全套装备所需素材
- */
-export const calcCrafterGearMaterials = (
-  patchVer: string,
-): CategorizedMaterials | null => {
-  const patchData = HqData.patches[patchVer as XivPatchVer]
-  if (!patchData || !patchData.mainHand?.[8]) {
-    return null
-  }
-
-  const gears: GearSelections = fixGearSelections()
-
-  // 生产职业全部主副手
-  XivRoles.crafter.jobs.forEach(j => {
-    if (patchData.mainHand?.[j]) gears.mainHand[j] = 1
-    if (patchData.offHand?.[j]) gears.offHand[j] = 1
-  })
-
-  // 生产防具与饰品
-  const crafterAttire = XivRoles.crafter.attire as AttireAffix
-  gears.headAttire[crafterAttire] = 1
-  gears.bodyAttire[crafterAttire] = 1
-  gears.handsAttire[crafterAttire] = 1
-  gears.legsAttire[crafterAttire] = 1
-  gears.feetAttire[crafterAttire] = 1
-
-  const crafterAcc = XivRoles.crafter.accessory as AccessoryAffix
-  gears.earrings[crafterAcc] = 1
-  gears.necklace[crafterAcc] = 1
-  gears.wrist[crafterAcc] = 1
-  gears.rings[crafterAcc] = 2
-
-  const { calGearSelections } = useNbbCal()
-  const statistics = calGearSelections(gears, patchVer as XivPatchVer)
-
-  return extractMaterials(statistics, patchData)
-}
-
-/**
- * 计算指定版本采集职业全套装备所需素材
- */
-export const calcGathererGearMaterials = (
-  patchVer: string,
-): CategorizedMaterials | null => {
-  const patchData = HqData.patches[patchVer as XivPatchVer]
-  if (!patchData || !patchData.mainHand?.[16]) {
-    return null
-  }
-
-  const gears: GearSelections = fixGearSelections()
-
-  // 采集职业全部主副手
-  XivRoles.gatherer.jobs.forEach(j => {
-    if (patchData.mainHand?.[j]) gears.mainHand[j] = 1
-    if (patchData.offHand?.[j]) gears.offHand[j] = 1
-  })
-
-  // 采集防具与饰品
-  const gathererAttire = XivRoles.gatherer.attire as AttireAffix
-  gears.headAttire[gathererAttire] = 1
-  gears.bodyAttire[gathererAttire] = 1
-  gears.handsAttire[gathererAttire] = 1
-  gears.legsAttire[gathererAttire] = 1
-  gears.feetAttire[gathererAttire] = 1
-
-  const gathererAcc = XivRoles.gatherer.accessory as AccessoryAffix
-  gears.earrings[gathererAcc] = 1
-  gears.necklace[gathererAcc] = 1
-  gears.wrist[gathererAcc] = 1
-  gears.rings[gathererAcc] = 2
-
-  const { calGearSelections } = useNbbCal()
-  const statistics = calGearSelections(gears, patchVer as XivPatchVer)
-
-  return extractMaterials(statistics, patchData)
 }
 
 /**
@@ -389,18 +264,158 @@ export const mergeCategorizedMaterials = (
 }
 
 /**
- * 计算指定版本生产采集职业全套装备所需素材（兼容旧调用）
+ * 版本攻略专用的组合式函数
+ * 提供各职业装备素材计算及版本内容提取
  */
-export const calcLifeJobsGearMaterials = (
-  patchVer: string,
-): CategorizedMaterials | null => {
-  const crafterMats = calcCrafterGearMaterials(patchVer)
-  const gathererMats = calcGathererGearMaterials(patchVer)
+export function usePatchGuide() {
+  const { calGearSelections } = useAppCore()
 
-  if (!crafterMats && !gathererMats) return null
-  if (!crafterMats) return gathererMats
-  if (!gathererMats) return crafterMats
+  /**
+   * 计算指定版本某一个战斗职业一整套装备所需素材
+   */
+  const calcJobGearMaterials = (
+    patchVer: string,
+    jobId: number,
+  ): CategorizedMaterials | null => {
+    const patchData = HqData.patches[patchVer as XivPatchVer]
+    if (!patchData || !patchData.mainHand?.[jobId]) {
+      return null
+    }
 
-  return mergeCategorizedMaterials(crafterMats, gathererMats)
+    const role = XivJobRoleMap[jobId]
+    if (!role) return null
+
+    const gears: GearSelections = fixGearSelections()
+
+    // 主手与副手
+    gears.mainHand[jobId] = 1
+    if (patchData.offHand?.[jobId]) {
+      gears.offHand[jobId] = 1
+    }
+
+    // 五件防具
+    const attire = role.attire as AttireAffix
+    gears.headAttire[attire] = 1
+    gears.bodyAttire[attire] = 1
+    gears.handsAttire[attire] = 1
+    gears.legsAttire[attire] = 1
+    gears.feetAttire[attire] = 1
+
+    // 饰品（耳、项、腕各1，戒2）
+    const accessory = role.accessory as AccessoryAffix
+    gears.earrings[accessory] = 1
+    gears.necklace[accessory] = 1
+    gears.wrist[accessory] = 1
+    gears.rings[accessory] = 2
+
+    const statistics = calGearSelections(gears, patchVer as XivPatchVer)
+
+    return extractMaterials(statistics, patchData)
+  }
+
+  /**
+   * 计算指定版本生产职业全套装备所需素材
+   */
+  const calcCrafterGearMaterials = (
+    patchVer: string,
+  ): CategorizedMaterials | null => {
+    const patchData = HqData.patches[patchVer as XivPatchVer]
+    if (!patchData || !patchData.mainHand?.[8]) {
+      return null
+    }
+
+    const gears: GearSelections = fixGearSelections()
+
+    // 生产职业全部主副手
+    XivRoles.crafter.jobs.forEach(j => {
+      if (patchData.mainHand?.[j]) gears.mainHand[j] = 1
+      if (patchData.offHand?.[j]) gears.offHand[j] = 1
+    })
+
+    // 生产防具与饰品
+    const crafterAttire = XivRoles.crafter.attire as AttireAffix
+    gears.headAttire[crafterAttire] = 1
+    gears.bodyAttire[crafterAttire] = 1
+    gears.handsAttire[crafterAttire] = 1
+    gears.legsAttire[crafterAttire] = 1
+    gears.feetAttire[crafterAttire] = 1
+
+    const crafterAcc = XivRoles.crafter.accessory as AccessoryAffix
+    gears.earrings[crafterAcc] = 1
+    gears.necklace[crafterAcc] = 1
+    gears.wrist[crafterAcc] = 1
+    gears.rings[crafterAcc] = 2
+
+    const statistics = calGearSelections(gears, patchVer as XivPatchVer)
+
+    return extractMaterials(statistics, patchData)
+  }
+
+  /**
+   * 计算指定版本采集职业全套装备所需素材
+   */
+  const calcGathererGearMaterials = (
+    patchVer: string,
+  ): CategorizedMaterials | null => {
+    const patchData = HqData.patches[patchVer as XivPatchVer]
+    if (!patchData || !patchData.mainHand?.[16]) {
+      return null
+    }
+
+    const gears: GearSelections = fixGearSelections()
+
+    // 采集职业全部主副手
+    XivRoles.gatherer.jobs.forEach(j => {
+      if (patchData.mainHand?.[j]) gears.mainHand[j] = 1
+      if (patchData.offHand?.[j]) gears.offHand[j] = 1
+    })
+
+    // 采集防具与饰品
+    const gathererAttire = XivRoles.gatherer.attire as AttireAffix
+    gears.headAttire[gathererAttire] = 1
+    gears.bodyAttire[gathererAttire] = 1
+    gears.handsAttire[gathererAttire] = 1
+    gears.legsAttire[gathererAttire] = 1
+    gears.feetAttire[gathererAttire] = 1
+
+    const gathererAcc = XivRoles.gatherer.accessory as AccessoryAffix
+    gears.earrings[gathererAcc] = 1
+    gears.necklace[gathererAcc] = 1
+    gears.wrist[gathererAcc] = 1
+    gears.rings[gathererAcc] = 2
+
+    const statistics = calGearSelections(gears, patchVer as XivPatchVer)
+
+    return extractMaterials(statistics, patchData)
+  }
+
+  /**
+   * 计算指定版本生产采集职业全套装备所需素材（兼容调用）
+   */
+  const calcLifeJobsGearMaterials = (
+    patchVer: string,
+  ): CategorizedMaterials | null => {
+    const crafterMats = calcCrafterGearMaterials(patchVer)
+    const gathererMats = calcGathererGearMaterials(patchVer)
+
+    if (!crafterMats && !gathererMats) return null
+    if (!crafterMats) return gathererMats
+    if (!gathererMats) return crafterMats
+
+    return mergeCategorizedMaterials(crafterMats, gathererMats)
+  }
+
+  return {
+    isItemInPatch,
+    getPatchLegendaryGatherings,
+    getPatchTradeItems,
+    getPatchMasterRecipeItems,
+    getPatchFoods,
+    getPatchMedicines,
+    calcJobGearMaterials,
+    calcCrafterGearMaterials,
+    calcGathererGearMaterials,
+    mergeCategorizedMaterials,
+    calcLifeJobsGearMaterials,
+  }
 }
-

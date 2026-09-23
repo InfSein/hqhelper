@@ -6,7 +6,7 @@ import ItemList from '@/components/item/ItemList.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
-import type { ItemInfo } from '@/tools/item'
+import type { ItemInfo } from '@/types/item'
 
 const { t } = useLocale()
 const store = useStore()
@@ -26,32 +26,39 @@ interface CraftStatementsProps {
 }
 const props = defineProps<CraftStatementsProps>()
 
+const dealMaterials = (items: ItemInfo[]) => {
+  if (store.funcConfig.statement_ignore_crystals) {
+    return items.filter(item => !item.isCrystal)
+  }
+  return items
+}
+
 const statementBlocks = computed(() => {
   return [
     {
       id: 'craft-target',
       name: t('statement.list.targets'),
-      items: props.craftTargets
+      items: props.craftTargets,
     },
     {
       id: 'material-lv1',
       name: t('statement.list.material.lv1'),
-      items: props.materialsLv1
+      items: dealMaterials(props.materialsLv1),
     },
     {
       id: 'material-lv2',
       name: t('statement.list.material.lv2'),
-      items: props.materialsLv2
+      items: dealMaterials(props.materialsLv2),
     },
     {
       id: 'material-lv3',
       name: t('statement.list.material.lv3'),
-      items: props.materialsLv3
+      items: dealMaterials(props.materialsLv3),
     },
     {
       id: 'material-lvBase',
       name: t('statement.list.material.lvbase'),
-      items: props.materialsLvBase
+      items: dealMaterials(props.materialsLvBase),
     },
   ]
 })

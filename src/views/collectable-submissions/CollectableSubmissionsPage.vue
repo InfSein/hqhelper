@@ -10,13 +10,13 @@ import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
 import { useAppMode } from '@/composables/useAppMode'
 import { XivUnpackedCollectableSubmissions } from '@/assets/data'
-import { useNbbCal } from '@/tools/use-nbb-cal'
+import { useAppCore } from '@/composables/useAppCore'
 import { fixWorkState } from '@/types/workstate/cshelper'
 
 const store = useStore()
 const { t } = useLocale()
 const { appMode } = useAppMode()
-const { calItems } = useNbbCal()
+const { calItems } = useAppCore()
 const NAIVE_UI_MESSAGE = useMessage()
 
 const workState = ref(fixWorkState())
@@ -104,9 +104,9 @@ const statistics = computed(() => {
 
 const showModalJoinInWorkflow = ref(false)
 const workflowItems = computed(() => {
-  const items : Record<number, number> = {}
-  Object.values(statistics.value.ls).forEach((stat: any) => {
-    items[stat.id] = stat.need
+  const items: Record<number, number> = {}
+  statistics.value.craftTargets.forEach(item => {
+    items[item.id] = item.amount
   })
   return items
 })

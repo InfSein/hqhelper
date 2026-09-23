@@ -3,7 +3,7 @@ import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
 import { useDialog } from '@/composables/useDialog'
 import { handleGetPriceError } from '@/tools/error'
-import type { StatementData } from '@/tools/use-fufu-cal'
+import type { StatementData } from '@/types/core'
 import useItemPrice from './useItemPrice'
 import { getItemPriceInfo } from '@/tools/item/price'
 
@@ -20,9 +20,16 @@ export function useCostAndBenefit(statementData: ComputedRef<StatementData>) {
   const showModal = ref(false)
   const updatingPrice = ref(false)
 
+  const costItems = computed(() => {
+    if (store.funcConfig.statement_ignore_crystals) {
+      return statementData.value.materialsLvBase.filter(item => !item.isCrystal)
+    }
+    return statementData.value.materialsLvBase
+  })
+
   const costAndBenefit = computed(() => {
     return calCostAndBenefit(
-      statementData.value.materialsLvBase,
+      costItems.value,
       statementData.value.craftTargets
     )
   })
@@ -35,7 +42,7 @@ export function useCostAndBenefit(statementData: ComputedRef<StatementData>) {
         statementData.value.craftTargets.forEach(item => {
           items.push(item.id)
         })
-        statementData.value.materialsLvBase.forEach(item => {
+        costItems.value.forEach(item => {
           items.push(item.id)
         })
         const itemPrices = await getItemPriceInfo([...new Set(items)], store.funcConfig.universalis_server)

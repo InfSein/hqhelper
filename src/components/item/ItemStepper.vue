@@ -2,7 +2,7 @@
 import ItemButton from './ItemButton.vue'
 import Stepper from '@/components/ui/Stepper.vue'
 import { useResponsive } from '@/composables/useResponsive'
-import type { ItemInfo } from '@/tools/item'
+import type { ItemInfo } from '@/types/item'
 
 const { isMobile } = useResponsive()
 
