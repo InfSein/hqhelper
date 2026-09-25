@@ -1,7 +1,6 @@
-- 核心算法重构
-- 在用户button左侧增加一些按钮
-- 新的公告系统
-
+- 图标图床替换，https://xivapi-v2.xivcdn.com/api/asset?path=ui/icon/037000/037618.tex，记得问下能不能
+- 通知面板ui，公告排版要调整，不用alert但保留抬头图标，其余自己设计
+- 原有IconGithub等改为导入svg文件
 
 
 ## Before beta

@@ -3,11 +3,13 @@ import { assignDefaults } from '@/tools'
 export interface MainCacheModel {
   sponsor_nbbids: number[]
   ignore_announcements: number[]
+  read_announcements: number[]
 }
 
 const defaultMainCache: MainCacheModel = {
   sponsor_nbbids: [],
   ignore_announcements: [],
+  read_announcements: [],
 }
 
 /**

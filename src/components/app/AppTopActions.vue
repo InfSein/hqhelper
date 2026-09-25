@@ -2,6 +2,8 @@
 import {
   DevicesOutlined,
   NotificationsOutlined,
+  DarkModeTwotone,
+  LightModeTwotone,
 } from '@vicons/material'
 import IconGithub from '@/assets/icons/external/IconGithub.vue'
 import ModalDonate from '@/components/modals/ModalDonate.vue'
@@ -22,6 +24,7 @@ const NAIVE_UI_MESSAGE = useMessage()
 
 const isClient = computed(() => !!window.electronAPI)
 const showDonateModal = ref(false)
+const notifyBtnRef = ref<any>(null)
 
 // #region 公告与通知逻辑
 enum AnnouncementId {
@@ -62,14 +65,93 @@ const announcements = computed((): Announcement[] => {
   ]
 })
 
-// 过滤掉已被用户忽略的公告
+// 过滤掉已被用户忽略（不再显示）的公告
 const activeAnnouncements = computed(() => {
   return announcements.value.filter(
     announcement => !store.mainCache.ignore_announcements.includes(announcement.id)
   )
 })
 
-const unreadCount = computed(() => activeAnnouncements.value.length)
+// 未读数量：未读（不在 read_announcements 中）且未被忽略的公告
+const unreadCount = computed(() => {
+  const readList = store.mainCache.read_announcements || []
+  return activeAnnouncements.value.filter(
+    announcement => !readList.includes(announcement.id)
+  ).length
+})
+
+// 面板显示控制与固定逻辑
+const isPinned = ref(false)
+const isHovered = ref(false)
+let hideTimer: ReturnType<typeof setTimeout> | null = null
+
+const isPanelOpen = computed(() => isPinned.value || isHovered.value)
+
+const handleMouseEnter = () => {
+  if (hideTimer) {
+    clearTimeout(hideTimer)
+    hideTimer = null
+  }
+  isHovered.value = true
+}
+
+const handleMouseLeave = () => {
+  if (hideTimer) {
+    clearTimeout(hideTimer)
+  }
+  hideTimer = setTimeout(() => {
+    isHovered.value = false
+  }, 150)
+}
+
+const handleButtonClick = () => {
+  if (isPinned.value) {
+    // 当前已固定显示，点击后固定为不显示（关闭面板并取消固定）
+    isPinned.value = false
+    isHovered.value = false
+  } else {
+    // 当前未固定，点击后固定为显示
+    isPinned.value = true
+  }
+}
+
+const handleClickOutside = (e: MouseEvent) => {
+  const target = e.target as HTMLElement | null
+  if (!target) return
+  // 排除通知按钮本身
+  if (notifyBtnRef.value?.$el?.contains(target)) return
+  // 排除可能弹出的 naive 对话框或弹窗，防止操作确认框时面板意外关闭
+  if (target.closest('.n-modal-container') || target.closest('.n-dialog') || target.closest('.n-modal-mask')) {
+    return
+  }
+  isPinned.value = false
+  isHovered.value = false
+}
+
+// 自动标记所有有效公告为已读
+const markAllAsRead = () => {
+  if (!activeAnnouncements.value.length) return
+  if (!store.mainCache.read_announcements) {
+    store.mainCache.read_announcements = []
+  }
+  let updated = false
+  activeAnnouncements.value.forEach(a => {
+    if (!store.mainCache.read_announcements.includes(a.id)) {
+      store.mainCache.read_announcements.push(a.id)
+      updated = true
+    }
+  })
+  if (updated) {
+    store.updateMainCache()
+  }
+}
+
+// 打开面板时自动标为已读
+watch(isPanelOpen, open => {
+  if (open) {
+    markAllAsRead()
+  }
+})
 
 const handleIgnoreAnnouncement = async (aid: AnnouncementId) => {
   if (
@@ -79,8 +161,10 @@ const handleIgnoreAnnouncement = async (aid: AnnouncementId) => {
   ) {
     return
   }
-  store.mainCache.ignore_announcements.push(aid)
-  store.updateMainCache()
+  if (!store.mainCache.ignore_announcements.includes(aid)) {
+    store.mainCache.ignore_announcements.push(aid)
+    store.updateMainCache()
+  }
   NAIVE_UI_MESSAGE.success(t('announcement.message.ignored'))
 }
 
@@ -99,20 +183,6 @@ const handleIgnoreAll = async () => {
   })
   store.updateMainCache()
   NAIVE_UI_MESSAGE.success(t('announcement.message.ignored'))
-}
-
-const getTagLabel = (type?: string) => {
-  switch (type) {
-    case 'success':
-      return t('announcement.type.success')
-    case 'warning':
-      return t('announcement.type.warning')
-    case 'error':
-      return t('announcement.type.error')
-    case 'info':
-    default:
-      return t('announcement.type.info')
-  }
 }
 // #endregion
 
@@ -140,95 +210,81 @@ const handleOpenGithub = () => {
     <n-button-group size="small">
       <!-- 通知中心 -->
       <n-popover
-        trigger="click"
+        :show="isPanelOpen"
+        trigger="manual"
         placement="bottom-end"
-        :style="{ width: '380px', maxWidth: '90vw', padding: '0' }"
+        :style="{ width: '380px', maxWidth: '90vw' }"
+        :on-clickoutside="handleClickOutside"
       >
         <template #trigger>
-          <n-tooltip trigger="hover">
-            <template #trigger>
-              <n-button round strong secondary size="small" class="top-action-btn__edge-left">
-                <template #icon>
-                  <n-badge dot :show="unreadCount > 0" :offset="[-1, 1]">
-                    <n-icon :size="16"><NotificationsOutlined /></n-icon>
-                  </n-badge>
-                </template>
-              </n-button>
+          <n-button
+            ref="notifyBtnRef"
+            round
+            strong
+            secondary
+            size="small"
+            class="top-action-btn__edge-left"
+            :class="{ 'is-active': isPinned }"
+            @mouseenter="handleMouseEnter"
+            @mouseleave="handleMouseLeave"
+            @click="handleButtonClick"
+          >
+            <template #icon>
+              <n-badge dot :show="unreadCount > 0" :offset="[-1, 1]">
+                <n-icon :size="16"><NotificationsOutlined /></n-icon>
+              </n-badge>
             </template>
-            {{ t('announcement.tooltip') }}
-          </n-tooltip>
+          </n-button>
         </template>
 
-        <div class="notification-panel">
-          <div class="panel-header">
-            <div class="title-wrap">
-              <span class="panel-title">{{ t('announcement.title.notification_center') }}</span>
-              <n-tag
-                v-if="unreadCount > 0"
-                size="tiny"
-                type="primary"
-                round
-                :bordered="false"
-              >
-                {{ unreadCount }}
-              </n-tag>
-            </div>
-            <n-button
-              v-if="unreadCount > 0"
-              text
-              type="primary"
-              size="tiny"
-              @click="handleIgnoreAll"
-            >
-              {{ t('announcement.action.ignore_all') }}
-            </n-button>
+        <div
+          class="notification-panel"
+          @mouseenter="handleMouseEnter"
+          @mouseleave="handleMouseLeave"
+        >
+          <div class="flex items-center gap-0.75 text-app-xl">
+            <n-icon :size="16"><NotificationsOutlined /></n-icon>
+            <span>{{ t('announcement.title.notification_center') }}</span>
           </div>
+          <n-divider style="margin: 4px 0 8px;" />
 
-          <n-scrollbar style="max-height: 400px" class="panel-body">
+          <n-scrollbar trigger="none" style="max-height: 300px">
             <div v-if="activeAnnouncements.length" class="announcement-list">
-              <div
+              <n-alert
                 v-for="item in activeAnnouncements"
                 :key="'anno-' + item.id"
-                class="announcement-card"
+                :type="item.type || 'info'"
+                :title="item.title"
+                class="announcement-alert"
               >
-                <div class="card-head">
-                  <n-tag
-                    :type="item.type || 'info'"
-                    size="tiny"
-                    round
-                    :bordered="false"
-                    class="shrink-0"
-                  >
-                    {{ getTagLabel(item.type) }}
-                  </n-tag>
-                  <span class="card-title">{{ item.title }}</span>
-                </div>
-                <div class="card-content">
-                  <p v-for="(line, idx) in item.content" :key="idx">{{ line }}</p>
-                </div>
-                <div class="card-actions">
-                  <div class="action-buttons">
+                <div class="announcement-alert-content">
+                  <div class="announcement-text">
+                    <p v-for="(line, idx) in item.content" :key="idx">{{ line }}</p>
+                  </div>
+                  <div class="announcement-actions">
+                    <div class="action-buttons">
+                      <n-button
+                        v-for="(act, actIdx) in item.actions"
+                        :key="actIdx"
+                        quaternary
+                        type="info"
+                        size="tiny"
+                        @click="act.onClick"
+                      >
+                        {{ act.label }}
+                      </n-button>
+                    </div>
                     <n-button
-                      v-for="(act, actIdx) in item.actions"
-                      :key="actIdx"
                       quaternary
-                      type="info"
+                      type="error"
                       size="tiny"
-                      @click="act.onClick"
+                      @click="handleIgnoreAnnouncement(item.id)"
                     >
-                      {{ act.label }}
+                      {{ t('announcement.action.ignore') }}
                     </n-button>
                   </div>
-                  <n-button
-                    quaternary
-                    type="error"
-                    size="tiny"
-                    @click="handleIgnoreAnnouncement(item.id)"
-                  >
-                    {{ t('announcement.action.ignore') }}
-                  </n-button>
                 </div>
-              </div>
+              </n-alert>
             </div>
             <n-empty
               v-else
@@ -239,6 +295,21 @@ const handleOpenGithub = () => {
           </n-scrollbar>
         </div>
       </n-popover>
+
+      <!-- 切换主题 -->
+      <n-tooltip trigger="hover">
+        <template #trigger>
+          <n-button strong secondary size="small" class="top-action-btn" @click="switchTheme">
+            <template #icon>
+              <n-icon :size="16">
+                <DarkModeTwotone v-if="theme === 'light'" />
+                <LightModeTwotone v-else />
+              </n-icon>
+            </template>
+          </n-button>
+        </template>
+        {{ theme === 'light' ? t('common.appfunc.switch_to_dark') : t('common.appfunc.switch_to_light') }}
+      </n-tooltip>
 
       <!-- 下载客户端 -->
       <n-tooltip v-if="!isClient" trigger="hover">
@@ -294,9 +365,17 @@ const handleOpenGithub = () => {
   padding: 0 8px 0 6px !important;
 }
 
-/* hover 提升层级保证边框高亮清晰完整 */
 :deep(.n-button.top-action-btn:hover),
-:deep(.n-button.top-action-btn:focus) {
+:deep(.n-button.top-action-btn:focus),
+:deep(.n-button.top-action-btn__edge-left:hover),
+:deep(.n-button.top-action-btn__edge-left:focus),
+:deep(.n-button.top-action-btn__edge-right:hover),
+:deep(.n-button.top-action-btn__edge-right:focus) {
+  z-index: 2;
+}
+
+:deep(.n-button.top-action-btn__edge-left.is-active) {
+  color: var(--app-color-primary);
   z-index: 2;
 }
 
@@ -305,80 +384,42 @@ const handleOpenGithub = () => {
   display: flex;
   flex-direction: column;
 
-  .panel-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 14px 8px;
-    border-bottom: 1px solid var(--app-color-border);
-
-    .title-wrap {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-
-      .panel-title {
-        font-weight: bold;
-        font-size: var(--app-font-size-sm);
-        color: var(--app-color-text);
-      }
-    }
-  }
-
-  .panel-body {
-    padding: 10px 14px;
-  }
-
   .announcement-list {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
   }
 
-  .announcement-card {
-    padding: 8px 10px;
-    background-color: var(--app-color-background-embedded);
+  .announcement-alert {
     border-radius: 6px;
-    border: 1px solid var(--app-color-border);
 
-    .card-head {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-bottom: 6px;
-
-      .card-title {
-        font-weight: bold;
+    .announcement-alert-content {
+      .announcement-text {
         font-size: var(--app-font-size-xs);
-        color: var(--app-color-text);
+        color: var(--app-color-text-sub);
+        line-height: 1.5;
+
+        p {
+          margin: 2px 0;
+        }
       }
-    }
 
-    .card-content {
-      font-size: var(--app-font-size-xs);
-      color: var(--app-color-text-sub);
-      line-height: 1.5;
-      margin-bottom: 8px;
-
-      p {
-        margin: 2px 0;
-      }
-    }
-
-    .card-actions {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 4px;
-      padding-top: 4px;
-      border-top: 1px dashed var(--app-color-border);
-
-      .action-buttons {
+      .announcement-actions {
         display: flex;
         align-items: center;
+        justify-content: space-between;
         flex-wrap: wrap;
-        gap: 2px;
+        gap: 4px;
+        margin-top: 6px;
+        padding-top: 4px;
+        border-top: 1px dashed var(--app-color-border);
+
+        .action-buttons {
+          display: flex;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 2px;
+        }
       }
     }
   }
