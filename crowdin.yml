@@ -1,8 +1,0 @@
-project_id: 807968
-api_token_env: CROWDIN_PERSONAL_TOKEN
-base_path: '.'
-base_url: 'https://api.crowdin.com'
-
-files:
-  - source: '/src/locales/zh.json'
-    translation: '/src/locales/%locale%.json'

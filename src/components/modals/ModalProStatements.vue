@@ -1,22 +1,20 @@
 <script setup lang="ts">
-import { 
-  TableViewOutlined
+import {
+  TableViewOutlined,
 } from '@vicons/material'
-import ModalRecommProcesses from './ModalRecommProcesses.vue'
 import ModalPreferences from './ModalPreferences.vue'
-import { type UserConfigModel } from '@/models/config-user'
-import { type FuncConfigModel } from '@/models/config-func'
+import ModalRecommProcesses from './ModalRecommProcesses.vue'
+import CraftStatementsPro from '@/components/craft/CraftStatementsPro.vue'
+import { useStore } from '@/store'
+import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
 import { type ItemInfo } from '@/tools/item'
 import { useFufuCal } from '@/tools/use-fufu-cal'
-import CraftStatementsPro from '../custom/general/CraftStatementsPro.vue'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
-// const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
-
-const { getProStatementData, calRecommProcessData } = useFufuCal(userConfig, funcConfig, t)
+const store = useStore()
+const { t } = useLocale()
+const { isMobile } = useResponsive()
+const { getProStatementData, calRecommProcessData } = useFufuCal()
 
 const showModal = defineModel<boolean>('show', { required: true })
 const showRecommendedProcessesModal = ref(false)
@@ -70,8 +68,25 @@ const handleShowRecommendedProcesses = () => {
   showRecommendedProcessesModal.value = true
 }
 
+import { onInventoryChange, offInventoryChange } from '@/composables/useInventoryPlugin'
+
+const handleInventoryChange = (changedItemIds: number[]) => {
+  if (!showModal.value) return
+  if (store.userConfig.receive_third_party_data && store.funcConfig.inventory_use_plugin_data) {
+    proStatementInstace.value?.applyInventoryChanges(changedItemIds)
+  }
+}
+
+onMounted(() => {
+  onInventoryChange(handleInventoryChange)
+})
+
+onBeforeUnmount(() => {
+  offInventoryChange(handleInventoryChange)
+})
+
 const handleStatementLoaded = () => {
-  if (funcConfig.value.inventory_statement_enable_sync) {
+  if (store.funcConfig.inventory_statement_enable_sync || store.funcConfig.inventory_use_plugin_data) {
     if (proStatementInstace?.value?.setPreparedItemsByInventory) {
       proStatementInstace.value.setPreparedItemsByInventory()
     } else {
@@ -102,10 +117,10 @@ const handleSettingButtonClick = () => {
         <span class="title">
           {{ t('common.appfunc.craft_statement') }}
         </span>
-        <span class="card-title-extra">
+        <span class="card-title__extra">
           <n-tag type="info" size="small" round>PRO</n-tag>
         </span>
-        <div class="card-title-actions">
+        <div class="card-title__actions">
           <a href="javascript:void(0);" @click="handleResetPreparedItems">[{{ t('statement.text.reset_prepared') }}]</a>
           <a href="javascript:void(0);" @click="handleShowRecommendedProcesses">[{{ t('common.appfunc.recomm_process') }}]</a>
         </div>
@@ -135,30 +150,9 @@ const handleSettingButtonClick = () => {
 </template>
 
 <style scoped>
-/* All */
-.wrapper {
-  user-select: text;
-}
-.wrapper.desktop {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-}
-.group .container {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  height: 100%;
-  user-select: text;
-}
-
-/* Desktop */
-@media screen and (min-width: 768px) {
-}
-
 /* Mobile */
 @media screen and (max-width: 767px) {
-  .card-title-actions {
+  .card-title__actions {
     flex-basis: 100%;
   }
 }
