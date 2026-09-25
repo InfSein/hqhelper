@@ -6,6 +6,7 @@ import {
 import Dialog from "@/components/app/Dialog.vue"
 import AppHeader from './components/app/AppHeader.vue'
 import AccountView from './components/app/AccountView.vue'
+import AppTopActions from './components/app/AppTopActions.vue'
 import { useStore } from '@/store/index'
 import { useLocale } from './locales'
 import { useAppMode } from '@/composables/useAppMode'
@@ -306,7 +307,10 @@ const naiveUIThemeOverrides = computed(() : GlobalThemeOverrides => {
             <router-view />
           </n-layout>
 
-          <AccountView v-if="!isMobile && appMode !== 'overlay'" trigger-class="absolute! top-9 right-5 z-[2000]!" />
+          <div v-if="!isMobile && appMode !== 'overlay'" class="top-actions-wrapper">
+            <AppTopActions />
+            <AccountView />
+          </div>
 
           <div
             v-if="AppStatus.IsBeta && !isMobile"
@@ -372,5 +376,15 @@ const naiveUIThemeOverrides = computed(() : GlobalThemeOverrides => {
 }
 .env-overlay #main-content {
   top: 0;
+}
+.top-actions-wrapper {
+  position: absolute;
+  top: 36px;
+  right: 20px;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  -webkit-app-region: no-drag;
 }
 </style>

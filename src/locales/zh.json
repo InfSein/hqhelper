@@ -36,6 +36,7 @@
       "feedback_qquery": "反馈问题(QQ问卷)",
       "follow_us": "关注我们",
       "ignore": "不再显示",
+      "ignore_all": "全部忽略",
       "join_q_group": "加入Q群"
     },
     "content": {
@@ -46,10 +47,19 @@
     },
     "message": {
       "ignore_confirm": "确定不再显示这一公告吗？",
-      "ignored": "此公告将不再显示"
+      "ignored": "此公告将不再显示",
+      "no_announcements": "暂无未读通知"
     },
     "title": {
-      "title_1": "金曦之遗辉步入尾声……"
+      "title_1": "金曦之遗辉步入尾声……",
+      "notification_center": "系统通知"
+    },
+    "tooltip": "系统通知",
+    "type": {
+      "info": "通知",
+      "success": "重要",
+      "warning": "提醒",
+      "error": "紧急"
     }
   },
   "appheader": {

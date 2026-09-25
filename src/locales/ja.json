@@ -36,7 +36,8 @@
       "feedback_qquery": "バグ報告 (QQアンケート)",
       "follow_us": "フォローする",
       "ignore": "次回から表示しない",
-      "join_q_group": "QQグループに参加する"
+      "join_q_group": "QQグループに参加する",
+      "ignore_all": "すべて既読"
     },
     "content": {
       "content_1_1": "パッチ7.4の実装により、『黄金のレガシー』全体を通しての主要HQ製作装備がすべて出揃い、HqHelper は 7.0 における使命をひとまず終えることとなりました。",
@@ -46,10 +47,19 @@
     },
     "message": {
       "ignore_confirm": "このお知らせを今後表示しないようにしますか？",
-      "ignored": "このお知らせは今後表示されません"
+      "ignored": "このお知らせは今後表示されません",
+      "no_announcements": "未読のお知らせはありません"
     },
     "title": {
-      "title_1": "黄金のレガシーはレガシーになってゆく…"
+      "title_1": "黄金のレガシーはレガシーになってゆく…",
+      "notification_center": "システム通知"
+    },
+    "tooltip": "お知らせと通知",
+    "type": {
+      "info": "お知らせ",
+      "success": "重要",
+      "warning": "注意",
+      "error": "緊急"
     }
   },
   "appheader": {
@@ -1186,7 +1196,8 @@
       "navigate": "移動",
       "select": "選択",
       "close": "閉じる"
-    }
+    },
+    "project_github": "プロジェクトGitHub"
   },
   "contact_us": {
     "feedback": {

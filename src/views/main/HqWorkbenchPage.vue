@@ -3,7 +3,6 @@ import StatisticsPanel from './components/StatisticsPanel.vue'
 import JobPanel from '@/views/main/components/JobPanel.vue'
 import PatchPanel from '@/views/main/components/PatchPanel.vue'
 import ModalJoinInWorkflow from '@/components/modals/ModalJoinInWorkflow.vue'
-import AppAnnouncements from '@/views/main/components/AppAnnouncements.vue'
 import GearSelectionPanel from '@/views/main/components/GearSelectionPanel.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
@@ -102,7 +101,6 @@ const specialItems = computed(() => {
 
 <template>
   <div id="main-container">
-    <AppAnnouncements />
     <n-grid cols="4" item-responsive :x-gap="10" :y-gap="10">
       <n-grid-item span="4">
         <PatchPanel

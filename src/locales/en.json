@@ -36,6 +36,7 @@
       "feedback_qquery": "Feedback (QQ Questionnaire)",
       "follow_us": "Follow us",
       "ignore": "Don't show this again",
+      "ignore_all": "Dismiss All",
       "join_q_group": "Join Q-Group"
     },
     "content": {
@@ -46,10 +47,19 @@
     },
     "message": {
       "ignore_confirm": "Are you sure you want to dismiss this announcement?",
-      "ignored": "This announcement will no longer be displayed."
+      "ignored": "This announcement will no longer be displayed.",
+      "no_announcements": "No unread notifications"
     },
     "title": {
-      "title_1": "The DAWNTRAIL era is coming to an end..."
+      "title_1": "The DAWNTRAIL era is coming to an end...",
+      "notification_center": "Notifications"
+    },
+    "tooltip": "System Notifications",
+    "type": {
+      "info": "Info",
+      "success": "Notice",
+      "warning": "Warning",
+      "error": "Alert"
     }
   },
   "appheader": {
@@ -844,6 +854,7 @@
     }
   },
   "common": {
+    "project_github": "GitHub",
     "account": "Account",
     "add": "Add",
     "add2": "Add",
