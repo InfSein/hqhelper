@@ -12,7 +12,7 @@ import type {
   ProStatementBlock,
   StatementData,
 } from '@/types/core'
-import { mapToItemInfoList, sortItems } from '@/tools/item'
+import { item_map2list, sortItems } from '@/tools/item'
 import { classifyMaterials, groupCraftablesByJob } from '@/tools/item/classify'
 import { getRecipeMap } from '@/tools/recipe/cache'
 import { doCal } from '@/tools/recipe/engine'
@@ -51,13 +51,13 @@ function filterCrystals(
 /** 将引擎计算结果转换为 UI 就绪的 StatementData */
 function rawToStatementData(raw: RecipeCalculateResult): StatementData {
   return {
-    craftTargets: mapToItemInfoList(raw.ls),
-    materialsLv1: mapToItemInfoList(raw.lv1),
-    materialsLv2: mapToItemInfoList(raw.lv2),
-    materialsLv3: mapToItemInfoList(raw.lv3),
-    materialsLv4: mapToItemInfoList(raw.lv4),
-    materialsLv5: mapToItemInfoList(raw.lv5),
-    materialsLvBase: mapToItemInfoList(raw.lvBase),
+    craftTargets: item_map2list(raw.ls),
+    materialsLv1: item_map2list(raw.lv1),
+    materialsLv2: item_map2list(raw.lv2),
+    materialsLv3: item_map2list(raw.lv3),
+    materialsLv4: item_map2list(raw.lv4),
+    materialsLv5: item_map2list(raw.lv5),
+    materialsLvBase: item_map2list(raw.lvBase),
   }
 }
 
@@ -257,17 +257,17 @@ export function useAppCore() {
     lv1ItemsForCal: Record<number, number>,
     baseItemsForCal: Record<number, number>,
   ) => {
-    const craftTargets = mapToItemInfoList(targetItemsForCal)
-    const lv1Items = mapToItemInfoList(lv1ItemsForCal)
+    const craftTargets = item_map2list(targetItemsForCal)
+    const lv1Items = item_map2list(lv1ItemsForCal)
 
     const statistics = calItemsRaw(lv1ItemsForCal)
     const lv2Map = statistics.lv1
     const lv3Map = statistics.lv2
 
-    const lv2Items = mapToItemInfoList(lv2Map)
-    const lv3Items = mapToItemInfoList(lv3Map)
+    const lv2Items = item_map2list(lv2Map)
+    const lv3Items = item_map2list(lv3Map)
 
-    const lvBaseItems = mapToItemInfoList(baseItemsForCal)
+    const lvBaseItems = item_map2list(baseItemsForCal)
 
     return {
       craftTargets,

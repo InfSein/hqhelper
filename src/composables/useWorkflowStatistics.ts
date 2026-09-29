@@ -1,5 +1,5 @@
 import { computed, watch, type ComputedRef } from 'vue'
-import { mapToItemInfoList } from '@/tools/item'
+import { item_map2list } from '@/tools/item'
 import { useAppCore } from '@/composables/useAppCore'
 import type { Workflow } from '@/types/workstate/workflow'
 
@@ -12,7 +12,7 @@ export function useWorkflowStatistics(currentWorkflow: ComputedRef<Workflow>) {
   } = useAppCore()
 
   const craftTargetsArray = computed(() => {
-    return mapToItemInfoList(currentWorkflow.value.targetItems)
+    return item_map2list(currentWorkflow.value.targetItems)
   })
 
   const statementData = computed(() => {
