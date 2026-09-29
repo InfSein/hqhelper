@@ -14,8 +14,8 @@ import type {
   ProStatementBlock,
   StatementData,
 } from '@/types/core'
-import { getItemInfo, sortItems } from '@/tools/item'
-import { groupCraftablesByJob } from '@/tools/item/classify'
+import { getItemInfo, mapToItemInfoList, sortItems } from '@/tools/item'
+import { classifyMaterials, groupCraftablesByJob } from '@/tools/item/classify'
 import { getRecipeMap } from '@/tools/recipe/cache'
 import { doCal } from '@/tools/recipe/engine'
 
@@ -84,39 +84,14 @@ interface ProcessClassifiedMaterials {
  * 推荐流程中不展示水晶分组，因此水晶在此显式过滤
  */
 function classifyBaseMaterialsForProcess(lvBaseItems: ItemInfo[]): ProcessClassifiedMaterials {
-  const result: ProcessClassifiedMaterials = {
-    gatherableCommon: [],
-    gatherableLimited: [],
-    aethersands: [],
-    tradable: [],
-    otherCollectable: [],
+  const classified = classifyMaterials(lvBaseItems)
+  return {
+    gatherableCommon: classified.gatherableCommon,
+    gatherableLimited: classified.gatherableLimited,
+    aethersands: classified.aethersands,
+    tradable: classified.tomeScriptItems,
+    otherCollectable: classified.other,
   }
-
-  lvBaseItems.forEach(item => {
-    if (item.gatherInfo?.jobId) {
-      if (item.gatherInfo.timeLimitInfo?.length) {
-        result.gatherableLimited.push(item)
-      } else {
-        result.gatherableCommon.push(item)
-      }
-    } else if (item.canReduceFrom?.length) {
-      result.aethersands.push(item)
-    } else if (item.tradeInfo?.costId) {
-      result.tradable.push(item)
-    } else if (!item.isCrystal) {
-      // 显式排除水晶，其余归入其他采集/获取
-      result.otherCollectable.push(item)
-    }
-  })
-
-  result.tradable.sort((a, b) =>
-    (a.tradeInfo!.costId - b.tradeInfo!.costId) ||
-    (a.uiTypeOrder - b.uiTypeOrder) ||
-    (a.sortOrder - b.sortOrder) ||
-    (a.id - b.id),
-  )
-
-  return result
 }
 
 /** 采集物品排序（按地图或限时开始时间） */
@@ -199,7 +174,7 @@ export function useAppCore() {
     if (!patchData) {
       return undefined
     }
-    const out: Record<string, RecipeCalculateInputEntry> = {}
+    const selections: Record<number, number> = {}
 
     for (const _gearKey in input) {
       const gearKey = _gearKey as keyof GearSelections
@@ -208,19 +183,14 @@ export function useAppCore() {
         if (gear[jobId] > 0) {
           const item = (patchData[gearKey] as Record<string, number> | undefined)?.[jobId]
           if (item) {
-            out[item] = {
-              itemId: item,
-              count: gear[jobId],
-              recipeId: recipeMap[item],
-              checked: false,
-            }
+            selections[item] = (selections[item] ?? 0) + gear[jobId]
           } else if (item !== 0) {
             console.warn('wrong index?', gearKey, jobId)
           }
         }
       }
     }
-    const raw = doCal(out)
+    const raw = calItemsRaw(selections)
     return rawToStatementData(raw)
   }
 
@@ -309,17 +279,17 @@ export function useAppCore() {
     lv1ItemsForCal: Record<number, number>,
     baseItemsForCal: Record<number, number>,
   ) => {
-    const craftTargets = dealItemMapToItemList(targetItemsForCal)
-    const lv1Items = dealItemMapToItemList(lv1ItemsForCal)
+    const craftTargets = mapToItemInfoList(targetItemsForCal)
+    const lv1Items = mapToItemInfoList(lv1ItemsForCal)
 
     const statistics = calItemsRaw(lv1ItemsForCal)
     const lv2Map = collectCalResultToMap(statistics.lv1, false)
     const lv3Map = collectCalResultToMap(statistics.lv2, false)
 
-    const lv2Items = dealItemMapToItemList(lv2Map)
-    const lv3Items = dealItemMapToItemList(lv3Map)
+    const lv2Items = mapToItemInfoList(lv2Map)
+    const lv3Items = mapToItemInfoList(lv3Map)
 
-    const lvBaseItems = dealItemMapToItemList(baseItemsForCal)
+    const lvBaseItems = mapToItemInfoList(baseItemsForCal)
 
     return {
       craftTargets,
@@ -327,20 +297,6 @@ export function useAppCore() {
       lv2Items,
       lv3Items,
       lvBaseItems,
-    }
-
-    function dealItemMapToItemList(itemMap: Record<number, number>) {
-      const list: ItemInfo[] = []
-      for (const _id in itemMap) {
-        const id = Number(_id)
-        const amount = itemMap[id]
-        if (amount > 0) {
-          const itemInfo = getItemInfo(id)
-          itemInfo.amount = amount
-          list.push(itemInfo)
-        }
-      }
-      return list
     }
   }
 

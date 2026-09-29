@@ -4,4 +4,5 @@ export {
   expandTopLevel,
   expandMaterials,
   accumulateBaseMaterials,
+  type DoCalOptions,
 } from './engine'

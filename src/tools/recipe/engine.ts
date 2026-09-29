@@ -9,6 +9,14 @@ import type {
 } from '@/types/core'
 
 /**
+ * 计算需要制作的次数 = ceil(需求量 / 单次产出)
+ */
+function calcCraftCount(need: number, yields: number): number {
+  if (yields <= 0) return 0
+  return Math.ceil(need / yields)
+}
+
+/**
  * 将材料累加到结果映射表中
  */
 function addMaterialToMap(
@@ -66,8 +74,7 @@ export function expandTopLevel(
 
     if (recipe) {
       const pc = recipe.yields
-      let mkc = Math.floor(need / pc)
-      mkc += (need % pc) > 0 ? 1 : 0
+      const mkc = calcCraftCount(need, pc)
 
       result[id] = {
         id: numId,
@@ -160,8 +167,7 @@ export function expandMaterials(
       const targetRecipe = XivUnpackedRecipes[firstRid]
       if (targetRecipe) {
         pc1 = targetRecipe.yields
-        mkc1 = Math.floor(need1 / pc1)
-        mkc1 += (need1 % pc1) > 0 ? 1 : 0
+        mkc1 = calcCraftCount(need1, pc1)
       }
     }
 
@@ -204,25 +210,33 @@ export function accumulateBaseMaterials(
   return sumMap02
 }
 
+export interface DoCalOptions {
+  hideCluster?: boolean
+  shipArr0?: number[]
+  shipArrs?: number[][]
+}
+
 /**
  * 递归配方展开计算主函数
  */
 export function doCal(
   calMap: Record<string, RecipeCalculateInputEntry>,
-  hideCluster = false,
-  shipArr0: number[] = [],
-  shipArr1: number[] = [],
-  shipArr2: number[] = [],
-  shipArr3: number[] = [],
-  shipArr4: number[] = [],
+  options: DoCalOptions = {},
 ): RecipeCalculateResult {
-  const shipArrs = [shipArr1, shipArr2, shipArr3, shipArr4, []]
+  const { hideCluster = false, shipArr0 = [], shipArrs = [] } = options
+  const defaultShipArrs = [
+    shipArrs[0] ?? [],
+    shipArrs[1] ?? [],
+    shipArrs[2] ?? [],
+    shipArrs[3] ?? [],
+    shipArrs[4] ?? [],
+  ]
   const sumMap0 = expandTopLevel(calMap, shipArr0)
 
   const lvMaps: Record<string, RecipeCalculateResultItem>[] = []
   let currentMap = sumMap0
   for (let i = 0; i < 5; i++) {
-    currentMap = expandMaterials(currentMap, hideCluster, shipArrs[i])
+    currentMap = expandMaterials(currentMap, hideCluster, defaultShipArrs[i])
     lvMaps.push(currentMap)
   }
 

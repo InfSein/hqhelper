@@ -391,3 +391,21 @@ export const getItemInfo = (item: `${number}` | number | RecipeCalculateResultIt
   // * 组装完毕，返回结果
   return itemInfo
 }
+
+/**
+ * 将物品数量映射表转换为 ItemInfo 列表（过滤数量 <= 0 的项）
+ * @param itemMap key: 道具 id, value: 数量
+ */
+export const mapToItemInfoList = (itemMap: Record<number, number>): ItemInfo[] => {
+  const list: ItemInfo[] = []
+  for (const _id in itemMap) {
+    const id = Number(_id)
+    const amount = itemMap[id]
+    if (amount > 0) {
+      const itemInfo = getItemInfo(id)
+      itemInfo.amount = amount
+      list.push(itemInfo)
+    }
+  }
+  return list
+}

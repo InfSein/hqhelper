@@ -1,6 +1,5 @@
 import { computed, watch, type ComputedRef } from 'vue'
-import { getItemInfo } from '@/tools/item'
-import type { ItemInfo } from '@/types/item'
+import { mapToItemInfoList } from '@/tools/item'
 import { useAppCore } from '@/composables/useAppCore'
 import type { Workflow } from '@/types/workstate/workflow'
 
@@ -13,17 +12,7 @@ export function useWorkflowStatistics(currentWorkflow: ComputedRef<Workflow>) {
   } = useAppCore()
 
   const craftTargetsArray = computed(() => {
-    const items: ItemInfo[] = []
-    for (const _id in currentWorkflow.value.targetItems) {
-      const id = Number(_id)
-      const count = currentWorkflow.value.targetItems[id]
-      if (count > 0) {
-        const itemInfo = getItemInfo(id)
-        itemInfo.amount = count
-        items.push(itemInfo)
-      }
-    }
-    return items
+    return mapToItemInfoList(currentWorkflow.value.targetItems)
   })
 
   const statementData = computed(() => {
