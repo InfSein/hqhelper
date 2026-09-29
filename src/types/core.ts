@@ -1,56 +1,23 @@
 import type { ItemInfo } from '@/types/item'
 
 /**
- * 计算引擎输入条目
- */
-export interface RecipeCalculateInputEntry {
-  /** 道具ID */
-  itemId: number,
-  /** 数量 */
-  count: number,
-  /** 配方ID */
-  recipeId: number,
-  /** 是否已勾选/已完成 */
-  checked: boolean,
-  /** (可选)特殊跳过标记 */
-  skip?: boolean,
-}
-
-/**
- * 递归计算展开中单项物品的信息
- */
-export interface RecipeCalculateResultItem {
-  id: number
-  rid?: number | number[]
-  name: string[]
-  icon: number
-  desc: string[]
-  uc: number
-  need: number
-  mkc: number
-  pc?: number
-  checked?: boolean
-  job?: number
-}
-
-/**
- * 递归配方展开计算的完整结果结构
+ * 递归配方展开计算的完整结果结构（物品ID -> 需求数量）
  */
 export interface RecipeCalculateResult {
   /** 目标制品队列 */
-  ls: Record<string, RecipeCalculateResultItem>
+  ls: Record<number, number>,
   /** 1级材料（直接素材） */
-  lv1: Record<string, RecipeCalculateResultItem>
+  lv1: Record<number, number>,
   /** 2级材料（半成品下级素材） */
-  lv2: Record<string, RecipeCalculateResultItem>
+  lv2: Record<number, number>,
   /** 3级材料 */
-  lv3: Record<string, RecipeCalculateResultItem>
+  lv3: Record<number, number>,
   /** 4级材料 */
-  lv4: Record<string, RecipeCalculateResultItem>
+  lv4: Record<number, number>,
   /** 5级材料 */
-  lv5: Record<string, RecipeCalculateResultItem>
+  lv5: Record<number, number>,
   /** 基础素材汇总统计 */
-  lvBase: Record<string, RecipeCalculateResultItem>
+  lvBase: Record<number, number>,
 }
 
 /**

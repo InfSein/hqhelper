@@ -8,13 +8,11 @@ import {
 import type { GearSelections } from '@/types/game/gear'
 import type { RecommItemGroup, ItemInfo } from '@/types/item'
 import type {
-  RecipeCalculateInputEntry,
   RecipeCalculateResult,
-  RecipeCalculateResultItem,
   ProStatementBlock,
   StatementData,
 } from '@/types/core'
-import { getItemInfo, mapToItemInfoList, sortItems } from '@/tools/item'
+import { mapToItemInfoList, sortItems } from '@/tools/item'
 import { classifyMaterials, groupCraftablesByJob } from '@/tools/item/classify'
 import { getRecipeMap } from '@/tools/recipe/cache'
 import { doCal } from '@/tools/recipe/engine'
@@ -35,40 +33,32 @@ function deductPrepared(
   return result
 }
 
-/** 从计算结果层级收集物品到 map（可选过滤水晶） */
-function collectCalResultToMap(
-  calResultLevel: Record<string, RecipeCalculateResultItem>,
+/** 过滤物品映射表中的水晶类道具（ID: 2~19） */
+function filterCrystals(
+  items: Record<number, number>,
   ignoreCrystal: boolean,
 ): Record<number, number> {
-  const map: Record<number, number> = {}
-  for (const calResult of Object.values(calResultLevel)) {
-    if (ignoreCrystal && calResult.id >= 2 && calResult.id <= 19) continue
-    map[calResult.id] = calResult.need
+  if (!ignoreCrystal) return { ...items }
+  const result: Record<number, number> = {}
+  for (const itemID in items) {
+    const id = Number(itemID)
+    if (id >= 2 && id <= 19) continue
+    result[id] = items[id]
   }
-  return map
+  return result
 }
 
 /** 将引擎计算结果转换为 UI 就绪的 StatementData */
 function rawToStatementData(raw: RecipeCalculateResult): StatementData {
-  const fieldMapping: [keyof RecipeCalculateResult, keyof StatementData][] = [
-    ['ls', 'craftTargets'],
-    ['lv1', 'materialsLv1'],
-    ['lv2', 'materialsLv2'],
-    ['lv3', 'materialsLv3'],
-    ['lv4', 'materialsLv4'],
-    ['lv5', 'materialsLv5'],
-    ['lvBase', 'materialsLvBase'],
-  ]
-
-  const result = {} as StatementData
-  for (const [calKey, statKey] of fieldMapping) {
-    const items: ItemInfo[] = []
-    for (const id in raw[calKey]) {
-      items.push(getItemInfo(raw[calKey][id]))
-    }
-    result[statKey] = items
+  return {
+    craftTargets: mapToItemInfoList(raw.ls),
+    materialsLv1: mapToItemInfoList(raw.lv1),
+    materialsLv2: mapToItemInfoList(raw.lv2),
+    materialsLv3: mapToItemInfoList(raw.lv3),
+    materialsLv4: mapToItemInfoList(raw.lv4),
+    materialsLv5: mapToItemInfoList(raw.lv5),
+    materialsLvBase: mapToItemInfoList(raw.lvBase),
   }
-  return result
 }
 
 interface ProcessClassifiedMaterials {
@@ -134,22 +124,10 @@ export function useAppCore() {
   const recipeMap = getRecipeMap()
 
   /**
-   * 内部纯算法调用：直接调用计算引擎返回中间结构体
+   * 内部纯算法调用：直接调用计算引擎返回各层级数量映射
    */
   const calItemsRaw = (selections: Record<number, number>): RecipeCalculateResult => {
-    const calMap: Record<string, RecipeCalculateInputEntry> = {}
-    for (const item in selections) {
-      const count = selections[item]
-      if (!count) continue
-      const itemId = Number(item)
-      calMap[item] = {
-        itemId,
-        count,
-        recipeId: recipeMap[itemId],
-        checked: false,
-      }
-    }
-    return doCal(calMap)
+    return doCal(selections)
   }
 
   /**
@@ -218,14 +196,14 @@ export function useAppCore() {
 
     // 计算一级素材
     const statisticsForLv1 = calItemsRaw(targetItemsForCal)
-    const lv1Items = collectCalResultToMap(statisticsForLv1.lv1, ignoreCrystal)
+    const lv1Items = filterCrystals(statisticsForLv1.lv1, ignoreCrystal)
 
     // 扣减已准备的一级素材
     const lv1ItemsForCal = deductPrepared(lv1Items, itemsPrepared.materialsLv1)
 
     // 计算基础素材
     const statistics = calItemsRaw(lv1ItemsForCal)
-    const baseItems = collectCalResultToMap(statistics.lvBase, ignoreCrystal)
+    const baseItems = filterCrystals(statistics.lvBase, ignoreCrystal)
 
     // 一级素材中无配方的道具直接计入基础素材
     for (const itemID in lv1ItemsForCal) {
@@ -283,8 +261,8 @@ export function useAppCore() {
     const lv1Items = mapToItemInfoList(lv1ItemsForCal)
 
     const statistics = calItemsRaw(lv1ItemsForCal)
-    const lv2Map = collectCalResultToMap(statistics.lv1, false)
-    const lv3Map = collectCalResultToMap(statistics.lv2, false)
+    const lv2Map = statistics.lv1
+    const lv3Map = statistics.lv2
 
     const lv2Items = mapToItemInfoList(lv2Map)
     const lv3Items = mapToItemInfoList(lv3Map)

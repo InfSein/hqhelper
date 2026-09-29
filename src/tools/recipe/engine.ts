@@ -2,11 +2,7 @@ import {
   XivUnpackedItems,
   XivUnpackedRecipes,
 } from '@/assets/data'
-import type {
-  RecipeCalculateInputEntry,
-  RecipeCalculateResult,
-  RecipeCalculateResultItem,
-} from '@/types/core'
+import type { RecipeCalculateResult } from '@/types/core'
 
 /**
  * 计算需要制作的次数 = ceil(需求量 / 单次产出)
@@ -17,241 +13,112 @@ function calcCraftCount(need: number, yields: number): number {
 }
 
 /**
- * 将材料累加到结果映射表中
+ * 展开一层材料（包含水晶与常规素材）
  */
-function addMaterialToMap(
-  reMap: Record<string, RecipeCalculateResultItem>,
-  itemId: number,
-  count: number,
-  rids?: number[],
-) {
-  const item = XivUnpackedItems[itemId]
-  if (!item) return
+function expandMaterials(
+  currentMap: Record<number, number>,
+): Record<number, number> {
+  const nextMap: Record<number, number> = {}
 
-  const itemKey = String(itemId)
-  if (reMap[itemKey]) {
-    reMap[itemKey].need += count
-  } else {
-    reMap[itemKey] = {
-      id: itemId,
-      rid: rids ?? [],
-      name: item.name,
-      icon: item.icon,
-      desc: item.desc,
-      uc: item.uc,
-      need: count,
-      mkc: 0,
-      pc: 1,
-    }
-  }
-}
+  for (const idStr in currentMap) {
+    const id = Number(idStr)
+    const need = currentMap[id]
+    if (need <= 0) continue
 
-/**
- * 处理顶层制作目标队列
- */
-export function expandTopLevel(
-  calMap: Record<string, RecipeCalculateInputEntry>,
-  shipArr: number[] = [],
-): Record<string, RecipeCalculateResultItem> {
-  const result: Record<string, RecipeCalculateResultItem> = {}
+    const item = XivUnpackedItems[id]
+    if (!item?.rids?.length) continue
 
-  for (const id in calMap) {
-    const entry = calMap[id]
-    if (!entry) continue
-
-    const numId = Number(id)
-    if (shipArr.includes(numId)) continue
-    // 特殊场景跳过标记
-    if (entry.skip) continue
-
-    const need = entry.count
-    const recipeId = entry.recipeId
-    const checked = entry.checked
-    const recipe = XivUnpackedRecipes[recipeId]
-    const item = XivUnpackedItems[numId]
-
-    if (!item) continue
-
-    if (recipe) {
-      const pc = recipe.yields
-      const mkc = calcCraftCount(need, pc)
-
-      result[id] = {
-        id: numId,
-        rid: recipeId,
-        checked,
-        job: recipe.job,
-        name: item.name,
-        icon: item.icon,
-        desc: item.desc,
-        uc: item.uc,
-        need,
-        mkc,
-        pc,
-      }
-    } else {
-      result[id] = {
-        id: numId,
-        checked,
-        rid: [],
-        name: item.name,
-        icon: item.icon,
-        desc: item.desc,
-        uc: item.uc,
-        need,
-        mkc: 0,
-      }
-    }
-  }
-
-  return result
-}
-
-/**
- * 逐级展开材料（支持水晶与常规素材）
- */
-export function expandMaterials(
-  itemTemMap: Record<string, RecipeCalculateResultItem>,
-  hideCluster = false,
-  shipArr: number[] = [],
-): Record<string, RecipeCalculateResultItem> {
-  const reMap: Record<string, RecipeCalculateResultItem> = {}
-
-  for (const id in itemTemMap) {
-    if (itemTemMap[id].checked === true) continue
-
-    let rid = itemTemMap[id].rid
-    if (rid === undefined || (Array.isArray(rid) && rid.length === 0)) {
-      continue
-    }
-    if (Array.isArray(rid)) {
-      rid = rid[0]
-    }
-
+    const rid = item.rids[0]
     const recipe = XivUnpackedRecipes[rid]
     if (!recipe) continue
 
-    const material = recipe.materials
+    const mkc = calcCraftCount(need, recipe.yields)
+    if (mkc <= 0) continue
+
+    // 展开水晶
     const shard = recipe.crystals
-    const mkc = itemTemMap[id].mkc
-
-    // 展开水晶类
-    if (!hideCluster) {
-      for (let i = 0; i < shard.length; i += 2) {
-        const shardId = shard[i]
-        if (shardId <= 0) continue
-        addMaterialToMap(reMap, shardId, mkc * shard[i + 1], [])
-      }
+    for (let i = 0; i < shard.length; i += 2) {
+      const shardId = shard[i]
+      if (shardId <= 0) continue
+      const count = mkc * shard[i + 1]
+      nextMap[shardId] = (nextMap[shardId] ?? 0) + count
     }
 
-    // 展开常规材料
+    // 展开常规素材
+    const material = recipe.materials
     for (let j = 0; j < material.length; j += 2) {
-      const itemId = material[j]
-      if (shipArr.includes(Number(itemId))) continue
-      const item = XivUnpackedItems[itemId]
-      if (!item) continue
-      addMaterialToMap(reMap, itemId, mkc * material[j + 1], item.rids)
+      const matId = material[j]
+      if (matId <= 0) continue
+      const count = mkc * material[j + 1]
+      nextMap[matId] = (nextMap[matId] ?? 0) + count
     }
   }
 
-  // 针对展开出的有配方的材料，计算其生产次数与产出
-  for (const k in reMap) {
-    const item = reMap[k]
-    let mkc1 = 0
-    const need1 = item.need
-    let pc1 = 0
-
-    const rid = item.rid
-    const firstRid = Array.isArray(rid) ? rid[0] : rid
-    if (firstRid) {
-      const targetRecipe = XivUnpackedRecipes[firstRid]
-      if (targetRecipe) {
-        pc1 = targetRecipe.yields
-        mkc1 = calcCraftCount(need1, pc1)
-      }
-    }
-
-    reMap[k].mkc = mkc1
-    reMap[k].pc = pc1
-  }
-
-  return reMap
+  return nextMap
 }
 
 /**
- * 汇总基础素材（无法再进一步分解的素材）
+ * 汇总基础素材（无配方的素材及水晶）
  */
-export function accumulateBaseMaterials(
-  temmap: Record<string, RecipeCalculateResultItem>,
-  sumMap02: Record<string, RecipeCalculateResultItem>,
-): Record<string, RecipeCalculateResultItem> {
-  for (const id in temmap) {
-    if (temmap[id].checked === true) continue
+function accumulateBaseMaterials(
+  lvMaps: Record<number, number>[],
+): Record<number, number> {
+  const baseMap: Record<number, number> = {}
 
-    const num = temmap[id].need
-    const rid = temmap[id].rid
+  for (const lvMap of lvMaps) {
+    for (const idStr in lvMap) {
+      const id = Number(idStr)
+      const count = lvMap[id]
+      if (count <= 0) continue
 
-    if (rid === undefined || (Array.isArray(rid) && rid.length === 0)) {
-      if (sumMap02[id]) {
-        sumMap02[id].need += num
-      } else {
-        sumMap02[id] = {
-          id: Number(id),
-          name: temmap[id].name,
-          icon: temmap[id].icon,
-          desc: temmap[id].desc,
-          uc: temmap[id].uc,
-          need: num,
-          mkc: 0,
-        }
+      const item = XivUnpackedItems[id]
+      // 无配方的素材视为基础素材（水晶在 XivUnpackedItems 中 rids 为空）
+      if (!item?.rids?.length) {
+        baseMap[id] = (baseMap[id] ?? 0) + count
       }
     }
   }
-  return sumMap02
-}
 
-export interface DoCalOptions {
-  hideCluster?: boolean
-  shipArr0?: number[]
-  shipArrs?: number[][]
+  return baseMap
 }
 
 /**
  * 递归配方展开计算主函数
+ * @param targets 待计算物品队列，key 为物品 ID，value 为需求数量
+ * @returns 各层级物品数量映射结果
  */
 export function doCal(
-  calMap: Record<string, RecipeCalculateInputEntry>,
-  options: DoCalOptions = {},
+  targets: Record<number, number>,
 ): RecipeCalculateResult {
-  const { hideCluster = false, shipArr0 = [], shipArrs = [] } = options
-  const defaultShipArrs = [
-    shipArrs[0] ?? [],
-    shipArrs[1] ?? [],
-    shipArrs[2] ?? [],
-    shipArrs[3] ?? [],
-    shipArrs[4] ?? [],
-  ]
-  const sumMap0 = expandTopLevel(calMap, shipArr0)
+  // 提取顶层有效目标
+  const ls: Record<number, number> = {}
+  for (const idStr in targets) {
+    const id = Number(idStr)
+    const count = targets[id]
+    if (count > 0) {
+      ls[id] = count
+    }
+  }
 
-  const lvMaps: Record<string, RecipeCalculateResultItem>[] = []
-  let currentMap = sumMap0
+  // 逐级展开 5 层素材
+  const lvMaps: Record<number, number>[] = []
+  let currentMap = ls
   for (let i = 0; i < 5; i++) {
-    currentMap = expandMaterials(currentMap, hideCluster, defaultShipArrs[i])
+    currentMap = expandMaterials(currentMap)
     lvMaps.push(currentMap)
   }
 
-  let sumMap02: Record<string, RecipeCalculateResultItem> = {}
-  for (const lvMap of lvMaps) {
-    sumMap02 = accumulateBaseMaterials(lvMap, sumMap02)
-  }
+  // 汇总所有展开层级中的基础素材
+  const lvBase = accumulateBaseMaterials(lvMaps)
 
   return {
-    ls: sumMap0,
+    ls,
     lv1: lvMaps[0],
     lv2: lvMaps[1],
     lv3: lvMaps[2],
     lv4: lvMaps[3],
     lv5: lvMaps[4],
-    lvBase: sumMap02,
+    lvBase,
   }
 }
+

@@ -20,7 +20,6 @@ import {
 } from '@/tools/game/map'
 import { deepCopy, range } from '@/tools'
 import { getImgCdnUrl } from '@/tools/game'
-import type { RecipeCalculateResultItem } from '@/types/core'
 
 /**
  * 获取可以精选的道具映射表
@@ -113,18 +112,14 @@ export const sortItems = (items: ItemInfo[], by: "recipeOrder" | "recipeOrderSea
 
 /**
  * 获取道具信息
- * @param item 物品ID或是`nbb-cal`传入的物品信息
+ * @param item 物品ID
+ * @param amount 数量（可选，默认为 0）
  * @returns 处理后的道具信息
  */
-export const getItemInfo = (item: `${number}` | number | RecipeCalculateResultItem) => {
+export const getItemInfo = (item: `${number}` | number, amount = 0) => {
   // * 尝试从items表中获取物品完整信息
-  let itemID = 0, itemAmount = 0
-  if (typeof item === 'number' || typeof item === 'string') {
-    itemID = Number(item)
-  } else {
-    itemID = Number(item.id)
-    itemAmount = item.need
-  }
+  const itemID = Number(item)
+  const itemAmount = amount
 
   let _item : XivUnpackedItem = {
     id: 0,
@@ -402,9 +397,7 @@ export const mapToItemInfoList = (itemMap: Record<number, number>): ItemInfo[] =
     const id = Number(_id)
     const amount = itemMap[id]
     if (amount > 0) {
-      const itemInfo = getItemInfo(id)
-      itemInfo.amount = amount
-      list.push(itemInfo)
+      list.push(getItemInfo(id, amount))
     }
   }
   return list
