@@ -48,7 +48,7 @@
     "message": {
       "ignore_confirm": "确定不再显示这一公告吗？",
       "ignored": "此公告将不再显示",
-      "no_announcements": "暂无未读通知"
+      "no_announcements": "暂无通知"
     },
     "title": {
       "title_1": "金曦之遗辉步入尾声……",
@@ -60,6 +60,17 @@
       "success": "重要",
       "warning": "提醒",
       "error": "紧急"
+    },
+    "a_1": {
+      "title": {
+        "title": "银海的天舟即将降临……"
+      },
+      "content": {
+        "content_1": "在过去的几个月里，我们完全重构了HqHelper的项目结构，并且重新审视了我们的目标。",
+        "content_2": "从银海之天舟资料片开始，我们将会将HqHelper的数据库从单一的星级HQ配方扩张至所有可交易配方。",
+        "content_3": "由此，HqHelper也将成为功能完备、结构先进的配方计算器！",
+        "content_4": "欢迎在正式发行之前参与我们的内部测试，并向我们反馈各种问题和需求。"
+      }
     }
   },
   "appheader": {

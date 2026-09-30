@@ -6,6 +6,10 @@ import {
   LightModeTwotone,
 } from '@vicons/material'
 import IconGithub from '@/assets/icons/external/github.svg'
+import IconInfo from '@/assets/icons/info.svg'
+import IconSuccess from '@/assets/icons/success.svg'
+import IconWarning from '@/assets/icons/warning.svg'
+import IconError from '@/assets/icons/error.svg'
 import ModalDonate from '@/components/modals/ModalDonate.vue'
 import { useStore } from '@/store'
 import useConfig from '@/composables/useConfig'
@@ -28,7 +32,10 @@ const notifyBtnRef = ref<any>(null)
 
 // #region 公告与通知逻辑
 enum AnnouncementId {
-  dawntrailEnd = 2,
+  // used
+  dawntrailEnd = 1,
+
+  evercoldBeta = 3,
 }
 
 interface Announcement {
@@ -45,25 +52,53 @@ interface Announcement {
 const announcements = computed((): Announcement[] => {
   return [
     {
-      id: AnnouncementId.dawntrailEnd,
-      type: 'success',
-      title: t('announcement.title.title_1'),
+      id: AnnouncementId.evercoldBeta,
+      type: 'info',
+      title: t('announcement.a_1.title.title'),
       content: [
-        t('announcement.content.content_1_1'),
-        t('announcement.content.content_1_2'),
-        t('announcement.content.content_1_3'),
-        t('announcement.content.content_1_4'),
+        t('announcement.a_1.content.content_1'),
+        t('announcement.a_1.content.content_2'),
+        t('announcement.a_1.content.content_3'),
+        t('announcement.a_1.content.content_4'),
       ],
       actions: [
-        { label: t('announcement.action.follow_us'), onClick: () => visitUrl('https://weibo.com/u/7870808507') },
+        // { label: t('announcement.action.follow_us'), onClick: () => visitUrl('https://weibo.com/u/7870808507') },
         { label: t('announcement.action.join_q_group'), onClick: () => visitUrl(qGroupInfo.groupUrl) },
         { label: t('announcement.action.feedback_github'), onClick: () => visitUrl(githubInfo.newIssueUrl) },
         { label: t('announcement.action.feedback_qquery'), onClick: () => visitUrl(otherSocialInfo.qqQueryUrl) },
-        { label: t('common.appfunc.donate_us'), onClick: () => (showDonateModal.value = true) },
+        // { label: t('common.appfunc.donate_us'), onClick: () => (showDonateModal.value = true) },
       ],
     },
   ]
 })
+
+const getAnnouncementIcon = (type?: Announcement['type']) => {
+  switch (type) {
+    case 'success':
+      return IconSuccess
+    case 'warning':
+      return IconWarning
+    case 'error':
+      return IconError
+    case 'info':
+    default:
+      return IconInfo
+  }
+}
+
+const getAnnouncementTypeClass = (type?: Announcement['type']) => {
+  switch (type) {
+    case 'success':
+      return 'text-primary'
+    case 'warning':
+      return 'text-warning'
+    case 'error':
+      return 'text-error'
+    case 'info':
+    default:
+      return 'text-info'
+  }
+}
 
 // 过滤掉已被用户忽略（不再显示）的公告
 const activeAnnouncements = computed(() => {
@@ -213,7 +248,7 @@ const handleOpenGithub = () => {
         :show="isPanelOpen"
         trigger="manual"
         placement="bottom-end"
-        :style="{ width: '380px', maxWidth: '90vw' }"
+        :style="{ width: '320px', maxWidth: '90vw' }"
         :on-clickoutside="handleClickOutside"
       >
         <template #trigger>
@@ -242,27 +277,51 @@ const handleOpenGithub = () => {
           @mouseenter="handleMouseEnter"
           @mouseleave="handleMouseLeave"
         >
-          <div class="flex items-center gap-0.75 text-app-xl">
-            <n-icon :size="16"><NotificationsOutlined /></n-icon>
-            <span>{{ t('announcement.title.notification_center') }}</span>
+          <div class="flex items-center justify-between text-app-base font-bold text-text px-1">
+            <div class="flex items-center gap-1.5">
+              <n-icon :size="16"><NotificationsOutlined /></n-icon>
+              <span>{{ t('announcement.title.notification_center') }}</span>
+            </div>
+            <n-button
+              v-show="false"
+              quaternary
+              size="tiny"
+              type="error"
+              @click="handleIgnoreAll"
+            >
+              {{ t('announcement.action.ignore_all') }}
+            </n-button>
           </div>
-          <n-divider style="margin: 4px 0 8px;" />
+          <n-divider style="margin: 6px 0 4px;" />
 
-          <n-scrollbar trigger="none" style="max-height: 300px">
-            <div v-if="activeAnnouncements.length" class="announcement-list">
-              <n-alert
-                v-for="item in activeAnnouncements"
+          <n-scrollbar trigger="none" style="max-height: 450px">
+            <div v-if="activeAnnouncements.length" class="flex flex-col">
+              <template
+                v-for="(item, index) in activeAnnouncements"
                 :key="'anno-' + item.id"
-                :type="item.type || 'info'"
-                :title="item.title"
-                class="announcement-alert"
               >
-                <div class="announcement-alert-content">
-                  <div class="announcement-text">
-                    <p v-for="(line, idx) in item.content" :key="idx">{{ line }}</p>
+                <!-- 多个通知之间的分隔线 -->
+                <n-divider v-if="index > 0" style="margin: 6px 0;" />
+
+                <!-- 单个通知项 -->
+                <div class="px-2 py-1 rounded transition-colors duration-150 hover:bg-bg-hover">
+                  <!-- [图标] 标题 -->
+                  <div class="flex items-center gap-1 leading-snug">
+                    <n-icon :size="24" class="shrink-0" :class="getAnnouncementTypeClass(item.type)">
+                      <component :is="getAnnouncementIcon(item.type)" />
+                    </n-icon>
+                    <span class="font-semibold text-app-base text-text wrap-break-word">{{ item.title }}</span>
                   </div>
-                  <div class="announcement-actions">
-                    <div class="action-buttons">
+
+                  <!-- 内容 -->
+                  <div class="mt-1 ml-7 text-app-xs text-sub leading-relaxed space-y-1">
+                    <p v-for="(line, idx) in item.content" :key="idx" class="m-0 wrap-break-word">{{ line }}</p>
+                  </div>
+
+                  <!-- 操作按钮 -->
+                  <template v-if="item.actions?.length">
+                    <n-divider class="my-1!" />
+                    <div class="flex items-center flex-wrap gap-1">
                       <n-button
                         v-for="(act, actIdx) in item.actions"
                         :key="actIdx"
@@ -273,18 +332,19 @@ const handleOpenGithub = () => {
                       >
                         {{ act.label }}
                       </n-button>
+                      <n-button
+                        v-show="false"
+                        quaternary
+                        type="error"
+                        size="tiny"
+                        @click="handleIgnoreAnnouncement(item.id)"
+                      >
+                        {{ t('announcement.action.ignore') }}
+                      </n-button>
                     </div>
-                    <n-button
-                      quaternary
-                      type="error"
-                      size="tiny"
-                      @click="handleIgnoreAnnouncement(item.id)"
-                    >
-                      {{ t('announcement.action.ignore') }}
-                    </n-button>
-                  </div>
+                  </template>
                 </div>
-              </n-alert>
+              </template>
             </div>
             <n-empty
               v-else
@@ -385,45 +445,5 @@ const handleOpenGithub = () => {
 .notification-panel {
   display: flex;
   flex-direction: column;
-
-  .announcement-list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .announcement-alert {
-    border-radius: 6px;
-
-    .announcement-alert-content {
-      .announcement-text {
-        font-size: var(--app-font-size-xs);
-        color: var(--app-color-text-sub);
-        line-height: 1.5;
-
-        p {
-          margin: 2px 0;
-        }
-      }
-
-      .announcement-actions {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 4px;
-        margin-top: 6px;
-        padding-top: 4px;
-        border-top: 1px dashed var(--app-color-border);
-
-        .action-buttons {
-          display: flex;
-          align-items: center;
-          flex-wrap: wrap;
-          gap: 2px;
-        }
-      }
-    }
-  }
 }
 </style>
