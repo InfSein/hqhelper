@@ -12,8 +12,8 @@ import useConfig from '@/composables/useConfig'
 import { useLocale } from '@/composables/useLocale'
 import { useEorzeaTime } from '@/composables/useEorzeaTime'
 import { XivJobs, type XivJob } from '@/assets/data'
-import { getItemInfo, type ItemInfo } from '@/tools/item'
-import type { RecommItemGroup } from '@/types/item'
+import { getItemInfo } from '@/tools/item'
+import type { ItemInfo, RecommItemGroup } from '@/types/item'
 
 const store = useStore()
 const { t } = useLocale()

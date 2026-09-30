@@ -18,9 +18,9 @@ import { useEorzeaTime } from '@/composables/useEorzeaTime'
 import { useResponsive } from '@/composables/useResponsive'
 import { XivJobs, type XivJob } from '@/assets/data'
 import { playAudio } from '@/tools'
-import { getItemInfo, type ItemInfo } from '@/tools/item'
-import { useNbbCal } from '@/tools/use-nbb-cal'
-import type { ItemGroup } from '@/types/item'
+import { getItemInfo } from '@/tools/item'
+import type { ItemInfo, ItemGroup } from '@/types/item'
+import { getLimitedGatherings } from '@/tools/game'
 import {
   fixWorkState,
   type WorkState,
@@ -41,7 +41,6 @@ const { alertError } = useDialog()
 const { isMobile } = useResponsive()
 const { currentET } = useEorzeaTime()
 const { optionsRenderer } = useUiTools()
-const { getLimitedGatherings } = useNbbCal()
 const {
   uiLanguage, itemLanguage,
 } = useConfig()

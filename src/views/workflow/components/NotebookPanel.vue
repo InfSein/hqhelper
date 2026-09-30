@@ -35,7 +35,8 @@ import MasterGroupIcon from '@/assets/icons/game-ui/recipe-notebook/group-master
 import SpecialGroupIcon from '@/assets/icons/game-ui/recipe-notebook/group-special.svg'
 import { XivJobs, XivRecipeCustomLists, XivSrbMap, XivUnpackedRecipes, XivUnpackedItems } from '@/assets/data'
 import { sortRecord } from '@/tools'
-import { getItemInfo, sortItems, getItemNameRevertMap, type ItemInfo } from '@/tools/item'
+import { getItemInfo, sortItems, getItemNameRevertMap } from '@/tools/item'
+import type { ItemInfo } from '@/types/item'
 import { decodeShareCode } from '@/tools/shareCode'
 
 const store = useStore()

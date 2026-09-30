@@ -9,7 +9,7 @@ import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
 import { useItemContextMenu } from '@/composables/useItemContextMenu'
 import { useItemLocale } from '@/composables/useItemLocale'
-import type { ItemInfo } from '@/tools/item'
+import type { ItemInfo } from '@/types/item'
 
 const store = useStore()
 const { t } = useLocale()

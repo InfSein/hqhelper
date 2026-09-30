@@ -8,7 +8,7 @@ import { useLocale } from '@/composables/useLocale'
 import useConfig from '@/composables/useConfig'
 import { useResponsive } from '@/composables/useResponsive'
 import { XivJobs } from '@/assets/data'
-import type { ItemInfo } from '@/tools/item'
+import type { ItemInfo } from '@/types/item'
 import { XivMaps, type XivMapAetheryteInfo, type XivMapInfo } from '@/tools/game/map'
 
 const { t } = useLocale()

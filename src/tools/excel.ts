@@ -4,13 +4,14 @@ import {
   XivJobs, XivGearAffixes
 } from '@/assets/data'
 import { attireAffixes, accessoryAffixes, type GearSelections, type AttireAffix, type AccessoryAffix, fixGearSelections } from "@/types/game/gear"
-import { getItemInfo, type ItemInfo } from './item'
-import type { StatementData } from './use-fufu-cal'
+import { getItemInfo } from './item'
+import type { ItemInfo } from '@/types/item'
+import type { StatementData } from '@/types/core'
 import type { ItemPriceInfo } from '@/types/item/price'
 
 export const export2Excel = (
   gearSelections: GearSelections,
-  statistics: any,
+  statistics: StatementData,
   tomeScriptItems: Record<number, ItemInfo[]>,
   normalGathering: ItemInfo[],
   limitedGathering: ItemInfo[],
@@ -19,7 +20,6 @@ export const export2Excel = (
   ui_lang: 'zh' | 'ja' | 'en',
   item_lang: 'zh' | 'ja' | 'en',
   t: (message: string, args?: any) => string,
-  getStatementData: (statistics: any) => StatementData,
   file_name?: string,
   item_price_map?: Record<number, ItemPriceInfo>,
   price_type?: "averagePrice" | "currentAveragePrice" | "minPrice" | "maxPrice" | "marketLowestPrice" | "marketPrice" | "purchasePrice"
@@ -29,7 +29,7 @@ export const export2Excel = (
   let tableData : string[][]
   let workSheet : XLSX.WorkSheet
 
-  const statements = getStatementData(statistics)
+  const statements = statistics
   const getItemName = (item: ItemInfo) => {
     return item[`name_${item_lang}`] || '???'
   }
@@ -220,11 +220,10 @@ export const export2Excel = (
 
   const directMaterials = statements.materialsLv1
   directMaterials.forEach(item => {
-    const itemGroupId = statistics.lvBase[item.id]?.uc ?? 0
-    if (item.amount && itemGroupId !== 59) { // 排除水晶
+    if (item.amount && !item.isCrystal) { // 排除水晶
       tableData.push([
         getItemName(item),
-        item.amount.toString()
+        item.amount.toString(),
       ])
     }
   })

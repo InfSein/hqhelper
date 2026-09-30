@@ -3,7 +3,7 @@ import {
   assignDefaults,
   deepCopy
 } from '@/tools'
-import type { ItemInfo } from '@/tools/item'
+import type { ItemInfo } from '@/types/item'
 
 export const _VAR_TAG_MAXLEN = 5
 export const _VAR_REMARK_MAXLINE = 3

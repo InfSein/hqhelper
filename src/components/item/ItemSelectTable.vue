@@ -4,7 +4,8 @@ import type { ScrollbarInst } from 'naive-ui'
 import ItemCell from './ItemCell.vue'
 import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
-import { getItemInfo, type ItemInfo } from '@/tools/item'
+import { getItemInfo } from '@/tools/item'
+import type { ItemInfo } from '@/types/item'
 
 const { t } = useLocale()
 const { isMobile } = useResponsive()

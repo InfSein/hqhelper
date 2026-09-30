@@ -1,5 +1,5 @@
 import type { InjectionKey } from 'vue'
-import type { ItemInfo } from '@/tools/item'
+import type { ItemInfo } from '@/types/item'
 
 /** 添加物品到当前工作流的回调 */
 export const addToCurrentWorkflowKey: InjectionKey<(itemId: number) => void> = Symbol('addToCurrentWorkflow')

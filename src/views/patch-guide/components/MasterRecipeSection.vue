@@ -8,7 +8,7 @@ import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
 import { XivJobs } from '@/assets/data'
-import { getPatchMasterRecipeItems } from '@/tools/game/patch-guide'
+import { getPatchMasterRecipeItems } from '../composables/usePatchGuide'
 
 interface MasterRecipeSectionProps {
   patchVer: string

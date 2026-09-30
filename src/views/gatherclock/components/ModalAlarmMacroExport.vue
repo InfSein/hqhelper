@@ -12,8 +12,8 @@ import { useLocale } from '@/composables/useLocale'
 import useConfig from '@/composables/useConfig'
 import { useResponsive } from '@/composables/useResponsive'
 import { XivJobs, type XivJob } from '@/assets/data'
-import { getItemInfo, type ItemInfo } from '@/tools/item'
-import type { ItemGroup } from '@/types/item/index'
+import { getItemInfo } from '@/tools/item'
+import type { ItemInfo, ItemGroup } from '@/types/item'
 import {
   type AlarmMacroOptions,
   _VAR_GATHERCLOCK_MAX_ALARM_MACRO,

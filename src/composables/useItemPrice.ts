@@ -1,5 +1,5 @@
 import { useStore } from "@/store"
-import type { ItemInfo } from "@/tools/item"
+import type { ItemInfo } from '@/types/item'
 import { ItemPriceApiVersion, type ItemPriceInfo } from "@/types/item/price"
 
 const useItemPrice = () => {

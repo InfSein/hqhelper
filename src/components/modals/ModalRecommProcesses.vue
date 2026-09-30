@@ -5,18 +5,16 @@ import {
 } from '@vicons/material'
 import ModalPreferences from './ModalPreferences.vue'
 import CraftRecommProcess from '@/components/craft/CraftRecommProcess.vue'
-import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
 import useConfig from '@/composables/useConfig'
 import { CopyToClipboard } from '@/tools'
-import { type ItemInfo } from '@/tools/item'
-import { useFufuCal } from '@/tools/use-fufu-cal'
+import type { ItemInfo } from '@/types/item'
+import { useAppCore } from '@/composables/useAppCore'
 
-const store = useStore()
 const { t } = useLocale()
 const { itemLanguage } = useConfig()
 const NAIVE_UI_MESSAGE = useMessage()
-const { calRecommProcessGroups } = useFufuCal()
+const { calRecommProcessGroups } = useAppCore()
 
 const showModal = defineModel<boolean>('show', { required: true })
 const expandedBlocks = ref<Record<number, string[]>>({})
@@ -54,10 +52,6 @@ const itemGroups = computed(() => {
     props.lv2Items,
     props.lv3Items,
     props.lvBaseItems,
-    store.funcConfig.processes_craftable_item_sortby,
-    store.funcConfig.processes_merge_gatherings,
-    store.userConfig.language_ui,
-    t
   )
 })
 

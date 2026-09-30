@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import type { ItemInfo } from '@/tools/item'
+import type { ItemInfo } from '@/types/item'
 import type { MacroGenerateMode } from '@/types/config/func'
 import type { ModalGearOverviewProps } from '@/components/modals/ModalGearOverview.vue'
 import { useStore } from '@/store'

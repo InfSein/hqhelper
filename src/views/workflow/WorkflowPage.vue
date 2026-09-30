@@ -35,7 +35,7 @@ import { useWorkflowStatistics } from '@/composables/useWorkflowStatistics'
 import { onInventoryChange, offInventoryChange } from '@/composables/useInventoryPlugin'
 import { type SettingGroupKey } from '@/types'
 import { getDefaultWorkflow, _VAR_MAX_WORKFLOW } from '@/types/workstate/workflow'
-import { type ItemInfo } from '@/tools/item'
+import type { ItemInfo } from '@/types/item'
 import { addToCurrentWorkflowKey, reverseRecipeLookupKey } from '@/constants/vue-injects'
 
 const store = useStore()
@@ -523,7 +523,7 @@ const setInventoryByStatementPrepared = () => {
                   </div>
                 </template>
                 <CraftStatistics
-                  :item-selected="currentWorkflow.targetItems"
+                  :statistics="statementData"
                   :list-height="pageHeightVals.statisticsBlock"
                 />
               </n-tab-pane>

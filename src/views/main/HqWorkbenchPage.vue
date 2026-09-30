@@ -6,8 +6,9 @@ import ModalJoinInWorkflow from '@/components/modals/ModalJoinInWorkflow.vue'
 import GearSelectionPanel from '@/views/main/components/GearSelectionPanel.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
-import { XivJobRoleMap, type XivPatchVer } from '@/assets/data';
-import { useNbbCal } from '@/tools/use-nbb-cal'
+import { XivJobRoleMap, type XivPatchVer } from '@/assets/data'
+import { useAppCore } from '@/composables/useAppCore'
+import { getPatchData } from '@/tools/game'
 import { fixGearSelections } from '@/types/game/gear'
 import type { AttireAffix, AccessoryAffix, GearSelections } from '@/types/game/gear'
 import type { WorkState } from '@/types/workstate/hqworkbench'
@@ -15,7 +16,7 @@ import type { WorkState } from '@/types/workstate/hqworkbench'
 const store = useStore()
 const { t } = useLocale()
 const NAIVE_UI_MESSAGE = useMessage()
-const { calGearSelections, getSpecialItems, getPatchData } = useNbbCal()
+const { calGearSelections } = useAppCore()
 
 const workState = ref<WorkState>({
   patch: undefined,
@@ -58,9 +59,10 @@ const handleJobButtonDupliClick = () => {
 
 const showModalJoinInWorkflow = ref(false)
 const workflowItems = computed(() => {
-  const items : Record<number, number> = {}
-  Object.values(statistics.value.ls).forEach((stat: any) => {
-    items[stat.id] = stat.need
+  const items: Record<number, number> = {}
+  if (!statistics.value) return items
+  statistics.value.craftTargets.forEach(item => {
+    items[item.id] = item.amount
   })
   return items
 })
@@ -94,8 +96,11 @@ const patchData = computed(() => {
 const statistics = computed(() => {
   return calGearSelections(workState.value.gears, (workState.value.patch || '7.0') as XivPatchVer)
 })
-const specialItems = computed(() => {
-  return getSpecialItems((workState.value.patch || '7.0') as XivPatchVer)
+const aethersands = computed(() => {
+  return Object.keys(patchData.value?.reduces ?? []).map(Number)
+})
+const alkahests = computed(() => {
+  return patchData.value?.alkahests
 })
 </script>
 
@@ -137,8 +142,8 @@ const specialItems = computed(() => {
           class="h-full"
           :patch-selected="workState.patch"
           :statistics="statistics"
-          :aethersand-gatherings="specialItems.aethersands"
-          :alkahests="specialItems.alkahests"
+          :aethersand-gatherings="aethersands"
+          :alkahests="alkahests"
           :gear-selections="workState.gears"
         />
       </n-grid-item>

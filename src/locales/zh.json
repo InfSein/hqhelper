@@ -1451,7 +1451,11 @@
       "star_limit_reached": "最多只能收藏{max}个物品",
       "subscribe_limit_reached": "最多只能订阅{max}个物品",
       "system_notice_denied": "通知权限被拒绝，请检查浏览器的网站权限设置。",
-      "system_notice_not_supported": "当前使用的浏览器或客户端不支持系统通知功能。"
+      "system_notice_not_supported": "当前使用的浏览器或客户端不支持系统通知功能。",
+      "unstarred": "已取消收藏「{name}」",
+      "starred": "已收藏「{name}」",
+      "unsubscribed": "已取消订阅「{name}」",
+      "subscribed": "已订阅「{name}」"
     },
     "preference": {
       "custom_audio": {

@@ -5,7 +5,7 @@
 <script setup lang="ts">
 import { computed, ref, watch, onMounted, onUnmounted, nextTick } from 'vue'
 import useConfig from '@/composables/useConfig'
-import type { ItemInfo } from '@/tools/item'
+import type { ItemInfo } from '@/types/item'
 
 const { itemLanguage } = useConfig()
 

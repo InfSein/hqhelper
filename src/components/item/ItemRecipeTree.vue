@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import ItemSpan from './ItemSpan.vue'
-import { getItemInfo, type ItemInfo } from '@/tools/item'
+import { getItemInfo } from '@/tools/item'
+import type { ItemInfo } from '@/types/item'
 
 interface ItemRecipeTreeProps {
   item: ItemInfo
