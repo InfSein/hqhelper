@@ -5,7 +5,7 @@ import {
   DarkModeTwotone,
   LightModeTwotone,
 } from '@vicons/material'
-import IconGithub from '@/assets/icons/external/IconGithub.vue'
+import IconGithub from '@/assets/icons/external/github.svg'
 import ModalDonate from '@/components/modals/ModalDonate.vue'
 import { useStore } from '@/store'
 import useConfig from '@/composables/useConfig'
@@ -330,7 +330,9 @@ const handleOpenGithub = () => {
         <template #trigger>
           <n-button round strong secondary size="small" class="top-action-btn__edge-right" @click="handleOpenGithub">
             <template #icon>
-              <IconGithub :size="16" />
+              <n-icon :size="16">
+                <component :is="IconGithub" />
+              </n-icon>
             </template>
           </n-button>
         </template>

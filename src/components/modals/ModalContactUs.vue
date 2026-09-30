@@ -3,10 +3,10 @@ import {
   CloseSharp,
   ContactlessSharp,
 } from '@vicons/material'
-import IconQQ from '@/assets/icons/external/IconQQ.vue'
-import IconWeibo from '@/assets/icons/external/IconWeibo.vue'
-import IconGithub from '@/assets/icons/external/IconGithub.vue'
-import IconTwitter from '@/assets/icons/external/IconTwitter.vue'
+import IconQQ from '@/assets/icons/external/qq.svg'
+import IconWeibo from '@/assets/icons/external/weibo.svg'
+import IconGithub from '@/assets/icons/external/github.svg'
+import IconTwitter from '@/assets/icons/external/twitter.svg'
 import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
 import { qGroupInfo, githubInfo, otherSocialInfo } from '@/constants'
@@ -38,7 +38,9 @@ const handleClose = () => {
         <n-scrollbar trigger="none" :style="tabContentStyle">
           <div id="qq" class="item">
             <div class="title">
-              <n-icon><IconQQ /></n-icon>
+              <n-icon :size="28">
+                <component :is="IconQQ" />
+              </n-icon>
               <span>{{ t('common.qq') }}</span>
             </div>
             <div class="content">
@@ -69,7 +71,9 @@ const handleClose = () => {
           <n-divider />
           <div id="github-issue" class="item">
             <div class="title">
-              <n-icon><IconGithub /></n-icon>
+              <n-icon :size="28">
+                <component :is="IconGithub" />
+              </n-icon>
               <span>{{ t('contact_us.feedback.sub_title.github_issue') }}</span>
             </div>
             <div class="content">
@@ -93,7 +97,9 @@ const handleClose = () => {
           <n-divider />
           <div id="weibo" class="item">
             <div class="title">
-              <n-icon><IconWeibo /></n-icon>
+              <n-icon :size="28">
+                <component :is="IconWeibo" />
+              </n-icon>
               <span>{{ t('common.weibo') }}</span>
             </div>
             <div class="content">
@@ -107,7 +113,9 @@ const handleClose = () => {
           <n-divider />
           <div id="twitter" class="item">
             <div class="title">
-              <n-icon><IconTwitter /></n-icon>
+              <n-icon :size="28">
+                <component :is="IconTwitter" />
+              </n-icon>
               <span>{{ t('common.twitter_x') }}</span>
             </div>
             <div class="content">
