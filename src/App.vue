@@ -5,7 +5,6 @@ import {
 } from 'naive-ui'
 import Dialog from "@/components/app/Dialog.vue"
 import AppHeader from './components/app/AppHeader.vue'
-import AccountView from './components/app/AccountView.vue'
 import AppTopActions from './components/app/AppTopActions.vue'
 import { useStore } from '@/store/index'
 import { useLocale } from './locales'
@@ -309,7 +308,6 @@ const naiveUIThemeOverrides = computed(() : GlobalThemeOverrides => {
 
           <div v-if="!isMobile && appMode !== 'overlay'" class="top-actions-wrapper">
             <AppTopActions />
-            <AccountView />
           </div>
 
           <div

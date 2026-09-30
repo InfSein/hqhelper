@@ -11,6 +11,7 @@ import IconSuccess from '@/assets/icons/success.svg'
 import IconWarning from '@/assets/icons/warning.svg'
 import IconError from '@/assets/icons/error.svg'
 import ModalDonate from '@/components/modals/ModalDonate.vue'
+import AccountView from './AccountView.vue'
 import { useStore } from '@/store'
 import useConfig from '@/composables/useConfig'
 import { useLocale } from '@/composables/useLocale'
@@ -242,7 +243,77 @@ const handleOpenGithub = () => {
 
 <template>
   <div class="app-top-actions">
+    <!-- 工具操作组 -->
     <n-button-group size="small">
+      <!-- 切换主题 -->
+      <n-tooltip trigger="hover">
+        <template #trigger>
+          <n-button
+            round
+            strong
+            secondary
+            size="small"
+            class="top-action-btn__edge-left"
+            @click="switchTheme"
+          >
+            <template #icon>
+              <n-icon :size="16">
+                <DarkModeTwotone v-if="theme === 'light'" />
+                <LightModeTwotone v-else />
+              </n-icon>
+            </template>
+          </n-button>
+        </template>
+        {{ theme === 'light' ? t('common.appfunc.switch_to_dark') : t('common.appfunc.switch_to_light') }}
+      </n-tooltip>
+
+      <!-- 下载客户端 -->
+      <n-tooltip v-if="!isClient" trigger="hover">
+        <template #trigger>
+          <n-button
+            strong
+            secondary
+            size="small"
+            class="top-action-btn"
+            @click="handleClientBtnClick"
+          >
+            <template #icon>
+              <n-icon :size="16">
+                <DevicesOutlined />
+              </n-icon>
+            </template>
+          </n-button>
+        </template>
+        {{ t('common.appfunc.download_client') }}
+      </n-tooltip>
+
+      <!-- GitHub -->
+      <n-tooltip trigger="hover">
+        <template #trigger>
+          <n-button
+            round
+            strong
+            secondary
+            size="small"
+            class="top-action-btn__edge-right"
+            @click="handleOpenGithub"
+          >
+            <template #icon>
+              <n-icon :size="16">
+                <component :is="IconGithub" />
+              </n-icon>
+            </template>
+          </n-button>
+        </template>
+        GitHub
+      </n-tooltip>
+    </n-button-group>
+
+    <!-- 账号与通知组 -->
+    <n-button-group>
+      <!-- 账号登录 -->
+      <AccountView trigger-class="top-action-account-btn account" />
+
       <!-- 通知中心 -->
       <n-popover
         :show="isPanelOpen"
@@ -258,7 +329,7 @@ const handleOpenGithub = () => {
             strong
             secondary
             size="small"
-            class="top-action-btn__edge-left"
+            class="top-action-btn__edge-right"
             :class="{ 'is-active': isPinned }"
             @mouseenter="handleMouseEnter"
             @mouseleave="handleMouseLeave"
@@ -355,49 +426,6 @@ const handleOpenGithub = () => {
           </n-scrollbar>
         </div>
       </n-popover>
-
-      <!-- 切换主题 -->
-      <n-tooltip trigger="hover">
-        <template #trigger>
-          <n-button strong secondary size="small" class="top-action-btn" @click="switchTheme">
-            <template #icon>
-              <n-icon :size="16">
-                <DarkModeTwotone v-if="theme === 'light'" />
-                <LightModeTwotone v-else />
-              </n-icon>
-            </template>
-          </n-button>
-        </template>
-        {{ theme === 'light' ? t('common.appfunc.switch_to_dark') : t('common.appfunc.switch_to_light') }}
-      </n-tooltip>
-
-      <!-- 下载客户端 -->
-      <n-tooltip v-if="!isClient" trigger="hover">
-        <template #trigger>
-          <n-button strong secondary size="small" class="top-action-btn" @click="handleClientBtnClick">
-            <template #icon>
-              <n-icon :size="16">
-                <DevicesOutlined />
-              </n-icon>
-            </template>
-          </n-button>
-        </template>
-        {{ t('common.appfunc.download_client') }}
-      </n-tooltip>
-
-      <!-- GitHub -->
-      <n-tooltip trigger="hover">
-        <template #trigger>
-          <n-button round strong secondary size="small" class="top-action-btn__edge-right" @click="handleOpenGithub">
-            <template #icon>
-              <n-icon :size="16">
-                <component :is="IconGithub" />
-              </n-icon>
-            </template>
-          </n-button>
-        </template>
-        GitHub
-      </n-tooltip>
     </n-button-group>
 
     <!-- 弹窗 -->
@@ -409,8 +437,9 @@ const handleOpenGithub = () => {
 .app-top-actions {
   display: inline-flex;
   align-items: center;
+  gap: 8px;
 
-  button:not(:first-child) {
+  :deep(button:not(:first-child)) {
     border-left: 1px solid var(--app-color-background-embedded);
   }
 }
@@ -419,12 +448,18 @@ const handleOpenGithub = () => {
   width: 32px;
   height: 28px;
   padding: 0 !important;
+  border-left: 1px solid var(--app-color-background-embedded) !important;
 }
 .top-action-btn__edge-left {
   padding: 0 6px 0 8px !important;
 }
 .top-action-btn__edge-right {
   padding: 0 8px 0 6px !important;
+  border-left: 1px solid var(--app-color-background-embedded) !important;
+}
+.top-action-account-btn,
+:deep(.n-button.top-action-account-btn.account) {
+  padding: 0 8px 0 14px !important;
 }
 
 :deep(.n-button.top-action-btn:hover),
@@ -432,11 +467,14 @@ const handleOpenGithub = () => {
 :deep(.n-button.top-action-btn__edge-left:hover),
 :deep(.n-button.top-action-btn__edge-left:focus),
 :deep(.n-button.top-action-btn__edge-right:hover),
-:deep(.n-button.top-action-btn__edge-right:focus) {
+:deep(.n-button.top-action-btn__edge-right:focus),
+:deep(.n-button.top-action-account-btn.account:hover),
+:deep(.n-button.top-action-account-btn.account:focus) {
   z-index: 2;
 }
 
-:deep(.n-button.top-action-btn__edge-left.is-active) {
+:deep(.n-button.top-action-btn__edge-left.is-active),
+:deep(.n-button.top-action-btn__edge-right.is-active) {
   color: var(--app-color-primary);
   z-index: 2;
 }
