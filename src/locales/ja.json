@@ -797,6 +797,8 @@
   },
   "cloud": {
     "message": {
+      "beta_upload_disabled": "現在のバージョンはベータ版（Beta）です。本番環境のデータへの影響を防ぐため、クラウドへのアップロードは無効化されています。クラウドからのダウンロードは引き続きご利用いただけます。",
+      "beta_upload_disabled_title": "ベータ版ではアップロードが無効です",
       "cache_cleaned": "アイテム価格サーバーの設定が変更されたため、アイテム価格キャッシュがクリアされました。",
       "cannot_sync_because_modules_data_load_failed": "同期できません。以下のモジュールのデータ読み込みに失敗しました：",
       "cannot_sync_because_modules_data_not_uploaded": "同期できません。以下のモジュールがまだアップロードされていません：",

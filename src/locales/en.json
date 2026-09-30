@@ -797,6 +797,8 @@
   },
   "cloud": {
     "message": {
+      "beta_upload_disabled": "The current version is a Beta build. Uploading data to the cloud is disabled to prevent affecting production data. You can still download data from the cloud.",
+      "beta_upload_disabled_title": "Data upload is disabled in Beta",
       "cache_cleaned": "Due to a change in the item price server settings, the item price cache has been cleared.",
       "cannot_sync_because_modules_data_load_failed": "Synchronization cannot proceed because the data loading for the following modules failed:",
       "cannot_sync_because_modules_data_not_uploaded": "Synchronization cannot proceed because the following modules have not yet uploaded data:",

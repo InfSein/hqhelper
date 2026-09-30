@@ -21,6 +21,7 @@ import { fixWorkState as fixCsHelperWorkState } from '@/types/workstate/cshelper
 import { fixWorkState as fixWorkflowWorkState } from '@/types/workstate/workflow'
 import { fixWorkState as fixFashionclothWorkState } from '@/types/workstate/fchelper'
 import { fixWorkState as fixMacromanageWorkState } from '@/types/workstate/macromanage'
+import AppStatus from '@/constants/app'
 
 const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
 
@@ -33,6 +34,8 @@ const {
   getListBatch, addList, editList,
   resolveListTitle,
 } = useNbbCloud()
+
+const isBeta = computed(() => AppStatus.IsBeta)
 
 const showModal = defineModel<boolean>('show', { required: true })
 
@@ -199,6 +202,8 @@ const handleSelectRevert = () => {
 }
 
 const handleUpload = async () => {
+  if (isBeta.value) return
+
   syncing.value = true
 
   if (getFailedLabels.value.length) {
@@ -495,6 +500,9 @@ const handleDownload = async () => {
   >
     <n-spin :show="loading">
       <div class="wrapper">
+        <n-alert v-if="isBeta" type="warning" :title="t('cloud.message.beta_upload_disabled_title')">
+          {{ t('cloud.message.beta_upload_disabled') }}
+        </n-alert>
         <n-card size="small" embedded>
           <template #header>
             <div class="card-title">
@@ -541,7 +549,12 @@ const handleDownload = async () => {
           </template>
 
           <div class="start-sync-wrapper">
-            <n-button :text="!isMobile" :loading="syncing" :disabled="syncing || !syncTargets.length" @click="handleUpload">
+            <n-button
+              :text="!isMobile"
+              :loading="syncing"
+              :disabled="isBeta || syncing || !syncTargets.length"
+              @click="handleUpload"
+            >
               <div class="sync-button-container">
                 <n-icon :size="isMobile ? 16 : 48"><CloudUploadRound /></n-icon>
                 {{ t('cloud.text.upload_data') }}

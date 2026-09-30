@@ -311,7 +311,7 @@ const naiveUIThemeOverrides = computed(() : GlobalThemeOverrides => {
           </div>
 
           <div
-            v-if="AppStatus.IsBeta && !isMobile"
+            v-if="AppStatus.IsDevOrBeta && !isMobile"
             class="absolute bottom-1 left-2 text-app-xs text-sub select-none"
           >
             ◈ {{ t('common.message.app_beta_tooltip') }}

@@ -194,6 +194,13 @@ export const useNbbCloud = () => {
   const addList = async (
     type: HqList, content: string
   ) => {
+    if (AppStatus.IsBeta) {
+      return {
+        errno: 1,
+        errmsg: 'Beta version cannot upload data',
+        data: {} as any,
+      }
+    }
     const desc = generateListTitle()
     const response = await doNbbPost<ResdataSetList>(
       '/cloud/addlist',
@@ -204,6 +211,13 @@ export const useNbbCloud = () => {
   const editList = async (
     id: number, content: string
   ) => {
+    if (AppStatus.IsBeta) {
+      return {
+        errno: 1,
+        errmsg: 'Beta version cannot upload data',
+        data: {} as any,
+      }
+    }
     const desc = generateListTitle()
     const response = await doNbbPost<ResdataSetList>(
       '/cloud/uplist',
