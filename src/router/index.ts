@@ -1,5 +1,7 @@
 import { createRouter, createWebHashHistory, type RouteRecordRaw } from 'vue-router'
 import HomePage from '@/views/home/HomePage.vue'
+import MainPage from '@/views/main/HqWorkbenchPage.vue'
+import WorkflowPage from '@/views/workflow/WorkflowPage.vue'
 
 /* 
  * 增加路由页面时请注意：
@@ -8,10 +10,8 @@ import HomePage from '@/views/home/HomePage.vue'
 
 const routes : RouteRecordRaw[] = [
   { path: '/', component: HomePage },
-  { 
-    path: '/hqwb', 
-    component: () => import('@/views/main/HqWorkbenchPage.vue') 
-  },
+  { path: '/hqwb', component: MainPage },
+  { path: '/workflow', component: WorkflowPage },
   { 
     path: '/fthelper', 
     component: () => import('@/views/food-and-tinc/FoodAndTincPage.vue') 
@@ -27,10 +27,6 @@ const routes : RouteRecordRaw[] = [
   { 
     path: '/gatherclock', 
     component: () => import('@/views/gatherclock/GatherClockPage.vue') 
-  },
-  { 
-    path: '/workflow', 
-    component: () => import('@/views/workflow/WorkflowPage.vue') 
   },
   { 
     path: '/share', 

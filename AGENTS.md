@@ -181,7 +181,7 @@ hqhelper/
 ### 4.3 样式
 
 - **Tailwind CSS 4** 用于快速 utility class 编写（如 `flex`, `mt-2`, `shrink-0` 等）
-- **主题色彩类名**：使用映射好的 Tailwind 语义类名（`text-text`, `text-sub`, `text-primary`, `bg-bg-hover`, `border-border` 等），**严禁**使用 `text-[var(--app-color-*)]` 或 `hover:bg-[var(--app-color-*)]` 等任意值类名
+- **主题色彩类名**：使用映射好的 Tailwind 语义类名（`text-text`, `text-sub`, `text-primary`, `bg-bg-hover`, `border-border` 等）
 - **字号类名**：统一使用映射到 CSS 变量的 Tailwind 语义类名（`text-app-2xs`, `text-app-xs`, `text-app-sm`, `text-app-base`, `text-app-lg`, `text-app-xl`），以跟随用户字号偏好设置，**严禁**使用 Tailwind 默认固定字号类名（如 `text-xs`, `text-sm`）或 `calc(var(--n-font-size) ± Npx)`
 - **Tailwind 4 类名规范**：使用 `shrink-0`（而非 `flex-shrink-0`）、`grow`（而非 `flex-grow`）
 - **尽量使用 Tailwind**：尽量使用 tailwind class ，而非自定义 class，除非此 class在同一文件中被多次复用或是内部样式过多
@@ -363,7 +363,6 @@ npm run lint
 - ❌ 不要使用 Vue Options API
 - ❌ 不要直接使用 `useI18n()`，使用 `useLocale()` 代替
 - ❌ 不要修改 Tailwind preflight（项目已禁用）
-- ❌ 不要使用 `text-[var(--app-color-*)]`、`hover:bg-[var(--app-color-*)]` 等任意值类名，必须使用 Tailwind 主题映射语义类名（如 `text-text`, `hover:bg-bg-hover`）
 - ❌ 不要使用 Tailwind 默认固定字号类名（如 `text-xs`, `text-sm`）或 `calc(var(--n-font-size) ± Npx)`，改用 `text-app-*` 语义类名或 `var(--app-font-size-*)` 变量
 - ❌ 不要使用旧版 Tailwind 类名如 `flex-shrink-0`（改用 `shrink-0`）
 - ❌ 不要在 `templates/` 和 `ui/` 组件中手动 import 已自动注册的组件

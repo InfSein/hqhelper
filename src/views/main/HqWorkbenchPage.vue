@@ -2,10 +2,10 @@
 import StatisticsPanel from './components/StatisticsPanel.vue'
 import JobPanel from '@/views/main/components/JobPanel.vue'
 import PatchPanel from '@/views/main/components/PatchPanel.vue'
-import ModalJoinInWorkflow from '@/components/modals/ModalJoinInWorkflow.vue'
 import GearSelectionPanel from '@/views/main/components/GearSelectionPanel.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
+import { useAppModals } from '@/composables/useAppModals'
 import { XivJobRoleMap, type XivPatchVer } from '@/assets/data'
 import { useAppCore } from '@/composables/useAppCore'
 import { getPatchData } from '@/tools/game'
@@ -17,6 +17,7 @@ const store = useStore()
 const { t } = useLocale()
 const NAIVE_UI_MESSAGE = useMessage()
 const { calGearSelections } = useAppCore()
+const { joinItemsToWorkflow } = useAppModals()
 
 const workState = ref<WorkState>({
   patch: undefined,
@@ -57,7 +58,6 @@ const handleJobButtonDupliClick = () => {
   }
 }
 
-const showModalJoinInWorkflow = ref(false)
 const workflowItems = computed(() => {
   const items: Record<number, number> = {}
   if (!statistics.value) return items
@@ -70,7 +70,7 @@ const handleJoinWorkflow = () => {
   if (!Object.values(workflowItems.value).length) {
     NAIVE_UI_MESSAGE.error(t('workflow.join_in_workflow.message.no_armor')); return
   }
-  showModalJoinInWorkflow.value = true
+  joinItemsToWorkflow(workflowItems.value)
 }
 
 const handleImportState = (patch: XivPatchVer, gearSelections?: GearSelections) => {
@@ -148,11 +148,6 @@ const alkahests = computed(() => {
         />
       </n-grid-item>
     </n-grid>
-
-    <ModalJoinInWorkflow
-      v-model:show="showModalJoinInWorkflow"
-      :items="workflowItems"
-    />
 
     <n-back-top />
   </div>

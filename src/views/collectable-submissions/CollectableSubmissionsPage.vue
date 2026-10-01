@@ -4,11 +4,11 @@ import {
 } from '@vicons/material'
 import RouterCard from '@/components/ui/RouterCard.vue'
 import StatisticsPanelShared from '@/components/StatisticsPanelShared.vue'
-import ModalJoinInWorkflow from '@/components/modals/ModalJoinInWorkflow.vue'
 import ItemSelectionPanel from '@/views/collectable-submissions/components/ItemSelectionPanel.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
 import { useAppMode } from '@/composables/useAppMode'
+import { useAppModals } from '@/composables/useAppModals'
 import { XivUnpackedCollectableSubmissions } from '@/assets/data'
 import { useAppCore } from '@/composables/useAppCore'
 import { fixWorkState } from '@/types/workstate/cshelper'
@@ -17,6 +17,7 @@ const store = useStore()
 const { t } = useLocale()
 const { appMode } = useAppMode()
 const { calItems } = useAppCore()
+const { joinItemsToWorkflow } = useAppModals()
 const NAIVE_UI_MESSAGE = useMessage()
 
 const workState = ref(fixWorkState())
@@ -102,7 +103,6 @@ const statistics = computed(() => {
   return value
 })
 
-const showModalJoinInWorkflow = ref(false)
 const workflowItems = computed(() => {
   const items: Record<number, number> = {}
   statistics.value.craftTargets.forEach(item => {
@@ -114,7 +114,7 @@ const handleJoinWorkflow = () => {
   if (!Object.values(workflowItems.value).length) {
     NAIVE_UI_MESSAGE.error(t('workflow.join_in_workflow.message.no_colleactable_submission')); return
   }
-  showModalJoinInWorkflow.value = true
+  joinItemsToWorkflow(workflowItems.value)
 }
 </script>
 
@@ -141,11 +141,6 @@ const handleJoinWorkflow = () => {
       />
     </div>
     
-    <ModalJoinInWorkflow
-      v-model:show="showModalJoinInWorkflow"
-      :items="workflowItems"
-    />
-
     <n-back-top />
   </div>
 </template>
