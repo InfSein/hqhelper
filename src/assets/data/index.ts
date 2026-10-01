@@ -1,14 +1,38 @@
 // #region Import for other ts files
 import type {
   AttireAffix, AccessoryAffix,
-} from '@/models/gears'
+} from '@/types/game/gear'
 // #endregion
 
-export type XivPatchVer = "7.0" | "7.1" | "7.2" | "7.3" | "7.4"
+export const XivPatchVers = ["7.0", "7.1", "7.2", "7.3", "7.4"] as const
+export type XivPatchVer = (typeof XivPatchVers)[number]
 
 // #region Manuals
 import JsonXivItemRemarks from './manuals/xiv-item-remarks.json'
 export const XivItemRemarks = JsonXivItemRemarks as Record<number, string[]>
+
+import JsonXivRecipeCustomLists from './manuals/xiv-recipe-customlists.json'
+export interface XivRecipeCustomList {
+  name_zh: string
+  name_ja: string
+  name_en: string
+  code: string
+}
+export const XivRecipeCustomLists = JsonXivRecipeCustomLists as XivRecipeCustomList[]
+
+import JsonXivSrbs from './manuals/xiv-srbs.json'
+export const XivSrbs = JsonXivSrbs as Record<number, {
+  id: number
+  name: string[]
+  srb: number[]
+}>
+export const XivSrbMap = Object.fromEntries(
+  Object.values(XivSrbs).flatMap(srb =>
+    srb.srb.map(v => [v, {
+      id: srb.id, name_zh: srb.name[2], name_en: srb.name[1], name_ja: srb.name[0]
+    }])
+  )
+) as Record<number, { id: number, name_zh: string, name_en: string, name_ja: string }>
 // #endregion
 
 // #region Unpacks
@@ -271,7 +295,7 @@ export const XivJobs = JsonXivJobs as Record<number, XivJob>
 
 import JsonXivPatches from './xiv-patches.json'
 export interface XivPatch {
-  v: string
+  v: XivPatchVer
   v_sub?: string
   name_zh: string
   name_en: string
@@ -297,4 +321,8 @@ export interface XivRole {
   jobs: number[]
 }
 export const XivRoles = JsonXivRoles as Record<XivRoleKey, XivRole>
+export const XivJobRoleMap = Object.fromEntries(
+  Object.entries(XivRoles).flatMap(([, role]) => role.jobs.map(jobId => [jobId, role]))
+) as Record<number, XivRole>
+
 // #endregion

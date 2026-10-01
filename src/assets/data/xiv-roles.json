@@ -7,7 +7,7 @@
     "role_icon_url": "./image/game-job/misc/clear_tank.png",
     "attire": "fending",
     "accessory": "fending",
-    "jobs": [19,21,32,37]
+    "jobs": [19,21,32,37,44]
   },
   "healer": {
     "role_name_en": "Healer",
@@ -57,7 +57,7 @@
     "role_icon_url": "./image/game-job/misc/clear_ranged.png",
     "attire": "aiming",
     "accessory": "aiming",
-    "jobs": [23,31,38]
+    "jobs": [23,31,38,45]
   },
   "dps_magic": {
     "role_name_en": "Cast DPS",

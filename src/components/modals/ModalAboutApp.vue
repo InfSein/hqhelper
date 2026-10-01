@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import AboutApp from '../custom/general/AboutApp.vue'
-import { InfoSharp } from '@vicons/material'
+import {
+  InfoSharp,
+} from '@vicons/material'
+import AboutApp from '@/components/app/AboutApp.vue'
+import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-// const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
+const { t } = useLocale()
+const { isMobile } = useResponsive()
 
 const showModal = defineModel<boolean>('show', { required: true })
 </script>
@@ -16,17 +19,11 @@ const showModal = defineModel<boolean>('show', { required: true })
     :title="t('common.appfunc.about_app')"
     :height="isMobile ? '650px' : '600px'"
   >
-    <div class="wrapper" :style="{ height: isMobile ? '550px' : '500px' }">
+    <div class="flex flex-col select-text overflow-y-auto" :style="{ height: isMobile ? '550px' : '500px' }">
       <AboutApp />
     </div>
   </MyModal>
 </template>
 
 <style scoped>
-.wrapper {
-  display: flex;
-  flex-direction: column;
-  user-select: text;
-  overflow-y: auto;
-}
 </style>

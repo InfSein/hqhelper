@@ -1,24 +1,21 @@
 <script setup lang="ts">
-import { 
-  WaterDropOutlined,
+import {
   DoneOutlined,
+  WaterDropOutlined,
 } from '@vicons/material'
-import { deepCopy } from '@/tools'
-import useUiTools from '@/tools/ui'
+import ItemSelectTable from '@/components/item/ItemSelectTable.vue'
 import { useStore } from '@/store'
-import { fixUserConfig, type UserConfigModel } from '@/models/config-user'
-import { fixFuncConfig, type FuncConfigModel, type WorkflowJoinMode } from '@/models/config-func'
-import { _VAR_MAX_WORKFLOW, getDefaultWorkflow } from '@/models/workflow'
-import ItemSelectTable from '../custom/item/ItemSelectTable.vue'
-
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
+import { useLocale } from '@/composables/useLocale'
+import useUiTools from '@/composables/useUiTools'
+import { deepCopy } from '@/tools'
+import { fixUserConfig } from '@/types/config/user'
+import { fixFuncConfig, type WorkflowJoinMode } from '@/types/config/func'
+import { _VAR_MAX_WORKFLOW, getDefaultWorkflow } from '@/types/workstate/workflow'
 
 const store = useStore()
+const { t } = useLocale()
 const NAIVE_UI_MESSAGE = useMessage()
-const { optionsRenderer } = useUiTools(isMobile)
+const { optionsRenderer } = useUiTools()
 
 const modalId = 'modal-join-in-workflow'
 
@@ -33,15 +30,21 @@ const joinMode = ref<WorkflowJoinMode>('accumulation')
 const itemsToAdd = ref<Record<number, number>>({})
 
 const onLoad = () => {
-  joinMode.value = funcConfig.value.workflow_default_join_mode
+  joinMode.value = store.funcConfig.workflow_default_join_mode
   itemsToAdd.value = deepCopy(props.items)
   targetWorkflow.value = workflowOptions.value[0].value
   workflowOptions.value.forEach(option => {
-    if (option.value === funcConfig.value.workflow_default_join_target) {
+    if (option.value === store.funcConfig.workflow_default_join_target) {
       targetWorkflow.value = option.value
     }
   })
 }
+
+onMounted(() => {
+  if (showModal.value) {
+    onLoad()
+  }
+})
 
 const targetWorkflow = ref<number | "add">(0)
 const workflowOptions = computed(() => {
@@ -49,7 +52,7 @@ const workflowOptions = computed(() => {
       label: string;
       value: number | "add";
       disabled?: boolean;
-  }[] = userConfig.value.workflow_cache_work_state.workflows.map((workflow, flowIndex) => {
+  }[] = store.userConfig.workflow_cache_work_state.workflows.map((workflow, flowIndex) => {
     return {
       label: workflow.name || t('workflow.text.workflow_with_index', flowIndex + 1),
       value: flowIndex
@@ -118,7 +121,7 @@ const handleSubmit = () => {
     newFuncConfig.workflow_default_join_target = targetWorkflow.value
   }
   store.setUserConfig(newUserConfig)
-  if (joinMode.value !== funcConfig.value.workflow_default_join_mode) {
+  if (joinMode.value !== store.funcConfig.workflow_default_join_mode) {
     newFuncConfig.workflow_default_join_mode = joinMode.value
   }
   store.setFuncConfig(newFuncConfig)
@@ -168,7 +171,7 @@ const handleSubmit = () => {
     </div>
 
     <template #action>
-      <div class="modal-submit-container">
+      <div class="app-modal-footer">
         <n-button type="primary" @click="handleSubmit">
           <template #icon>
             <n-icon><DoneOutlined /></n-icon>
