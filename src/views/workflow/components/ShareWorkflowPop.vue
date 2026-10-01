@@ -28,7 +28,11 @@ const shareUrl = computed(() => {
   if (!shareCode.value) return ''
   const origin = window.location.origin
   const pathname = window.location.pathname
-  return `${origin}${pathname}#/share?code=${shareCode.value}`
+  let base = origin + pathname + '#/'
+  if (origin === 'file://') {
+    base = 'https://hqhelper.com/#/'
+  }
+  return `${base}share?code=${shareCode.value}`
 })
 
 const handleCopy = async (content: string) => {
