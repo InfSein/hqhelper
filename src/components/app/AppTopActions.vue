@@ -258,13 +258,15 @@ const handleOpenGithub = () => {
           >
             <template #icon>
               <n-icon :size="16">
-                <DarkModeTwotone v-if="theme === 'light'" />
-                <LightModeTwotone v-else />
+                <LightModeTwotone v-if="theme === 'light'" />
+                <DarkModeTwotone v-else />
               </n-icon>
             </template>
           </n-button>
         </template>
-        {{ theme === 'light' ? t('common.appfunc.switch_to_dark') : t('common.appfunc.switch_to_light') }}
+        <div class="whitespace-pre-line">
+          {{ theme === 'light' ? t('appheader.tooltip.theme_tip_light') : t('appheader.tooltip.theme_tip_dark') }}
+        </div>
       </n-tooltip>
 
       <!-- 下载客户端 -->

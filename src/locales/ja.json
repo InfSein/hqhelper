@@ -89,7 +89,9 @@
     "tooltip": {
       "already_in_index": "すでにHqHelperのホームページです",
       "announcement_for_item_zh_translation": "DONT_SHOW",
-      "back_to_index": "このボタンをクリックするとホームページに戻ります。"
+      "back_to_index": "このボタンをクリックするとホームページに戻ります。",
+      "theme_tip_light": "現在はライトモードです。\nこのボタンをクリックするとダークモードに切り替えることができます。",
+      "theme_tip_dark": "現在はダークモードです。\nこのボタンをクリックするとライトモードに切り替えることができます。"
     }
   },
   "changelog": {

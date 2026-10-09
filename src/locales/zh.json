@@ -100,7 +100,9 @@
     "tooltip": {
       "already_in_index": "……不过您已经在HqHelper的首页了。",
       "announcement_for_item_zh_translation": "※ 国服数据尚未更新时，显示的中文名一般为人工临时翻译，请谨慎参考。",
-      "back_to_index": "点击此按钮可以返回到首页。"
+      "back_to_index": "点击此按钮可以返回到首页。",
+      "theme_tip_light": "当前为浅色模式。\n点击此按钮可以切换为深色模式。",
+      "theme_tip_dark": "当前为深色模式。\n点击此按钮可以切换为浅色模式。"
     }
   },
   "changelog": {

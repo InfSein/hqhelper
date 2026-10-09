@@ -89,7 +89,9 @@
     "tooltip": {
       "already_in_index": "...You are already on the HqHelper home page.",
       "announcement_for_item_zh_translation": "DONT_SHOW",
-      "back_to_index": "Return to the home page."
+      "back_to_index": "Return to the home page.",
+      "theme_tip_light": "Currently in Light Mode.\nClick this button to switch to Dark Mode.",
+      "theme_tip_dark": "Currently in Dark Mode.\nClick this button to switch to Light Mode."
     }
   },
   "changelog": {
