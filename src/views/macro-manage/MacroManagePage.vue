@@ -147,9 +147,17 @@ const macroItemLanguageOptions = computed(() => {
 const multiOperateDropdownOptions = computed(() => {
   return [
     {
-      label: t('macro_manage.text.batch_add'),
-      key: 'batch-add',
-      icon: renderIcon(PlaylistAddCheckOutlined),
+      label: t('common.import'),
+      key: 'import',
+      icon: renderIcon(ArchiveSharp),
+    },
+    {
+      label: t('common.export'),
+      key: 'export',
+      icon: renderIcon(UnarchiveSharp),
+    },
+    {
+      key: 'd1', type: 'divider'
     },
     {
       label: t('macro_manage.text.enable_select_mode'),
@@ -416,8 +424,10 @@ const handleReportDataMissing = (macro: RecordedCraftMacro | number) => {
   )
 }
 const handleMultiOperateDropdownSelect = async (key: string | number) => {
-  if (key === 'batch-add') {
-    showModalBatchAdd.value = true
+  if (key === 'import') {
+    handleImportButtonClick()
+  } else if (key === 'export') {
+    handleExportButtonClick()
   } else if (key === 'delete') {
     if (!workState.value.recordedCraftMacros.length) {
       NAIVE_UI_MESSAGE.info(t('macro_manage.message.no_macro_added'))
@@ -526,6 +536,9 @@ const handleImportButtonClick = () => {
 const handleExportButtonClick = () => {
   imexportMode.value = 'export'
   showModalImExport.value = true
+}
+const handleBatchAddButtonClick = () => {
+  showModalBatchAdd.value = true
 }
 
 const handleAddRow = () => {
@@ -692,20 +705,12 @@ const handleSettingButtonClick = () => {
                   {{ t('macro_manage.text.batch_operate') }}
                 </n-button>
               </n-dropdown>
-              <n-button-group>
-                <n-button ghost @click="handleExportButtonClick">
-                  <template #icon>
-                    <n-icon :component="UnarchiveSharp" />
-                  </template>
-                  {{ t('common.export') }}
-                </n-button>
-                <n-button ghost @click="handleImportButtonClick">
-                  <template #icon>
-                    <n-icon :component="ArchiveSharp" />
-                  </template>
-                  {{ t('common.import') }}
-                </n-button>
-              </n-button-group>
+              <n-button ghost @click="handleBatchAddButtonClick">
+                <template #icon>
+                  <n-icon :component="PlaylistAddCheckOutlined" />
+                </template>
+                {{ t('macro_manage.text.batch_add') }}
+              </n-button>
               <n-button type="primary" @click="handleAddRow">
                 <template #icon>
                   <n-icon :component="AddTaskOutlined" />
