@@ -226,9 +226,9 @@ const handleSave = async () => {
   }
 
   // 处理一些属性
-  prepareMacroForSave(formData.value, t('common.id_macro', formData.value.id))
   formData.value.relateItems = relateItems
   formData.value.craftActions = formCraftActions.value.map(action => action.val)
+  prepareMacroForSave(formData.value, t('common.id_macro', formData.value.id))
 
   emits('onSubmit', formData.value)
 }

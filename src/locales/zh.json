@@ -1703,6 +1703,8 @@
       "perception_with_val": "鉴别力需要达到{val}",
       "quoted_position": "(X:{x}, Y:{y})",
       "recipe_detail": "耐久{dur} / 难度{pro} / 品质{qua}",
+      "matched_craft_macros": "匹配到{count}个生产宏",
+      "matched_craft_macros_view": "点此查看",
       "recipe_level_info": "{lv}级{star}{job}配方",
       "reduce_can_get": "精选收藏品形态的该物品可能获得：",
       "reduce_info": "该物品可以通过精选以下道具获得：",
@@ -1721,6 +1723,12 @@
     }
   },
   "macro_manage": {
+    "modal_matched_macros": {
+      "title": "匹配的生产宏",
+      "count_badge": "匹配到{count}个宏",
+      "no_macros": "未找到匹配的生产宏",
+      "jump_to_macro_manage": "前往宏管理"
+    },
     "imexport": {
       "desc": {
         "desc_1": "与主界面的导入导出功能不同，此处导出的文件并非可供阅读与编辑的表格，而是单纯的数据文件。",

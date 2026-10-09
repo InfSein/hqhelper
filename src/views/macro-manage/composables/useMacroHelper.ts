@@ -1,8 +1,12 @@
 import { XivCraftActions, type XivCraftAction } from '@/assets/data'
-import type { CraftMacroRow, RecordedCraftMacro } from "@/types/workstate/macromanage"
-import { deepCopy } from "@/tools"
-import { getItemInfo } from "@/tools/item"
-import { useStore } from "@/store"
+import {
+  type CraftMacroRow,
+  type RecordedCraftMacro,
+  extractRecipeDifficulties,
+} from '@/types/workstate/macromanage'
+import { deepCopy } from '@/tools'
+import { getItemInfo } from '@/tools/item'
+import { useStore } from '@/store'
 
 const useMacroHelper = () => {
   const store = useStore()
@@ -132,17 +136,18 @@ const useMacroHelper = () => {
   /** 将表格行数据归档为缓存的宏内容 */
   const archiveMacroRow = (row: CraftMacroRow, customCpRequirement?: number) : RecordedCraftMacro => {
     const { id, name, remark, relateItems, tags, requirements, craftActions } = row
+    const relateItemsIds = relateItems.map(item => {
+      if (typeof item === 'string') {
+        return item
+      } else {
+        return item.id
+      }
+    })
     return {
       id,
       name,
       remark,
-      relateItems: relateItems.map(item => {
-        if (typeof item === 'string') {
-          return item
-        } else {
-          return item.id
-        }
-      }),
+      relateItems: relateItemsIds,
       tags,
       requirements: {
         craftsmanship: requirements.craftsmanship,
@@ -150,6 +155,7 @@ const useMacroHelper = () => {
         cp: customCpRequirement ?? calMacroCpCost(craftActions),
       },
       craftActions: craftActions.map(action => action.id),
+      recipeDifficulties: row.recipeDifficulties ?? extractRecipeDifficulties(relateItemsIds),
     }
   }
   /** 将缓存的宏内容解档为表格行数据 */
@@ -176,6 +182,7 @@ const useMacroHelper = () => {
         cp: macro.requirements?.cp ?? cpRequirement,
       },
       craftActions: craftActions,
+      recipeDifficulties: macro.recipeDifficulties ?? extractRecipeDifficulties(macro.relateItems),
     }
   }
 
@@ -187,7 +194,8 @@ const useMacroHelper = () => {
     const data = macros.map(m => ([
       m.id, m.name, m.remark, m.relateItems, m.tags,
       [m.requirements.craftsmanship, m.requirements.control, m.requirements.cp],
-      m.craftActions
+      m.craftActions,
+      m.recipeDifficulties ?? extractRecipeDifficulties(m.relateItems),
     ]))
     const blob = new Blob([JSON.stringify(data)], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
@@ -234,9 +242,10 @@ const useMacroHelper = () => {
         cp: m[5][2],
       },
       craftActions: m[6],
+      recipeDifficulties: m[7] && Array.isArray(m[7]) ? m[7] : extractRecipeDifficulties(m[3]),
     }))
 
-    return macros;
+    return macros
 
     function isRecordedCraftMacroArray(data: any) {
       return Array.isArray(data) && data.every(entry => {
@@ -252,7 +261,13 @@ const useMacroHelper = () => {
               if (x === null) x = undefined
               return typeof x === 'number' || typeof x === 'undefined'
             })) &&
-          Array.isArray(entry[6]) && entry[6].every((x: any) => typeof x === 'number')
+          Array.isArray(entry[6]) && entry[6].every((x: any) => typeof x === 'number') &&
+          (!entry[7] || (Array.isArray(entry[7]) && entry[7].every((d: any) =>
+            typeof d === 'object' && d !== null &&
+            typeof d.durability === 'number' &&
+            typeof d.progress === 'number' &&
+            typeof d.quality === 'number'
+          )))
       })
     }
   }

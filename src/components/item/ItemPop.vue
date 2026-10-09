@@ -30,7 +30,7 @@ const { t } = useLocale()
 const NAIVE_UI_MESSAGE = useMessage()
 const { isMobile } = useResponsive()
 const { currentET } = useEorzeaTime()
-const { showItemPriceDetail } = useAppModals()
+const { showItemPriceDetail, displayMatchedMacrosModal } = useAppModals()
 const {
   uiLanguage, itemLanguage,
 } = useConfig()
@@ -218,6 +218,34 @@ const openInAngler = () => {
 
 const openInBestCraft = () => {
   window.open(`https://tnze.yyyy.games/#/recipe?recipeId=${props.itemInfo?.craftInfo?.recipeId}`)
+}
+
+const matchedMacros = computed(() => {
+  const craftInfo = props.itemInfo?.craftInfo
+  if (!craftInfo || !props.itemInfo?.craftRequires?.length) return []
+  const { durability, progress, quality } = craftInfo
+  if (!durability || !progress || !quality) return []
+
+  const recordedMacros = store.userConfig.macromanage_cache_work_state?.recordedCraftMacros ?? []
+  return recordedMacros.filter(macro => {
+    return macro.recipeDifficulties?.some(d =>
+      d.durability === durability && d.progress === progress && d.quality === quality
+    )
+  })
+})
+
+const openMatchedMacrosModal = () => {
+  const craftInfo = props.itemInfo?.craftInfo
+  if (!craftInfo) return
+  displayMatchedMacrosModal({
+    itemInfo: props.itemInfo,
+    targetDifficulty: {
+      durability: craftInfo.durability,
+      progress: craftInfo.progress,
+      quality: craftInfo.quality,
+    },
+    matchedMacros: matchedMacros.value,
+  })
 }
 
 const itemPriceInfo = computed(() => {
@@ -717,6 +745,12 @@ const handleOnScroll = (e: Event) => {
               <div class="other-attrs">
                 <div v-if="!itemInfo.craftInfo?.qsable" class="text-error">{{ t('item.text.cannot_quick_synthesis') }}</div>
                 <div v-if="!itemInfo.craftInfo?.hqable" class="text-error">{{ t('item.text.cannot_hq') }}</div>
+              </div>
+              <div class="other-attrs" v-if="matchedMacros.length">
+                <div>{{ t('item.text.matched_craft_macros', { count: matchedMacros.length }) }}</div>
+                <a class="p-0 inline-flex items-center" @click="openMatchedMacrosModal">
+                  {{ t('item.text.matched_craft_macros_view') }}
+                </a>
               </div>
             </div>
           </div>

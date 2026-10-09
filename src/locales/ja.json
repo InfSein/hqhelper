@@ -1683,6 +1683,8 @@
       "perception_with_val": "最低技術力：{val}",
       "quoted_position": "(X:{x}, Y:{y})",
       "recipe_detail": "耐久{dur} / 難易度{pro} / 品質{qua}",
+      "matched_craft_macros": "製作マクロが{count}件一致",
+      "matched_craft_macros_view": "詳細を確認",
       "recipe_level_info": "{job} Lv. {lv}{star}",
       "reduce_can_get": "収集品を精選することで入手可能なアイテム：",
       "reduce_info": "このアイテムは精選以下のアイテムで入手できます：",
@@ -1697,6 +1699,12 @@
     }
   },
   "macro_manage": {
+    "modal_matched_macros": {
+      "title": "一致する製作マクロ",
+      "count_badge": "{count}件のマクロが一致",
+      "no_macros": "一致する製作マクロが見つかりません",
+      "jump_to_macro_manage": "マクロ管理へ移動"
+    },
     "imexport": {
       "desc": {
         "desc_1": "メインインターフェースのインポート/エクスポート機能とは異なり、ここでエクスポートされるファイルは編集可能な表形式ではなく純粋なデータファイルです。",

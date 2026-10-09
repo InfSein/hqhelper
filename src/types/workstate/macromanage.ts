@@ -3,6 +3,7 @@ import {
   assignDefaults,
   deepCopy
 } from '@/tools'
+import { getItemInfo } from '@/tools/item'
 import type { ItemInfo } from '@/types/item'
 
 export const _VAR_TAG_MAXLEN = 5
@@ -27,6 +28,16 @@ export type StrictCraftRequirements = {
   [K in keyof Required<CraftRequirements>]: number
 }
 
+/** 配方难度 (用于在宏与物品之间反向匹配) */
+export interface RecipeDifficulty {
+  /** 耐久 */
+  durability: number,
+  /** 难度 */
+  progress: number,
+  /** 品质 */
+  quality: number,
+}
+
 export interface RecordedCraftMacro {
   id: number,
   name: string,
@@ -38,6 +49,8 @@ export interface RecordedCraftMacro {
   /** 此生产宏的属性要求 */
   requirements: CraftRequirements,
   craftActions: number[],
+  /** 关联物品的配方难度 */
+  recipeDifficulties?: RecipeDifficulty[],
 }
 const defaultCraftMacro: RecordedCraftMacro = {
   id: -1,
@@ -46,7 +59,8 @@ const defaultCraftMacro: RecordedCraftMacro = {
   relateItems: [],
   tags: [],
   requirements: {},
-  craftActions: []
+  craftActions: [],
+  recipeDifficulties: [],
 }
 export const getDefaultCraftMacro = (id: number) => {
   const macro = deepCopy(defaultCraftMacro)
@@ -55,7 +69,32 @@ export const getDefaultCraftMacro = (id: number) => {
 }
 
 /**
- * 准备宏数据以保存。处理默认名称和 requirements 的清零逻辑。
+ * 从关联物品列表中提取所有可制作物品的配方难度并去重
+ * @param relateItems 关联物品ID或名称列表
+ */
+export const extractRecipeDifficulties = (relateItems: (number | string)[]): RecipeDifficulty[] => {
+  const result: RecipeDifficulty[] = []
+  for (const item of relateItems) {
+    if (typeof item === 'number') {
+      const itemInfo = getItemInfo(item)
+      if (itemInfo?.craftRequires?.length && itemInfo?.craftInfo) {
+        const { durability, progress, quality } = itemInfo.craftInfo
+        if (durability && progress && quality) {
+          const exists = result.some(
+            d => d.durability === durability && d.progress === progress && d.quality === quality
+          )
+          if (!exists) {
+            result.push({ durability, progress, quality })
+          }
+        }
+      }
+    }
+  }
+  return result
+}
+
+/**
+ * 准备宏数据以保存。处理默认名称、requirements 的清零逻辑及配方难度提取。
  * @param macro 宏对象
  * @param defaultName 当 name 为空时使用的默认名称
  */
@@ -64,6 +103,9 @@ export const prepareMacroForSave = (macro: RecordedCraftMacro, defaultName: stri
   if (!macro.requirements.craftsmanship) delete macro.requirements.craftsmanship
   if (!macro.requirements.control) delete macro.requirements.control
   if (!macro.requirements.cp) delete macro.requirements.cp
+  if (macro.relateItems) {
+    macro.recipeDifficulties = extractRecipeDifficulties(macro.relateItems)
+  }
 }
 
 export interface CraftMacroRow {
@@ -77,6 +119,8 @@ export interface CraftMacroRow {
   /** 此生产宏的属性要求 */
   requirements: Omit<CraftRequirements, 'cp'> & { cp: number },
   craftActions: XivCraftAction[],
+  /** 关联物品的配方难度 */
+  recipeDifficulties?: RecipeDifficulty[],
 }
 
 export interface WorkState {
@@ -98,5 +142,12 @@ export const defaultWorkState: WorkState = {
 
 export const fixWorkState = (state?: WorkState) : WorkState => {
   const _state = assignDefaults(defaultWorkState, state || {}) as WorkState
+  if (_state.recordedCraftMacros) {
+    _state.recordedCraftMacros.forEach(macro => {
+      if (!macro.recipeDifficulties) {
+        macro.recipeDifficulties = extractRecipeDifficulties(macro.relateItems || [])
+      }
+    })
+  }
   return _state
 }

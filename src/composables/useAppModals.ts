@@ -1,11 +1,18 @@
 import { ref } from 'vue'
 import type { ItemInfo } from '@/types/item'
 import type { MacroGenerateMode } from '@/types/config/func'
+import type { RecipeDifficulty, RecordedCraftMacro } from '@/types/workstate/macromanage'
 import type { ModalGearOverviewProps } from '@/components/modals/ModalGearOverview.vue'
 import { useStore } from '@/store'
 import { CopyToClipboard } from '@/tools'
 import { useLocale } from './useLocale'
 import { useDialog } from './useDialog'
+
+export interface MatchedMacrosModalData {
+  itemInfo?: ItemInfo
+  targetDifficulty?: RecipeDifficulty
+  matchedMacros: RecordedCraftMacro[]
+}
 
 const showCopyMacroModal = ref(false)
 const macroMapValue = ref<Record<MacroGenerateMode, string>>({
@@ -27,6 +34,11 @@ const modalItemPriceDetailItems = ref<ItemInfo[]>([])
 
 const showModalGearOverview = ref(false)
 const modalGearOverviewData = ref<ModalGearOverviewProps>({})
+
+const showModalMatchedMacros = ref(false)
+const modalMatchedMacrosData = ref<MatchedMacrosModalData>({
+  matchedMacros: [],
+})
 
 export function useAppModals() {
   const store = useStore()
@@ -87,6 +99,11 @@ export function useAppModals() {
     showModalGearOverview.value = true
   }
 
+  const displayMatchedMacrosModal = (data: MatchedMacrosModalData) => {
+    modalMatchedMacrosData.value = data
+    showModalMatchedMacros.value = true
+  }
+
   return {
     showCopyMacroModal,
     macroMapValue,
@@ -113,6 +130,10 @@ export function useAppModals() {
     showModalGearOverview,
     modalGearOverviewData,
     displayGearOverviewModal,
+
+    showModalMatchedMacros,
+    modalMatchedMacrosData,
+    displayMatchedMacrosModal,
   }
 }
 

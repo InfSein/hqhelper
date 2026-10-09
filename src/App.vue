@@ -30,6 +30,7 @@ const ModalCloudSync = defineAsyncComponent(() => import('@/components/modals/Mo
 const ModalFestivalEgg = defineAsyncComponent(() => import('@/components/modals/ModalFestivalEgg.vue'))
 const ModalItemPriceDetail = defineAsyncComponent(() => import('@/components/modals/ModalItemPriceDetail.vue'))
 const ModalGearOverview = defineAsyncComponent(() => import('@/components/modals/ModalGearOverview.vue'))
+const ModalMatchedMacros = defineAsyncComponent(() => import('@/components/modals/ModalMatchedMacros.vue'))
 
 const store = useStore()
 const { t, setLocale } = useLocale()
@@ -46,7 +47,8 @@ const {
   showModalLogin, loginAction,
   showModalCloudSync,
   showModalItemPriceDetail, modalItemPriceDetailItems,
-  showModalGearOverview, modalGearOverviewData
+  showModalGearOverview, modalGearOverviewData,
+  showModalMatchedMacros, modalMatchedMacrosData,
 } = useAppModals()
 
 const locale = computed(() => {
@@ -347,6 +349,10 @@ const naiveUIThemeOverrides = computed(() : GlobalThemeOverrides => {
           :job-id="modalGearOverviewData.jobId"
           :attire-affix="modalGearOverviewData.attireAffix"
           :accessory-affix="modalGearOverviewData.accessoryAffix"
+        />
+        <ModalMatchedMacros
+          v-model:show="showModalMatchedMacros"
+          :data="modalMatchedMacrosData"
         />
       </div>
     </n-message-provider>

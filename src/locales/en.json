@@ -1683,6 +1683,8 @@
       "perception_with_val": "Perception needs to reach {val}",
       "quoted_position": "(X:{x}, Y:{y})",
       "recipe_detail": "Durability: {dur} / Progress: {pro} / Quality: {qua}",
+      "matched_craft_macros": "Matched {count} crafting macro(s)",
+      "matched_craft_macros_view": "Click to view",
       "recipe_level_info": "{job} Lv. {lv}{star}",
       "reduce_can_get": "Aetherial Reduction yields:",
       "reduce_info": "Reducible from:",
@@ -1697,6 +1699,12 @@
     }
   },
   "macro_manage": {
+    "modal_matched_macros": {
+      "title": "Matched Crafting Macros",
+      "count_badge": "{count} macro(s) matched",
+      "no_macros": "No matched crafting macros found",
+      "jump_to_macro_manage": "Go to Macro Manager"
+    },
     "imexport": {
       "desc": {
         "desc_1": "This export is a raw data file, not an editable table.",
