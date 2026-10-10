@@ -70,7 +70,6 @@ const renderList = (list: string[]) => {
 const getNoteImage = (ver: string, filename: string) => {
   return renderImg(`https://infsein.github.io/static/hqhelper/patchnote/${ver}/${filename}`)
 }
-// const refer = (text: string) => `<span class="font-small" style="font-style: italic;">${text}</span>`
 export const getChangelogs = (
   ui_lang: 'zh' | 'ja' | 'en',
   t: (message: string, args?: any) => string
