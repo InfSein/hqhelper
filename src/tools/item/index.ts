@@ -194,7 +194,7 @@ export const getItemInfo = (item: `${number}` | number, amount = 0) => {
       const attr = []
       attr.push(sp[0])
       attr.push(sp[1])
-      const hqAttr = (sp.length > 2 && sp[2]) ? sp[1] + sp[2] : 0
+      const hqAttr = (sp.length > 2 && _item.hqable) ? sp[1] + sp[2] : 0
       attr.push(hqAttr)
       itemInfo.attrsProvided.push(attr)
     })
