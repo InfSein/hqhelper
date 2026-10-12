@@ -83,6 +83,19 @@ export const getChangelogs = (
   const isZh = ui_lang === 'zh'
   return [
     {
+      version: '3.0.0 Alpha1',
+      date: '2026-11-01',
+      changes: [
+        {
+          name: groupName.breaking,
+          changes: [
+            '开始封闭测试。',
+            '现在HqHelper同时提供全量配方计算器功能。'
+          ]
+        },
+      ]
+    },
+    {
       version: '2.5.1',
       date: '2026-07-28',
       changes: [
