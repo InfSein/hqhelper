@@ -111,18 +111,21 @@ const itemHasHQ = computed(() => {
   }
 })
 const showHqSwitcherInHeader = computed(() => {
-  return (props.itemInfo.attrsProvided?.length > 0) || (props.itemInfo.tempAttrsProvided?.length > 0)
+  return (props.itemInfo.attrsProvided?.length > 0) || (itemTempAttrTexts.value.length > 0)
 })
 const itemTempAttrTexts = computed(() : string[] => {
   if (!props.itemInfo.tempAttrsProvided?.length) {
     return []
   }
-  return props.itemInfo.tempAttrsProvided.map(attr => buildAttrText(attr, showItemHqAttr.value))
+  return props.itemInfo.tempAttrsProvided
+    .map(attr => buildAttrText(attr, showItemHqAttr.value))
+    .filter(x => !!x)
 
   function buildAttrText(attr: number[], hq: boolean) {
     const attrId = attr[0]
     const attrPercent = hq ? attr[4] : attr[2]
     const attrMax = hq ? attr[5] : attr[3]
+    if (!attrMax) return ''
     switch (attrId) {
       case 7: // 体力
       case 8: // 魔力
@@ -408,7 +411,7 @@ const handleOnScroll = (e: Event) => {
             </div>
           </div>
           <!-- 使用效果(食物/爆发药) -->
-          <div class="description-block" v-if="itemInfo.tempAttrsProvided.length">
+          <div class="description-block" v-if="itemTempAttrTexts.length">
             <div class="title">
               {{ t('common.effect') }}
             </div>
