@@ -1,6 +1,6 @@
-- 图标图床替换，https://xivapi-v2.xivcdn.com/api/asset?path=ui/icon/037000/037618.tex，记得问下能不能
-- 通知面板ui，公告排版要调整，不用alert但保留抬头图标，其余自己设计
-- 原有IconGithub等改为导入svg文件
+- 图标图床替换，https://xivapi-v2.xivcdn.com/api/asset?path=ui/icon/037000/037618.tex
+- 后台联动通知
+- 剔除无用配方（主要考虑material只有一个的）
 
 
 ## Before beta
