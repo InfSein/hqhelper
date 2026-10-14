@@ -14,7 +14,7 @@ import { useLocale } from '@/composables/useLocale'
 import { useNbbCloud } from '@/composables/useNbbCloud'
 import { useAppModals } from '@/composables/useAppModals'
 import { useResponsive } from '@/composables/useResponsive'
-import { CopyToClipboard } from '@/tools'
+import { CopyToClipboard, deepCopy } from '@/tools'
 import { fixCloudConfig } from '@/types/config/cloud'
 
 const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
@@ -27,6 +27,8 @@ const { isMobile } = useResponsive()
 const { displayLoginModal, displayCloudSyncModal } = useAppModals()
 const {
   updateUserInfo,
+  updateUserInfoExt,
+  getUserInfoExt,
   resolveUserInfo,
 } = useNbbCloud()
 const {
@@ -47,17 +49,29 @@ const wrapper = ref<HTMLElement>()
 
 onMounted(async () => {
   const nextUpdateTime = store.cloudConfig.nbb_userinfo_last_update + 5000
-  if (
-    store.cloudConfig.nbb_account_token
-    && Date.now() >= nextUpdateTime
-  ) {
-    const response = await updateUserInfo()
-    if (response.errno) {
-      console.warn('User info auto update failed.\n', response)
-    } else {
-      const newCloudConfig = resolveUserInfo(response.data, store.cloudConfig)
+  if (store.cloudConfig.nbb_account_token) {
+    if (Date.now() >= nextUpdateTime) {
+      const [response, extResponse] = await Promise.all([
+        updateUserInfo(),
+        getUserInfoExt(),
+      ])
+      let newCloudConfig = deepCopy(store.cloudConfig)
+      if (response.errno) {
+        console.warn('User info auto update failed.\n', response)
+      } else {
+        newCloudConfig = resolveUserInfo(response.data, newCloudConfig)
+      }
+      if (!extResponse.errno && extResponse.data) {
+        newCloudConfig.nbb_account_user_group = (extResponse.data.userGroup as any) || ''
+        newCloudConfig.nbb_account_avatar_vip = extResponse.data.userAvatar || ''
+      }
       if (JSON.stringify(newCloudConfig) !== JSON.stringify(store.cloudConfig)) {
         store.setCloudConfig(newCloudConfig)
+        appForceUpdate()
+      }
+    } else if (!store.cloudConfig.nbb_account_user_group) {
+      const extUpdated = await updateUserInfoExt()
+      if (extUpdated) {
         appForceUpdate()
       }
     }

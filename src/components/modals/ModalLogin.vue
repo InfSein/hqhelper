@@ -15,8 +15,10 @@ import {
   VerifiedUserFilled,
 } from '@vicons/material'
 import ModalNbbAvatarSelector from './ModalNbbAvatarSelector.vue'
+import ModalUploadAvatar from './ModalUploadAvatar.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
+import useCloud from '@/composables/useCloud'
 import { useNbbCloud } from '@/composables/useNbbCloud'
 import { deepCopy } from '@/tools'
 import { getImgCdnUrl } from '@/tools/game'
@@ -26,12 +28,14 @@ const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
 
 const store = useStore()
 const { t } = useLocale()
+const { isVipOrDev } = useCloud()
 const NAIVE_UI_MESSAGE = useMessage()
 const {
   sendVerify, sendVerifyForResetPassword,
   register, login, resetPassword,
   resolveUserInfo,
   resetNickNameAndTitle, resetAvatar,
+  updateUserInfoExt,
 } = useNbbCloud()
 
 const showModal = defineModel<boolean>('show', { required: true })
@@ -47,6 +51,7 @@ const isVerifyCooldown = ref(false)
 const isSendingVerify = ref(false)
 const isSubmitting = ref(false)
 const showNbbAvatarSelector = ref(false)
+const showUploadAvatarModal = ref(false)
 const loginFormData = reactive({
   account: '',
   password: '',
@@ -69,11 +74,14 @@ const edituserFormData = reactive({
   avatar: 0,
 })
 
-const onLoad = () => {
+const onLoad = async () => {
   loginAction.value = props.defaultTab
   edituserFormData.nickname = store.cloudConfig.nbb_account_nickname
   edituserFormData.title = store.cloudConfig.nbb_account_title
   edituserFormData.avatar = store.cloudConfig.nbb_account_avatar
+  if (loginAction.value === 'edituser') {
+    await updateUserInfoExt()
+  }
 }
 
 const modalIcon = computed(() => {
@@ -99,6 +107,9 @@ const verifyButtonText = computed(() =>
   isVerifyCooldown.value ? t('cloud.message.verify_cooldown', verifyCooldown.value) : t('cloud.text.send_verify')
 )
 const avatarUrl = computed(() => {
+  if (store.cloudConfig.nbb_account_avatar_vip && edituserFormData.avatar === store.cloudConfig.nbb_account_avatar) {
+    return store.cloudConfig.nbb_account_avatar_vip
+  }
   const avatarId = edituserFormData.avatar || 64384
   return getImgCdnUrl(avatarId)
 })
@@ -172,6 +183,9 @@ const handleSendVerify = async (email: string) => {
 const handleShowNbbAvatarSelector = () => {
   showNbbAvatarSelector.value = true
 }
+const handleShowUploadAvatarModal = () => {
+  showUploadAvatarModal.value = true
+}
 
 const handleSubmit = async () => {
   try {
@@ -188,6 +202,7 @@ const handleSubmit = async () => {
       handleResponse(response, t('cloud.message.login_succeed'))
       if (!response.errno) {
         handleSaveLoginInfo(response.data)
+        await updateUserInfoExt()
         showModal.value = false
       }
     } else if (loginAction.value === 'register') {
@@ -469,10 +484,18 @@ const handleSubmit = async () => {
               class="button-avatar"
             />
             <n-button
+              v-if="!store.cloudConfig.nbb_account_avatar_vip"
               size="small"
               @click="handleShowNbbAvatarSelector"
             >
               {{ t('common.edit') }}
+            </n-button>
+            <n-button
+              v-if="isVipOrDev"
+              size="small"
+              @click="handleShowUploadAvatarModal"
+            >
+              {{ t('common.upload') }}
             </n-button>
           </div>
         </div>
@@ -499,6 +522,9 @@ const handleSubmit = async () => {
     <ModalNbbAvatarSelector
       v-model:show="showNbbAvatarSelector"
       v-model:avatar-id="edituserFormData.avatar"
+    />
+    <ModalUploadAvatar
+      v-model:show="showUploadAvatarModal"
     />
   </MyModal>
 </template>

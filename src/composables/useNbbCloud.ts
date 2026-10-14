@@ -6,7 +6,8 @@ import type {
   HqList,
   NbbResponse,
   ResdataRegisterAndLogin,
-  ResdataGetList, ResdataSetList
+  ResdataGetList, ResdataSetList,
+  ResdataUserInfoExt, ResdataUploadAvatar,
 } from '@/types/api/nbb-cloud'
 import { deepCopy } from "@/tools"
 import { md5 } from "../utils/md5"
@@ -120,7 +121,7 @@ export const useNbbCloud = () => {
   ) => {
     const newCloudConfig = fixCloudConfig(deepCopy(oldConfig))
     newCloudConfig.nbb_account_avatar = Number(data.avatar || '') || 0
-    newCloudConfig.nbb_account_avatar_vip = data.vipAvatar || ''
+    newCloudConfig.nbb_account_avatar_vip = data.vipAvatar || oldConfig?.nbb_account_avatar_vip || ''
     newCloudConfig.nbb_account_uid = data.uid
     newCloudConfig.nbb_account_title = data.title || ''
     newCloudConfig.nbb_account_nickname = data.nickname
@@ -226,6 +227,94 @@ export const useNbbCloud = () => {
     return response
   }
 
+  /**
+   * 获取用户扩展信息 (HqHelper 用户组与已审核自定义头像)
+   */
+  const getUserInfoExt = async () : Promise<NbbResponse<ResdataUserInfoExt>> => {
+    const token = store.cloudConfig.nbb_account_token
+    if (!token) {
+      return {
+        errno: 1,
+        errmsg: 'No token',
+        data: null as any,
+      }
+    }
+    try {
+      const response = await fetch('https://hqhelper.com/api/nbbcloud/usrinfo_ext', {
+        method: 'POST',
+        headers: {
+          'Authorization': token,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({}),
+      })
+      const data = await response.json()
+      return data
+    } catch (error: any) {
+      return {
+        errno: 1,
+        errmsg: error?.message || 'Network error',
+        data: null as any,
+      }
+    }
+  }
+
+  /**
+   * 上传自定义头像
+   * @param file 图片文件
+   */
+  const uploadAvatar = async (file: File) : Promise<NbbResponse<ResdataUploadAvatar>> => {
+    const token = store.cloudConfig.nbb_account_token
+    if (!token) {
+      return {
+        errno: 1,
+        errmsg: 'No token',
+        data: null as any,
+      }
+    }
+    const formData = new FormData()
+    formData.append('avatar', file)
+    try {
+      const response = await fetch('https://hqhelper.com/api/nbbcloud/avatar', {
+        method: 'POST',
+        headers: {
+          'Authorization': token,
+        },
+        body: formData,
+      })
+      const data = await response.json()
+      return data
+    } catch (error: any) {
+      return {
+        errno: 1,
+        errmsg: error?.message || 'Network error',
+        data: null as any,
+      }
+    }
+  }
+
+  /**
+   * 同步更新用户扩展信息到 store 中
+   * @returns 是否发生配置更新
+   */
+  const updateUserInfoExt = async () => {
+    if (!store.cloudConfig.nbb_account_token) return false
+    const response = await getUserInfoExt()
+    if (!response.errno && response.data) {
+      const newCloudConfig = deepCopy(store.cloudConfig)
+      newCloudConfig.nbb_account_user_group = (response.data.userGroup as any) || ''
+      newCloudConfig.nbb_account_avatar_vip = response.data.userAvatar || ''
+      if (
+        newCloudConfig.nbb_account_user_group !== store.cloudConfig.nbb_account_user_group
+        || newCloudConfig.nbb_account_avatar_vip !== store.cloudConfig.nbb_account_avatar_vip
+      ) {
+        store.setCloudConfig(newCloudConfig)
+        return true
+      }
+    }
+    return false
+  }
+
   return {
     /** 向邮箱发送验证码 */
     sendVerify,
@@ -243,6 +332,12 @@ export const useNbbCloud = () => {
     login,
     /** 刷新用户信息 */
     updateUserInfo,
+    /** 获取用户扩展信息 */
+    getUserInfoExt,
+    /** 上传自定义头像 */
+    uploadAvatar,
+    /** 刷新用户扩展信息 */
+    updateUserInfoExt,
     /** 将登录、注册、刷新用户信息获取到的data转译为cloudConfig */
     resolveUserInfo,
     /** 修改密码 */

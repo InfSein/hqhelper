@@ -24,6 +24,8 @@ export interface CloudConfigModel {
   nbb_account_datacenter: string,
   /** NBB云账户-服务器 */
   nbb_account_world: string,
+  /** 用户组/身份 */
+  nbb_account_user_group: "" | "dev" | "vip" | "user",
 
   /** 上次刷新用户信息的时间戳 */
   nbb_userinfo_last_update: number,
@@ -43,6 +45,7 @@ const defaultCloudConfig: CloudConfigModel = {
   nbb_account_country: '',
   nbb_account_datacenter: '',
   nbb_account_world: '',
+  nbb_account_user_group: '',
   nbb_userinfo_last_update: 0,
   nbb_sync_targets: 'all',
 }

@@ -37,23 +37,28 @@ const useCloud = () => {
 
   const userSpecialTitle = computed(() : UserSpecialTitle | undefined => {
     if (!userLoggedIn.value) return undefined
-    if (userId.value === 2956) {
+    const group = store.cloudConfig.nbb_account_user_group
+    if (group === 'dev' || userId.value === 2956) {
       return {
         key: 'dev',
         tag: 'DEV',
         tagColor: 'var(--color-info)',
-        desc: 'HqHelper的开发者'
+        desc: 'HqHelper的开发者',
       }
     }
-    if (store.mainCache.sponsor_nbbids.includes(userId.value)) {
+    if (group === 'vip') {
       return {
         key: 'vip',
         tag: 'VIP',
         tagColor: 'var(--color-error)',
-        desc: 'HqHelper的赞助者'
+        desc: 'HqHelper的赞助者',
       }
     }
     return undefined
+  })
+
+  const isVipOrDev = computed(() => {
+    return userSpecialTitle.value?.key === 'dev' || userSpecialTitle.value?.key === 'vip'
   })
 
   return {
@@ -63,6 +68,7 @@ const useCloud = () => {
     userLoggedIn,
     userTitle,
     userSpecialTitle,
+    isVipOrDev,
   }
 }
 

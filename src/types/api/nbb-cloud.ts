@@ -45,3 +45,13 @@ export interface ResdataSetList {
   id: number,
   hash: string,
 }
+
+export interface ResdataUserInfoExt {
+  userGroup: "" | "dev" | "vip" | "user" | string,
+  userAvatar: string,
+}
+
+export interface ResdataUploadAvatar {
+  status: "pending" | string,
+  message: string,
+}

@@ -3,12 +3,10 @@ import {
   ChecklistRtlSharp,
   RefreshOutlined,
 } from '@vicons/material'
-import { useStore } from '@/store'
 import { useDialog } from '@/composables/useDialog'
 import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
 
-const store = useStore()
 const { t } = useLocale()
 const { alertInfo } = useDialog()
 const { isMobile } = useResponsive()
@@ -58,8 +56,6 @@ const loadSponsors = async () => {
       throw new Error(sponsorsContent.errmsg)
     }
     sponsors.value = sponsorsContent.data.content.sponsors
-    store.mainCache.sponsor_nbbids = sponsors.value.flatMap(s => s.nbbid ? [s.nbbid] : [])
-    store.setMainCache(store.mainCache)
     sponsorLoadingStatus.value = 'finished'
   } catch (e: any) {
     sponsorLoadingStatus.value = 'error'
