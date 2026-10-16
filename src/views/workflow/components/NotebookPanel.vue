@@ -1006,9 +1006,10 @@ defineExpose({
               :type="!isSearchMode && isCustomListMode ? 'primary' : 'default'"
               @click="handleEnterCustomListMode"
             >
-              <n-icon :size="22">
-                <BookmarkOutlined />
-              </n-icon>
+              <XivFARImage
+                src="./ui/mog.png"
+                :size="32"
+              />
             </n-button>
           </template>
           {{ t('recipe.notebookgroup.custom_lists') }}
@@ -1020,9 +1021,10 @@ defineExpose({
               :type="!isSearchMode && isStarredMode ? 'primary' : 'default'"
               @click="handleEnterStarredMode"
             >
-              <n-icon :size="22">
-                <StarRound />
-              </n-icon>
+              <XivFARImage
+                src="./ui/star.png"
+                :size="32"
+              />
             </n-button>
           </template>
           {{ t('workflow.notebook_starred.title') }}
