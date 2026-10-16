@@ -1726,6 +1726,7 @@
       "reduce_info": "该物品可以通过精选以下道具获得：",
       "reverse_recipe_lookup": "反查配方",
       "reverse_recipe_lookup_no_result": "未找到使用该物品作为素材的配方",
+      "view_recipe": "查看配方",
       "simulate_craft_bestcraft": "在BestCraft中模拟制作",
       "simulate_craft_teamcraft": "在TeamCraft中模拟制作",
       "timelimited_gatherable": "进行中",

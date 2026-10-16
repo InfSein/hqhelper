@@ -36,7 +36,7 @@ import { onInventoryChange, offInventoryChange } from '@/composables/useInventor
 import { type SettingGroupKey } from '@/types'
 import { getDefaultWorkflow, _VAR_MAX_WORKFLOW } from '@/types/workstate/workflow'
 import type { ItemInfo } from '@/types/item'
-import { addToCurrentWorkflowKey, reverseRecipeLookupKey } from '@/constants/vue-injects'
+import { addToCurrentWorkflowKey, reverseRecipeLookupKey, focusRecipeKey } from '@/constants/vue-injects'
 
 const store = useStore()
 const { t } = useLocale()
@@ -252,6 +252,19 @@ provide(reverseRecipeLookupKey, (item: ItemInfo) => {
     workState.value.pageView = 'AB'
   }
   notebookPanelRef.value?.searchByMaterial(item)
+})
+
+provide(focusRecipeKey, (item: ItemInfo) => {
+  if (workState.value.pageView === 'BC') {
+    workState.value.pageView = 'AB'
+  }
+  notebookPanelRef.value?.focusRecipe(item)
+  if (isMobile.value) {
+    nextTick(() => {
+      const el = document.querySelector('.block-a')
+      el?.scrollIntoView({ behavior: 'smooth' })
+    })
+  }
 })
 // #endregion
 

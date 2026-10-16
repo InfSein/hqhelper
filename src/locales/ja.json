@@ -1706,6 +1706,7 @@
       "reduce_info": "このアイテムは精選以下のアイテムで入手できます：",
       "reverse_recipe_lookup": "素材からレシピ検索",
       "reverse_recipe_lookup_no_result": "このアイテムを素材として使用するレシピが見つかりませんでした",
+      "view_recipe": "レシピを見る",
       "simulate_craft_bestcraft": "BestCraftで製作をシミュレーション",
       "simulate_craft_teamcraft": "TeamCraftで製作をシミュレーション",
       "timelimited_gatherable": "採集可能期間中",

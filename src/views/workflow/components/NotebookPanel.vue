@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch, h, nextTick } from 'vue'
 import {
-  BookmarkOutlined,
   CloseRound,
   DeleteSweepRound,
   HistoryRound,
@@ -65,6 +64,7 @@ const emit = defineEmits<{
 }>()
 
 const itemListScrollbarRef = ref<ScrollbarInst | null>(null)
+const itemListContainerRef = ref<HTMLElement | null>(null)
 const scrollToTop = () => {
   nextTick(() => {
     itemListScrollbarRef.value?.scrollTo({ top: 0 })
@@ -217,7 +217,12 @@ const currSelectedItem = computed(() => {
   return getItemInfo(itemId)
 })
 
+const skipMenuSwitchEffect = ref(false)
 const onNotebookMenuSwitched = () => {
+  if (skipMenuSwitchEffect.value) {
+    skipMenuSwitchEffect.value = false
+    return
+  }
   const keys = Object.keys(currMenus.value) as `i_${number}`[]
   if (!keys.length) return
   const firstKey = keys[0]
@@ -962,8 +967,97 @@ const handleNotebookItemContextMenu = (e: MouseEvent, item: ItemInfo) => {
 }
 // #endregion
 
+const focusRecipe = (itemOrId: ItemInfo | number) => {
+  const itemInfo = typeof itemOrId === 'number' ? getItemInfo(itemOrId) : itemOrId
+  if (!itemInfo?.id) return
+
+  const targetItemId = itemInfo.id
+
+  let targetJob: number | null = null
+  let targetMenuType: ('common' | 'special' | 'master') | null = null
+  let targetContentGroupKey: `i_${number}` | null = null
+
+  // 检查指定职业的菜单中是否包含该配方
+  const checkJob = (job: number) => {
+    const group = notebookGroups.value[job]
+    if (!group) return false
+    const menuTypes: ('common' | 'special' | 'master')[] = ['common', 'special', 'master']
+    for (const menuType of menuTypes) {
+      const menus = group.menus[menuType]
+      for (const [menuKey, menu] of Object.entries(menus)) {
+        for (const cg of Object.values(menu.contentGroups)) {
+          if (cg.items.some(it => it.id === targetItemId)) {
+            targetJob = job
+            targetMenuType = menuType
+            targetContentGroupKey = menuKey as `i_${number}`
+            return true
+          }
+        }
+      }
+    }
+    return false
+  }
+
+  // 1. 优先在当前选中的职业中查找
+  if (!checkJob(props.selectedJob)) {
+    // 2. 检查物品的主生产职业
+    const primaryJob = itemInfo.craftInfo?.jobId
+    if (primaryJob && checkJob(primaryJob)) {
+      // 成功匹配主职业
+    } else {
+      // 3. 遍历其他所有职业查找
+      for (const jobStr of Object.keys(notebookGroups.value)) {
+        const job = Number(jobStr)
+        if (job !== props.selectedJob && checkJob(job)) {
+          break
+        }
+      }
+    }
+  }
+
+  // 退出搜索、自定列表、收藏列表模式
+  isSearchMode.value = false
+  isCustomListMode.value = false
+  isStarredMode.value = false
+  searchKeyword.value = ''
+
+  // 若分类筛选导致该物品不可见，重置分类筛选为全部
+  if (selectedUiType.value !== -1 && itemInfo.uiTypeId !== selectedUiType.value) {
+    selectedUiType.value = -1
+  }
+
+  if (targetJob !== null && targetJob !== props.selectedJob) {
+    emit('update:selectedJob', targetJob)
+  }
+  if (targetMenuType !== null && targetMenuType !== props.selectedMenu) {
+    skipMenuSwitchEffect.value = true
+    emit('update:selectedMenu', targetMenuType)
+    setTimeout(() => {
+      skipMenuSwitchEffect.value = false
+    }, 500)
+  }
+  if (targetContentGroupKey !== null && targetContentGroupKey !== props.selectedContentGroup) {
+    emit('update:selectedContentGroup', targetContentGroupKey)
+  }
+  emit('update:selectedItem', targetItemId)
+
+  // 滚动定位到物品列表中的对应项
+  nextTick(() => {
+    setTimeout(() => {
+      const container = itemListContainerRef.value
+      const targetEl = container?.querySelector(`[data-item-id="${targetItemId}"]`) as HTMLElement | null
+      if (targetEl) {
+        targetEl.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+      } else {
+        scrollToTop()
+      }
+    }, 100)
+  })
+}
+
 defineExpose({
   searchByMaterial,
+  focusRecipe,
 })
 </script>
 
@@ -1342,11 +1436,12 @@ defineExpose({
             </div>
           </div>
           <n-scrollbar ref="itemListScrollbarRef" trigger="none" class="flex-1">
-            <div
-              v-for="group in filteredNotebookGroups"
-              :key="group.key"
-              class="flex flex-col gap-1 pr-3 mb-2"
-            >
+            <div ref="itemListContainerRef">
+              <div
+                v-for="group in filteredNotebookGroups"
+                :key="group.key"
+                class="flex flex-col gap-1 pr-3 mb-2"
+              >
               <div v-if="group.label" class="sticky top-0 z-10 w-full rounded px-1 bg-border">
                 <i class="xiv e032"></i>
                 {{ group.label }}
@@ -1354,6 +1449,7 @@ defineExpose({
               <div
                 v-for="entry in group.items"
                 :key="entry.item.id"
+                :data-item-id="entry.item.id"
                 class="flex gap-1"
               >
                 <n-button
@@ -1402,11 +1498,12 @@ defineExpose({
                 </n-button>
               </div>
             </div>
-            <div
-              v-if="filteredNotebookGroups.length === 0"
-              class="h-full flex items-center justify-center py-8"
-            >
-              <n-empty :description="isStarredMode ? t('workflow.notebook_starred.empty') : t('common.no_data')" />
+              <div
+                v-if="filteredNotebookGroups.length === 0"
+                class="h-full flex items-center justify-center py-8"
+              >
+                <n-empty :description="isStarredMode ? t('workflow.notebook_starred.empty') : t('common.no_data')" />
+              </div>
             </div>
           </n-scrollbar>
         </div>

@@ -1706,6 +1706,7 @@
       "reduce_info": "Reducible from:",
       "reverse_recipe_lookup": "Search Recipes by Material",
       "reverse_recipe_lookup_no_result": "No recipes found using this item as material",
+      "view_recipe": "View Recipe",
       "simulate_craft_bestcraft": "Simulate in BestCraft",
       "simulate_craft_teamcraft": "Simulate in Teamcraft",
       "timelimited_gatherable": "ACTIVE",

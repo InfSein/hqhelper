@@ -11,8 +11,10 @@ import {
   AccessAlarmsOutlined,
   NotificationsRound,
   NotificationsNoneRound,
+  MenuBookOutlined,
 } from '@vicons/material'
 import { CopyToClipboard } from '@/tools'
+import { getItemInfo } from '@/tools/item'
 import type { ItemInfo } from '@/types/item'
 import {
   _VAR_GATHERCLOCK_MAX_STARRED,
@@ -24,7 +26,7 @@ import useUiTools from './useUiTools'
 import { useLocale } from './useLocale'
 import { useAppModals } from './useAppModals'
 import { useStore } from '@/store'
-import { addToCurrentWorkflowKey, reverseRecipeLookupKey } from '@/constants/vue-injects'
+import { addToCurrentWorkflowKey, reverseRecipeLookupKey, focusRecipeKey } from '@/constants/vue-injects'
 
 export function useItemContextMenu(
   getItem: () => ItemInfo,
@@ -34,6 +36,7 @@ export function useItemContextMenu(
   const { joinItemsToWorkflow } = useAppModals()
   const addToCurrentWorkflow = inject(addToCurrentWorkflowKey, undefined)
   const reverseRecipeLookup = inject(reverseRecipeLookupKey, undefined)
+  const focusRecipe = inject(focusRecipeKey, undefined)
 
   const NAIVE_UI_MESSAGE = useMessage()
   const { itemLanguage } = useConfig()
@@ -102,6 +105,8 @@ export function useItemContextMenu(
   const dropdownOptions = computed(() => {
     const itemInfo = getItem()
     if (!itemInfo.id) return []
+    const itemCraftInfo = itemInfo.craftInfo || (itemInfo.id ? getItemInfo(itemInfo.id)?.craftInfo : undefined)
+    const hasRecipe = !!itemCraftInfo?.recipeId
     const options = [
       {
         label: t('common.copy_item_name'),
@@ -148,14 +153,23 @@ export function useItemContextMenu(
       {
         type: 'divider',
         key: 'd-star',
-        show: !!itemInfo?.craftInfo?.recipeId || (!!reverseRecipeLookup && itemInfo.id >= 100),
+        show: hasRecipe || (!!reverseRecipeLookup && itemInfo.id >= 100),
+      },
+      {
+        label: t('item.text.view_recipe'),
+        key: 'view-recipe',
+        show: !!focusRecipe && hasRecipe,
+        icon: renderIcon(MenuBookOutlined),
+        click: () => {
+          focusRecipe?.(itemInfo.craftInfo ? itemInfo : (getItemInfo(itemInfo.id) || itemInfo))
+        }
       },
       {
         label: store.userConfig.notebook_starred_recipes.includes(itemInfo.id)
           ? t('workflow.notebook_starred.unstar_recipe')
           : t('workflow.notebook_starred.star_recipe'),
         key: 'toggle-star-recipe',
-        show: !!itemInfo?.craftInfo?.recipeId,
+        show: hasRecipe,
         icon: renderIcon(
           store.userConfig.notebook_starred_recipes.includes(itemInfo.id)
             ? StarRound
