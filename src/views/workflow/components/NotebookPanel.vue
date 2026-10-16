@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch, h } from 'vue'
+import { computed, ref, watch, h, nextTick } from 'vue'
 import {
   BookmarkOutlined,
   CloseRound,
@@ -16,7 +16,7 @@ import {
   StarRound,
   StarBorderRound,
 } from '@vicons/material'
-import type { SelectOption } from 'naive-ui'
+import type { ScrollbarInst, SelectOption } from 'naive-ui'
 import ItemCell from '@/components/item/ItemCell.vue'
 import ItemSpan from '@/components/item/ItemSpan.vue'
 import XivFARImage from '@/components/ui/XivFARImage.vue'
@@ -63,6 +63,13 @@ const emit = defineEmits<{
   'update:notebookSearchHistory': [value: string[]]
   'add-item': [itemId: number]
 }>()
+
+const itemListScrollbarRef = ref<ScrollbarInst | null>(null)
+const scrollToTop = () => {
+  nextTick(() => {
+    itemListScrollbarRef.value?.scrollTo({ top: 0 })
+  })
+}
 
 // #region notebook data structure
 interface NotebookGroup {
@@ -497,6 +504,7 @@ const handleSearch = (keyword?: string) => {
   isStarredMode.value = false
 
   NAIVE_UI_MESSAGE.success(t('workflow.notebook_search.success_count', { count: totalCount }))
+  scrollToTop()
 
   // 记录搜索历史 (最多10条，去重且最新排在最前)
   const currentHistory = props.notebookSearchHistory ?? []
@@ -570,6 +578,7 @@ const searchByMaterial = (itemOrId: ItemInfo | number) => {
   isStarredMode.value = false
 
   NAIVE_UI_MESSAGE.success(t('workflow.notebook_search.success_count', { count: totalCount }))
+  scrollToTop()
 
   if (results[0]?.items?.[0]?.id) {
     emit('update:selectedItem', results[0].items[0].id)
@@ -650,6 +659,7 @@ const handleEnterCustomListMode = () => {
   if (currCustomList.value?.items?.length) {
     emit('update:selectedItem', currCustomList.value.items[0].id)
   }
+  scrollToTop()
 }
 
 const handleCustomListSelect = (index: number) => {
@@ -658,6 +668,7 @@ const handleCustomListSelect = (index: number) => {
   if (cl?.items?.length) {
     emit('update:selectedItem', cl.items[0].id)
   }
+  scrollToTop()
 }
 
 const handleJoinCustomList = (entry: CustomListEntry) => {
@@ -710,6 +721,7 @@ const handleEnterStarredMode = () => {
   if (starredItems.value.length > 0) {
     emit('update:selectedItem', starredItems.value[0].id)
   }
+  scrollToTop()
 }
 // #endregion
 
@@ -718,6 +730,7 @@ const handleJobSelect = (job: number) => {
   isCustomListMode.value = false
   isStarredMode.value = false
   emit('update:selectedJob', job)
+  scrollToTop()
 }
 
 const handleMenuTabUpdate = (val: 'common' | 'special' | 'master') => {
@@ -725,6 +738,7 @@ const handleMenuTabUpdate = (val: 'common' | 'special' | 'master') => {
   isSearchMode.value = false
   searchKeyword.value = ''
   emit('update:selectedMenu', val)
+  scrollToTop()
 }
 
 const handleContentGroupSelect = (menuId: `i_${number}`) => {
@@ -733,6 +747,7 @@ const handleContentGroupSelect = (menuId: `i_${number}`) => {
   isStarredMode.value = false
   searchKeyword.value = ''
   emit('update:selectedContentGroup', menuId)
+  scrollToTop()
 }
 
 interface DisplayedNotebookGroup {
@@ -855,6 +870,24 @@ const filteredNotebookGroups = computed<DisplayedNotebookGroup[]>(() => {
     }))
     .filter(group => group.items.length > 0)
 })
+
+// 监听菜单切换、搜索结果更新或分类筛选变化，自动将物品列表滚动回顶部
+watch(
+  [
+    () => props.selectedJob,
+    () => props.selectedMenu,
+    () => props.selectedContentGroup,
+    isSearchMode,
+    searchResults,
+    isCustomListMode,
+    selectedCustomListIndex,
+    isStarredMode,
+    selectedUiType,
+  ],
+  () => {
+    scrollToTop()
+  },
+)
 
 const handleFilterPrev = () => {
   if (filterOptions.value.length <= 1) return
@@ -1306,7 +1339,7 @@ defineExpose({
               </n-popover>
             </div>
           </div>
-          <n-scrollbar trigger="none" class="flex-1">
+          <n-scrollbar ref="itemListScrollbarRef" trigger="none" class="flex-1">
             <div
               v-for="group in filteredNotebookGroups"
               :key="group.key"
