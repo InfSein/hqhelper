@@ -1,27 +1,25 @@
 <script setup lang="ts">
 import {
+  BrowserUpdatedRound,
+  RefreshRound,
+  SpeedRound,
+  SystemUpdateAltRound,
   UpdateSharp,
   VpnLockRound,
-  SystemUpdateAltRound,
-  BrowserUpdatedRound,
-  SpeedRound, RefreshRound
 } from '@vicons/material'
 import ModalPreferences from './ModalPreferences.vue'
-import type { ProcessStage, ProgressData } from 'env.electron'
 import { useStore } from '@/store'
-import AppStatus from '@/variables/app-status'
-import { useDialog } from '@/tools/dialog'
-import { checkUrlLag } from '@/tools/web-request'
-import type { AppVersionJson } from '@/models'
-import { fixUserConfig, type UserConfigModel } from '@/models/config-user'
+import { useLocale } from '@/composables/useLocale'
+import { useDialog } from '@/composables/useDialog'
+import AppStatus from '@/constants/app'
 import { checkAppUpdates, checkElectronUpdates } from '@/tools'
-
-const t = inject<(message: string, args?: any) => string>('t')!
-// const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
+import type { ProcessStage, ProgressData } from 'env.electron'
+import { checkUrlLag } from '@/tools/web-request'
+import type { AppVersionJson } from '@/types'
 
 const store = useStore()
-const { alertError, confirm } = useDialog(t)
+const { t } = useLocale()
+const { alertError, confirm } = useDialog()
 
 const showModal = defineModel<boolean>('show', { required: true })
 
@@ -33,8 +31,8 @@ onMounted(() => {
       ver: 'v3'
     })
   }
-  useCustomProxy.value = userConfig.value.use_custom_proxy
-  customProxyUrl.value = userConfig.value.custom_proxy_url
+  useCustomProxy.value = store.userConfig.use_custom_proxy
+  customProxyUrl.value = store.userConfig.custom_proxy_url
 })
 const onLoad = async () => {
   if (window.electronAPI?.clientVersion) {
@@ -265,10 +263,9 @@ const getProxyPingStyle = (proxy: string) => {
 }
 
 const saveUpdateSettings = () => {
-  const newConfig = fixUserConfig(store.userConfig)
-  newConfig.use_custom_proxy = useCustomProxy.value
-  newConfig.custom_proxy_url = customProxyUrl.value
-  store.setUserConfig(newConfig)
+  store.userConfig.use_custom_proxy = useCustomProxy.value
+  store.userConfig.custom_proxy_url = customProxyUrl.value
+  store.updateUserConfig()
 }
 const handleDownloadWebPack = async () => {
   if (!window.electronAPI?.downloadUpdatePack) {
@@ -317,7 +314,7 @@ const getClientDownloadLink = async () => {
   return url
 }
 const handleDownloadElectronPack = async () => {
-  if (userConfig.value.update_client_builtin) {
+  if (store.userConfig.update_client_builtin) {
     if (!window.electronAPI?.downloadAndOpen) {
       await alertError('function downloadAndOpen is not defined.\nPlease check the client version (v6+ is required).'); return
     }
@@ -394,10 +391,12 @@ const handleSettingButtonClick = () => {
       <FoldableCard class="card proxy" card-key="modal-cu-proxy" card-size="small" disable-glass show-card-border>
         <template #header>
           <div class="card-title">
-            <n-icon><VpnLockRound /></n-icon>
-            <span class="title">{{ t('update.proxy.title') }}</span>
-            <div class="card-title-actions font-small">
-              <a href="javascript:void(0)" @click="handleShowProxySiteStatus">[{{ t('update.text.proxy_status_view') }}]</a>
+            <div class="card-title">
+              <n-icon><VpnLockRound /></n-icon>
+              <span class="title">{{ t('update.proxy.title') }}</span>
+              <div class="card-title__actions text-app-xs">
+                <a href="javascript:void(0)" @click="handleShowProxySiteStatus">[{{ t('update.text.proxy_status_view') }}]</a>
+              </div>
             </div>
           </div>
         </template>

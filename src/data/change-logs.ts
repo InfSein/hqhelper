@@ -70,7 +70,6 @@ const renderList = (list: string[]) => {
 const getNoteImage = (ver: string, filename: string) => {
   return renderImg(`https://infsein.github.io/static/hqhelper/patchnote/${ver}/${filename}`)
 }
-// const refer = (text: string) => `<span class="font-small" style="font-style: italic;">${text}</span>`
 export const getChangelogs = (
   ui_lang: 'zh' | 'ja' | 'en',
   t: (message: string, args?: any) => string
@@ -83,6 +82,19 @@ export const getChangelogs = (
   }
   const isZh = ui_lang === 'zh'
   return [
+    {
+      version: '3.0.0 Alpha1',
+      date: '2026-11-01',
+      changes: [
+        {
+          name: groupName.breaking,
+          changes: [
+            '开始封闭测试。',
+            '现在HqHelper同时提供全量配方计算器功能。'
+          ]
+        },
+      ]
+    },
     {
       version: '2.5.1',
       date: '2026-07-28',
