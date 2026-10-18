@@ -159,6 +159,7 @@ export interface ItemInfo {
   isCrystal: boolean
   isAethersand: boolean
   isFishingItem: boolean
+  /** 是否为家具/庭具 */
   isFurnishing: boolean
   tradeInfo: ItemTradeInfo | undefined
   collectInfo?: {

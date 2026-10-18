@@ -110,6 +110,44 @@ const notebookGroups = computed(() => {
     }
     const group = groups[job]
 
+    /** Special Notebook Id Enum */
+    enum snid {
+      /** 房屋：内外装潢 */
+      furn_inout = 1,
+      /** 房屋：庭具 */
+      furn_outdoor,
+      /** 房屋：家具 */
+      furn_furnishing,
+      /** 房屋：桌台&地毯 */
+      furn_tableOrFloor,
+      /** 房屋：桌上 */
+      furn_tableTop,
+      /** 房屋：壁挂 */
+      furn_wall,
+
+      /** 收藏品交易 */
+      collectables = 10,
+
+      /** 职业任务：珠串万货街交易 */
+      jobQuest_wachumeqimeqi = 20,
+      /** 职业任务：魔法大学交易 */
+      jobQuest_studium,
+      /** 职业任务：中庸工艺馆交易 */
+      jobQuest_crystarium,
+
+      /** 支线任务：天钢工具 */
+      sideQuest_skysteel = 30,
+      /** 支线任务：莫雯卓越工具 */
+      sideQuest_splendorous,
+      /** 支线任务：重建伊修加德 */
+      sideQuest_ishgardRestoration,
+      /** 支线任务：其他 */
+      sideQuest_other,
+
+      /** 其他（染剂、头花） */
+      other = 99,
+    }
+
     // * 秘籍
     if (recipe.srb) {
       const srbInfo = XivSrbMap[recipe.srb]
@@ -131,42 +169,121 @@ const notebookGroups = computed(() => {
 
     // * 特殊
     else if (item.isFurnishing) {
-      const id = 1
-      group.menus.special[`i_${id}`] ??= { id, name: t('recipe.notebookgroup.furnishing'), contentGroups: {} }
+      switch (item.uiTypeId) {
+        default: {
+          const id = snid.furn_inout
+          group.menus.special[`i_${id}`] ??= { id, name: t('recipe.notebookgroup.furn_inout'), contentGroups: {} }
+          group.menus.special[`i_${id}`].contentGroups[0] ??= { id: 0, items: [] }
+          group.menus.special[`i_${id}`].contentGroups[0].items.push(item)
+          break
+        }
+        case /*庭具*/76: {
+          const id = snid.furn_outdoor
+          group.menus.special[`i_${id}`] ??= { id, name: t('recipe.notebookgroup.furn_outdoor'), contentGroups: {} }
+          group.menus.special[`i_${id}`].contentGroups[0] ??= { id: 0, items: [] }
+          group.menus.special[`i_${id}`].contentGroups[0].items.push(item)
+          break
+        }
+        case /*家具*/57: {
+          const id = snid.furn_furnishing
+          group.menus.special[`i_${id}`] ??= { id, name: t('recipe.notebookgroup.furn_furnishing'), contentGroups: {} }
+          group.menus.special[`i_${id}`].contentGroups[0] ??= { id: 0, items: [] }
+          group.menus.special[`i_${id}`].contentGroups[0].items.push(item)
+          break
+        }
+        case /*桌台*/77:
+        case /*地毯*/80: {
+          const id = snid.furn_tableOrFloor
+          group.menus.special[`i_${id}`] ??= { id, name: t('recipe.notebookgroup.furn_tableOrFloor'), contentGroups: {} }
+          group.menus.special[`i_${id}`].contentGroups[0] ??= { id: 0, items: [] }
+          group.menus.special[`i_${id}`].contentGroups[0].items.push(item)
+          break
+        }
+        case /*桌上*/78: {
+          const id = snid.furn_tableTop
+          group.menus.special[`i_${id}`] ??= { id, name: t('recipe.notebookgroup.furn_tableTop'), contentGroups: {} }
+          group.menus.special[`i_${id}`].contentGroups[0] ??= { id: 0, items: [] }
+          group.menus.special[`i_${id}`].contentGroups[0].items.push(item)
+          break
+        }
+        case /*壁挂*/79: {
+          const id = snid.furn_wall
+          group.menus.special[`i_${id}`] ??= { id, name: t('recipe.notebookgroup.furn_wall'), contentGroups: {} }
+          group.menus.special[`i_${id}`].contentGroups[0] ??= { id: 0, items: [] }
+          group.menus.special[`i_${id}`].contentGroups[0].items.push(item)
+          break
+        }
+      }
+    } else if (item.id >= 43887 && item.id <= 43898) {
+      const id = snid.jobQuest_wachumeqimeqi
+      group.menus.special[`i_${id}`] ??= { id, name: t('recipe.notebookgroup.jobQuest_wachumeqimeqi'), contentGroups: {} }
+      group.menus.special[`i_${id}`].contentGroups[0] ??= { id: 0, items: [] }
+      group.menus.special[`i_${id}`].contentGroups[0].items.push(item)
+    } else if (item.id >= 35588 && item.id <= 35599) {
+      const id = snid.jobQuest_studium
+      group.menus.special[`i_${id}`] ??= { id, name: t('recipe.notebookgroup.jobQuest_studium'), contentGroups: {} }
+      group.menus.special[`i_${id}`].contentGroups[0] ??= { id: 0, items: [] }
+      group.menus.special[`i_${id}`].contentGroups[0].items.push(item)
+    } else if (item.id >= 27232 && item.id <= 27251) {
+      const id = snid.jobQuest_crystarium
+      group.menus.special[`i_${id}`] ??= { id, name: t('recipe.notebookgroup.jobQuest_crystarium'), contentGroups: {} }
+      group.menus.special[`i_${id}`].contentGroups[0] ??= { id: 0, items: [] }
+      group.menus.special[`i_${id}`].contentGroups[0].items.push(item)
+    } else if (
+      (item.id >= 29645 && item.id <= 29660)
+      || (item.id >= 31101 && item.id <= 31116)
+      || (item.id >= 31750 && item.id <= 31757)
+    ) {
+      const id = snid.sideQuest_skysteel
+      group.menus.special[`i_${id}`] ??= { id, name: t('recipe.notebookgroup.sideQuest_skysteel'), contentGroups: {} }
       group.menus.special[`i_${id}`].contentGroups[0] ??= { id: 0, items: [] }
       group.menus.special[`i_${id}`].contentGroups[0].items.push(item)
     } else if (item.collectable) {
-      // recipe.notebookgroup.
       if (item.collectInfo || item.name_zh.startsWith('收藏用')) {
-        const id = 2
+        const id = snid.collectables
         group.menus.special[`i_${id}`] ??= { id, name: t('recipe.notebookgroup.collectable'), contentGroups: {} }
         group.menus.special[`i_${id}`].contentGroups[0] ??= { id: 0, items: [] }
         group.menus.special[`i_${id}`].contentGroups[0].items.push(item)
       } else if (item.name_zh.includes('重建用')) {
-        const id = 3
-        group.menus.special[`i_${id}`] ??= { id, name: t('recipe.notebookgroup.skybuilder'), contentGroups: {} }
+        const id = snid.sideQuest_ishgardRestoration
+        group.menus.special[`i_${id}`] ??= { id, name: t('recipe.notebookgroup.sideQuest_ishgardRestoration'), contentGroups: {} }
         group.menus.special[`i_${id}`].contentGroups[0] ??= { id: 0, items: [] }
         group.menus.special[`i_${id}`].contentGroups[0].items.push(item)
-      } else if (item.name_zh.includes('改良用')) {
-        const id = 4
+      } /*else if (item.name_zh.includes('改良用')) {
+        const id = snid.sideQuest_skysteel
         group.menus.special[`i_${id}`] ??= { id, name: t('recipe.notebookgroup.skysteel'), contentGroups: {} }
         group.menus.special[`i_${id}`].contentGroups[0] ??= { id: 0, items: [] }
         group.menus.special[`i_${id}`].contentGroups[0].items.push(item)
-      } else if (item.name_zh.startsWith('面向收藏家的')) {
-        const id = 5
+      } */else if (item.name_zh.startsWith('面向收藏家的')) {
+        const id = snid.sideQuest_splendorous
         group.menus.special[`i_${id}`] ??= { id, name: t('recipe.notebookgroup.splendorous'), contentGroups: {} }
         group.menus.special[`i_${id}`].contentGroups[0] ??= { id: 0, items: [] }
         group.menus.special[`i_${id}`].contentGroups[0].items.push(item)
       } else {
-        const id = 10 // todo：进一步归类、enum重构
+        const id = snid.other // 未归类收藏品，版本更新时需要处理
         group.menus.special[`i_${id}`] ??= { id, name: t('recipe.notebookgroup.collectable_other'), contentGroups: {} }
         group.menus.special[`i_${id}`].contentGroups[0] ??= { id: 0, items: [] }
         group.menus.special[`i_${id}`].contentGroups[0].items.push(item)
       }
     } else if (
-      item.uiTypeId === /*染剂*/55
+      item.name_zh.endsWith('（复制品）') && (
+        item.name_zh.includes('空贼') || item.name_zh.includes('空鼠')
+      )
     ) {
-      const id = 99
+      const id = snid.sideQuest_other
+      group.menus.special[`i_${id}`] ??= { id, name: t('recipe.notebookgroup.sideQuest_other'), contentGroups: {} }
+      group.menus.special[`i_${id}`].contentGroups[0] ??= { id: 0, items: [] }
+      group.menus.special[`i_${id}`].contentGroups[0].items.push(item)
+    } else if (
+      item.uiTypeId === /*染剂*/55
+      || item.name_zh.endsWith('头花')
+      || (item.id >= 21926 && item.id <= 21934) // 郁金香腕带
+      || (item.id >= 38560 && item.id <= 38568) // 香豌豆花项链
+      || (item.id >= 47941 && item.id <= 47949) // 叶子花耳环
+      || (item.id >= 47212 && item.id <= 47222) // 大季花花环
+      || (item.id >= 51199 && item.id <= 51207) // 矢车菊手链
+    ) {
+      const id = snid.other
       group.menus.special[`i_${id}`] ??= { id, name: t('recipe.notebookgroup.other'), contentGroups: {} }
       group.menus.special[`i_${id}`].contentGroups[0] ??= { id: 0, items: [] }
       group.menus.special[`i_${id}`].contentGroups[0].items.push(item)

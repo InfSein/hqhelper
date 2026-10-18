@@ -2786,8 +2786,20 @@
       "custom_lists": "推荐列表",
       "skybuilder": "伊修加德重建",
       "skysteel": "天钢工具",
-      "splendorous": "莫雯工具",
-      "collectable_other": "未归类收藏品"
+      "splendorous": "支线任务：莫雯卓越工具",
+      "collectable_other": "未归类收藏品",
+      "furn_inout": "房屋：内外装潢",
+      "furn_outdoor": "房屋：庭具",
+      "furn_furnishing": "房屋：家具",
+      "furn_tableOrFloor": "房屋：桌台&地毯",
+      "furn_tableTop": "房屋：桌上",
+      "furn_wall": "房屋：壁挂",
+      "jobQuest_wachumeqimeqi": "职业任务：珠串万货街交易",
+      "jobQuest_studium": "职业任务：魔法大学交易",
+      "jobQuest_crystarium": "职业任务：中庸工艺馆交易",
+      "sideQuest_skysteel": "支线任务：天钢工具",
+      "sideQuest_other": "支线任务：其他",
+      "sideQuest_ishgardRestoration": "支线任务：重建伊修加德"
     },
     "notebook": "制作笔记",
     "text": {
