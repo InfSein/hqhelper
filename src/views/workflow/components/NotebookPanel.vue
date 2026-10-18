@@ -1633,7 +1633,7 @@ defineExpose({
                           size="small"
                           :tertiary="!isSearchMode && selectedContentGroup === child.menuId"
                           :quaternary="isSearchMode || selectedContentGroup !== child.menuId"
-                          class="justify-start w-full truncate"
+                          class="justify-start w-full truncate pl-1!"
                           @click="handleContentGroupSelect(child.menuId)"
                         >
                           <span class="truncate">{{ child.subLabel }}</span>
