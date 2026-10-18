@@ -93,6 +93,124 @@ interface NotebookMenu {
   }>
 }
 
+/** 特殊配方分类 ID 枚举 */
+enum SpecialNotebookId {
+  /** 房屋：内外装潢 */
+  furn_inout = 1,
+  /** 房屋：庭具 */
+  furn_outdoor = 2,
+  /** 房屋：家具 */
+  furn_furnishing = 3,
+  /** 房屋：桌台&地毯 */
+  furn_tableOrFloor = 4,
+  /** 房屋：桌上 */
+  furn_tableTop = 5,
+  /** 房屋：壁挂 */
+  furn_wall = 6,
+
+  /** 收藏品交易 */
+  collectables = 10,
+
+  /** 职业任务：珠串万货街交易 */
+  jobQuest_wachumeqimeqi = 20,
+  /** 职业任务：魔法大学交易 */
+  jobQuest_studium = 21,
+  /** 职业任务：中庸工艺馆交易 */
+  jobQuest_crystarium = 22,
+
+  /** 支线任务：天钢工具 */
+  sideQuest_skysteel = 30,
+  /** 支线任务：莫雯卓越工具 */
+  sideQuest_splendorous = 31,
+  /** 支线任务：重建伊修加德 */
+  sideQuest_ishgardRestoration = 32,
+  /** 支线任务：其他 */
+  sideQuest_other = 33,
+
+  /** 其他（染剂、头花） */
+  other = 99,
+}
+
+/** 特殊配方一级分类定义接口 */
+interface SpecialGroupDef {
+  groupKey: string
+  labelKey: string
+  snidRange?: SpecialNotebookId[]
+  match?: (id: number) => boolean
+  sortChildren?: (a: SpecialMenuTreeNode['children'][number], b: SpecialMenuTreeNode['children'][number]) => number
+}
+
+interface SpecialMenuTreeNode {
+  groupKey: string
+  groupLabel: string
+  children: {
+    menuId: `i_${number}`
+    menu: NotebookMenu
+    subLabel: string
+  }[]
+}
+
+/** 特殊配方一级分类定义 */
+const specialGroupDefs: SpecialGroupDef[] = [
+  {
+    groupKey: 'furnishing',
+    labelKey: 'recipe.notebookgroup.group_furnishing',
+    snidRange: [
+      SpecialNotebookId.furn_inout,
+      SpecialNotebookId.furn_outdoor,
+      SpecialNotebookId.furn_furnishing,
+      SpecialNotebookId.furn_tableOrFloor,
+      SpecialNotebookId.furn_tableTop,
+      SpecialNotebookId.furn_wall,
+    ],
+  },
+  {
+    groupKey: 'collectables',
+    labelKey: 'recipe.notebookgroup.collectable',
+    match: (id: number) => (id >= 1050 && id < 2000) || id === SpecialNotebookId.collectables,
+    sortChildren: (a, b) => b.menu.id - a.menu.id, // 按制作等级从高到低排序 (91-100, 81-90, 71-80, 61-70, 50-60，预留 101-110 等)
+  },
+  {
+    groupKey: 'jobQuest',
+    labelKey: 'recipe.notebookgroup.group_jobQuest',
+    snidRange: [
+      SpecialNotebookId.jobQuest_wachumeqimeqi,
+      SpecialNotebookId.jobQuest_studium,
+      SpecialNotebookId.jobQuest_crystarium,
+    ],
+  },
+  {
+    groupKey: 'sideQuest',
+    labelKey: 'recipe.notebookgroup.group_sideQuest',
+    snidRange: [
+      SpecialNotebookId.sideQuest_skysteel,
+      SpecialNotebookId.sideQuest_splendorous,
+      SpecialNotebookId.sideQuest_ishgardRestoration,
+      SpecialNotebookId.sideQuest_other,
+    ],
+  },
+  {
+    groupKey: 'other',
+    labelKey: 'recipe.notebookgroup.other',
+    snidRange: [SpecialNotebookId.other],
+  },
+]
+
+/**
+ * 获取收藏品配方的等级区间
+ * @param clv 配方制作等级
+ * @returns minLv, maxLv, name ('91-100', '50-60' 等)
+ */
+const getCollectableLevelRange = (clv: number) => {
+  const maxLv = Math.max(60, Math.ceil(clv / 10) * 10)
+  const minLv = maxLv === 60 ? 50 : maxLv - 9
+  return {
+    minLv,
+    maxLv,
+    name: `${minLv}-${maxLv}`,
+  }
+}
+
 const notebookGroups = computed(() => {
   const groups: Record<number, NotebookGroup> = {}
   Object.values(XivUnpackedRecipes).forEach(recipe => {
@@ -110,43 +228,7 @@ const notebookGroups = computed(() => {
     }
     const group = groups[job]
 
-    /** Special Notebook Id Enum */
-    enum snid {
-      /** 房屋：内外装潢 */
-      furn_inout = 1,
-      /** 房屋：庭具 */
-      furn_outdoor,
-      /** 房屋：家具 */
-      furn_furnishing,
-      /** 房屋：桌台&地毯 */
-      furn_tableOrFloor,
-      /** 房屋：桌上 */
-      furn_tableTop,
-      /** 房屋：壁挂 */
-      furn_wall,
-
-      /** 收藏品交易 */
-      collectables = 10,
-
-      /** 职业任务：珠串万货街交易 */
-      jobQuest_wachumeqimeqi = 20,
-      /** 职业任务：魔法大学交易 */
-      jobQuest_studium,
-      /** 职业任务：中庸工艺馆交易 */
-      jobQuest_crystarium,
-
-      /** 支线任务：天钢工具 */
-      sideQuest_skysteel = 30,
-      /** 支线任务：莫雯卓越工具 */
-      sideQuest_splendorous,
-      /** 支线任务：重建伊修加德 */
-      sideQuest_ishgardRestoration,
-      /** 支线任务：其他 */
-      sideQuest_other,
-
-      /** 其他（染剂、头花） */
-      other = 99,
-    }
+    const snid = SpecialNotebookId
 
     // * 秘籍
     if (recipe.srb) {
@@ -240,8 +322,13 @@ const notebookGroups = computed(() => {
       group.menus.special[`i_${id}`].contentGroups[0].items.push(item)
     } else if (item.collectable) {
       if (item.collectInfo || item.name_zh.startsWith('收藏用')) {
-        const id = snid.collectables
-        group.menus.special[`i_${id}`] ??= { id, name: t('recipe.notebookgroup.collectable'), contentGroups: {} }
+        const { name, maxLv } = getCollectableLevelRange(recipe.clv)
+        const id = 1000 + maxLv
+        group.menus.special[`i_${id}`] ??= {
+          id,
+          name: `${t('recipe.notebookgroup.collectable')}：${name}`,
+          contentGroups: {},
+        }
         group.menus.special[`i_${id}`].contentGroups[0] ??= { id: 0, items: [] }
         group.menus.special[`i_${id}`].contentGroups[0].items.push(item)
       } else if (item.name_zh.includes('重建用')) {
@@ -327,6 +414,71 @@ const notebookGroups = computed(() => {
 
 const currGroup = computed(() => notebookGroups.value[props.selectedJob])
 const currMenus = computed(() => currGroup.value?.menus?.[props.selectedMenu] ?? {})
+
+const specialMenuTree = computed<SpecialMenuTreeNode[]>(() => {
+  const menus = currMenus.value
+  if (props.selectedMenu !== 'special') return []
+
+  const tree: SpecialMenuTreeNode[] = []
+  const usedKeys = new Set<string>()
+
+  for (const def of specialGroupDefs) {
+    const children: SpecialMenuTreeNode['children'] = []
+    if (def.snidRange) {
+      for (const id of def.snidRange) {
+        const key = `i_${id}` as `i_${number}`
+        const menu = menus[key]
+        if (!menu) continue
+        usedKeys.add(key)
+        const subLabel = menu.name.replace(/^.+?[：:]\s*/, '') || menu.name
+        children.push({
+          menuId: key,
+          menu,
+          subLabel,
+        })
+      }
+    } else if (def.match) {
+      for (const [key, menu] of Object.entries(menus)) {
+        if (def.match(menu.id)) {
+          usedKeys.add(key)
+          const subLabel = menu.name.replace(/^.+?[：:]\s*/, '') || menu.name
+          children.push({
+            menuId: key as `i_${number}`,
+            menu,
+            subLabel,
+          })
+        }
+      }
+    }
+    if (def.sortChildren) {
+      children.sort(def.sortChildren)
+    }
+    if (children.length > 0) {
+      tree.push({
+        groupKey: def.groupKey,
+        groupLabel: t(def.labelKey),
+        children,
+      })
+    }
+  }
+
+  // 兜底：处理未匹配到任何预定义分组的特殊菜单项
+  for (const [key, menu] of Object.entries(menus)) {
+    if (!usedKeys.has(key)) {
+      tree.push({
+        groupKey: key,
+        groupLabel: menu.name,
+        children: [{
+          menuId: key as `i_${number}`,
+          menu,
+          subLabel: menu.name,
+        }],
+      })
+    }
+  }
+
+  return tree
+})
 const currContentGroups = computed(() => currMenus.value?.[props.selectedContentGroup]?.contentGroups ?? {})
 const currSelectedItem = computed(() => {
   const itemId = props.selectedItem
@@ -1437,17 +1589,75 @@ defineExpose({
               </div>
             </template>
             <template v-else>
-              <n-button
-                v-for="menu in Object.values(currMenus)"
-                :key="menu.id + menu.name"
-                size="small"
-                :tertiary="!isSearchMode && selectedContentGroup === `i_${menu.id}`"
-                :quaternary="isSearchMode || selectedContentGroup !== `i_${menu.id}`"
-                class="justify-start"
-                @click="handleContentGroupSelect(`i_${menu.id}`)"
-              >
-                {{ menu.name }}
-              </n-button>
+              <!-- 特殊配方：二级分类菜单展示 -->
+              <template v-if="selectedMenu === 'special' && specialMenuTree.length">
+                <div
+                  v-for="node in specialMenuTree"
+                  :key="node.groupKey"
+                  class="flex flex-col"
+                >
+                  <!-- 单子项分类：直接作为一级按钮展示 -->
+                  <template v-if="node.children.length === 1">
+                    <n-button
+                      size="small"
+                      :tertiary="!isSearchMode && selectedContentGroup === node.children[0].menuId"
+                      :quaternary="isSearchMode || selectedContentGroup !== node.children[0].menuId"
+                      class="justify-start truncate"
+                      @click="handleContentGroupSelect(node.children[0].menuId)"
+                    >
+                      <span class="truncate">{{ node.children[0].menu.name }}</span>
+                    </n-button>
+                  </template>
+
+                  <!-- 多子项分类：一级标题 + 带树枝线条的二级菜单 -->
+                  <template v-else>
+                    <div class="text-sub px-1 pt-0.5 select-none truncate">
+                      {{ node.groupLabel }}
+                    </div>
+                    <div
+                      v-for="(child, childIdx) in node.children"
+                      :key="child.menuId"
+                      class="relative pb-0.5"
+                    >
+                      <!-- 树枝线条：垂直线条 -->
+                      <div
+                        class="absolute left-2 top-0 border-l border-sub opacity-50"
+                        :class="childIdx === node.children.length - 1 ? 'h-3.5' : 'bottom-0'"
+                      />
+                      <!-- 树枝线条：水平线条 -->
+                      <div
+                        class="absolute left-2 top-3.5 w-2.5 border-t border-sub opacity-50"
+                      />
+                      <div class="pl-5">
+                        <n-button
+                          size="small"
+                          :tertiary="!isSearchMode && selectedContentGroup === child.menuId"
+                          :quaternary="isSearchMode || selectedContentGroup !== child.menuId"
+                          class="justify-start w-full truncate"
+                          @click="handleContentGroupSelect(child.menuId)"
+                        >
+                          <span class="truncate">{{ child.subLabel }}</span>
+                        </n-button>
+                      </div>
+                    </div>
+                  </template>
+                </div>
+              </template>
+
+              <!-- 普通/秘籍配方：扁平菜单展示 -->
+              <template v-else>
+                <n-button
+                  v-for="menu in Object.values(currMenus)"
+                  :key="menu.id + menu.name"
+                  size="small"
+                  :tertiary="!isSearchMode && selectedContentGroup === `i_${menu.id}`"
+                  :quaternary="isSearchMode || selectedContentGroup !== `i_${menu.id}`"
+                  class="justify-start truncate"
+                  @click="handleContentGroupSelect(`i_${menu.id}`)"
+                >
+                  <span class="truncate">{{ menu.name }}</span>
+                </n-button>
+              </template>
             </template>
           </div>
         </n-scrollbar>

@@ -2777,6 +2777,9 @@
     "recipe_requirement": "配方需求",
     "notebookgroup": {
       "other_master_recipes": "秘籍：其他",
+      "group_furnishing": "房屋",
+      "group_jobQuest": "职业任务",
+      "group_sideQuest": "支线任务",
       "furnishing": "房屋",
       "collectable": "收藏品交易",
       "other": "其他",

@@ -2500,8 +2500,33 @@
   "recipe": {
     "recipe_requirement": "製作素材",
     "notebookgroup": {
+      "other_master_recipes": "秘伝書:その他",
+      "group_furnishing": "ハウジング",
+      "group_jobQuest": "ジョブクエスト",
+      "group_sideQuest": "サブクエスト",
+      "furnishing": "ハウジング",
+      "collectable": "収集品納品",
+      "other": "その他",
+      "common": "通常レシピ",
+      "special": "特殊レシピ",
+      "master": "秘伝書",
       "custom_lists": "おすすめリスト",
-      "other_master_recipes": "秘伝書:その他"
+      "skybuilder": "イシュガルド復興",
+      "skysteel": "スカイスチールツール",
+      "splendorous": "モーエンツール",
+      "collectable_other": "未分類の収集品",
+      "furn_inout": "ハウジング：外装・内装",
+      "furn_outdoor": "ハウジング：庭具",
+      "furn_furnishing": "ハウジング：調度品",
+      "furn_tableOrFloor": "ハウジング：台座・敷物",
+      "furn_tableTop": "ハウジング：卓上",
+      "furn_wall": "ハウジング：壁掛",
+      "jobQuest_wachumeqimeqi": "ジョブクエスト：ワチュメキメキ万貨街",
+      "jobQuest_studium": "ジョブクエスト：魔法大学取引",
+      "jobQuest_crystarium": "ジョブクエスト：ミーン工芸館取引",
+      "sideQuest_skysteel": "サブクエスト：スカイスチールツール",
+      "sideQuest_other": "サブクエスト：その他",
+      "sideQuest_ishgardRestoration": "サブクエスト：イシュガルド復興"
     }
   },
   "recomm_process": {

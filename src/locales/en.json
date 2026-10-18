@@ -2500,8 +2500,33 @@
   "recipe": {
     "recipe_requirement": "Recipe Requirements",
     "notebookgroup": {
+      "other_master_recipes": "Other Master Recipes",
+      "group_furnishing": "Housing",
+      "group_jobQuest": "Job Quests",
+      "group_sideQuest": "Side Quests",
+      "furnishing": "Housing",
+      "collectable": "Collectables",
+      "other": "Others",
+      "common": "Level-based Recipes",
+      "special": "Special Recipes",
+      "master": "Master Recipes",
       "custom_lists": "Recommended Lists",
-      "other_master_recipes": "Other Master Recipes"
+      "skybuilder": "Ishgard Restoration",
+      "skysteel": "Skysteel Tools",
+      "splendorous": "Side Quests: Splendorous Tools",
+      "collectable_other": "Uncategorized Collectables",
+      "furn_inout": "Housing: Exterior / Interior",
+      "furn_outdoor": "Housing: Outdoor Furnishings",
+      "furn_furnishing": "Housing: Furnishings",
+      "furn_tableOrFloor": "Housing: Tables & Rugs",
+      "furn_tableTop": "Housing: Tabletop",
+      "furn_wall": "Housing: Wall-mounted",
+      "jobQuest_wachumeqimeqi": "Job Quests: Wachumeqimeqi Deliveries",
+      "jobQuest_studium": "Job Quests: Studium Deliveries",
+      "jobQuest_crystarium": "Job Quests: Crystarium Deliveries",
+      "sideQuest_skysteel": "Side Quests: Skysteel Tools",
+      "sideQuest_other": "Side Quests: Others",
+      "sideQuest_ishgardRestoration": "Side Quests: Ishgard Restoration"
     }
   },
   "recomm_process": {
