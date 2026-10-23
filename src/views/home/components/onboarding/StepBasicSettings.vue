@@ -10,6 +10,7 @@ import {
 } from '@vicons/material'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
 
 interface SettingOption {
   value: string
@@ -28,6 +29,7 @@ interface SettingItem {
 
 const store = useStore()
 const { t, setLocale } = useLocale()
+const { isMobile } = useResponsive()
 
 const handleUiLanguageChange = (val: 'zh' | 'en' | 'ja') => {
   store.userConfig.language_ui = val
@@ -87,9 +89,9 @@ const settingItems = computed<SettingItem[]>(() => [
 </script>
 
 <template>
-  <div class="w-full py-2 px-4">
-    <div class="step-header mb-5">
-      <h2 class="text-xl font-bold text-text mb-1">{{ t('onboarding.step_2.title') }}</h2>
+  <div class="w-full py-1 md:py-2 px-1 md:px-4">
+    <div class="step-header mb-3 md:mb-5">
+      <h2 class="text-app-xl font-bold text-text mb-1">{{ t('onboarding.step_2.title') }}</h2>
       <p class="text-app-xs text-sub">{{ t('onboarding.step_2.desc') }}</p>
     </div>
 
@@ -97,15 +99,17 @@ const settingItems = computed<SettingItem[]>(() => [
       <div
         v-for="item in settingItems"
         :key="item.id"
-        class="p-3.5"
+        class="p-2 md:p-3.5"
       >
-        <div class="flex items-center gap-1 mb-2.5">
+        <div class="flex items-center gap-1 mb-1.5 md:mb-2.5">
           <n-icon :component="item.icon" class="text-primary" />
           <div class="font-bold text-text">{{ item.label }}</div>
         </div>
         <n-radio-group
           :value="item.value"
           :name="item.id"
+          :size="isMobile ? 'small' : 'medium'"
+          class="onboarding-radio-group max-w-full"
           @update:value="item.onChange"
         >
           <n-radio-button
@@ -126,3 +130,12 @@ const settingItems = computed<SettingItem[]>(() => [
     </div>
   </div>
 </template>
+
+<style scoped>
+@media screen and (max-width: 767px) {
+  .onboarding-radio-group :deep(.n-radio-button) {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+</style>

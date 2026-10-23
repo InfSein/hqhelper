@@ -43,14 +43,14 @@ const getTradeCost = (itemInfo: ItemInfo, amount: number) => {
 </script>
 
 <template>
-  <div v-if="showItemDetails" class="flex gap-1.25 leading-[1.2]">
-    <div class="flex items-center">
+  <div v-if="showItemDetails" class="flex gap-1.25 leading-[1.2] min-w-0 max-w-full">
+    <div class="flex items-center shrink-0">
       <XivFARImage
         :size="26"
         :src="itemInfo"
       />
     </div>
-    <div>
+    <div class="min-w-0 flex-1">
       <div>
         <ItemSpan hide-icon :hide-pop-icon="hidePopIcon" :item-info="itemInfo" :span-max-width="itemSpanMaxWidth" :container-id="containerId" />
       </div>

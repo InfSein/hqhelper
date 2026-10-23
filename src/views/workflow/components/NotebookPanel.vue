@@ -5,7 +5,6 @@ import {
   DeleteSweepRound,
   HistoryRound,
   InfoOutlined,
-  OpenInNewFilled,
   JoinLeftOutlined,
   PlaylistAddOutlined,
   SearchRound,
@@ -17,11 +16,8 @@ import {
 } from '@vicons/material'
 import type { ScrollbarInst, SelectOption } from 'naive-ui'
 import ItemCell from '@/components/item/ItemCell.vue'
-import ItemSpan from '@/components/item/ItemSpan.vue'
 import XivFARImage from '@/components/ui/XivFARImage.vue'
-import TooltipButton from '@/components/ui/TooltipButton.vue'
-import ItemInfoHeader from '@/components/item/ItemInfoHeader.vue'
-import ItemRecipeTree from '@/components/item/ItemRecipeTree.vue'
+import NotebookRecipeDetail from './NotebookRecipeDetail.vue'
 import useConfig from '@/composables/useConfig'
 import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
@@ -499,9 +495,13 @@ const onNotebookMenuSwitched = () => {
 }
 watch(() => props.selectedMenu, onNotebookMenuSwitched)
 
-const simulateCraftCurrSelectedItem = () => {
-  if (!currSelectedItem.value?.craftInfo?.recipeId) return
-  window.open(`https://tnze.yyyy.games/#/recipe?recipeId=${currSelectedItem.value.craftInfo.recipeId}`)
+const showMobileRecipeDrawer = ref(false)
+const handleItemClick = (itemId: number) => {
+  emit('update:selectedItem', itemId)
+  // 移动端点击配方项（非长按呼出右键菜单时）打开底部详情抽屉
+  if (isMobile.value && !notebookDropdownShow.value) {
+    showMobileRecipeDrawer.value = true
+  }
 }
 // #endregion
 
@@ -850,6 +850,7 @@ const searchByMaterial = (itemOrId: ItemInfo | number) => {
   isSearchMode.value = true
   isCustomListMode.value = false
   isStarredMode.value = false
+  showMobileRecipeDrawer.value = false
 
   NAIVE_UI_MESSAGE.success(t('workflow.notebook_search.success_count', { count: totalCount }))
   scrollToTop()
@@ -1227,12 +1228,19 @@ const {
   handleContextMenu: _notebookHandleContextMenu,
   handleSelect: notebookHandleSelect,
   onClickOutside: notebookOnClickOutside,
+  handleTouchStart: _notebookHandleTouchStart,
+  handleTouchMove: notebookHandleTouchMove,
+  handleTouchEnd: notebookHandleTouchEnd,
 } = useItemContextMenu(
   () => activeContextItem.value ?? ({} as ItemInfo),
 )
 const handleNotebookItemContextMenu = (e: MouseEvent, item: ItemInfo) => {
   activeContextItem.value = item
   _notebookHandleContextMenu(e)
+}
+const handleNotebookItemTouchStart = (e: TouchEvent, item: ItemInfo) => {
+  activeContextItem.value = item
+  _notebookHandleTouchStart(e)
 }
 // #endregion
 
@@ -1341,7 +1349,7 @@ defineExpose({
       <span class="card-title__text">{{ t('recipe.notebook') }}</span>
     </template>
     <div class="flex flex-wrap items-center justify-between gap-2">
-      <div class="flex flex-wrap items-center gap-1.5">
+      <div class="flex flex-wrap items-center gap-1 md:gap-1.5">
         <n-tooltip
           v-for="job in Object.keys(notebookGroups)"
           :key="job"
@@ -1350,13 +1358,13 @@ defineExpose({
         >
           <template #trigger>
             <n-button
-              class="p-px w-9! h-9!"
+              class="p-px w-8.5! h-8.5! md:w-9! md:h-9!"
               :type="!isSearchMode && !isCustomListMode && !isStarredMode && selectedJob === Number(job) ? 'primary' : 'default'"
               @click="handleJobSelect(Number(job))"
             >
               <XivFARImage
                 :src="XivJobs[Number(job)].job_icon_url"
-                :size="32"
+                :size="isMobile ? 30 : 32"
               />
             </n-button>
           </template>
@@ -1365,13 +1373,13 @@ defineExpose({
         <n-tooltip placement="top" :trigger="isMobile ? 'manual' : 'hover'">
           <template #trigger>
             <n-button
-              class="p-px w-9! h-9!"
+              class="p-px w-8.5! h-8.5! md:w-9! md:h-9!"
               :type="!isSearchMode && isCustomListMode ? 'primary' : 'default'"
               @click="handleEnterCustomListMode"
             >
               <XivFARImage
                 src="./ui/mog.png"
-                :size="32"
+                :size="isMobile ? 30 : 32"
               />
             </n-button>
           </template>
@@ -1380,13 +1388,13 @@ defineExpose({
         <n-tooltip placement="top" :trigger="isMobile ? 'manual' : 'hover'">
           <template #trigger>
             <n-button
-              class="p-px w-9! h-9!"
+              class="p-px w-8.5! h-8.5! md:w-9! md:h-9!"
               :type="!isSearchMode && isStarredMode ? 'primary' : 'default'"
               @click="handleEnterStarredMode"
             >
               <XivFARImage
                 src="./ui/star.png"
-                :size="32"
+                :size="isMobile ? 30 : 32"
               />
             </n-button>
           </template>
@@ -1498,17 +1506,17 @@ defineExpose({
     </div>
     <n-divider class="my-2!" />
     <div class="w-full flex">
-      <div class="w-48 flex flex-col pr-2" :style="{ height: menuHeight, borderRight: '1px solid var(--color-border)' }">
+      <div class="w-27 md:w-48 flex flex-col pr-1.5 md:pr-2 shrink-0" :style="{ height: menuHeight, borderRight: '1px solid var(--color-border)' }">
         <n-tabs
           :value="selectedMenu"
           :disabled="isCustomListMode || isStarredMode"
           type="segment" animated
-          class="mb-2 transition-opacity"
+          class="notebook-menu-tabs mb-2 transition-opacity"
           :class="isCustomListMode || isStarredMode ? 'opacity-40' : ''"
           @update:value="handleMenuTabUpdate"
         >
           <n-tab name="common">
-            <n-tooltip placement="top">
+            <n-tooltip placement="top" :trigger="isMobile ? 'manual' : 'hover'">
               <template #trigger>
                 <n-icon
                   :size="18"
@@ -1521,7 +1529,7 @@ defineExpose({
             </n-tooltip>
           </n-tab>
           <n-tab name="special">
-            <n-tooltip placement="top">
+            <n-tooltip placement="top" :trigger="isMobile ? 'manual' : 'hover'">
               <template #trigger>
                 <n-icon
                   :size="18"
@@ -1534,7 +1542,7 @@ defineExpose({
             </n-tooltip>
           </n-tab>
           <n-tab name="master">
-            <n-tooltip placement="top">
+            <n-tooltip placement="top" :trigger="isMobile ? 'manual' : 'hover'">
               <template #trigger>
                 <n-icon
                   :size="18"
@@ -1626,9 +1634,9 @@ defineExpose({
                       />
                       <!-- 树枝线条：水平线条 -->
                       <div
-                        class="absolute left-2 top-3.5 w-2.5 border-t border-sub opacity-50"
+                        class="absolute left-2 top-3.5 w-1.5 md:w-2.5 border-t border-sub opacity-50"
                       />
-                      <div class="pl-5">
+                      <div class="pl-3.5 md:pl-5">
                         <n-button
                           size="small"
                           :tertiary="!isSearchMode && selectedContentGroup === child.menuId"
@@ -1662,10 +1670,10 @@ defineExpose({
           </div>
         </n-scrollbar>
       </div>
-      <div class="flex-1 pl-2 flex" :style="{ height: menuHeight }">
+      <div class="flex-1 pl-1.5 md:pl-2 flex min-w-0" :style="{ height: menuHeight }">
         <div class="flex-1 flex flex-col h-full min-w-0">
-          <div class="flex items-center gap-2 justify-between mb-2 pr-3 shrink-0">
-            <div class="w-80 flex items-center gap-1">
+          <div class="flex items-center gap-1.5 md:gap-2 justify-between mb-2 pr-0 md:pr-3 shrink-0">
+            <div class="flex-1 min-w-0 md:w-80 md:flex-none flex items-center gap-1">
               <n-select
                 v-model:value="selectedUiType"
                 size="small"
@@ -1675,6 +1683,7 @@ defineExpose({
                 class="flex-1 min-w-0"
               />
               <n-button
+                v-if="!isMobile"
                 size="small"
                 class="n-square-button shrink-0"
                 :disabled="filterOptions.length <= 1"
@@ -1686,6 +1695,7 @@ defineExpose({
                 </template>
               </n-button>
               <n-button
+                v-if="!isMobile"
                 size="small"
                 class="n-square-button shrink-0"
                 :disabled="filterOptions.length <= 1"
@@ -1767,64 +1777,67 @@ defineExpose({
               <div
                 v-for="group in filteredNotebookGroups"
                 :key="group.key"
-                class="flex flex-col gap-1 pr-3 mb-2"
+                class="flex flex-col gap-1 pr-0 md:pr-3 mb-2"
               >
-              <div v-if="group.label" class="sticky top-0 z-10 w-full rounded px-1 bg-border">
-                <i class="xiv e032"></i>
-                {{ group.label }}
+                <div v-if="group.label" class="sticky top-0 z-10 w-full rounded px-1 bg-border truncate">
+                  <i class="xiv e032"></i>
+                  {{ group.label }}
+                </div>
+                <div
+                  v-for="entry in group.items"
+                  :key="entry.item.id"
+                  :data-item-id="entry.item.id"
+                  class="flex gap-1"
+                >
+                  <n-button
+                    :type="selectedItem === entry.item.id ? 'primary' : 'default'"
+                    class="item-list-btn flex-1 justify-start px-1.5! md:px-2! py-1! h-auto! min-w-0 overflow-hidden"
+                    @click="handleItemClick(entry.item.id)"
+                    @contextmenu="handleNotebookItemContextMenu($event, entry.item)"
+                    @touchstart.passive="handleNotebookItemTouchStart($event, entry.item)"
+                    @touchmove.passive="notebookHandleTouchMove"
+                    @touchend.passive="notebookHandleTouchEnd"
+                  >
+                    <ItemCell
+                      :item-info="entry.item"
+                      :amount="entry.amount"
+                      show-item-details
+                    />
+                  </n-button>
+                  <n-button
+                    v-if="store.userConfig.notebook_action_buttons?.includes('reverse_lookup')"
+                    class="w-7! md:w-10! h-auto! px-0.5! md:px-1! shrink-0"
+                    :title="t('item.text.reverse_recipe_lookup')"
+                    @click.stop="searchByMaterial(entry.item)"
+                  >
+                    <template #icon>
+                      <n-icon :size="isMobile ? 16 : 20"><SearchRound /></n-icon>
+                    </template>
+                  </n-button>
+                  <n-button
+                    v-if="store.userConfig.notebook_action_buttons?.includes('star_recipe')"
+                    class="w-7! md:w-10! h-auto! px-0.5! md:px-1! shrink-0"
+                    :type="isRecipeStarred(entry.item.id) ? 'warning' : 'default'"
+                    :ghost="true"
+                    :title="isRecipeStarred(entry.item.id) ? t('workflow.notebook_starred.unstar_recipe') : t('workflow.notebook_starred.star_recipe')"
+                    @click.stop="toggleStarRecipe(entry.item.id)"
+                  >
+                    <n-icon :size="isMobile ? 16 : 20" :color="isRecipeStarred(entry.item.id) ? '#F6CA45' : undefined">
+                      <StarRound v-if="isRecipeStarred(entry.item.id)" />
+                      <StarBorderRound v-else />
+                    </n-icon>
+                  </n-button>
+                  <n-button
+                    type="info"
+                    :ghost="selectedItem !== entry.item.id"
+                    class="w-7! md:w-10! h-auto! px-0.5! md:px-1! shrink-0"
+                    :title="t('workflow.text.add_item_to_curr_workflow.tip_1') + '\r\n' + t('workflow.text.add_item_to_curr_workflow.tip_2')"
+                    @click="emit('add-item', entry.item.id)"
+                  >
+                    <n-icon :size="isMobile ? 16 : 20"><PlaylistAddOutlined /></n-icon>
+                  </n-button>
+                </div>
               </div>
-              <div
-                v-for="entry in group.items"
-                :key="entry.item.id"
-                :data-item-id="entry.item.id"
-                class="flex gap-1"
-              >
-                <n-button
-                  :type="selectedItem === entry.item.id ? 'primary' : 'default'"
-                  class="flex-1 justify-start px-2! py-1! h-auto! min-w-0"
-                  @click="emit('update:selectedItem', entry.item.id)"
-                  @contextmenu="handleNotebookItemContextMenu($event, entry.item)"
-                >
-                  <ItemCell
-                    :item-info="entry.item"
-                    :amount="entry.amount"
-                    show-item-details
-                  />
-                </n-button>
-                <n-button
-                  v-if="store.userConfig.notebook_action_buttons?.includes('reverse_lookup')"
-                  class="w-10! h-auto! px-1! shrink-0"
-                  :title="t('item.text.reverse_recipe_lookup')"
-                  @click.stop="searchByMaterial(entry.item)"
-                >
-                  <template #icon>
-                    <n-icon :size="20"><SearchRound /></n-icon>
-                  </template>
-                </n-button>
-                <n-button
-                  v-if="store.userConfig.notebook_action_buttons?.includes('star_recipe')"
-                  class="w-10! h-auto! px-1! shrink-0"
-                  :type="isRecipeStarred(entry.item.id) ? 'warning' : 'default'"
-                  :ghost="true"
-                  :title="isRecipeStarred(entry.item.id) ? t('workflow.notebook_starred.unstar_recipe') : t('workflow.notebook_starred.star_recipe')"
-                  @click.stop="toggleStarRecipe(entry.item.id)"
-                >
-                  <n-icon :size="20" :color="isRecipeStarred(entry.item.id) ? '#F6CA45' : undefined">
-                    <StarRound v-if="isRecipeStarred(entry.item.id)" />
-                    <StarBorderRound v-else />
-                  </n-icon>
-                </n-button>
-                <n-button
-                  type="info"
-                  :ghost="selectedItem !== entry.item.id"
-                  class="w-10! h-auto! px-1! shrink-0"
-                  :title="t('workflow.text.add_item_to_curr_workflow.tip_1') + '\r\n' + t('workflow.text.add_item_to_curr_workflow.tip_2')"
-                  @click="emit('add-item', entry.item.id)"
-                >
-                  <n-icon :size="20"><PlaylistAddOutlined /></n-icon>
-                </n-button>
-              </div>
-            </div>
               <div
                 v-if="filteredNotebookGroups.length === 0"
                 class="h-full flex items-center justify-center py-8"
@@ -1846,102 +1859,39 @@ defineExpose({
           @select="notebookHandleSelect"
         />
         <div v-if="!isMobile" class="w-1/2 pl-2" style="border-left: 1px solid var(--color-border);">
-          <n-card
-            v-if="currSelectedItem"
-            size="small"
-            :bordered="false"
-            class="h-full"
-            content-class="h-full flex flex-col"
-          >
-            <div class="flex items-start justify-between gap-2">
-              <ItemInfoHeader show-pop :item-info="currSelectedItem" class="flex-1 mt-0!" />
-              <n-tooltip v-if="currSelectedItem?.craftInfo?.recipeId" placement="top">
-                <template #trigger>
-                  <n-button
-                    quaternary
-                    size="small"
-                    class="shrink-0 n-square-button"
-                    @click="toggleStarRecipe(currSelectedItem.id)"
-                  >
-                    <template #icon>
-                      <n-icon :size="20" :color="isRecipeStarred(currSelectedItem.id) ? '#F6CA45' : undefined">
-                        <StarRound v-if="isRecipeStarred(currSelectedItem.id)" />
-                        <StarBorderRound v-else />
-                      </n-icon>
-                    </template>
-                  </n-button>
-                </template>
-                {{ isRecipeStarred(currSelectedItem.id) ? t('workflow.notebook_starred.unstar_recipe') : t('workflow.notebook_starred.star_recipe') }}
-              </n-tooltip>
-            </div>
-            <div class="h-1" />
-            <div class="flex flex-wrap items-center gap-x-2 text-app-xs">
-              <div class="flex-1">
-                {{ t('item.text.recipe_detail', {
-                  dur: currSelectedItem.craftInfo?.durability,
-                  pro: currSelectedItem.craftInfo?.progress,
-                  qua: currSelectedItem.craftInfo?.quality
-                }) }}
-              </div>
-              <div v-if="(currSelectedItem.craftInfo?.yields || 1) > 1" class="text-success">
-                {{ t('item.text.yields_info', currSelectedItem.craftInfo?.yields) }}
-              </div>
-              <div v-if="!currSelectedItem.craftInfo?.qsable" class="text-error">{{ t('item.text.cannot_quick_synthesis') }}</div>
-              <div v-if="!currSelectedItem.craftInfo?.hqable" class="text-error">{{ t('item.text.cannot_hq') }}</div>
-            </div>
-            <div class="flex flex-wrap items-center gap-x-4 text-app-xs">
-              <div v-if="currSelectedItem.craftInfo?.thresholds?.craftsmanship">
-                {{ t('recipe.text.craftsmanship_needs', [currSelectedItem.craftInfo?.thresholds?.craftsmanship]) }}
-              </div>
-              <div v-if="currSelectedItem.craftInfo?.thresholds?.control">
-                {{ t('recipe.text.control_needs', [currSelectedItem.craftInfo?.thresholds?.control]) }}
-              </div>
-            </div>
-            <div v-if="currSelectedItem.craftInfo?.masterRecipeId" class="flex items-center justify-end gap-0.5 text-app-xs">
-              {{ t('item.text.need_learn') }}
-              <ItemSpan span-max-width="180px" :img-size="12" :item-info="getItemInfo(currSelectedItem.craftInfo.masterRecipeId)" class="gap-0.5!" />
-            </div>
-            <n-divider class="my-1!" />
-            <div class="font-bold ml-1 pb-0.5">
-              {{ t('recipe.recipe_requirement') }}
-            </div>
-            <n-scrollbar class="ml-1 flex-1">
-              <ItemRecipeTree
-                :level="0"
-                :item="currSelectedItem"
-                :amount="1"
-                show-root-tree
-              />
-            </n-scrollbar>
-            <n-divider class="my-1!" />
-            <div class="flex justify-end gap-2">
-              <n-button @click="simulateCraftCurrSelectedItem">
-                <template #icon>
-                  <n-icon :size="18"><OpenInNewFilled /></n-icon>
-                </template>
-                {{ t('common.simulate_craft') }}
-              </n-button>
-              <TooltipButton
-                type="info"
-                :ghost="selectedItem !== currSelectedItem.id"
-                :tip="[t('workflow.text.add_item_to_curr_workflow.tip_1'), t('workflow.text.add_item_to_curr_workflow.tip_2')]"
-                @click="emit('add-item', currSelectedItem.id)"
-              >
-                <template #icon>
-                  <n-icon :size="18"><PlaylistAddOutlined /></n-icon>
-                </template>
-                {{ t('workflow.text.join_in_curr_workflow') }}
-              </TooltipButton>
-            </div>
-          </n-card>
-          <div v-else class="h-full flex items-center justify-center">
-            <n-empty>
-              {{ t('workflow.text.notebook_item_not_selected') }}
-            </n-empty>
-          </div>
+          <NotebookRecipeDetail
+            :item="currSelectedItem"
+            :selected-item="selectedItem"
+            :is-starred="currSelectedItem ? isRecipeStarred(currSelectedItem.id) : false"
+            @toggle-star="toggleStarRecipe"
+            @add-item="emit('add-item', $event)"
+          />
         </div>
       </div>
     </div>
+
+    <!-- 移动端配方详情抽屉 -->
+    <n-drawer
+      v-if="isMobile"
+      id="mobile-notebook-recipe-drawer"
+      v-model:show="showMobileRecipeDrawer"
+      placement="bottom"
+      height="72vh"
+      :auto-focus="false"
+    >
+      <n-drawer-content :body-content-style="{ padding: '8px 4px', height: '100%' }">
+        <NotebookRecipeDetail
+          :item="currSelectedItem"
+          :selected-item="selectedItem"
+          :is-starred="currSelectedItem ? isRecipeStarred(currSelectedItem.id) : false"
+          in-drawer
+          container-id="mobile-notebook-recipe-drawer"
+          @toggle-star="toggleStarRecipe"
+          @add-item="emit('add-item', $event)"
+          @close="showMobileRecipeDrawer = false"
+        />
+      </n-drawer-content>
+    </n-drawer>
 
     <!-- 移动端搜索历史抽屉 -->
     <n-drawer
@@ -2005,6 +1955,11 @@ defineExpose({
   --n-option-height: 28px !important;
   max-height: calc(var(--n-option-height) * 7.6);
 }
+.item-list-btn :deep(.n-button__content) {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+}
 .search-input-group {
   max-width: 458px;
 }
@@ -2012,6 +1967,9 @@ defineExpose({
   .search-input-group {
     width: 100%;
     max-width: 100%;
+  }
+  .notebook-menu-tabs :deep(.n-tabs-tab) {
+    padding: 3px 0 !important;
   }
 }
 </style>

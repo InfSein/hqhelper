@@ -22,7 +22,6 @@ import {
   FilePresentOutlined,
   HandshakeOutlined,
   HelpOutlineOutlined,
-  HomeOutlined,
   InfoFilled,
   InfoOutlined,
   LightModeTwotone,
@@ -33,7 +32,6 @@ import {
   TaskAltOutlined,
   UpdateOutlined,
   UpdateSharp,
-  WavesOutlined,
 } from '@vicons/material'
 import HqLogo from './HqLogo.vue'
 import AccountView from './AccountView.vue'
@@ -217,33 +215,6 @@ const menuData = computed(() => {
       icon: CasesRound,
       label: t('common.appfunc.useful_tools'),
       options: [
-        {
-          type: 'router',
-          icon: HomeOutlined,
-          label: t('common.back_to_index'),
-          description: '',
-          hide: !isMobile.value,
-          routerKey: '',
-          allowNewWindow: false,
-        },
-        {
-          type: 'router',
-          icon: WavesOutlined,
-          label: t('common.appfunc.workflow'),
-          description: t('appheader.menu.tooltip.workflow'),
-          hide: !isMobile.value,
-          routerKey: 'workflow',
-          allowNewWindow: false,
-        },
-        {
-          type: 'router',
-          icon: DashboardOutlined,
-          label: t('common.appfunc.hqwb'),
-          description: '...',
-          hide: !isMobile.value,
-          routerKey: 'hqwb',
-          allowNewWindow: false,
-        },
         {
           type: 'router',
           icon: AccessAlarmsOutlined,
@@ -907,6 +878,27 @@ const handleSwitchHomePage = (target: 'hqwb' | 'workflow') => {
           <AccountView />
           <n-divider style="margin: 12px 0 8px;" />
           <div class="drawer-main">
+            <n-button
+              :type="currentHomePage === 'workflow' ? 'primary' : 'default'"
+              :secondary="currentHomePage === 'workflow'"
+              @click="openModal(() => handleSwitchHomePage('workflow'))"
+            >
+              <template #icon>
+                <n-icon><CalculateOutlined /></n-icon>
+              </template>
+              {{ t('common.appfunc.workflow_calc') }}
+            </n-button>
+            <n-button
+              :type="currentHomePage === 'hqwb' ? 'primary' : 'default'"
+              :secondary="currentHomePage === 'hqwb'"
+              @click="openModal(() => handleSwitchHomePage('hqwb'))"
+            >
+              <template #icon>
+                <n-icon><DashboardOutlined /></n-icon>
+              </template>
+              {{ t('common.appfunc.hqwb') }}
+            </n-button>
+            <n-divider style="margin: 4px 0;" />
             <n-button
               v-for="(item, key) in mobileMenuData"
               :key="key"

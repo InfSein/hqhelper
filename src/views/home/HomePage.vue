@@ -3,14 +3,12 @@ import OnboardingWizard from './components/OnboardingWizard.vue'
 import MainPage from '@/views/main/HqWorkbenchPage.vue'
 import WorkflowPage from '@/views/workflow/WorkflowPage.vue'
 import { useStore } from '@/store'
-import { useResponsive } from '@/composables/useResponsive'
 import { useLocale } from '@/composables/useLocale'
 import { useAppModals } from '@/composables/useAppModals'
 import { decodeShareCode } from '@/tools/shareCode'
 import { getItemInfo } from '@/tools/item'
 
 const store = useStore()
-const { isMobile } = useResponsive()
 const { t } = useLocale()
 const route = useRoute()
 const router = useRouter()
@@ -22,10 +20,6 @@ const isOnboardingCompleted = computed(() => {
 })
 
 const activeComponent = computed(() => {
-  if (isMobile.value) {
-    // 移动端固定前往 HQ工作台
-    return MainPage
-  }
   if (store.userConfig.default_homepage === 'workflow') {
     return WorkflowPage
   }

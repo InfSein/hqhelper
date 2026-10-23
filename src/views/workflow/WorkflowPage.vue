@@ -139,7 +139,7 @@ const pageHeightVals = computed(() => {
   const contentHeight = pageHeight - headerHeight.value
   if (isMobile.value) {
     return {
-      notebookMenu: 'auto',
+      notebookMenu: '420px',
       itemSelectTable: 'auto',
       statisticsBlock: undefined,
       statementsBlock: 'auto',
@@ -241,6 +241,9 @@ const handleAddNotebookItem = (itemId: number) => {
   currentWorkflow.value.targetItems[itemId] ??= 0
   currentWorkflow.value.targetItems[itemId]++
   currentWorkflow.value.preparedItems.craftTarget[itemId] ??= 0
+  if (isMobile.value) {
+    NAIVE_UI_MESSAGE.success(t('workflow.join_in_workflow.message.join_succeed'))
+  }
 }
 
 provide(addToCurrentWorkflowKey, (itemId: number) => {
@@ -385,7 +388,12 @@ const setInventoryByStatementPrepared = () => {
 
 <template>
   <div id="main-container" class="wrapper">
-    <n-card embedded :bordered="false" class="header-block">
+    <n-card
+      embedded
+      :bordered="false"
+      class="header-block"
+      :class="store.userConfig.custom_background ? 'glasscard' : ''"
+    >
       <div class="block" ref="headerBlock">
         <div class="action">
           <p><i class="xiv sync-invert"></i> {{ t('workflow.text.switch_workflows') }}</p>
@@ -517,7 +525,7 @@ const setInventoryByStatementPrepared = () => {
             </a>
             <a
               v-show="store.funcConfig.inventory_workflow_enable_sync_reverse && showStatementSyncButtons"
-              class="card-title-extra"
+              class="card-title__extra"
               href="javascript:void(0);"
               style="cursor: pointer;"
               :title="t('workflow.tooltip.set_inventory_by_prepared')"

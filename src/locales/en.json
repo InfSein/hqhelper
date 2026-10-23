@@ -2006,7 +2006,7 @@
     },
     "step_3": {
       "desc": "In HqHelper, item buttons and spans provide powerful interactions:",
-      "feature_hover_desc": "Hover over any item to preview its crafting recipe, material sources, stats, and market prices.",
+      "feature_hover_desc": "Hover over any item (or tap the item/info icon on mobile) to preview its crafting recipe, material sources, stats, and market prices.",
       "feature_hover_title": "Hover for Details",
       "feature_menu_desc": "Right-click any item (or long-press on mobile) to open the context menu: copy name, copy /isearch macro, add to workflow, and more.",
       "feature_menu_title": "Right-Click Context Menu",
@@ -2015,7 +2015,7 @@
       "title": "Interactive Features"
     },
     "step_4": {
-      "desc": "You can always switch between modes anytime using the top-left menu on desktop:",
+      "desc": "You can always switch between modes anytime using the top-left menu on desktop or the right menu on mobile:",
       "hqwb_desc": "Quick gear calculator by patch. Select combat/crafter/gatherer gear sets and instantly summarize materials and tomestones.",
       "hqwb_title": "HQ Workbench",
       "name": "Homepage",

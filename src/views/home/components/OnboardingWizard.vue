@@ -10,6 +10,7 @@ import StepFeatureShowcase from './onboarding/StepFeatureShowcase.vue'
 import StepHomepageChoice from './onboarding/StepHomepageChoice.vue'
 import { useStore } from '@/store'
 import { useLocale } from '@/composables/useLocale'
+import { useResponsive } from '@/composables/useResponsive'
 
 const emit = defineEmits<{
   (e: 'complete'): void
@@ -17,6 +18,7 @@ const emit = defineEmits<{
 
 const store = useStore()
 const { t } = useLocale()
+const { isMobile } = useResponsive()
 
 const currentStep = ref(1)
 const totalSteps = 4
@@ -45,15 +47,16 @@ const handleFinish = () => {
 </script>
 
 <template>
-  <div class="min-h-[80vh] flex items-center justify-center pt-6 md:pt-10 pb-12 px-3">
+  <div class="min-h-[70vh] md:min-h-[80vh] flex items-center justify-center pt-2 md:pt-10 pb-6 md:pb-12 px-1 md:px-3">
     <n-card
       embedded
       :bordered="false"
+      :size="isMobile ? 'small' : 'medium'"
       class="max-w-240 w-[98%] rounded overflow-hidden"
       :class="store.userConfig.custom_background ? 'glasscard' : ''"
     >
       <!-- Stepper Header (Steps 2..4) -->
-      <div class="mb-6 px-2" :class="currentStep > 1 ? '' : 'opacity-0'">
+      <div class="mb-3 md:mb-6 px-0 md:px-2 onboarding-steps" :class="currentStep > 1 ? '' : 'hidden md:block md:opacity-0 pointer-events-none'">
         <n-steps :current="currentStep - 1" :status="'process'" size="small">
           <n-step :title="t('onboarding.step_2.name')" />
           <n-step :title="t('onboarding.step_3.name')" />
@@ -61,7 +64,7 @@ const handleFinish = () => {
         </n-steps>
       </div>
 
-      <div class="min-h-95 max-h-[50vh] flex items-center justify-center">
+      <div class="w-full md:min-h-95 md:max-h-[50vh] flex items-center justify-center">
         <Transition name="step-fade" mode="out-in">
           <StepWelcome
             v-if="currentStep === 1"
@@ -86,7 +89,7 @@ const handleFinish = () => {
 
       <!-- Action Footer (Steps 2..4) -->
       <template #action>
-        <div class="flex items-center justify-between" :class="currentStep > 1 ? '' : 'opacity-0'">
+        <div class="flex items-center justify-between" :class="currentStep > 1 ? '' : 'hidden md:flex md:opacity-0 pointer-events-none'">
           <n-button quaternary @click="handlePrev">
             <template #icon>
               <n-icon><ArrowBackOutlined /></n-icon>
@@ -135,5 +138,13 @@ const handleFinish = () => {
 .step-fade-leave-to {
   opacity: 0;
   transform: translateY(-6px);
+}
+@media screen and (max-width: 767px) {
+  .onboarding-steps :deep(.n-step-indicator) {
+    margin-right: 4px;
+  }
+  .onboarding-steps :deep(.n-step-content-header) {
+    font-size: var(--app-font-size-xs);
+  }
 }
 </style>

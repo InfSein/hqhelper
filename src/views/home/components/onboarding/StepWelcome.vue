@@ -11,16 +11,16 @@ const { t } = useLocale()
 </script>
 
 <template>
-  <div class="text-center py-4 flex flex-col items-center justify-center">
-    <div class="logo-wrapper mb-5">
+  <div class="text-center py-2 md:py-4 px-2 flex flex-col items-center justify-center">
+    <div class="logo-wrapper mb-4 md:mb-5">
       <AppLogoPlate />
     </div>
-    <h1 class="text-2xl font-bold text-text">{{ t('onboarding.welcome.title') }}</h1>
-    <p class="text-app-base text-primary font-medium mb-4">{{ t('onboarding.welcome.subtitle') }}</p>
+    <h1 class="text-[22px] md:text-[24px] font-bold text-text">{{ t('onboarding.welcome.title') }}</h1>
+    <p class="text-app-base text-primary font-medium mb-3 md:mb-4">{{ t('onboarding.welcome.subtitle') }}</p>
     <p class="text-app-sm text-sub max-w-125 leading-relaxed">
       {{ t('onboarding.welcome.desc_1') }}
     </p>
-    <p class="text-app-sm text-sub max-w-125 mb-8 leading-relaxed">
+    <p class="text-app-sm text-sub max-w-125 mb-6 md:mb-8 leading-relaxed">
       {{ t('onboarding.welcome.desc_2') }}
     </p>
 

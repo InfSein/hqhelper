@@ -36,23 +36,23 @@ const choices = computed<HomepageChoice[]>(() => [
 </script>
 
 <template>
-  <div class="w-full py-2 px-4">
-    <div class="step-header mb-5">
-      <h2 class="text-xl font-bold text-text mb-1">{{ t('onboarding.step_4.title') }}</h2>
+  <div class="w-full py-1 md:py-2 px-1 md:px-4">
+    <div class="step-header mb-3 md:mb-5">
+      <h2 class="text-app-xl font-bold text-text mb-1">{{ t('onboarding.step_4.title') }}</h2>
       <p class="text-app-xs text-sub">{{ t('onboarding.step_4.desc') }}</p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 md:gap-4 mb-1 md:mb-2">
       <div
         v-for="choice in choices"
         :key="choice.key"
-        class="choice-card p-4.5 rounded border transition-all cursor-pointer flex flex-col gap-2.5 select-none"
+        class="choice-card p-3.5 md:p-4.5 rounded border transition-all cursor-pointer flex flex-col gap-1.5 md:gap-2.5 select-none"
         :class="selectedHomepage === choice.key ? 'border-primary bg-primary/5 shadow-sm' : 'border-border bg-bg hover:border-primary/50 hover:bg-bg-hover/40'"
         @click="selectedHomepage = choice.key"
       >
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2.5">
-            <div class="p-2.5 rounded bg-primary/10 text-primary flex items-center justify-center">
+            <div class="p-2 md:p-2.5 rounded bg-primary/10 text-primary flex items-center justify-center">
               <n-icon :component="choice.icon" size="22" />
             </div>
             <span class="font-bold text-text text-app-base">{{ choice.title }}</span>
@@ -63,7 +63,7 @@ const choices = computed<HomepageChoice[]>(() => [
             :class="selectedHomepage === choice.key ? 'text-primary' : 'text-sub'"
           />
         </div>
-        <p class="text-app-xs text-sub leading-relaxed mt-1">
+        <p class="text-app-xs text-sub leading-relaxed mt-0.5 md:mt-1">
           {{ choice.desc }}
         </p>
       </div>

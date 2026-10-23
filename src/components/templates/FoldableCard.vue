@@ -36,7 +36,7 @@ const emit = defineEmits([
 ])
 
 const ui_fold_cache = store.userConfig.cache_ui_fold ?? {}
-const foldOnDefault : boolean = !store.userConfig.disable_workstate_cache && (ui_fold_cache[props.cardKey] ?? false)
+const foldOnDefault : boolean = !props.unfoldable && !store.userConfig.disable_workstate_cache && (ui_fold_cache[props.cardKey] ?? false)
 
 const folded = ref(foldOnDefault)
 const folderIcon = shallowRef(KeyboardArrowUpRound)
@@ -82,6 +82,14 @@ const updateUi = () => {
 }
 updateUi()
 emit('onCardFoldStatusChanged', folded.value)
+
+watch(() => props.unfoldable, (val) => {
+  if (val && folded.value) {
+    folded.value = false
+    updateUi()
+    emit('onCardFoldStatusChanged', folded.value)
+  }
+})
 
 const updateCache = () => {
   const _ui_fold_cache = store.userConfig.cache_ui_fold ?? {} // refresh to avoid mutation
