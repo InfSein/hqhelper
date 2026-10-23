@@ -1,17 +1,18 @@
 <script setup lang="ts">
-import { 
-  ArchiveSharp, UnarchiveSharp,
-  ContentCopyRound, FileDownloadOutlined
+import {
+  ArchiveSharp,
+  ContentCopyRound,
+  FileDownloadOutlined,
+  UnarchiveSharp,
 } from '@vicons/material'
+import { useLocale } from '@/composables/useLocale'
 import { CopyToClipboard, deepCopy } from '@/tools'
 import { exportPreferences, importPreferences } from '@/tools/preferences'
-import { type UserConfigModel, fixUserConfig } from '@/models/config-user'
-import { fixFuncConfig, type FuncConfigModel } from '@/models/config-func'
+import { fixFuncConfig, type FuncConfigModel } from '@/types/config/func'
+import { fixUserConfig, type UserConfigModel } from '@/types/config/user'
 
+const { t } = useLocale()
 const NAIVE_UI_MESSAGE = useMessage()
-
-const t = inject<(message: string, args?: any) => string>('t')!
-// const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
 
 const showModal = defineModel<boolean>('show', { required: true })
 const userConfigModel = defineModel<UserConfigModel>('userConfig', { required: true })
@@ -61,8 +62,8 @@ const handleImport = () => {
     const oldu = deepCopy(userConfigModel.value)
     const oldf = deepCopy(funcConfigModel.value)
     // 处理一些导入不会有的缓存，这些仍旧使用旧设置
-    u.cache_work_state = oldu.cache_work_state
-    u.fthelper_cache_work_state = oldu.fthelper_cache_work_state
+    u.hqwb_cache_work_state = oldu.hqwb_cache_work_state
+    u.mmhelper_cache_work_state = oldu.mmhelper_cache_work_state
     u.gatherclock_cache_work_state = oldu.gatherclock_cache_work_state
     if (f.universalis_server === oldf.universalis_server) {
       f.cache_item_prices = oldf.cache_item_prices
@@ -110,7 +111,7 @@ const handleImport = () => {
     </div>
 
     <template #action>
-      <div class="modal-submit-container">
+      <div class="app-modal-footer">
         <n-button v-if="action === 'export'" type="primary" @click="handleCopy">
           <template #icon>
             <n-icon><ContentCopyRound /></n-icon>
