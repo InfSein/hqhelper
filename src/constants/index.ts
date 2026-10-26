@@ -11,6 +11,7 @@ export const otherSocialInfo = {
   weiboUrl: 'https://weibo.com/u/7870808507',
   twitterUrl: 'https://twitter.com/FF14_HqHelper',
   qqQueryUrl: 'https://docs.qq.com/form/page/DY3RGRERjVnJobXVY',
+  qqQueryUrlBeta: 'https://docs.qq.com/form/page/DY3B4SnZvcm9DcEt2',
 }
 
-export * from './vue-injects'
+export * from './vue-injects'

@@ -61,12 +61,13 @@ const announcements = computed((): Announcement[] => {
         t('announcement.a_1.content.content_2'),
         t('announcement.a_1.content.content_3'),
         t('announcement.a_1.content.content_4'),
+        '内测群：1063205108'
       ],
       actions: [
         // { label: t('announcement.action.follow_us'), onClick: () => visitUrl('https://weibo.com/u/7870808507') },
-        { label: t('announcement.action.join_q_group'), onClick: () => visitUrl(qGroupInfo.groupUrl) },
-        { label: t('announcement.action.feedback_github'), onClick: () => visitUrl(githubInfo.newIssueUrl) },
-        { label: t('announcement.action.feedback_qquery'), onClick: () => visitUrl(otherSocialInfo.qqQueryUrl) },
+        // { label: t('announcement.action.join_q_group'), onClick: () => visitUrl(qGroupInfo.groupUrl) },
+        // { label: t('announcement.action.feedback_github'), onClick: () => visitUrl(githubInfo.newIssueUrl) },
+        { label: t('announcement.action.feedback_qquery'), onClick: () => visitUrl(otherSocialInfo.qqQueryUrlBeta) },
         // { label: t('common.appfunc.donate_us'), onClick: () => (showDonateModal.value = true) },
       ],
     },
