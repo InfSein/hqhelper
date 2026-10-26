@@ -357,6 +357,13 @@ const purchaseHistoryList = computed(() => {
 </template>
 
 <style scoped>
+:deep(.n-spin-content) {
+  transition: opacity 0.3s var(--n-bezier, ease-in-out), filter 0.3s var(--n-bezier, ease-in-out);
+}
+:deep(.n-spin-content.n-spin-content--spinning) {
+  filter: blur(var(--glasscard-blur, 4px));
+}
+
 .wrapper {
   height: 70vh;
   display: flex;
