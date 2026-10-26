@@ -1,10 +1,10 @@
 {
   "name": "hqhelper",
   "version": "2.5.1",
-  "beta": true,
+  "beta": "1",
   "gamever": {
-    "cn": "7.55",
-    "global": "7.55"
+    "cn": "7.57",
+    "global": "7.57"
   },
   "private": true,
   "type": "module",

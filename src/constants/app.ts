@@ -11,6 +11,9 @@ class AppStatus {
     return location.origin.includes('beta.hqhelper')
       || PackageJson.beta
   }
+  static get BetaVersion() {
+    return PackageJson.beta ?? ''
+  }
   static get IsDevOrBeta() {
     return import.meta.env.DEV
       || location.origin.includes('beta.hqhelper')

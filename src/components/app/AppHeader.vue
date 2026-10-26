@@ -788,7 +788,7 @@ const handleSwitchHomePage = (target: 'hqwb' | 'workflow') => {
 
         <n-popover :trigger="isMobile ? 'click' : 'hover'" :keep-alive-on-hover="isMobile" style="max-width: 260px;">
           <template #trigger>
-            <p>{{ AppStatus.Version }}</p>
+            <p>{{ AppStatus.BetaVersion ? ` Beta${AppStatus.BetaVersion}` : AppStatus.Version }}</p>
           </template>
           <div class="flex flex-col">
             <p v-for="(tt, ttIndex) in versionTooltip" :key="`version-tooltip-${ttIndex}`">{{ tt }}</p>
