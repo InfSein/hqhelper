@@ -29,7 +29,10 @@ const useStaff = () => {
         "./image/staff/infsein.jpg",
         t('about_app.staff.jobs.infsein'),
         ["我问遍了整个猫区，他们都说我是最帅的肥"],
-        [{ name: "Github", url: "https://github.com/InfSein" }],
+        [
+          { name: "Portfolio", url: "https://infsein.hqhelper.com" },
+          { name: "Github", url: "https://github.com/InfSein" },
+        ],
         {
           self: true,
           donate_desc: t('donate_us.final_confirm.desc.desc_3'),
