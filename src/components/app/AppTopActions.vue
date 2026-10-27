@@ -20,7 +20,7 @@ import { useDialog } from '@/composables/useDialog'
 import { useAppModals } from '@/composables/useAppModals'
 import { useNbbCloud } from '@/composables/useNbbCloud'
 import { useServerNotice } from '@/composables/useServerNotice'
-import { qGroupInfo, githubInfo, otherSocialInfo } from '@/constants'
+import { githubInfo, otherSocialInfo } from '@/constants'
 import { formatTimestamp, visitUrl } from '@/tools'
 
 const store = useStore()
@@ -98,12 +98,13 @@ const serverAnnouncements = computed((): Announcement[] => {
         },
       })
     }
+    const contentStr = (msg.content || '').trim()
     return {
       id: msg.id,
       type: msg.type || 'info',
       category: msg.category,
       title: msg.title,
-      content: (msg.content || '').split(/\r?\n/).filter(line => line.trim() !== ''),
+      content: contentStr ? contentStr.split(/\r?\n/) : [],
       notifyTime: msg.notifyTime,
       deletable: !!msg.deletable,
       feedbackId: msg.feedbackId,
@@ -489,7 +490,9 @@ const handleOpenGithub = () => {
 
                   <!-- 内容 -->
                   <div class="mt-1 ml-7 text-app-xs text-sub leading-relaxed space-y-1">
-                    <p v-for="(line, idx) in item.content" :key="idx" class="m-0 wrap-break-word">{{ line }}</p>
+                    <p v-for="(line, idx) in item.content" :key="idx" class="m-0 wrap-break-word">
+                      <br v-if="!line.trim()"><template v-else>{{ line }}</template>
+                    </p>
                   </div>
 
                   <!-- 操作按钮 -->
