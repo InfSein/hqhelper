@@ -57,6 +57,9 @@ export const useDialog = (_t?: (message: string, args?: any) => string) => {
       })
     })
   }
+  const alertWarning = (input: string | DialogOptions) : Promise<void> => {
+    return alert(input)
+  }
   const alertInfo = (input: string | DialogOptions) : Promise<void> => {
     const options = buildDialogOptions(input, t('common.tip'), 'info')
     return new Promise((resolve, reject) => {
@@ -121,6 +124,7 @@ export const useDialog = (_t?: (message: string, args?: any) => string) => {
 
   return {
     alert,
+    alertWarning,
     alertInfo,
     alertError,
     confirm,

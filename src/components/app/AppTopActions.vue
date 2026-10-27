@@ -4,6 +4,7 @@ import {
   NotificationsOutlined,
   DarkModeTwotone,
   LightModeTwotone,
+  RefreshOutlined,
 } from '@vicons/material'
 import IconGithub from '@/assets/icons/external/github.svg'
 import IconInfo from '@/assets/icons/info.svg'
@@ -17,17 +18,23 @@ import useConfig from '@/composables/useConfig'
 import { useLocale } from '@/composables/useLocale'
 import { useDialog } from '@/composables/useDialog'
 import { useAppModals } from '@/composables/useAppModals'
+import { useNbbCloud } from '@/composables/useNbbCloud'
+import { useServerNotice } from '@/composables/useServerNotice'
 import { qGroupInfo, githubInfo, otherSocialInfo } from '@/constants'
-import { visitUrl } from '@/tools'
+import { formatTimestamp, visitUrl } from '@/tools'
 
 const store = useStore()
 const { t } = useLocale()
 const { theme, switchTheme } = useConfig()
 const { confirm } = useDialog()
-const { displayCheckUpdatesModal } = useAppModals()
+const { displayCheckUpdatesModal, displayFeedbackHistoryModal } = useAppModals()
+const { updateUserInfoExt } = useNbbCloud()
+const { serverMessages } = useServerNotice()
 const NAIVE_UI_MESSAGE = useMessage()
 
 const isClient = computed(() => !!window.electronAPI)
+const isLoggedIn = computed(() => !!store.cloudConfig.nbb_account_token)
+const isRefreshingNotices = ref(false)
 const showDonateModal = ref(false)
 const notifyBtnRef = ref<any>(null)
 
@@ -40,17 +47,21 @@ enum AnnouncementId {
 }
 
 interface Announcement {
-  id: AnnouncementId
+  id: number
   type?: 'info' | 'success' | 'warning' | 'error'
+  category?: string
   title: string
   content: string[]
+  notifyTime?: string
+  deletable?: boolean
+  feedbackId?: number
   actions?: {
     label: string
     onClick: () => void
   }[]
 }
 
-const announcements = computed((): Announcement[] => {
+const localAnnouncements = computed((): Announcement[] => {
   return [
     {
       id: AnnouncementId.evercoldBeta,
@@ -73,6 +84,75 @@ const announcements = computed((): Announcement[] => {
     },
   ]
 })
+
+const serverAnnouncements = computed((): Announcement[] => {
+  return serverMessages.value.map(msg => {
+    const actions: NonNullable<Announcement['actions']> = []
+    if (msg.category === 'feedback_reply' || msg.feedbackId) {
+      actions.push({
+        label: t('feedback.action.view_detail'),
+        onClick: () => {
+          isPinned.value = false
+          isHovered.value = false
+          displayFeedbackHistoryModal(msg.feedbackId)
+        },
+      })
+    }
+    return {
+      id: msg.id,
+      type: msg.type || 'info',
+      category: msg.category,
+      title: msg.title,
+      content: (msg.content || '').split(/\r?\n/).filter(line => line.trim() !== ''),
+      notifyTime: msg.notifyTime,
+      deletable: !!msg.deletable,
+      feedbackId: msg.feedbackId,
+      actions: actions.length ? actions : undefined,
+    }
+  })
+})
+
+const announcements = computed((): Announcement[] => {
+  const sortedServer = [...serverAnnouncements.value].sort((a, b) => {
+    const timeA = a.notifyTime ? Date.parse(a.notifyTime) : 0
+    const timeB = b.notifyTime ? Date.parse(b.notifyTime) : 0
+    if (timeA !== timeB) {
+      return timeB - timeA
+    }
+    return b.id - a.id
+  })
+  return [
+    ...sortedServer,
+    ...localAnnouncements.value,
+  ]
+})
+
+const formatNotifyTime = (iso?: string) => {
+  if (!iso) return ''
+  const ts = Date.parse(iso)
+  if (Number.isNaN(ts)) return iso
+  return formatTimestamp(ts)
+}
+
+const handleRefreshNotices = async () => {
+  if (!isLoggedIn.value || isRefreshingNotices.value) return
+  isRefreshingNotices.value = true
+  try {
+    await updateUserInfoExt()
+    if (isPanelOpen.value) {
+      markAllAsRead()
+    }
+  } finally {
+    isRefreshingNotices.value = false
+  }
+}
+
+const handleDeleteMessage = (id: number) => {
+  if (!store.mainCache.ignore_announcements.includes(id)) {
+    store.mainCache.ignore_announcements.push(id)
+    store.updateMainCache()
+  }
+}
 
 const getAnnouncementIcon = (type?: Announcement['type']) => {
   switch (type) {
@@ -190,7 +270,7 @@ watch(isPanelOpen, open => {
   }
 })
 
-const handleIgnoreAnnouncement = async (aid: AnnouncementId) => {
+const handleIgnoreAnnouncement = async (aid: number) => {
   if (
     !(await confirm(
       t('announcement.message.ignore_confirm') + '\n' + t('common.message.operation_irreversible')
@@ -356,15 +436,30 @@ const handleOpenGithub = () => {
               <n-icon :size="16"><NotificationsOutlined /></n-icon>
               <span>{{ t('announcement.title.notification_center') }}</span>
             </div>
-            <n-button
-              v-show="false"
-              quaternary
-              size="tiny"
-              type="error"
-              @click="handleIgnoreAll"
-            >
-              {{ t('announcement.action.ignore_all') }}
-            </n-button>
+            <div class="flex items-center gap-1">
+              <n-button
+                v-if="isLoggedIn"
+                quaternary
+                circle
+                size="tiny"
+                :loading="isRefreshingNotices"
+                :title="t('common.refresh')"
+                @click="handleRefreshNotices"
+              >
+                <template #icon>
+                  <n-icon :size="14"><RefreshOutlined /></n-icon>
+                </template>
+              </n-button>
+              <n-button
+                v-show="false"
+                quaternary
+                size="tiny"
+                type="error"
+                @click="handleIgnoreAll"
+              >
+                {{ t('announcement.action.ignore_all') }}
+              </n-button>
+            </div>
           </div>
           <n-divider style="margin: 6px 0 4px;" />
 
@@ -379,12 +474,17 @@ const handleOpenGithub = () => {
 
                 <!-- 单个通知项 -->
                 <div class="px-2 py-1 rounded transition-colors duration-150 hover:bg-bg-hover">
-                  <!-- [图标] 标题 -->
-                  <div class="flex items-center gap-1 leading-snug">
+                  <!-- [图标] 标题与时间 -->
+                  <div class="flex items-start gap-1 leading-snug">
                     <n-icon :size="24" class="shrink-0" :class="getAnnouncementTypeClass(item.type)">
                       <component :is="getAnnouncementIcon(item.type)" />
                     </n-icon>
-                    <span class="font-semibold text-app-base text-text wrap-break-word">{{ item.title }}</span>
+                    <div class="flex flex-col min-w-0 flex-1">
+                      <span class="font-semibold text-app-base text-text wrap-break-word">{{ item.title }}</span>
+                      <span v-if="item.notifyTime" class="text-app-2xs text-sub select-none">
+                        {{ formatNotifyTime(item.notifyTime) }}
+                      </span>
+                    </div>
                   </div>
 
                   <!-- 内容 -->
@@ -393,9 +493,9 @@ const handleOpenGithub = () => {
                   </div>
 
                   <!-- 操作按钮 -->
-                  <template v-if="item.actions?.length">
+                  <template v-if="item.actions?.length || item.deletable">
                     <n-divider class="my-1!" />
-                    <div class="flex items-center flex-wrap gap-1">
+                    <div class="flex items-center flex-wrap gap-1 ml-6">
                       <n-button
                         v-for="(act, actIdx) in item.actions"
                         :key="actIdx"
@@ -405,6 +505,15 @@ const handleOpenGithub = () => {
                         @click="act.onClick"
                       >
                         {{ act.label }}
+                      </n-button>
+                      <n-button
+                        v-if="item.deletable"
+                        quaternary
+                        type="error"
+                        size="tiny"
+                        @click="handleDeleteMessage(item.id)"
+                      >
+                        {{ t('common.delete') }}
                       </n-button>
                       <n-button
                         v-show="false"

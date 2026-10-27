@@ -1,13 +1,16 @@
 import { assignDefaults } from '@/tools'
+import type { ServerMessage } from '@/types/api/nbb-cloud'
 
 export interface MainCacheModel {
   ignore_announcements: number[]
   read_announcements: number[]
+  server_messages: ServerMessage[]
 }
 
 const defaultMainCache: MainCacheModel = {
   ignore_announcements: [],
   read_announcements: [],
+  server_messages: [],
 }
 
 /**
@@ -23,5 +26,9 @@ export const fixMainCache = (cache?: MainCacheModel) => {
   }
 
   // 处理其他的设置项
-  return assignDefaults(defaultMainCache, cache || {}) as MainCacheModel
+  const fixed = assignDefaults(defaultMainCache, cache || {}) as MainCacheModel
+  if (!Array.isArray(fixed.server_messages)) {
+    fixed.server_messages = []
+  }
+  return fixed
 }

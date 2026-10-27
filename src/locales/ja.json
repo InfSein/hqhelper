@@ -83,7 +83,8 @@
         "theme_switch_to_dark": "世界に闇をとりもどしてほしい。",
         "theme_switch_to_light": "今はただ夜明けの時を待つ。",
         "user_preference": "人の意思で機械の稼働を改変できる神たる能力",
-        "workflow": "~ Flow Together ~"
+        "workflow": "~ Flow Together ~",
+        "send_feedback": "不具合の報告や機能の要望を送信します。"
       }
     },
     "tooltip": {
@@ -912,7 +913,8 @@
       "useful_tools": "ツール",
       "user_preference": "設定",
       "workflow": "ワークフロー",
-      "workflow_calc": "レシピ計算機"
+      "workflow_calc": "レシピ計算機",
+      "send_feedback": "フィードバック送信"
     },
     "appsetting": {
       "appearance": "外見",
@@ -1223,7 +1225,9 @@
       "select": "選択",
       "close": "閉じる"
     },
-    "project_github": "プロジェクトGitHub"
+    "project_github": "プロジェクトGitHub",
+    "optional": "任意",
+    "submit": "送信"
   },
   "contact_us": {
     "feedback": {
@@ -2834,5 +2838,56 @@
     "copy_lt_to_et_content": "{lt}に対応するエオルゼア時間：{et}",
     "copy_et_to_lt_content": "エオルゼア時間{et}の次回到達時刻：{lt}",
     "eorzea_date": "第{year}星暦{month}月{day}日"
+  },
+  "feedback": {
+    "title": {
+      "history": "フィードバック履歴"
+    },
+    "action": {
+      "history": "履歴",
+      "submit_cooldown": "お待ちください ({sec}s)",
+      "view_detail": "詳細を見る",
+      "back_to_list": "一覧に戻る"
+    },
+    "field": {
+      "type": "種類",
+      "title": "件名",
+      "content": "内容",
+      "contact": "連絡先",
+      "images": "画像添付",
+      "status": "状態",
+      "created_at": "送信日時"
+    },
+    "type": {
+      "bug": "不具合報告",
+      "feat": "機能要望"
+    },
+    "status": {
+      "pending": "未対応",
+      "processing": "対応中",
+      "resolved": "解決済み",
+      "closed": "クローズ"
+    },
+    "placeholder": {
+      "title": "問題や要望の概要を入力してください（1〜100文字）",
+      "content": "再現手順や要望の詳細を入力してください（1〜5000文字）",
+      "contact": "メールアドレスやSNSなど、連絡可能な方法を入力してください"
+    },
+    "text": {
+      "images_tip": "最大6枚、1枚あたり10MBまで",
+      "admin_replies": "管理者からの返信",
+      "no_replies": "まだ返信はありません"
+    },
+    "message": {
+      "login_required": "この機能を利用するにはログインが必要です",
+      "submit_succeed": "フィードバックを送信しました！ご協力ありがとうございます。",
+      "submit_failed": "フィードバックの送信に失敗しました",
+      "image_too_large": "画像サイズは1枚あたり10MB以下にしてください",
+      "rate_limited": "送信頻度が高すぎます。{sec}秒後にもう一度お試しください",
+      "banned_title": "フィードバック権限が制限されています",
+      "banned_permanent": "お使いのアカウントはフィードバックの送信が制限されています。",
+      "banned_until": "お使いのアカウントは {time} までフィードバックの送信が制限されています",
+      "no_records": "フィードバック履歴がありません"
+    }
   }
 }

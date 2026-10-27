@@ -8,15 +8,18 @@ import type {
   ResdataRegisterAndLogin,
   ResdataGetList, ResdataSetList,
   ResdataUserInfoExt, ResdataUploadAvatar,
+  SubmitFeedbackPayload, ResdataSubmitFeedback, ResdataFeedbackList,
 } from '@/types/api/nbb-cloud'
 import { deepCopy } from "@/tools"
 import { md5 } from "../utils/md5"
 import AppStatus from "@/constants/app"
 import { useStore } from "@/store"
 import { fixCloudConfig, type CloudConfigModel } from "@/types/config/cloud"
+import { useServerNotice } from "./useServerNotice"
 
 export const useNbbCloud = () => {
   const store = useStore()
+  const { applyUserInfoExt } = useServerNotice()
 
   const alovaApi = createAlova({
     baseURL: 'https://cloud.nbb.ffxiv.cn',
@@ -228,9 +231,12 @@ export const useNbbCloud = () => {
   }
 
   /**
-   * 获取用户扩展信息 (HqHelper 用户组与已审核自定义头像)
+   * 向 HqHelper 扩展接口发起 POST 请求
    */
-  const getUserInfoExt = async () : Promise<NbbResponse<ResdataUserInfoExt>> => {
+  const doHqApiPost = async <T = any>(
+    path: string,
+    body: FormData | Record<string, any>,
+  ) : Promise<NbbResponse<T>> => {
     const token = store.cloudConfig.nbb_account_token
     if (!token) {
       return {
@@ -239,17 +245,21 @@ export const useNbbCloud = () => {
         data: null as any,
       }
     }
+    const isFormData = body instanceof FormData
+    const headers: Record<string, string> = {
+      'Authorization': token,
+    }
+    if (!isFormData) {
+      headers['Content-Type'] = 'application/json'
+    }
     try {
-      const response = await fetch('https://hqhelper.com/api/nbbcloud/usrinfo_ext', {
+      const response = await fetch(`https://hqhelper.com/api/nbbcloud${path}`, {
         method: 'POST',
-        headers: {
-          'Authorization': token,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({}),
+        headers,
+        body: isFormData ? body : JSON.stringify(body),
       })
       const data = await response.json()
-      return data
+      return data as NbbResponse<T>
     } catch (error: any) {
       return {
         errno: 1,
@@ -260,37 +270,61 @@ export const useNbbCloud = () => {
   }
 
   /**
+   * 获取用户扩展信息 (HqHelper 用户组、已审核自定义头像与系统通知)
+   */
+  const getUserInfoExt = async () : Promise<NbbResponse<ResdataUserInfoExt>> => {
+    const lang = store.userConfig.language_ui || 'zh'
+    const response = await doHqApiPost<ResdataUserInfoExt>('/usrinfo_ext', { lang })
+    if (!response.errno && response.data) {
+      applyUserInfoExt(response.data)
+    }
+    return response
+  }
+
+  /**
    * 上传自定义头像
    * @param file 图片文件
    */
   const uploadAvatar = async (file: File) : Promise<NbbResponse<ResdataUploadAvatar>> => {
-    const token = store.cloudConfig.nbb_account_token
-    if (!token) {
-      return {
-        errno: 1,
-        errmsg: 'No token',
-        data: null as any,
-      }
-    }
     const formData = new FormData()
     formData.append('avatar', file)
-    try {
-      const response = await fetch('https://hqhelper.com/api/nbbcloud/avatar', {
-        method: 'POST',
-        headers: {
-          'Authorization': token,
-        },
-        body: formData,
-      })
-      const data = await response.json()
-      return data
-    } catch (error: any) {
-      return {
-        errno: 1,
-        errmsg: error?.message || 'Network error',
-        data: null as any,
-      }
+    return doHqApiPost<ResdataUploadAvatar>('/avatar', formData)
+  }
+
+  /**
+   * 提交用户反馈
+   */
+  const submitFeedback = async (
+    payload: SubmitFeedbackPayload
+  ) : Promise<NbbResponse<ResdataSubmitFeedback>> => {
+    const formData = new FormData()
+    formData.append('source', 'HqHelper')
+    formData.append('type', payload.type)
+    formData.append('title', payload.title)
+    formData.append('content', payload.content)
+    if (payload.contact) {
+      formData.append('contact', payload.contact)
     }
+    if (payload.images?.length) {
+      payload.images.forEach(file => {
+        formData.append('images', file)
+      })
+    }
+    return doHqApiPost<ResdataSubmitFeedback>('/feedback', formData)
+  }
+
+  /**
+   * 分页获取个人反馈记录列表
+   */
+  const getFeedbackList = async (
+    page = 1,
+    pageSize = 10,
+  ) : Promise<NbbResponse<ResdataFeedbackList>> => {
+    return doHqApiPost<ResdataFeedbackList>('/feedback/list', {
+      page,
+      pageSize,
+      source: 'HqHelper',
+    })
   }
 
   /**
@@ -336,6 +370,10 @@ export const useNbbCloud = () => {
     getUserInfoExt,
     /** 上传自定义头像 */
     uploadAvatar,
+    /** 提交用户反馈 */
+    submitFeedback,
+    /** 获取个人反馈记录列表 */
+    getFeedbackList,
     /** 刷新用户扩展信息 */
     updateUserInfoExt,
     /** 将登录、注册、刷新用户信息获取到的data转译为cloudConfig */

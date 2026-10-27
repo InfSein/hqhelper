@@ -94,7 +94,8 @@
         "theme_switch_to_dark": "为这个世界带回黑暗。",
         "theme_switch_to_light": "静待黎明天光来。",
         "user_preference": "以人的意志改变机械的程序。",
-        "workflow": "众生如归流。"
+        "workflow": "众生如归流。",
+        "send_feedback": "向我们报告遇到的错误或提出功能建议。"
       }
     },
     "tooltip": {
@@ -924,7 +925,8 @@
       "user_preference": "偏好设置",
       "workflow": "工作流",
       "hqwb": "HQ工作台",
-      "workflow_calc": "配方计算器"
+      "workflow_calc": "配方计算器",
+      "send_feedback": "发送反馈"
     },
     "appsetting": {
       "appearance": "外观",
@@ -1235,7 +1237,9 @@
     "share_link": "分享链接",
     "copy_item_zh_name": "复制中文名",
     "copy_item_ja_name": "复制日文名",
-    "copy_item_en_name": "复制英文名"
+    "copy_item_en_name": "复制英文名",
+    "optional": "可选",
+    "submit": "提交"
   },
   "contact_us": {
     "feedback": {
@@ -2874,5 +2878,56 @@
     "copy_et_to_lt_content": "下一次到达艾欧泽亚时间「{et}」是在：「{lt}」",
     "eorzea_date": "星历{year}年{month}月{day}日",
     "current_time": "当前时间"
+  },
+  "feedback": {
+    "title": {
+      "history": "反馈记录"
+    },
+    "action": {
+      "history": "反馈记录",
+      "submit_cooldown": "请等待 {sec}秒",
+      "view_detail": "查看反馈",
+      "back_to_list": "返回列表"
+    },
+    "field": {
+      "type": "反馈类型",
+      "title": "标题",
+      "content": "内容",
+      "contact": "联系方式",
+      "images": "上传图片",
+      "status": "状态",
+      "created_at": "提交时间",
+      "contact_sub": "推荐QQ或者电子邮箱"
+    },
+    "type": {
+      "bug": "错误报告",
+      "feat": "功能申请"
+    },
+    "status": {
+      "pending": "待处理",
+      "processing": "处理中",
+      "resolved": "已解决",
+      "closed": "已关闭"
+    },
+    "placeholder": {
+      "title": "请简要概括您的问题或建议",
+      "content": "请详细描述问题的触发步骤、表现，或您期望的新功能细节",
+      "contact": "如果你愿意让我们在处理问题期间联系你"
+    },
+    "text": {
+      "admin_replies": "开发人员回复",
+      "no_replies": "暂未收到回复"
+    },
+    "message": {
+      "login_required": "此功能必须登录后才可使用",
+      "submit_succeed": "反馈提交成功！感谢您的支持。",
+      "submit_failed": "反馈提交失败",
+      "image_too_large": "单张图片大小不能超过 10MB",
+      "rate_limited": "提交过于频繁，请等待 {sec} 秒后再试",
+      "banned_title": "无法发送反馈",
+      "banned_permanent": "您的账号已被限制提交反馈。",
+      "banned_until": "您的账号已被限制提交反馈，解封时间：{time}",
+      "no_records": "暂无反馈记录"
+    }
   }
 }

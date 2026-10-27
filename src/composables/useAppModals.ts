@@ -40,6 +40,10 @@ const modalMatchedMacrosData = ref<MatchedMacrosModalData>({
   matchedMacros: [],
 })
 
+const showModalFeedback = ref(false)
+const showModalFeedbackHistory = ref(false)
+const highlightFeedbackId = ref<number | undefined>(undefined)
+
 export function useAppModals() {
   const store = useStore()
   const { t } = useLocale()
@@ -104,6 +108,15 @@ export function useAppModals() {
     showModalMatchedMacros.value = true
   }
 
+  const displayFeedbackModal = () => {
+    showModalFeedback.value = true
+  }
+
+  const displayFeedbackHistoryModal = (feedbackId?: number) => {
+    highlightFeedbackId.value = feedbackId
+    showModalFeedbackHistory.value = true
+  }
+
   return {
     showCopyMacroModal,
     macroMapValue,
@@ -134,6 +147,13 @@ export function useAppModals() {
     showModalMatchedMacros,
     modalMatchedMacrosData,
     displayMatchedMacrosModal,
+
+    showModalFeedback,
+    displayFeedbackModal,
+
+    showModalFeedbackHistory,
+    highlightFeedbackId,
+    displayFeedbackHistoryModal,
   }
 }
 

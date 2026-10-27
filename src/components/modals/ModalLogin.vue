@@ -231,6 +231,7 @@ const handleSubmit = async () => {
       handleResponse(response, t('cloud.message.register_succeed'))
       if (!response.errno) {
         handleSaveLoginInfo(response.data)
+        await updateUserInfoExt()
         showModal.value = false
       }
     } else if (loginAction.value === 'resetpass') {

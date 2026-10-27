@@ -83,7 +83,8 @@
         "theme_switch_to_dark": "Switch to Dark Mode.",
         "theme_switch_to_light": "Switch to Light Mode.",
         "user_preference": "Customize application settings.",
-        "workflow": "Workflow allows you to organize production targets."
+        "workflow": "Workflow allows you to organize production targets.",
+        "send_feedback": "Report bugs or suggest new features to us."
       }
     },
     "tooltip": {
@@ -913,7 +914,8 @@
       "useful_tools": "Tools",
       "user_preference": "User Preferences",
       "workflow": "Workflow",
-      "workflow_calc": "Recipe Calculator"
+      "workflow_calc": "Recipe Calculator",
+      "send_feedback": "Send Feedback"
     },
     "appsetting": {
       "appearance": "Appearance",
@@ -1223,7 +1225,9 @@
       "navigate": "Navigate",
       "select": "Select",
       "close": "Close"
-    }
+    },
+    "optional": "Optional",
+    "submit": "Submit"
   },
   "contact_us": {
     "feedback": {
@@ -2834,5 +2838,56 @@
     "copy_lt_to_et_content": "Eorzea Time for {lt}: {et}",
     "copy_et_to_lt_content": "Next arrival of Eorzea Time {et} is at: {lt}",
     "eorzea_date": "Astral Era Year {year}, Month {month}, Day {day}"
+  },
+  "feedback": {
+    "title": {
+      "history": "Feedback History"
+    },
+    "action": {
+      "history": "History",
+      "submit_cooldown": "Please wait ({sec}s)",
+      "view_detail": "View Feedback",
+      "back_to_list": "Back to List"
+    },
+    "field": {
+      "type": "Type",
+      "title": "Title",
+      "content": "Content",
+      "contact": "Contact",
+      "images": "Images",
+      "status": "Status",
+      "created_at": "Submitted At"
+    },
+    "type": {
+      "bug": "Bug Report",
+      "feat": "Feature Request"
+    },
+    "status": {
+      "pending": "Pending",
+      "processing": "Processing",
+      "resolved": "Resolved",
+      "closed": "Closed"
+    },
+    "placeholder": {
+      "title": "Briefly summarize your issue or suggestion (1-100 chars)",
+      "content": "Describe the steps to reproduce the issue or details of your feature request (1-5000 chars)",
+      "contact": "Email / Discord / Other contact info for follow-up"
+    },
+    "text": {
+      "images_tip": "Up to 6 images, max 10MB each",
+      "admin_replies": "Admin Replies",
+      "no_replies": "No replies yet"
+    },
+    "message": {
+      "login_required": "You must log in to use this feature",
+      "submit_succeed": "Feedback submitted successfully! Thank you for your support.",
+      "submit_failed": "Failed to submit feedback",
+      "image_too_large": "Each image must not exceed 10MB",
+      "rate_limited": "Submitting too frequently, please wait {sec}s before retrying",
+      "banned_title": "Feedback Permission Restricted",
+      "banned_permanent": "Your account has been restricted from submitting feedback.",
+      "banned_until": "Your account is restricted from submitting feedback until {time}",
+      "no_records": "No feedback records"
+    }
   }
 }

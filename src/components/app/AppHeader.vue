@@ -18,6 +18,7 @@ import {
   DevicesOutlined,
   EventNoteFilled,
   FastfoodOutlined,
+  FeedbackOutlined,
   FileCopyFilled,
   FilePresentOutlined,
   HandshakeOutlined,
@@ -56,13 +57,13 @@ import { checkAppUpdates, visitUrl } from '@/tools'
 
 const store = useStore()
 const { theme, switchTheme } = useConfig()
-const { confirm } = useDialog()
+const { confirm, alertWarning } = useDialog()
 const NAIVE_UI_MESSAGE = useMessage()
 const { renderIcon, optionsRenderer } = useUiTools()
 const { t, currentLocale: locale } = useLocale()
 const { isMobile } = useResponsive()
 const { currentET } = useEorzeaTime()
-const { displayCheckUpdatesModal } = useAppModals()
+const { displayCheckUpdatesModal, displayFeedbackModal } = useAppModals()
 
 const isChina = computed(() => locale.value === 'zh')
 const useDesktopUi = computed(() => {
@@ -380,6 +381,19 @@ const menuData = computed(() => {
           description: t('appheader.menu.tooltip.contact_us'),
           click: () => {
             showContactModal.value = true
+          }
+        },
+        {
+          type: 'common',
+          label: t('common.appfunc.send_feedback'),
+          icon: FeedbackOutlined,
+          description: t('appheader.menu.tooltip.send_feedback'),
+          click: () => {
+            if (!store.cloudConfig.nbb_account_token) {
+              alertWarning(t('feedback.message.login_required'))
+              return
+            }
+            displayFeedbackModal()
           }
         },
         {

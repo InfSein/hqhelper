@@ -21,6 +21,7 @@ import { fixUserConfig, type UserConfigModel } from './types/config/user'
 import { fixCloudConfig, type CloudConfigModel } from './types/config/cloud'
 import { fixMainCache, type MainCacheModel } from './types/config/cache-main'
 import { useInventoryPluginAutoConnect } from '@/composables/useInventoryPlugin.ts'
+import { useNbbCloud } from '@/composables/useNbbCloud'
 
 const ModalCopyAsMacro = defineAsyncComponent(() => import('@/components/modals/ModalCopyAsMacro.vue'))
 const ModalJoinInWorkflow = defineAsyncComponent(() => import('@/components/modals/ModalJoinInWorkflow.vue'))
@@ -31,6 +32,8 @@ const ModalFestivalEgg = defineAsyncComponent(() => import('@/components/modals/
 const ModalItemPriceDetail = defineAsyncComponent(() => import('@/components/modals/ModalItemPriceDetail.vue'))
 const ModalGearOverview = defineAsyncComponent(() => import('@/components/modals/ModalGearOverview.vue'))
 const ModalMatchedMacros = defineAsyncComponent(() => import('@/components/modals/ModalMatchedMacros.vue'))
+const ModalFeedback = defineAsyncComponent(() => import('@/components/modals/ModalFeedback.vue'))
+const ModalFeedbackHistory = defineAsyncComponent(() => import('@/components/modals/ModalFeedbackHistory.vue'))
 
 const store = useStore()
 const { t, setLocale } = useLocale()
@@ -39,6 +42,7 @@ const { confirm } = useDialog(t)
 const { isMobile } = useResponsive()
 const { appMode } = useAppMode()
 const { emitSync, onSync } = useElectronSync()
+const { updateUserInfoExt } = useNbbCloud()
 useInventoryPluginAutoConnect()
 const {
   showCopyMacroModal, macroMapValue,
@@ -49,6 +53,8 @@ const {
   showModalItemPriceDetail, modalItemPriceDetailItems,
   showModalGearOverview, modalGearOverviewData,
   showModalMatchedMacros, modalMatchedMacrosData,
+  showModalFeedback,
+  showModalFeedbackHistory,
 } = useAppModals()
 
 const locale = computed(() => {
@@ -57,6 +63,9 @@ const locale = computed(() => {
 setLocale(locale.value)
 watch(locale, (newVal) => {
   setLocale(newVal)
+  if (store.cloudConfig.nbb_account_token) {
+    updateUserInfoExt()
+  }
 })
 
 watch(theme, () => {
@@ -354,6 +363,8 @@ const naiveUIThemeOverrides = computed(() : GlobalThemeOverrides => {
           v-model:show="showModalMatchedMacros"
           :data="modalMatchedMacrosData"
         />
+        <ModalFeedback v-model:show="showModalFeedback" />
+        <ModalFeedbackHistory v-model:show="showModalFeedbackHistory" />
       </div>
     </n-message-provider>
     </n-dialog-provider>

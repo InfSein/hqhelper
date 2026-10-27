@@ -46,12 +46,76 @@ export interface ResdataSetList {
   hash: string,
 }
 
+export type ServerMessageType = "info" | "success" | "warning" | "error"
+export type ServerMessageCategory = "announcement" | "feedback_reply" | string
+
+export interface ServerMessage {
+  id: number,
+  type: ServerMessageType,
+  category: ServerMessageCategory,
+  title: string,
+  content: string,
+  notifyTime: string,
+  deletable: boolean,
+  feedbackId?: number,
+}
+
 export interface ResdataUserInfoExt {
   userGroup: "" | "dev" | "vip" | "user" | string,
   userAvatar: string,
+  feedbackBanned?: boolean,
+  feedbackBanExpiresAt?: string | null,
+  messages?: ServerMessage[],
 }
 
 export interface ResdataUploadAvatar {
   status: "pending" | string,
   message: string,
+}
+
+export type FeedbackType = "bug" | "feat"
+export type FeedbackStatus = "pending" | "processing" | "resolved" | "closed" | string
+
+export interface SubmitFeedbackPayload {
+  type: FeedbackType,
+  title: string,
+  content: string,
+  contact?: string,
+  images?: File[],
+}
+
+export interface ResdataSubmitFeedback {
+  id?: number,
+  todayCount?: number,
+  nextCooldownSeconds?: number,
+  retryAfter?: number,
+}
+
+export interface FeedbackReply {
+  id: number,
+  content: string,
+  type: ServerMessageType,
+  resultStatus: FeedbackStatus,
+  createdAt: string,
+}
+
+export interface FeedbackRecord {
+  id: number,
+  source: string,
+  type: FeedbackType,
+  title: string,
+  content: string,
+  contact: string,
+  images: string[],
+  status: FeedbackStatus,
+  createdAt: string,
+  updatedAt: string,
+  replies: FeedbackReply[],
+}
+
+export interface ResdataFeedbackList {
+  list: FeedbackRecord[],
+  total: number,
+  page: number,
+  pageSize: number,
 }

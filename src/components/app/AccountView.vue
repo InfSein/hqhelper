@@ -12,6 +12,7 @@ import useCloud from '@/composables/useCloud'
 import { useDialog } from '@/composables/useDialog'
 import { useLocale } from '@/composables/useLocale'
 import { useNbbCloud } from '@/composables/useNbbCloud'
+import { useServerNotice } from '@/composables/useServerNotice'
 import { useAppModals } from '@/composables/useAppModals'
 import { useResponsive } from '@/composables/useResponsive'
 import { CopyToClipboard, deepCopy } from '@/tools'
@@ -31,6 +32,7 @@ const {
   getUserInfoExt,
   resolveUserInfo,
 } = useNbbCloud()
+const { clearPersonalServerNotices } = useServerNotice()
 const {
   avatarUrl,
   userId,
@@ -69,7 +71,7 @@ onMounted(async () => {
         store.setCloudConfig(newCloudConfig)
         appForceUpdate()
       }
-    } else if (!store.cloudConfig.nbb_account_user_group) {
+    } else {
       const extUpdated = await updateUserInfoExt()
       if (extUpdated) {
         appForceUpdate()
@@ -104,6 +106,7 @@ const handleLogout = async () => {
   }
   const newCloudConfig = fixCloudConfig()
   store.setCloudConfig(newCloudConfig)
+  clearPersonalServerNotices()
   appForceUpdate()
   NAIVE_UI_MESSAGE.success(t('cloud.message.logged_out'))
 }
