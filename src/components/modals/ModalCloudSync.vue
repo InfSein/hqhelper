@@ -35,8 +35,6 @@ const {
   resolveListTitle,
 } = useNbbCloud()
 
-const isBeta = computed(() => AppStatus.IsBeta)
-
 const showModal = defineModel<boolean>('show', { required: true })
 
 const cloudLists = ref<Record<HqList, CloudList>>()
@@ -202,7 +200,7 @@ const handleSelectRevert = () => {
 }
 
 const handleUpload = async () => {
-  if (isBeta.value) return
+  if (AppStatus.IsBeta) return
 
   syncing.value = true
 
@@ -500,7 +498,7 @@ const handleDownload = async () => {
   >
     <n-spin :show="loading">
       <div class="wrapper">
-        <n-alert v-if="isBeta" type="warning" :title="t('cloud.message.beta_upload_disabled_title')">
+        <n-alert v-if="AppStatus.IsBeta" type="warning" :title="t('cloud.message.beta_upload_disabled_title')">
           {{ t('cloud.message.beta_upload_disabled') }}
         </n-alert>
         <n-card size="small" embedded>
@@ -552,7 +550,7 @@ const handleDownload = async () => {
             <n-button
               :text="!isMobile"
               :loading="syncing"
-              :disabled="isBeta || syncing || !syncTargets.length"
+              :disabled="AppStatus.IsBeta || syncing || !syncTargets.length"
               @click="handleUpload"
             >
               <div class="sync-button-container">

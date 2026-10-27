@@ -9,7 +9,7 @@ class AppStatus {
   }
   static get IsBeta() {
     return location.origin.includes('beta.hqhelper')
-      || PackageJson.beta
+      || !!PackageJson.beta
   }
   static get BetaVersion() {
     return PackageJson.beta ?? ''
