@@ -1,0 +1,62 @@
+[
+  {
+    "name_zh": "职业任务：刻木匠",
+    "name_ja": "クラスクエスト：木工師",
+    "name_en": "Quests: CRP",
+    "code": "AcfAcjAdGAdnAd9AeFAeRAeWAffAf3girAAGCnjCnoAAwFPsFQAKXEKXMKYyMScAAYA"
+  },
+  {
+    "name_zh": "职业任务：锻铁匠",
+    "name_ja": "クラスクエスト：鍛冶師",
+    "name_en": "Quests: BSM",
+    "code": "AZFAZ7AZ_Aa7AbZAbyAcEgklAAGBJQBJcBPuCeACeFCfGAAwKVwKV8LmWMPAAAY"
+  },
+  {
+    "name_zh": "职业任务：铸甲匠",
+    "name_ja": "クラスクエスト：甲冑師",
+    "name_en": "Quests: ARM",
+    "code": "giyAAGBFuBF4BOMBTwBYcBgwBiaBkGB4qB44CeACeFCeeAAwKasKboKeEKgQ"
+  },
+  {
+    "name_zh": "职业任务：雕金匠",
+    "name_ja": "クラスクエスト：彫金師",
+    "name_en": "Quests: GSM",
+    "code": "AgeAg_AhNAs4As8As-BBsBB6hDRAAGCGqCNECeMCeRCe8AAwKzwL0wL00MOkMWQ"
+  },
+  {
+    "name_zh": "职业任务：制革匠",
+    "name_ja": "クラスクエスト：革細工師",
+    "name_en": "Quests: LTW",
+    "code": "AjeAwcAyGA4gA43A5DA68A7IhDQAAGCGoCIQCk3Ck4AAwFKAKnsLucLvgMsc"
+  },
+  {
+    "name_zh": "职业任务：裁衣匠",
+    "name_ja": "クラスクエスト：裁縫師",
+    "name_en": "Quests: WVR",
+    "code": "ApuAsNAtPAvfAw1AxoAyPgzKAAGBn0BqqBrKBsmB3fCmYAAwFM4FNUKoELr6MTQAAYZZIA"
+  },
+  {
+    "name_zh": "职业任务：炼金术士",
+    "name_ja": "クラスクエスト：錬金術師",
+    "name_en": "Quests: ALC",
+    "code": "AfDAhlBHMhHUAAHCO-AAMEfMEfWEfcAAYI_wI_4JAAKt8KxYADAVkgpm4xOQABxijgADDFOA"
+  },
+  {
+    "name_zh": "职业任务：烹调师",
+    "name_ja": "クラスクエスト：調理師",
+    "name_en": "Quests: CUL",
+    "code": "hIgAAECRECRICRKCROCRoCSKCSMCSOCTQCTSCTWCT0CT6CUaCXiGRUGRcGReGRiGRsGRuGR0GR4GR8A"
+  },
+  {
+    "name_zh": "幻境武器",
+    "name_ja": "ファントムウェポン",
+    "name_en": "Phantom Weapons",
+    "code": "LcHLcILcJMOHMOIMOJMcbMccMcdA"
+  },
+  {
+    "name_zh": "黄道武器",
+    "name_ja": "ゾディアックウェポン",
+    "name_en": "Zodiac Weapons",
+    "code": "CUmCUnCUoCUpCUqCUrCUsCUt"
+  }
+]

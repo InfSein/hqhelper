@@ -1,0 +1,179 @@
+{
+    "src/components/app": {
+        "description": "应用基础/布局组件"
+    },
+    "src/components/chart": {
+        "description": "图表相关"
+    },
+    "src/components/craft": {
+        "description": "制作/宏相关"
+    },
+    "src/components/item": {
+        "description": "道具相关"
+    },
+    "src/components/job": {
+        "description": "职业相关"
+    },
+    "src/components/map": {
+        "description": "地图相关"
+    },
+    "src/components/modals": {
+        "description": "全局模态框"
+    },
+    "src/components/templates": {
+        "description": "布局/容器模板"
+    },
+    "src/components/ui": {
+        "description": "通用UI控件"
+    },
+    "src/components/modals/ModalAboutApp.vue": {
+        "description": "关于本作"
+    },
+    "src/components/modals/ModalChangeLogs.vue": {
+        "description": "更新日志"
+    },
+    "src/components/modals/ModalCheckUpdates.vue": {
+        "description": "检查更新"
+    },
+    "src/components/modals/ModalCloudSync.vue": {
+        "description": "数据同步"
+    },
+    "src/components/modals/ModalContactUs.vue": {
+        "description": "联系我们"
+    },
+    "src/components/modals/ModalCopyAsMacro.vue": {
+        "description": "复制宏"
+    },
+    "src/components/modals/ModalCostAndBenefit.vue": {
+        "description": "成本/收益预估"
+    },
+    "src/components/modals/ModalCraftStatements.vue": {
+        "description": "制作报表(旧)"
+    },
+    "src/components/modals/ModalDonate.vue": {
+        "description": "赞助我们"
+    },
+    "src/components/modals/ModalFestivalEgg.vue": {
+        "description": "彩蛋"
+    },
+    "src/components/modals/ModalInventory.vue": {
+        "description": "背包库存"
+    },
+    "src/components/modals/ModalItemPriceDetail.vue": {
+        "description": "道具价格详情"
+    },
+    "src/components/modals/ModalJoinInWorkflow.vue": {
+        "description": "加入工作流"
+    },
+    "src/components/modals/ModalLogin.vue": {
+        "description": "登录/注册"
+    },
+    "src/components/modals/ModalNbbAvatarSelector.vue": {
+        "description": "选择头像"
+    },
+    "src/components/modals/ModalPreferences.vue": {
+        "description": "偏好设置"
+    },
+    "src/components/modals/ModalPreferencesImportExport.vue": {
+        "description": "偏好设置:导入/导出"
+    },
+    "src/components/modals/ModalProStatements.vue": {
+        "description": "制作报表(PRO)"
+    },
+    "src/components/modals/ModalRecommProcesses.vue": {
+        "description": "推荐流程"
+    },
+    "src/components/modals/ModalSponsorsList.vue": {
+        "description": "致谢名单"
+    },
+    "src/views/main": {
+        "description": "主界面"
+    },
+    "src/views/main/components/AppAnnouncements.vue": {
+        "description": "公告"
+    },
+    "src/views/main/components/GearSelectionPanel.vue": {
+        "description": "选择部件"
+    },
+    "src/views/main/components/JobPanel.vue": {
+        "description": "选择职业"
+    },
+    "src/views/main/components/ModalConfirmImportMain.vue": {
+        "description": "确认导入内容"
+    },
+    "src/views/main/components/ModalImExportMain.vue": {
+        "description": "导入/导出"
+    },
+    "src/views/main/components/ModalSelectedGears.vue": {
+        "description": "已选部件"
+    },
+    "src/views/main/components/PatchPanel.vue": {
+        "description": "选择版本"
+    },
+    "src/views/main/components/StatisticsPanel.vue": {
+        "description": "查看统计"
+    },
+    "src/views/collectable-submissions": {
+        "description": "工票计算"
+    },
+    "src/views/collectable-submissions/components/ItemSelectionPanel.vue": {
+        "description": "选择收藏品"
+    },
+    "src/views/download": {
+        "description": "下载页"
+    },
+    "src/views/error": {
+        "description": "错误页"
+    },
+    "src/views/fashion-clothes": {
+        "description": "时装计算"
+    },
+    "src/views/fashion-clothes/components/ItemSelectionPanel.vue": {
+        "description": "选择时装"
+    },
+    "src/views/food-and-tinc": {
+        "description": "食药计算"
+    },
+    "src/views/food-and-tinc/components/ItemSelectionPanel.vue": {
+        "description": "选择食药"
+    },
+    "src/views/gatherclock": {
+        "description": "采集时钟"
+    },
+    "src/views/gatherclock/components/GatherItemCard.vue": {
+        "description": "采集品卡片"
+    },
+    "src/views/gatherclock/components/ModalAlarmMacroExport.vue": {
+        "description": "导出闹钟宏"
+    },
+    "src/views/gatherclock/components/ModalAudioConfig.vue": {
+        "description": "提示音设置"
+    },
+    "src/views/macro-manage": {
+        "description": "宏管理"
+    },
+    "src/views/macro-manage/components/ModalBatchAddCraftMacro.vue": {
+        "description": "批量添加宏"
+    },
+    "src/views/macro-manage/components/ModalCraftActionsEdit.vue": {
+        "description": "编辑制作技能"
+    },
+    "src/views/macro-manage/components/ModalCraftMacroEdit.vue": {
+        "description": "添加/编辑宏"
+    },
+    "src/views/macro-manage/components/ModalImExportCraftMacro.vue": {
+        "description": "导入/导出"
+    },
+    "src/views/macro-manage/components/ModalPresetCReqsManage.vue": {
+        "description": "管理常用属性组"
+    },
+    "src/views/macro-manage/components/ModalPresetTagsManage.vue": {
+        "description": "管理常用标签"
+    },
+    "src/views/workflow": {
+        "description": "工作流"
+    },
+    "src/views/workflow-process": {
+        "description": "工作流(客户端)"
+    }
+}

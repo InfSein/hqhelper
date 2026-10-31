@@ -1,3 +1,12 @@
+:root {
+  --app-font-size: 14px;
+  --app-font-size-2xs: calc(var(--app-font-size) - 4px);
+  --app-font-size-xs: calc(var(--app-font-size) - 2px);
+  --app-font-size-sm: calc(var(--app-font-size) - 1px);
+  --app-font-size-lg: calc(var(--app-font-size) + 1px);
+  --app-font-size-xl: calc(var(--app-font-size) + 2px);
+}
+
 *,
 *::before,
 *::after {
@@ -25,8 +34,9 @@ body {
     Arial, 
     Helvetica, 
     sans-serif;
-  font-size: 15px;
+  font-size: var(--app-font-size);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
