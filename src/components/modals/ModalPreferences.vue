@@ -407,7 +407,7 @@ const preferenceGroups = computed(() : PreferenceGroup[] => {
               type: 'switch'
             },
             {
-              key: 'inventory_ws_port',
+              key: 'tpd_ws_port',
               label: t('preference.inventory_plugin.port.title'),
               hide: !window.wsApi || !formUserConfigData.value.receive_third_party_data,
               type: 'number',
@@ -415,7 +415,7 @@ const preferenceGroups = computed(() : PreferenceGroup[] => {
               max: 65535,
             },
             {
-              key: 'inventory_ws_token',
+              key: 'tpd_ws_token',
               label: t('preference.inventory_plugin.token.title'),
               hide: !window.wsApi || !formUserConfigData.value.receive_third_party_data,
               descriptions: [
@@ -424,7 +424,7 @@ const preferenceGroups = computed(() : PreferenceGroup[] => {
               type: 'password',
             },
             {
-              key: 'inventory_ws_test_connection',
+              key: 'tpd_ws_test_connection',
               label: t('preference.inventory_plugin.test.title'),
               hide: !window.wsApi || !formUserConfigData.value.receive_third_party_data,
               descriptions: inventoryTestDescriptions.value,
@@ -1029,6 +1029,7 @@ const onLoad = () => {
 const handleCheck = () => {
   const port = Number(formUserConfigData.value.tpd_ws_port)
   const token = formUserConfigData.value.tpd_ws_token?.trim() ?? ''
+  console.log(port, token, formUserConfigData.value)
   if (
     formUserConfigData.value.receive_third_party_data
     && (!Number.isInteger(port) || port < 1 || port > 65535 || !token)
