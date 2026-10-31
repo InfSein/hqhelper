@@ -34,7 +34,7 @@ const defaultWorkflow: Workflow = {
   }
 }
 export const getDefaultWorkflow = () => deepCopy(defaultWorkflow)
-export const _VAR_MAX_WORKFLOW = 10;
+export const _VAR_MAX_WORKFLOW = 8;
 
 export interface WorkState {
   pageView: "AB" | "BC";

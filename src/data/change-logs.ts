@@ -83,7 +83,7 @@ export const getChangelogs = (
   const isZh = ui_lang === 'zh'
   return [
     {
-      version: '3.0.0 Alpha1',
+      version: '3.0.0 Beta1',
       date: '2026-11-01',
       changes: [
         {
