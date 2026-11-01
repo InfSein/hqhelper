@@ -184,6 +184,16 @@ const {
   openModal: handleAnalysisItemPrices,
 } = useCostAndBenefit(statementData)
 provide('updateItemPrices', updateItemPrices)
+
+const costAndBenefitDescriptions = computed(() => {
+  const ruleText = store.funcConfig.costandbenefit_benefit_calculation_rule === 'net'
+    ? t('preference.costandbenefit_benefit_calculation_rule.option.net')
+    : t('preference.costandbenefit_benefit_calculation_rule.option.total')
+  return [
+    t('statistics.group.cost_and_benefit.button.tooltip.tooltip_1'),
+    t('statistics.group.cost_and_benefit.button.tooltip.tooltip_2', { rule: ruleText }),
+  ]
+})
 </script>
 
 <template>
@@ -311,10 +321,7 @@ provide('updateItemPrices', updateItemPrices)
         <GroupBox
           id="price-analysis-group" class="group"
           :title="t('statistics.group.cost_and_benefit.title')"
-          :descriptions="[
-            t('statistics.group.cost_and_benefit.button.tooltip.tooltip_1'),
-            t('statistics.group.cost_and_benefit.button.tooltip.tooltip_2')
-          ]"
+          :descriptions="costAndBenefitDescriptions"
         >
           <n-button
             style="width: 100%; height: 55px;"

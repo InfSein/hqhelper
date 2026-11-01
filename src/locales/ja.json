@@ -1293,7 +1293,8 @@
     "custom_price_off": "カスタム価格を無効化",
     "tooltip": {
       "cal_hq_price_here": "HQの価格が計算に含まれています（HQがない場合はNQの価格）。",
-      "cal_nq_price_here": "NQの価格が計算に含まれています。"
+      "cal_nq_price_here": "NQの価格が計算に含まれています。",
+      "current_displaying_rule": "現在は{rule}を表示しています。"
     }
   },
   "cs_helper": {
@@ -2112,6 +2113,16 @@
       },
       "title": "コスト/収益分析のアイテム並び順の基準"
     },
+    "costandbenefit_benefit_calculation_rule": {
+      "desc": {
+        "desc_1": "「純収益」を選択した場合、予想収益から予想コストが差し引かれます。"
+      },
+      "option": {
+        "net": "純収益",
+        "total": "総収益"
+      },
+      "title": "コスト/収益分析における収益計算ルール"
+    },
     "costandbenefit_show_item_details": "コスト/収益分析におけるアイテム詳細の表示機能を追加しました",
     "custom_background": {
       "desc": {
@@ -2596,7 +2607,7 @@
           },
           "tooltip": {
             "tooltip_1": "Universalis APIを利用し、素材のコストと予想される収入を計算します。",
-            "tooltip_2": "「収入」とは、完成品を販売した際に得られるギルのことです（コストは差し引かれていません）。"
+            "tooltip_2": "「収益」の計算ルールは環境設定で調整できます。現在は{rule}です。"
           }
         },
         "title": "コスト/収入予測",

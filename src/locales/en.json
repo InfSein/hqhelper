@@ -1293,7 +1293,8 @@
     "custom_price_off": "Disable Custom Prices",
     "tooltip": {
       "cal_hq_price_here": "Based on HQ item prices (or NQ prices if HQ is unavailable).",
-      "cal_nq_price_here": "Based on NQ item prices."
+      "cal_nq_price_here": "Based on NQ item prices.",
+      "current_displaying_rule": "Currently displaying: {rule}."
     }
   },
   "cs_helper": {
@@ -2112,6 +2113,16 @@
       },
       "title": "Items sorting rules in cost/benefit analysis"
     },
+    "costandbenefit_benefit_calculation_rule": {
+      "desc": {
+        "desc_1": "When \"Net profit\" is selected, estimated cost will be deducted from estimated benefit."
+      },
+      "option": {
+        "net": "Net profit",
+        "total": "Gross profit"
+      },
+      "title": "Profit calculation rule in cost/benefit analysis"
+    },
     "costandbenefit_show_item_details": "Display item details in cost/benefit analysis",
     "custom_background": {
       "desc": {
@@ -2596,7 +2607,7 @@
           },
           "tooltip": {
             "tooltip_1": "Calculate the cost and benefit of materials with data given by Universalis API.",
-            "tooltip_2": "Benefit means sold earns, not deducted by cost."
+            "tooltip_2": "The \"Benefit\" calculation rule can be adjusted in Preferences, currently set to {rule}."
           }
         },
         "title": "Cost/Benefit",

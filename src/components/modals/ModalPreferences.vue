@@ -930,6 +930,24 @@ const preferenceGroups = computed(() : PreferenceGroup[] => {
               ]
             },
             {
+              key: 'costandbenefit_benefit_calculation_rule',
+              label: t('preference.costandbenefit_benefit_calculation_rule.title'),
+              descriptions: [
+                t('preference.costandbenefit_benefit_calculation_rule.desc.desc_1'),
+              ],
+              type: 'radio-group',
+              options: [
+                {
+                  value: 'total',
+                  label: t('preference.costandbenefit_benefit_calculation_rule.option.total')
+                },
+                {
+                  value: 'net',
+                  label: t('preference.costandbenefit_benefit_calculation_rule.option.net')
+                }
+              ]
+            },
+            {
               key: 'universalis_showpriceinpop',
               label: t('preference.universalis_showpriceinpop.title'),
               descriptions: [

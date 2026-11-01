@@ -1305,7 +1305,8 @@
     "custom_price_off": "关闭自定义价格",
     "tooltip": {
       "cal_hq_price_here": "此处计入物品的HQ价格（无HQ品质时取NQ价格）。",
-      "cal_nq_price_here": "此处计入物品的NQ价格。"
+      "cal_nq_price_here": "此处计入物品的NQ价格。",
+      "current_displaying_rule": "当前正在显示{rule}。"
     }
   },
   "cs_helper": {
@@ -2101,6 +2102,16 @@
       },
       "title": "成本/收益分析中物品默认排序规则"
     },
+    "costandbenefit_benefit_calculation_rule": {
+      "desc": {
+        "desc_1": "选择“净收益”时，预计收益将扣除预计成本。"
+      },
+      "option": {
+        "net": "净收益",
+        "total": "总收益"
+      },
+      "title": "成本/收益分析中收益计算规则"
+    },
     "costandbenefit_show_item_details": "成本/收益分析中显示物品详情",
     "custom_background": {
       "desc": {
@@ -2548,7 +2559,7 @@
           },
           "tooltip": {
             "tooltip_1": "借助Universalis提供的API计算素材成本和预计收益。",
-            "tooltip_2": "“收益”是指卖出制作成品所能获得的金钱，并未扣除成本。"
+            "tooltip_2": "“收益”的计算规则可在偏好设置中调整，当前为{rule}。"
           }
         },
         "title": "成本/收益预估",

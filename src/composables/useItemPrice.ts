@@ -46,6 +46,8 @@ const useItemPrice = () => {
 
       return {
         total: totalStr,
+        totalVal: total,
+        hasValue,
         partial,
         itemsMap
       }
@@ -54,14 +56,31 @@ const useItemPrice = () => {
     const costRes = calculateTotal(costItems, 'NQ')
     const benefitRes = calculateTotal(benefitItems, 'HQ')
 
+    let benefitInfo = benefitRes.total
+    let isBenefitPartial = benefitRes.partial
+
+    if (store.funcConfig.costandbenefit_benefit_calculation_rule === 'net') {
+      if (benefitRes.total === '???') {
+        benefitInfo = '???'
+      } else if (costRes.total === '???') {
+        benefitInfo = '???'
+      } else {
+        const netTotal = benefitRes.totalVal - costRes.totalVal
+        benefitInfo = Math.floor(netTotal).toLocaleString()
+      }
+      if (costRes.partial) {
+        isBenefitPartial = true
+      }
+    }
+
     return {
       updateRequired,
       itemsCost: costRes.itemsMap,
       itemsBenefit: benefitRes.itemsMap,
       costInfo: costRes.total,
-      benefitInfo: benefitRes.total,
+      benefitInfo,
       isCostPartial: costRes.partial,
-      isBenefitPartial: benefitRes.partial
+      isBenefitPartial
     }
   }
 

@@ -82,6 +82,7 @@ const customCostAndBenefit = computed(() => {
 
     return {
       total: totalStr,
+      totalVal: total,
       partial: false,
     }
   }
@@ -89,9 +90,15 @@ const customCostAndBenefit = computed(() => {
   const costRes = calcTotal(props.costItems, 'NQ')
   const benefitRes = calcTotal(props.benefitItems, 'HQ')
 
+  let benefitInfo = benefitRes.total
+  if (store.funcConfig.costandbenefit_benefit_calculation_rule === 'net') {
+    const netTotal = benefitRes.totalVal - costRes.totalVal
+    benefitInfo = Math.floor(netTotal).toLocaleString()
+  }
+
   return {
     costInfo: costRes.total,
-    benefitInfo: benefitRes.total,
+    benefitInfo,
     isCostPartial: costRes.partial,
     isBenefitPartial: benefitRes.partial,
   }
@@ -116,6 +123,16 @@ const isBenefitPartial = computed(() => {
   return customPriceMode.value
     ? customCostAndBenefit.value.isBenefitPartial
     : costAndBenefit.value.isBenefitPartial
+})
+
+const benefitDescriptions = computed(() => {
+  const ruleText = store.funcConfig.costandbenefit_benefit_calculation_rule === 'net'
+    ? t('preference.costandbenefit_benefit_calculation_rule.option.net')
+    : t('preference.costandbenefit_benefit_calculation_rule.option.total')
+  return [
+    t('cost_and_benefit.tooltip.cal_hq_price_here'),
+    t('cost_and_benefit.tooltip.current_displaying_rule', { rule: ruleText }),
+  ]
 })
 
 const showItemDetails = computed(() => {
@@ -191,7 +208,7 @@ const handleShowItemPriceDetail = () => {
         :tab="t('common.benefit')"
       >
         <div class="container">
-          <div class="text-right">
+          <div class="text-right flex items-center justify-end gap-1">
             <span>{{ t('statistics.group.cost_and_benefit.button.text.text_2', { val: benefitInfo }) }}</span>
             <i class="xiv gil"></i>
             <TooltipText
@@ -199,6 +216,7 @@ const handleShowItemPriceDetail = () => {
               :text="t('common.or_more')"
               :tooltip="t('statistics.group.cost_and_benefit.tooltip.benefit_is_partial')"
             />
+            <HelpButton icon="info" :size="18" :descriptions="benefitDescriptions" />
           </div>
           <ItemPriceTable
             price-type="HQ"
@@ -240,7 +258,7 @@ const handleShowItemPriceDetail = () => {
           @save:custom-price="handlePriceSave"
         />
       </GroupBox>
-      <GroupBox>
+      <GroupBox :descriptions="benefitDescriptions">
         <template #title>
           <div class="group-title">
             <span>{{ t('statistics.group.cost_and_benefit.button.text.text_2', { val: benefitInfo }) }}</span>
@@ -250,7 +268,7 @@ const handleShowItemPriceDetail = () => {
               :text="t('common.or_more')"
               :tooltip="t('statistics.group.cost_and_benefit.tooltip.benefit_is_partial')"
             />
-            <HelpButton icon="info" :size="18" :descriptions="[t('cost_and_benefit.tooltip.cal_hq_price_here')]" />
+            <HelpButton icon="info" :size="18" :descriptions="benefitDescriptions" />
           </div>
         </template>
         <ItemPriceTable
