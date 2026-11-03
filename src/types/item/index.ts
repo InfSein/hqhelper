@@ -1,5 +1,5 @@
 import type { Component } from "vue"
-import type { ItemTradeInfo } from "@/assets/data"
+import type { ItemGilShopInfo, ItemTradeInfo } from "@/assets/data"
 import type { XivMapAetheryteInfo } from "@/tools/game/map"
 
 export interface ItemInfo {
@@ -162,6 +162,8 @@ export interface ItemInfo {
   /** 是否为家具/庭具 */
   isFurnishing: boolean
   tradeInfo: ItemTradeInfo | undefined
+  /** NPC 商店购买信息 */
+  gilShopInfo?: ItemGilShopInfo
   collectInfo?: {
     levelMin: number
     levelMax: number

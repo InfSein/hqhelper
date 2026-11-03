@@ -1239,7 +1239,8 @@
     "copy_item_ja_name": "复制日文名",
     "copy_item_en_name": "复制英文名",
     "optional": "可选",
-    "submit": "提交"
+    "submit": "提交",
+    "buy": "购买"
   },
   "contact_us": {
     "feedback": {
@@ -1746,7 +1747,11 @@
       "context_title": {
         "copy": "复制……",
         "openin": "打开……"
-      }
+      },
+      "can_buy_from_shop": "该物品可以在NPC商店购买：",
+      "shop_price": "售价：{price}",
+      "shop_location": "位置：",
+      "shop_npc": "NPC：{npc}"
     }
   },
   "macro_manage": {

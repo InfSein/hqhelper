@@ -9,6 +9,7 @@ import {
   XivItemTypes,
   XivGatheringBonuses,
   XivUnpackedTradeMap,
+  XivUnpackedGilShops,
   XivUnpackedCollectableSubmissions,
   HqData,
   type XivPatchVer,
@@ -361,6 +362,12 @@ export const getItemInfo = (item: `${number}` | number, amount = 0) => {
 
   // * 组装物品兑换信息
   itemInfo.tradeInfo = XivUnpackedTradeMap[itemInfo.id]
+
+  // * 组装物品NPC商店购买信息与售价
+  const gilShop = XivUnpackedGilShops[itemInfo.id]
+  if (gilShop) {
+    itemInfo.gilShopInfo = gilShop
+  }
 
   // * 处理物品是钓鱼采集品的场合
   // 目前也没有数据，给个标识让人去饿猫鱼糕找吧！

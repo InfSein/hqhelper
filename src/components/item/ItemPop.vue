@@ -18,9 +18,10 @@ import { useAppModals } from '@/composables/useAppModals'
 import { useEorzeaTime } from '@/composables/useEorzeaTime'
 import { useResponsive } from '@/composables/useResponsive'
 import { useItemLocale } from '@/composables/useItemLocale'
-import { XivItemRemarks, XivJobs } from '@/assets/data'
+import { XivItemRemarks, XivJobs, XivUnpackedNpcs } from '@/assets/data'
 import { getItemInfo } from '@/tools/item'
 import { calculateGatherThresholds } from '@/tools/item/gather'
+import { getPlaceNames } from '@/tools/game/map'
 import type { ItemInfo } from '@/types/item'
 import { handleGetPriceError } from '@/tools/error'
 import { getItemPriceInfo } from '@/tools/item/price'
@@ -188,6 +189,41 @@ const tradeCostList = computed(() => {
   }
 
   return result
+})
+const shopInfo = computed(() => {
+  return props.itemInfo.gilShopInfo
+})
+const shopNpc = computed(() => {
+  if (!shopInfo.value?.npc) return undefined
+  return XivUnpackedNpcs[shopInfo.value.npc]
+})
+const shopNpcName = computed(() => {
+  if (!shopNpc.value) return undefined
+  switch (itemLanguage.value) {
+    case 'ja': return shopNpc.value.name[0]
+    case 'en': return shopNpc.value.name[1]
+    case 'zh':
+    default: return shopNpc.value.name[2] || shopNpc.value.name[0]
+  }
+})
+const shopNpcLocation = computed(() => {
+  if (!shopNpc.value?.coords || !shopNpc.value?.place) return undefined
+  const placeNames = getPlaceNames(shopNpc.value.place)
+  let placeName = placeNames.name_zh
+  switch (itemLanguage.value) {
+    case 'ja':
+      placeName = placeNames.name_ja
+      break
+    case 'en':
+      placeName = placeNames.name_en
+      break
+  }
+  return {
+    placeId: shopNpc.value.place,
+    placeName,
+    coordinateX: shopNpc.value.coords.x,
+    coordinateY: shopNpc.value.coords.y,
+  }
 })
 const timeCanGather = (timeLimit: {start: string, end: string}) => {
   try {
@@ -584,6 +620,30 @@ const handleOnScroll = (e: Event) => {
             <n-divider class="item-divider" />
             <div class="content">
               <ItemSubmissionReward :item-info="itemInfo" />
+            </div>
+          </div>
+          <!-- 购买 -->
+          <div class="description-block" v-if="shopInfo">
+            <div class="title">{{ t('common.buy') }}</div>
+            <n-divider class="item-divider" />
+            <div class="content">
+              <div>{{ t('item.text.can_buy_from_shop') }}</div>
+              <div class="item">
+                {{ t('item.text.shop_price', { price: shopInfo?.costCount ?? '???' }) }}
+                <i class="xiv gil"></i>
+                ,
+                {{ t('item.text.shop_npc', { npc: shopNpcName }) }}
+              </div>
+              <div v-if="shopNpcLocation" class="item">
+                <span>{{ t('item.text.shop_location') }}</span>
+                <LocationSpan
+                  :place-id="shopNpcLocation.placeId"
+                  :place-name="shopNpcLocation.placeName"
+                  :coordinate-x="shopNpcLocation.coordinateX"
+                  :coordinate-y="shopNpcLocation.coordinateY"
+                  :pop-trigger="innerPopTrigger"
+                />
+              </div>
             </div>
           </div>
           <!-- 兑换 -->

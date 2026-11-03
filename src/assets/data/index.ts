@@ -202,6 +202,29 @@ export interface ItemTradeInfo {
 }
 import JsonXivUnpackedTradeMap from './unpacks/trade-map.json'
 export const XivUnpackedTradeMap = JsonXivUnpackedTradeMap as Record<number, ItemTradeInfo>
+
+export interface ItemGilShopInfo {
+  receiveCount: number
+  costId: number
+  costCount: number
+  npc: number
+}
+import JsonXivUnpackedGilShops from './unpacks/gil-shops.json'
+export const XivUnpackedGilShops = JsonXivUnpackedGilShops as Record<number, ItemGilShopInfo>
+
+export interface XivUnpackedNpc {
+  id: number
+  /** [日文, 英文, 中文] */
+  name: string[]
+  territory?: number
+  place?: number
+  coords?: {
+    x: number
+    y: number
+  }
+}
+import JsonXivUnpackedNpcs from './unpacks/npcs.json'
+export const XivUnpackedNpcs = JsonXivUnpackedNpcs as Record<number, XivUnpackedNpc>
 // #endregion
 
 // #region Other

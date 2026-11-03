@@ -1227,7 +1227,8 @@
     },
     "project_github": "プロジェクトGitHub",
     "optional": "任意",
-    "submit": "送信"
+    "submit": "送信",
+    "buy": "購入"
   },
   "contact_us": {
     "feedback": {
@@ -1723,7 +1724,10 @@
       "timelimited_gatherable": "採集可能期間中",
       "trade_also_receive": "両替機能で獲得",
       "yields_info": "Yields: {val}",
-      "zh_name_is_temp": "DONT_SHOW"
+      "zh_name_is_temp": "DONT_SHOW",
+      "can_buy_from_shop": "NPCショップで購入可能なアイテムです：",
+      "shop_price": "価格：{price}gil",
+      "shop_location": "場所："
     }
   },
   "macro_manage": {

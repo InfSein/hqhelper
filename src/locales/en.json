@@ -1227,7 +1227,8 @@
       "close": "Close"
     },
     "optional": "Optional",
-    "submit": "Submit"
+    "submit": "Submit",
+    "buy": "Purchase"
   },
   "contact_us": {
     "feedback": {
@@ -1723,7 +1724,10 @@
       "timelimited_gatherable": "ACTIVE",
       "trade_also_receive": "Would also receive:",
       "yields_info": "Yields: {val}",
-      "zh_name_is_temp": "DONT_SHOW"
+      "zh_name_is_temp": "DONT_SHOW",
+      "can_buy_from_shop": "This item can be purchased from NPC shops:",
+      "shop_price": "Price: {price} gil",
+      "shop_location": "Location: "
     }
   },
   "macro_manage": {
