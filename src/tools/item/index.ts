@@ -213,13 +213,15 @@ export const getItemInfo = (item: `${number}` | number, amount = 0) => {
   // * 组装物品采集信息
   const gatherData = XivUnpackedGatheringItems[itemID]
   if (gatherData) {
-    const gatherJob = gatherData.type <= 1 ? 16 /*采矿*/ : 17 /*园艺*/
+    let gatherJob = 0
     let gntype_zh = '???', gntype_en = '???', gntype_ja = '???'
     switch (gatherData.type) {
-      case 0: gntype_zh = '矿脉'; gntype_en = 'mineral deposit'; gntype_ja = '採掘'; break
-      case 1: gntype_zh = '石场'; gntype_en = 'rocky outcrop'; gntype_ja = '砕岩'; break
-      case 2: gntype_zh = '良材'; gntype_en = 'mature tree'; gntype_ja = '伐採'; break
-      case 3: gntype_zh = '草场'; gntype_en = 'lush vegetation'; gntype_ja = '草刈'; break
+      case 0: gatherJob = 16; gntype_zh = '矿脉'; gntype_en = 'mineral deposit'; gntype_ja = '採掘'; break
+      case 1: gatherJob = 16; gntype_zh = '石场'; gntype_en = 'rocky outcrop'; gntype_ja = '砕岩'; break
+      case 2: gatherJob = 17; gntype_zh = '良材'; gntype_en = 'mature tree'; gntype_ja = '伐採'; break
+      case 3: gatherJob = 17; gntype_zh = '草场'; gntype_en = 'lush vegetation'; gntype_ja = '草刈'; break
+      case 4: gatherJob = 18; gntype_zh = '刺鱼'; gntype_en = 'spearfishing'; gntype_ja = '刺突漁'; break
+      case 5: gatherJob = 18; gntype_zh = '垂钓'; gntype_en = 'fishing'; gntype_ja = '釣り'; break
     }
     const nodeLevel = gatherData.pointLevel
     gntype_zh = nodeLevel + '级' + '★'.repeat(gatherData.star) + gntype_zh

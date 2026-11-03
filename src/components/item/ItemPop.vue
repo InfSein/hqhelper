@@ -472,14 +472,6 @@ const handleOnScroll = (e: Event) => {
                 </p>
                 <p v-else>{{ getJobName(XivJobs[itemInfo.gatherInfo.jobId]) }}</p>
               </div>
-              <div v-if="itemInfo.isFishingItem" class="extra">
-                <XivFARImage
-                  class="icon"
-                  :src="XivJobs[18].job_icon_url"
-                  :size="12"
-                />
-                <p>{{ getJobName(XivJobs[18]) }}</p>
-              </div>
               <div v-if="itemInfo.gatherInfo?.[`gntype_${uiLanguage}`]" class="extra">
                 {{ ' - ' }}
                 {{ itemInfo.gatherInfo[`gntype_${uiLanguage}`] }}
@@ -487,7 +479,7 @@ const handleOnScroll = (e: Event) => {
             </div>
             <n-divider class="item-divider" />
             <div class="content" v-if="itemInfo.gatherInfo">
-              <div class="other-attrs" v-if="itemGatherDifficulty" style="gap: 2px;">
+              <div class="other-attrs" v-if="!itemInfo.isFishingItem && itemGatherDifficulty" style="gap: 2px;">
                 {{ itemGatherDifficulty.diffText }}
                 <HelpButton
                   :size="12"
@@ -495,7 +487,6 @@ const handleOnScroll = (e: Event) => {
                   color="var(--color-info)"
                   pop-type="popover"
                   :placement="isMobile ? 'bottom' : 'right-start'"
-                  style="padding: 0;"
                 >
                   <div>
                     <div class="font-bold">{{ t('item.gather_threshold.title.gather_threshold') }}</div>
