@@ -224,9 +224,11 @@ export const getItemInfo = (item: `${number}` | number, amount = 0) => {
       case 5: gatherJob = 18; gntype_zh = '垂钓'; gntype_en = 'fishing'; gntype_ja = '釣り'; break
     }
     const nodeLevel = gatherData.pointLevel
-    gntype_zh = nodeLevel + '级' + '★'.repeat(gatherData.star) + gntype_zh
-    gntype_en = 'Lv ' + nodeLevel + '★'.repeat(gatherData.star) + ' ' + gntype_en
-    gntype_ja = 'レベル' + nodeLevel + '★'.repeat(gatherData.star) + gntype_ja
+    if (gatherData.type <= 3) { // 钓鱼的场地等级好像有点问题，先不显示
+      gntype_zh = nodeLevel + '级' + '★'.repeat(gatherData.star) + gntype_zh
+      gntype_en = 'Lv ' + nodeLevel + '★'.repeat(gatherData.star) + ' ' + gntype_en
+      gntype_ja = 'レベル' + nodeLevel + '★'.repeat(gatherData.star) + gntype_ja
+    }
     const territoryID = gatherData.territory
     if (territoryID && XivUnpackedTerritories[territoryID]) {
       const territoryData = XivUnpackedTerritories[territoryID]
@@ -354,16 +356,16 @@ export const getItemInfo = (item: `${number}` | number, amount = 0) => {
   itemInfo.isCrystal = itemInfo.uiTypeId === 59
   itemInfo.isAethersand = itemInfo.name_en.endsWith('Aethersand')
 
-  // * 处理物品是钓鱼采集品的场合
-  // 目前也没有数据，给个标识让人去饿猫鱼糕找吧！
-  // 如果可以兑换，那一般不是钓鱼采集品(例如 [44174]ロイヤルロブスター)
-  itemInfo.isFishingItem = !itemInfo.tradeInfo && itemType === 47
-
   // * 处理物品是否为家具/庭具
   itemInfo.isFurnishing = itemType === 57 || (itemType >= 65 && itemType <= 80)
 
   // * 组装物品兑换信息
   itemInfo.tradeInfo = XivUnpackedTradeMap[itemInfo.id]
+
+  // * 处理物品是钓鱼采集品的场合
+  // 目前也没有数据，给个标识让人去饿猫鱼糕找吧！
+  // 如果可以兑换，那一般不是钓鱼采集品(例如 [44174]ロイヤルロブスター)
+  itemInfo.isFishingItem = !itemInfo.tradeInfo && itemType === 47
 
   // * 组装物品收藏品交易信息
   const csd = XivUnpackedCollectableSubmissions[itemInfo.id]

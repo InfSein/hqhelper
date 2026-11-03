@@ -332,6 +332,31 @@ export function useItemContextMenu(
               window.open(`https://ffxivteamcraft.com/simulator/${itemInfo.id}/${itemInfo?.craftInfo?.recipeId}`)
             }
           },
+          {
+            type: 'divider',
+            key: 'openin-group__d2',
+            show: !!itemInfo.isFishingItem
+          },
+          {
+            label: t('common.open_in.angler_search'),
+            key: 'open-in-angler',
+            show: !!itemInfo.isFishingItem,
+            click: () => {
+              // 钓鱼笔记站点的语言子域名与物品语言的对应关系
+              const langMap: Record<string, string> = { zh: 'cn', ja: 'jp', en: 'en' }
+              const lang = langMap[itemLanguage.value] ?? itemLanguage.value
+              const name = getItemDisplayName(itemInfo)
+              window.open(`https://${lang}.ff14angler.com/?search=${name}`)
+            }
+          },
+          {
+            label: t('common.open_in.ffmomola'),
+            key: 'open-in-momola',
+            show: !!itemInfo.isFishingItem,
+            click: () => {
+              window.open(`https://fish.ffmomola.com/ng/#/wiki/fish/${itemInfo.id}`)
+            }
+          },
         ]
       },
     ]

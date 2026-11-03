@@ -35,7 +35,6 @@ const {
   uiLanguage, itemLanguage,
 } = useConfig()
 const {
-  getItemName,
   getItemTypeName,
   getJobName,
   getAttrName,
@@ -203,20 +202,6 @@ const timeCanGather = (timeLimit: {start: string, end: string}) => {
     console.error(err)
   }
   return ''
-}
-
-const openInMomola = () => {
-  window.open(`https://fish.ffmomola.com/ng/#/wiki/fish/${props.itemInfo.id}`)
-}
-const openInAngler = () => {
-  let lang : string = itemLanguage.value
-  switch (lang) {
-    case 'zh': lang = 'cn'; break
-    case 'ja': lang = 'jp'; break
-  }
-  const name = getItemName(props.itemInfo)
-  const domain = `https://${lang}.ff14angler.com/`
-  window.open(`${domain}?search=${name}`)
 }
 
 const openInBestCraft = () => {
@@ -583,23 +568,6 @@ const handleOnScroll = (e: Event) => {
                   }}{{ bonus.bonus[`text_${uiLanguage}`] }}
                 </li>
               </ul>
-            </div>
-            <div class="content" v-if="itemInfo.isFishingItem">
-              <div>{{ t('item.text.gather_website.intro') }}</div>
-              <div class="item actions">
-                <n-button size="small" @click="openInAngler">
-                  <template #icon>
-                    <n-icon><OpenInNewFilled /></n-icon>
-                  </template>
-                  {{ t('common.open_in.angler_search') }}
-                </n-button>
-                <n-button size="small" @click="openInMomola">
-                  <template #icon>
-                    <n-icon><OpenInNewFilled /></n-icon>
-                  </template>
-                  {{ t('common.open_in.ffmomola') }}
-                </n-button>
-              </div>
             </div>
             <div v-show="false" class="content extra" v-if="itemInfo.isFishingItem">
               {{ t('item.text.gather_website.note') }}
