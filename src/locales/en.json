@@ -2834,6 +2834,11 @@
       "title": "Crafting Log Settings",
       "custom_action_buttons": "Customize Action Buttons",
       "star_recipe": "Star/Unstar Button"
+    },
+    "notebook_actions": {
+      "previous": "Previous category",
+      "next": "Next category",
+      "join_menu_recipes": "Add recipes in this entry to workflow"
     }
   },
   "eorzea_time_modal": {

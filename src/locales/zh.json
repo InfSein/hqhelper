@@ -2790,7 +2790,8 @@
     },
     "notebook_actions": {
       "previous": "查看上一类",
-      "next": "查看下一类"
+      "next": "查看下一类",
+      "join_menu_recipes": "将此项目中的配方加入到工作流"
     }
   },
   "recipe": {

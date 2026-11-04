@@ -951,6 +951,18 @@ const handleJoinCustomList = (entry: CustomListEntry) => {
     joinItemsToWorkflow(entry.itemsMap)
   }
 }
+
+const handleJoinMenuRecipes = (menu: NotebookMenu) => {
+  const itemsMap: Record<number, number> = {}
+  Object.values(menu.contentGroups).forEach(cg => {
+    cg.items.forEach(item => {
+      itemsMap[item.id] = 1
+    })
+  })
+  if (Object.keys(itemsMap).length > 0) {
+    joinItemsToWorkflow(itemsMap)
+  }
+}
 // #endregion
 
 // #region starred recipes
@@ -1556,7 +1568,7 @@ defineExpose({
           </n-tab>
         </n-tabs>
         <n-scrollbar trigger="none" class="flex-1">
-          <div class="flex flex-col gap-0.5">
+          <div class="flex flex-col gap-0.5 pr-3">
             <template v-if="isStarredMode">
               <n-button
                 size="small"
@@ -1606,15 +1618,30 @@ defineExpose({
                 >
                   <!-- 单子项分类：直接作为一级按钮展示 -->
                   <template v-if="node.children.length === 1">
-                    <n-button
-                      size="small"
-                      :tertiary="!isSearchMode && selectedContentGroup === node.children[0].menuId"
-                      :quaternary="isSearchMode || selectedContentGroup !== node.children[0].menuId"
-                      class="justify-start truncate"
-                      @click="handleContentGroupSelect(node.children[0].menuId)"
-                    >
-                      <span class="truncate">{{ node.children[0].menu.name }}</span>
-                    </n-button>
+                    <div class="flex items-center gap-1 group">
+                      <n-button
+                        size="small"
+                        :tertiary="!isSearchMode && selectedContentGroup === node.children[0].menuId"
+                        :quaternary="isSearchMode || selectedContentGroup !== node.children[0].menuId"
+                        class="flex-1 justify-start truncate"
+                        @click="handleContentGroupSelect(node.children[0].menuId)"
+                      >
+                        <span class="truncate">{{ node.children[0].menu.name }}</span>
+                      </n-button>
+                      <n-button
+                        size="small"
+                        :type="!isSearchMode && selectedContentGroup === node.children[0].menuId ? 'primary' : 'default'"
+                        :tertiary="!isSearchMode && selectedContentGroup === node.children[0].menuId"
+                        :quaternary="isSearchMode || selectedContentGroup !== node.children[0].menuId"
+                        class="shrink-0 n-square-button"
+                        :title="t('workflow.notebook_actions.join_menu_recipes')"
+                        @click.stop="handleJoinMenuRecipes(node.children[0].menu)"
+                      >
+                        <template #icon>
+                          <n-icon :size="16"><JoinLeftOutlined /></n-icon>
+                        </template>
+                      </n-button>
+                    </div>
                   </template>
 
                   <!-- 多子项分类：一级标题 + 带树枝线条的二级菜单 -->
@@ -1636,15 +1663,28 @@ defineExpose({
                       <div
                         class="absolute left-2 top-3.5 w-1.5 md:w-2.5 border-t border-sub opacity-50"
                       />
-                      <div class="pl-3.5 md:pl-5">
+                      <div class="pl-3.5 md:pl-5 flex items-center gap-1 group">
                         <n-button
                           size="small"
                           :tertiary="!isSearchMode && selectedContentGroup === child.menuId"
                           :quaternary="isSearchMode || selectedContentGroup !== child.menuId"
-                          class="justify-start w-full truncate pl-1!"
+                          class="flex-1 justify-start truncate pl-1!"
                           @click="handleContentGroupSelect(child.menuId)"
                         >
                           <span class="truncate">{{ child.subLabel }}</span>
+                        </n-button>
+                        <n-button
+                          size="small"
+                          :type="!isSearchMode && selectedContentGroup === child.menuId ? 'primary' : 'default'"
+                          :tertiary="!isSearchMode && selectedContentGroup === child.menuId"
+                          :quaternary="isSearchMode || selectedContentGroup !== child.menuId"
+                          class="shrink-0 n-square-button"
+                          :title="t('workflow.notebook_actions.join_menu_recipes')"
+                          @click.stop="handleJoinMenuRecipes(child.menu)"
+                        >
+                          <template #icon>
+                            <n-icon :size="16"><JoinLeftOutlined /></n-icon>
+                          </template>
                         </n-button>
                       </div>
                     </div>
@@ -1654,17 +1694,34 @@ defineExpose({
 
               <!-- 普通/秘籍配方：扁平菜单展示 -->
               <template v-else>
-                <n-button
+                <div
                   v-for="menu in Object.values(currMenus)"
                   :key="menu.id + menu.name"
-                  size="small"
-                  :tertiary="!isSearchMode && selectedContentGroup === `i_${menu.id}`"
-                  :quaternary="isSearchMode || selectedContentGroup !== `i_${menu.id}`"
-                  class="justify-start truncate"
-                  @click="handleContentGroupSelect(`i_${menu.id}`)"
+                  class="flex items-center gap-1 group"
                 >
-                  <span class="truncate">{{ menu.name }}</span>
-                </n-button>
+                  <n-button
+                    size="small"
+                    :tertiary="!isSearchMode && selectedContentGroup === `i_${menu.id}`"
+                    :quaternary="isSearchMode || selectedContentGroup !== `i_${menu.id}`"
+                    class="flex-1 justify-start truncate"
+                    @click="handleContentGroupSelect(`i_${menu.id}`)"
+                  >
+                    <span class="truncate">{{ menu.name }}</span>
+                  </n-button>
+                  <n-button
+                    size="small"
+                    :type="!isSearchMode && selectedContentGroup === `i_${menu.id}` ? 'primary' : 'default'"
+                    :tertiary="!isSearchMode && selectedContentGroup === `i_${menu.id}`"
+                    :quaternary="isSearchMode || selectedContentGroup !== `i_${menu.id}`"
+                    class="shrink-0 n-square-button"
+                    :title="t('workflow.notebook_actions.join_menu_recipes')"
+                    @click.stop="handleJoinMenuRecipes(menu)"
+                  >
+                    <template #icon>
+                      <n-icon :size="16"><JoinLeftOutlined /></n-icon>
+                    </template>
+                  </n-button>
+                </div>
               </template>
             </template>
           </div>
