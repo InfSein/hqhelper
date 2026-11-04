@@ -113,6 +113,36 @@ const itemHasHQ = computed(() => {
 const showHqSwitcherInHeader = computed(() => {
   return (props.itemInfo.attrsProvided?.length > 0) || (itemTempAttrTexts.value.length > 0)
 })
+/** 需在装备属性模块右上角单独显示的特殊词条ID：物理/魔法基本性能(12/13)、攻击间隔(14)、格挡发动力/性能(17/18)、物理/魔法防御力(21/24) */
+const SPECIAL_ARMOR_ATTR_IDS = new Set([12, 13, 14, 17, 18, 21, 24])
+const specialArmorAttrs = computed(() => {
+  if (!props.itemInfo.attrsProvided?.length) return []
+  return props.itemInfo.attrsProvided
+    .filter(attr => SPECIAL_ARMOR_ATTR_IDS.has(attr[0]))
+    .map(attr => {
+      const attrId = attr[0]
+      const rawVal = showItemHqAttr.value ? (attr[2] || attr[1]) : attr[1]
+      const value = attrId === 14 ? Number(rawVal).toFixed(2) : String(rawVal)
+      return {
+        id: attrId,
+        name: getAttrName(attrId),
+        value,
+      }
+    })
+})
+const normalArmorAttrs = computed(() => {
+  if (!props.itemInfo.attrsProvided?.length) return []
+  return props.itemInfo.attrsProvided
+    .filter(attr => !SPECIAL_ARMOR_ATTR_IDS.has(attr[0]))
+    .map(attr => {
+      const attrId = attr[0]
+      const rawVal = showItemHqAttr.value ? (attr[2] || attr[1]) : attr[1]
+      return {
+        id: attrId,
+        text: `${getAttrName(attrId)} +${rawVal}`,
+      }
+    })
+})
 const itemTempAttrTexts = computed(() : string[] => {
   if (!props.itemInfo.tempAttrsProvided?.length) {
     return []
@@ -379,6 +409,20 @@ const handleOnScroll = (e: Event) => {
         v-model:hq="showItemHqAttr"
         :hq-readonly="!itemHasHQ"
       />
+      <div
+        v-if="specialArmorAttrs.length"
+        class="flex flex-wrap justify-end gap-x-2.5 gap-y-1 mt-2 leading-tight"
+      >
+        <div
+          v-for="attr in specialArmorAttrs"
+          :key="'attr-special-' + attr.id"
+          class="relative flex flex-col items-end text-right"
+        >
+          <div class="text-app-xs">{{ attr.name }}</div>
+          <div class="text-app-lg z-1">{{ attr.value }}</div>
+          <div class="absolute bottom-px w-full h-1 bg-bg-hover rounded-xs z-0" />
+        </div>
+      </div>
       <div class="item-level">{{ t('item.text.item_level_with_val', itemInfo.itemLevel) }}</div>
       <n-divider class="item-divider" />
       <!-- 版本/ID等 -->
@@ -404,27 +448,18 @@ const handleOnScroll = (e: Event) => {
           <!-- 游戏内物品描述 -->
           <div class="main-descriptions" v-html="getItemDescriptions()"></div>
           <!-- 装备属性 -->
-          <div class="description-block" v-if="itemInfo.attrsProvided.length">
+          <div class="description-block" v-if="normalArmorAttrs.length">
             <div class="title">
               {{ t('common.armor_attr') }}
             </div>
             <n-divider class="item-divider" />
-            <div class="content armor" v-if="showItemHqAttr">
+            <div class="content armor">
               <div
                 class="item"
-                v-for="(attr, index) in itemInfo.attrsProvided"
-                :key="'attr-hq' + index"
+                v-for="attr in normalArmorAttrs"
+                :key="'attr-normal-' + attr.id"
               >
-                <div>{{ `${getAttrName(attr[0])} +${attr[2]}` }}</div>
-              </div>
-            </div>
-            <div class="content armor" v-else>
-              <div
-                class="item"
-                v-for="(attr, index) in itemInfo.attrsProvided"
-                :key="'attr-nq' + index"
-              >
-                <div>{{ `${getAttrName(attr[0])} +${attr[1]}` }}</div>
+                <div>{{ attr.text }}</div>
               </div>
             </div>
             <div v-if="isMobile" class="content extra">
