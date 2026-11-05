@@ -155,7 +155,7 @@ const handleStarButtonClick = (item: ItemInfo) => {
           />
           <p>{{ getJobName(XivJobs[item.gatherInfo.jobId]) }}</p>
         </div>
-        <div class="recommended-aetheryte" v-if="XivMaps[item.gatherInfo.placeID]">
+        <div class="recommended-aetheryte" v-if="item.gatherInfo.recommAetheryte">
           <span>{{ t('common.recomm') }}</span>
           <span style="vertical-align: middle;">
             <XivFARImage

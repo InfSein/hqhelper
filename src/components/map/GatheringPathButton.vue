@@ -193,12 +193,12 @@ const popoverContentMaxHeight = computed(() => isMobile.value ? '60vh' : '515px'
 const MAP_SIZE = 222
 const PATH_END_PADDING_PX = 7
 
-function getMapScale(mapSize: number) {
-  return mapSize / 40
+function getMapScale(mapSize: number, sizeFactor = 100) {
+  return (mapSize * ((sizeFactor || 100) / 100)) / 41
 }
 
-function getPositionStyle(x: number, y: number, mapSize = MAP_SIZE) {
-  const mapScale = getMapScale(mapSize)
+function getPositionStyle(x: number, y: number, sizeFactor = 100, mapSize = MAP_SIZE) {
+  const mapScale = getMapScale(mapSize, sizeFactor)
   return {
     left: `${(x - 1) * mapScale}px`,
     top: `${(y - 1) * mapScale}px`,
@@ -207,8 +207,8 @@ function getPositionStyle(x: number, y: number, mapSize = MAP_SIZE) {
   }
 }
 
-function getLineStyle(line: MapPathLine, mapSize = MAP_SIZE) {
-  const mapScale = getMapScale(mapSize)
+function getLineStyle(line: MapPathLine, sizeFactor = 100, mapSize = MAP_SIZE) {
+  const mapScale = getMapScale(mapSize, sizeFactor)
   const x1 = (line.x1 - 1) * mapScale
   const y1 = (line.y1 - 1) * mapScale
   const rawX2 = (line.x2 - 1) * mapScale
@@ -488,10 +488,10 @@ function getGatherJobSvgStyle(jobId: number) {
                   <line
                     v-for="(line, lineIndex) in entry.lines"
                     :key="`line-${entry.placeId}-${lineIndex}`"
-                    :x1="getLineStyle(line).x1"
-                    :y1="getLineStyle(line).y1"
-                    :x2="getLineStyle(line).x2"
-                    :y2="getLineStyle(line).y2"
+                    :x1="getLineStyle(line, entry.map.size_factor).x1"
+                    :y1="getLineStyle(line, entry.map.size_factor).y1"
+                    :x2="getLineStyle(line, entry.map.size_factor).x2"
+                    :y2="getLineStyle(line, entry.map.size_factor).y2"
                     :stroke="PATH_COLOR"
                     :stroke-width="1.5"
                     :marker-end="`url(#gather-path-arrowhead-${entry.placeId})`"
@@ -511,7 +511,7 @@ function getGatherJobSvgStyle(jobId: number) {
                         <XivFARImage
                           class="absolute -translate-x-1/2 -translate-y-1/2 z-[5] pointer-events-auto"
                           src="./ui/aetheryte.png"
-                          :style="getPositionStyle(aetheryte.x, aetheryte.y)"
+                          :style="getPositionStyle(aetheryte.x, aetheryte.y, entry.map.size_factor)"
                         />
                       </template>
                       <div class="text-app-xs text-center">{{ aetheryte[`name_${itemLanguage}`] }}</div>
@@ -523,7 +523,7 @@ function getGatherJobSvgStyle(jobId: number) {
                       <template #default>
                         <div
                           class="absolute -translate-x-1/2 -translate-y-1/2 z-[5] pointer-events-auto w-4 h-4"
-                          :style="getPositionStyle(target.x, target.y)"
+                          :style="getPositionStyle(target.x, target.y, entry.map.size_factor)"
                         >
                           <span
                             v-if="hasGatherJobSvg(target.item.gatherInfo?.jobId || 0)"

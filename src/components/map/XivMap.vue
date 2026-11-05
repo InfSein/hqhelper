@@ -15,7 +15,11 @@ interface MapButtonProps {
 }
 const props = defineProps<MapButtonProps>()
 
-const mapScale = computed(() => props.mapSize / 40)
+// 根据地图缩放系数（标准野外为 100，主城多为 200，室内多为 400）将游戏坐标换算为画布像素比例
+const mapScale = computed(() => {
+  const scale = (props.mapData.size_factor || 100) / 100
+  return (props.mapSize * scale) / 41
+})
 
 const getPositionStyle = (x: number, y: number) => {
   return {

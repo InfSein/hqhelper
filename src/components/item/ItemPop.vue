@@ -669,8 +669,7 @@ const handleOnScroll = (e: Event) => {
                 ,
                 {{ t('item.text.shop_npc', { npc: shopNpcName }) }}
               </div>
-              <div v-if="shopNpcLocation" class="item">
-                <span>{{ t('item.text.shop_location') }}</span>
+              <div v-if="shopNpcLocation" class="item text-app-sm">
                 <LocationSpan
                   :place-id="shopNpcLocation.placeId"
                   :place-name="shopNpcLocation.placeName"

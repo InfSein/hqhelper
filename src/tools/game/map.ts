@@ -20,6 +20,7 @@ export const parseUnpackedMapData = (data: Record<number, XivUnpackedMap>) => {
       ...getPlaceNames(mapData.placeId),
       map_id: mapData.mapId,
       map_src: `https://icon.nbbjack.com/maps/${mapData.mapSrc}.png`,
+      size_factor: mapData.sizeFactor,
       aetherytes: mapData.aetherytes.map(aetheryte => ({
         ...getPlaceNames(aetheryte.placeId),
         x: aetheryte.x,
@@ -36,6 +37,7 @@ export interface XivMapInfo {
   name_en: string
   map_id: number
   map_src: string
+  size_factor: number
   aetherytes: XivMapAetheryteInfo[]
 }
 export interface XivMapAetheryteInfo {

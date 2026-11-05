@@ -150,6 +150,7 @@ export interface XivUnpackedMap {
   weatherRate: number
   mapId: number
   mapSrc: string
+  sizeFactor: number
   aetherytes: {
     placeId: number
     x: number

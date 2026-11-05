@@ -69,7 +69,7 @@ const handleOpenCafeMap = () => {
         :flag-y="props.flagY"
       />
       <div class="footer">
-        <div class="recommended-aetheryte">
+        <div v-if="props.mapData.aetherytes.length" class="recommended-aetheryte">
           <span>{{ t('common.recomm') }}</span>
           <span style="vertical-align: middle;">
             <XivFARImage
