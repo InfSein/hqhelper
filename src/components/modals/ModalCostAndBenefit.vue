@@ -1,23 +1,23 @@
 <script setup lang='ts'>
-import { 
-  AttachMoneyOutlined
+import {
+  AttachMoneyOutlined,
 } from '@vicons/material'
-import ItemPriceTable from '../custom/item/ItemPriceTable.vue'
-import TooltipText from '../custom/general/TooltipText.vue'
-import HelpButton from '../custom/general/HelpButton.vue'
 import ModalPreferences from './ModalPreferences.vue'
-import useItemPrice from '@/composables/useItemPrice.ts'
-import type { ItemInfo } from '@/tools/item'
-import type { FuncConfigModel } from '@/models/config-func'
+import HelpButton from '@/components/ui/HelpButton.vue'
+import TooltipText from '@/components/ui/TooltipText.vue'
+import ItemPriceTable from '@/components/item/ItemPriceTable.vue'
+import { useStore } from '@/store'
+import { useLocale } from '@/composables/useLocale'
+import { useAppModals } from '@/composables/useAppModals'
+import { useResponsive } from '@/composables/useResponsive'
+import useItemPrice from '@/composables/useItemPrice'
+import type { ItemInfo } from '@/types/item'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-// const userConfig = inject<Ref<UserConfigModel>>('userConfig')!
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
-// const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
-const showItemPriceDetail = inject<(items: ItemInfo[]) => void>('showItemPriceDetail')!
-
+const store = useStore()
+const { t } = useLocale()
+const { isMobile } = useResponsive()
 const { calCostAndBenefit } = useItemPrice()
+const { showItemPriceDetail } = useAppModals()
 
 const modalId = 'modal-cost-and-benefits'
 
@@ -29,16 +29,114 @@ interface ModalCostAndBenefitProps {
 }
 const props = defineProps<ModalCostAndBenefitProps>()
 
+const customPriceMode = computed(() => store.funcConfig.costandbenefit_custom_price_enabled)
+
+const toggleCustomPriceMode = () => {
+  store.funcConfig.costandbenefit_custom_price_enabled = !store.funcConfig.costandbenefit_custom_price_enabled
+  store.updateFuncConfig()
+}
+
+// 缓存与当前编辑的自定义价格数据
+const customPriceMap = reactive<Record<number, number>>({})
+
+watch(
+  () => store.funcConfig.cache_custom_item_prices,
+  (val) => {
+    Object.keys(customPriceMap).forEach(key => delete customPriceMap[Number(key)])
+    Object.assign(customPriceMap, val)
+  },
+  { immediate: true, deep: true }
+)
+
+const handlePriceUpdate = (itemId: number, price: number) => {
+  customPriceMap[itemId] = price
+}
+
+const handlePriceSave = (itemId: number, price: number) => {
+  store.funcConfig.cache_custom_item_prices[itemId] = price
+  store.updateFuncConfig()
+}
+
 const costAndBenefit = computed(() => {
   return calCostAndBenefit(props.costItems, props.benefitItems)
 })
-const costInfo = computed(() => costAndBenefit.value.costInfo)
-const benefitInfo = computed(() => costAndBenefit.value.benefitInfo)
-const isCostPartial = computed(() => costAndBenefit.value.isCostPartial)
-const isBenefitPartial = computed(() => costAndBenefit.value.isBenefitPartial)
+
+const customCostAndBenefit = computed(() => {
+  const calcTotal = (items: ItemInfo[], type: 'NQ' | 'HQ') => {
+    let total = 0
+
+    items.forEach(item => {
+      if (customPriceMap[item.id] !== undefined) {
+        total += item.amount * customPriceMap[item.id]
+      } else {
+        const actualType = (type === 'HQ' && !item.hqable) ? 'NQ' : type
+        const p = store.funcConfig.cache_item_prices[item.id]?.[`${store.funcConfig.universalis_priceType}${actualType}`]
+        if (p !== undefined && Math.floor(p) > 0) {
+          total += item.amount * Math.floor(p)
+        }
+        // 物品价格为未知或???时按0来计算
+      }
+    })
+
+    const totalStr = Math.floor(total).toLocaleString()
+
+    return {
+      total: totalStr,
+      totalVal: total,
+      partial: false,
+    }
+  }
+
+  const costRes = calcTotal(props.costItems, 'NQ')
+  const benefitRes = calcTotal(props.benefitItems, 'HQ')
+
+  let benefitInfo = benefitRes.total
+  if (store.funcConfig.costandbenefit_benefit_calculation_rule === 'net') {
+    const netTotal = benefitRes.totalVal - costRes.totalVal
+    benefitInfo = Math.floor(netTotal).toLocaleString()
+  }
+
+  return {
+    costInfo: costRes.total,
+    benefitInfo,
+    isCostPartial: costRes.partial,
+    isBenefitPartial: benefitRes.partial,
+  }
+})
+
+const costInfo = computed(() => {
+  return customPriceMode.value
+    ? customCostAndBenefit.value.costInfo
+    : costAndBenefit.value.costInfo
+})
+const benefitInfo = computed(() => {
+  return customPriceMode.value
+    ? customCostAndBenefit.value.benefitInfo
+    : costAndBenefit.value.benefitInfo
+})
+const isCostPartial = computed(() => {
+  return customPriceMode.value
+    ? customCostAndBenefit.value.isCostPartial
+    : costAndBenefit.value.isCostPartial
+})
+const isBenefitPartial = computed(() => {
+  return customPriceMode.value
+    ? customCostAndBenefit.value.isBenefitPartial
+    : costAndBenefit.value.isBenefitPartial
+})
+
+const benefitDescriptions = computed(() => {
+  const ruleText = store.funcConfig.costandbenefit_benefit_calculation_rule === 'net'
+    ? t('preference.costandbenefit_benefit_calculation_rule.option.net')
+    : t('preference.costandbenefit_benefit_calculation_rule.option.total')
+  return [
+    t('cost_and_benefit.tooltip.cal_hq_price_here'),
+    t('cost_and_benefit.tooltip.current_displaying_rule', { rule: ruleText }),
+  ]
+})
 
 const showItemDetails = computed(() => {
-  return funcConfig.value.costandbenefit_show_item_details
+  return store.funcConfig.costandbenefit_show_item_details
 })
 
 const showPreferencesModal = ref(false)
@@ -69,8 +167,11 @@ const handleShowItemPriceDetail = () => {
         <span class="title">
           {{ t('statistics.group.cost_and_benefit.title') }}
         </span>
-        <div class="card-title-actions">
+        <div class="card-title__actions">
           <a href="javascript:void(0);" @click="handleShowItemPriceDetail">[{{ t('item.price.detail_table.intro') }}]</a>
+          <a href="javascript:void(0);" @click="toggleCustomPriceMode">
+            [{{ customPriceMode ? t('cost_and_benefit.custom_price_off') : t('cost_and_benefit.custom_price_on') }}]
+          </a>
         </div>
       </div>
     </template>
@@ -95,6 +196,10 @@ const handleShowItemPriceDetail = () => {
             :items="costItems"
             :show-item-details="showItemDetails"
             :container-id="modalId"
+            :custom-price-mode="customPriceMode"
+            :custom-prices="customPriceMap"
+            @update:custom-price="handlePriceUpdate"
+            @save:custom-price="handlePriceSave"
           />
         </div>
       </n-tab-pane>
@@ -103,7 +208,7 @@ const handleShowItemPriceDetail = () => {
         :tab="t('common.benefit')"
       >
         <div class="container">
-          <div class="text-right">
+          <div class="text-right flex items-center justify-end gap-1">
             <span>{{ t('statistics.group.cost_and_benefit.button.text.text_2', { val: benefitInfo }) }}</span>
             <i class="xiv gil"></i>
             <TooltipText
@@ -111,12 +216,17 @@ const handleShowItemPriceDetail = () => {
               :text="t('common.or_more')"
               :tooltip="t('statistics.group.cost_and_benefit.tooltip.benefit_is_partial')"
             />
+            <HelpButton icon="info" :size="18" :descriptions="benefitDescriptions" />
           </div>
           <ItemPriceTable
             price-type="HQ"
             :items="benefitItems"
             :show-item-details="showItemDetails"
             :container-id="modalId"
+            :custom-price-mode="customPriceMode"
+            :custom-prices="customPriceMap"
+            @update:custom-price="handlePriceUpdate"
+            @save:custom-price="handlePriceSave"
           />
         </div>
       </n-tab-pane>
@@ -142,9 +252,13 @@ const handleShowItemPriceDetail = () => {
           :items="costItems"
           :show-item-details="showItemDetails"
           :container-id="modalId"
+          :custom-price-mode="customPriceMode"
+          :custom-prices="customPriceMap"
+          @update:custom-price="handlePriceUpdate"
+          @save:custom-price="handlePriceSave"
         />
       </GroupBox>
-      <GroupBox>
+      <GroupBox :descriptions="benefitDescriptions">
         <template #title>
           <div class="group-title">
             <span>{{ t('statistics.group.cost_and_benefit.button.text.text_2', { val: benefitInfo }) }}</span>
@@ -154,7 +268,7 @@ const handleShowItemPriceDetail = () => {
               :text="t('common.or_more')"
               :tooltip="t('statistics.group.cost_and_benefit.tooltip.benefit_is_partial')"
             />
-            <HelpButton icon="info" :size="18" :descriptions="[t('cost_and_benefit.tooltip.cal_hq_price_here')]" />
+            <HelpButton icon="info" :size="18" :descriptions="benefitDescriptions" />
           </div>
         </template>
         <ItemPriceTable
@@ -162,6 +276,10 @@ const handleShowItemPriceDetail = () => {
           :items="benefitItems"
           :show-item-details="showItemDetails"
           :container-id="modalId"
+          :custom-price-mode="customPriceMode"
+          :custom-prices="customPriceMap"
+          @update:custom-price="handlePriceUpdate"
+          @save:custom-price="handlePriceSave"
         />
       </GroupBox>
     </div>

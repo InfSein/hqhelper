@@ -1,18 +1,18 @@
-import type { FuncConfigModel } from "@/models/config-func"
-import type { ItemInfo } from "@/tools/item"
-import { ItemPriceApiVersion, type ItemPriceInfo } from "@/types/item.price"
+import { useStore } from "@/store"
+import type { ItemInfo } from '@/types/item'
+import { ItemPriceApiVersion, type ItemPriceInfo } from "@/types/item/price"
 
 const useItemPrice = () => {
-  const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
+  const store = useStore()
 
   const calCostAndBenefit = (
     costItems: ItemInfo[],
     benefitItems: ItemInfo[],
   ) => {
     let updateRequired = false
-    const priceCache = funcConfig.value.cache_item_prices
-    const expiresAfter = Date.now() - funcConfig.value.universalis_expireTime
-    const priceKey = funcConfig.value.universalis_priceType
+    const priceCache = store.funcConfig.cache_item_prices
+    const expiresAfter = Date.now() - store.funcConfig.universalis_expireTime
+    const priceKey = store.funcConfig.universalis_priceType
 
     const cacheNotExpired = (item: ItemInfo) => {
       const priceInfo = priceCache[item.id]
@@ -30,7 +30,8 @@ const useItemPrice = () => {
         if (cacheNotExpired(item)) {
           const p = priceCache[item.id]
           itemsMap[item.id] = { amount: item.amount, price: p }
-          total += item.amount * (p[`${priceKey}${priceType}`] ?? 0)
+          const actualPriceType = (priceType === 'HQ' && !item.hqable) ? 'NQ' : priceType
+          total += item.amount * (p[`${priceKey}${actualPriceType}`] ?? 0)
           hasValue = true
         } else if (item.tradable) {
           updateRequired = true
@@ -45,6 +46,8 @@ const useItemPrice = () => {
 
       return {
         total: totalStr,
+        totalVal: total,
+        hasValue,
         partial,
         itemsMap
       }
@@ -53,14 +56,31 @@ const useItemPrice = () => {
     const costRes = calculateTotal(costItems, 'NQ')
     const benefitRes = calculateTotal(benefitItems, 'HQ')
 
+    let benefitInfo = benefitRes.total
+    let isBenefitPartial = benefitRes.partial
+
+    if (store.funcConfig.costandbenefit_benefit_calculation_rule === 'net') {
+      if (benefitRes.total === '???') {
+        benefitInfo = '???'
+      } else if (costRes.total === '???') {
+        benefitInfo = '???'
+      } else {
+        const netTotal = benefitRes.totalVal - costRes.totalVal
+        benefitInfo = Math.floor(netTotal).toLocaleString()
+      }
+      if (costRes.partial) {
+        isBenefitPartial = true
+      }
+    }
+
     return {
       updateRequired,
       itemsCost: costRes.itemsMap,
       itemsBenefit: benefitRes.itemsMap,
       costInfo: costRes.total,
-      benefitInfo: benefitRes.total,
+      benefitInfo,
       isCostPartial: costRes.partial,
-      isBenefitPartial: benefitRes.partial
+      isBenefitPartial
     }
   }
 

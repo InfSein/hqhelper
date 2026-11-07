@@ -7,6 +7,16 @@
 export {}
 declare global {
   const EffectScope: typeof import('vue').EffectScope
+  const NButton: typeof import('naive-ui').NButton
+  const NDivider: typeof import('naive-ui').NDivider
+  const NIcon: typeof import('naive-ui').NIcon
+  const NInput: typeof import('naive-ui').NInput
+  const NInputGroup: typeof import('naive-ui').NInputGroup
+  const NInputNumber: typeof import('naive-ui').NInputNumber
+  const NPopover: typeof import('naive-ui').NPopover
+  const NScrollbar: typeof import('naive-ui').NScrollbar
+  const NTag: typeof import('naive-ui').NTag
+  const NTooltip: typeof import('naive-ui').NTooltip
   const acceptHMRUpdate: typeof import('pinia').acceptHMRUpdate
   const computed: typeof import('vue').computed
   const createApp: typeof import('vue').createApp
