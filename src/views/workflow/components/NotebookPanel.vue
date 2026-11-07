@@ -3,16 +3,19 @@ import { computed, ref, watch, h, nextTick } from 'vue'
 import {
   CloseRound,
   DeleteSweepRound,
+  DragHandleRound,
   HistoryRound,
-  InfoOutlined,
   JoinLeftOutlined,
   PlaylistAddOutlined,
+  RestartAltRound,
   SearchRound,
   ChevronLeftOutlined,
   ChevronRightOutlined,
   SettingsRound,
   StarRound,
   StarBorderRound,
+  SwapHorizRound,
+  TuneRound,
 } from '@vicons/material'
 import type { ScrollbarInst, SelectOption } from 'naive-ui'
 import ItemCell from '@/components/item/ItemCell.vue'
@@ -23,7 +26,6 @@ import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
 import { useAppModals } from '@/composables/useAppModals'
 import { useItemContextMenu } from '@/composables/useItemContextMenu'
-import { useDialog } from '@/composables/useDialog'
 import { useStore } from '@/store'
 import CommonGroupIcon from '@/assets/icons/game-ui/recipe-notebook/group-common.svg'
 import MasterGroupIcon from '@/assets/icons/game-ui/recipe-notebook/group-master.svg'
@@ -33,12 +35,12 @@ import { sortRecord } from '@/tools'
 import { getItemInfo, sortItems, getItemNameRevertMap } from '@/tools/item'
 import type { ItemInfo } from '@/types/item'
 import { decodeShareCode } from '@/tools/shareCode'
+import AppStatus from '@/constants/app'
 
 const store = useStore()
 const { t } = useLocale()
 const { isMobile } = useResponsive()
 const { itemLanguage } = useConfig()
-const { alertInfo } = useDialog()
 const NAIVE_UI_MESSAGE = useMessage()
 
 const props = defineProps<{
@@ -516,6 +518,107 @@ const searchKeyword = ref('')
 const isSearchMode = ref(false)
 const searchResults = ref<SearchGroupResult[]>([])
 const showHistoryDrawer = ref(false)
+const showAdvancedSearch = ref(false)
+
+type AdvSearchMode = "exact" | "range"
+
+/** 当前物品语言对应的游戏数据库最大版本号 */
+const maxPatchVer = computed(() =>
+  itemLanguage.value === 'zh'
+    ? AppStatus.SupportedGameVersion.CN
+    : AppStatus.SupportedGameVersion.GLOBAL
+)
+
+/** 高级搜索面板条件状态 */
+const advSearch = ref({
+  patch: {
+    enabled: false,
+    mode: 'range' as AdvSearchMode,
+    start: '',
+    end: '',
+  },
+  ilv: {
+    enabled: false,
+    mode: 'range' as AdvSearchMode,
+    start: null as number | null,
+    end: null as number | null,
+  },
+  id: {
+    enabled: false,
+    mode: 'range' as AdvSearchMode,
+    start: null as number | null,
+    end: null as number | null,
+  },
+})
+
+/** 是否有任何已启用且填写了有效值的高级搜索条件 */
+const hasActiveAdvancedConditions = computed(() => {
+  const { patch, ilv, id } = advSearch.value
+  const patchValid = patch.mode === 'exact'
+    ? Boolean(patch.start.trim())
+    : Boolean(patch.start.trim() || patch.end.trim())
+  const ilvValid = ilv.mode === 'exact'
+    ? ilv.start !== null
+    : (ilv.start !== null || ilv.end !== null)
+  const idValid = id.mode === 'exact'
+    ? id.start !== null
+    : (id.start !== null || id.end !== null)
+  return Boolean(
+    (patch.enabled && patchValid) ||
+    (ilv.enabled && ilvValid) ||
+    (id.enabled && idValid)
+  )
+})
+
+const resetAdvancedSearch = () => {
+  advSearch.value = {
+    patch: { enabled: false, mode: 'range', start: '', end: '' },
+    ilv: { enabled: false, mode: 'range', start: null, end: null },
+    id: { enabled: false, mode: 'range', start: null, end: null },
+  }
+}
+
+const clearAdvancedSearchValues = () => {
+  advSearch.value.patch.enabled = false
+  advSearch.value.patch.start = ''
+  advSearch.value.patch.end = ''
+  advSearch.value.ilv.enabled = false
+  advSearch.value.ilv.start = null
+  advSearch.value.ilv.end = null
+  advSearch.value.id.enabled = false
+  advSearch.value.id.start = null
+  advSearch.value.id.end = null
+}
+
+const handlePatchInputUpdate = () => {
+  nextTick(() => {
+    const { mode, start, end } = advSearch.value.patch
+    advSearch.value.patch.enabled = mode === 'exact'
+      ? Boolean(start.trim())
+      : Boolean(start.trim() || end.trim())
+  })
+}
+const handleIlvInputUpdate = () => {
+  nextTick(() => {
+    const { mode, start, end } = advSearch.value.ilv
+    advSearch.value.ilv.enabled = mode === 'exact'
+      ? start !== null
+      : (start !== null || end !== null)
+  })
+}
+const handleIdInputUpdate = () => {
+  nextTick(() => {
+    const { mode, start, end } = advSearch.value.id
+    advSearch.value.id.enabled = mode === 'exact'
+      ? start !== null
+      : (start !== null || end !== null)
+  })
+}
+
+const toggleAdvSearchMode = (key: 'patch' | 'ilv' | 'id') => {
+  const target = advSearch.value[key]
+  target.mode = target.mode === 'exact' ? 'range' : 'exact'
+}
 
 watch(isSearchMode, (val) => {
   if (!val) {
@@ -561,8 +664,38 @@ const parsePatchNumber = (val: string): number | null => {
 }
 
 /**
- * 根据搜索关键字构建物品匹配函数
- * 支持普通搜索与高级指令：@版本、@ID、@IL
+ * 根据素材名称或 ID 字符串解析对应的物品 ID
+ */
+const resolveMaterialItemId = (rawMaterialName: string): number | undefined => {
+  const trimmedName = rawMaterialName.trim()
+  if (!trimmedName) return undefined
+  const revertMap = getItemNameRevertMap()
+  let itemId = revertMap.get(trimmedName)
+  if (!itemId && !isNaN(Number(trimmedName))) {
+    const numId = Number(trimmedName)
+    if (XivUnpackedItems[numId]) {
+      itemId = numId
+    }
+  }
+  if (!itemId) {
+    const lower = trimmedName.toLowerCase()
+    for (const item of Object.values(XivUnpackedItems)) {
+      if (
+        item.name[0]?.toLowerCase() === lower ||
+        item.name[1]?.toLowerCase() === lower ||
+        item.name[2]?.toLowerCase() === lower
+      ) {
+        itemId = item.id
+        break
+      }
+    }
+  }
+  return itemId
+}
+
+/**
+ * 根据单个搜索条件片段构建物品匹配函数
+ * 支持普通搜索与高级指令：@版本、@ID、@IL、@素材
  */
 const getItemMatcher = (trimmed: string): ((item: ItemInfo) => boolean) | null => {
   // 1. 版本匹配指令：@版本: / @Patch: / @パッチ:
@@ -685,53 +818,184 @@ const getItemMatcher = (trimmed: string): ((item: ItemInfo) => boolean) | null =
     }
   }
 
-  // 4. 普通搜索
+  // 4. 素材反查指令：@素材: / @Material:
+  const materialPrefixMatch = trimmed.match(/^@(?:素材|Material)(?:[:：]\s*(.*))?$/i)
+  if (materialPrefixMatch) {
+    const rawMaterialName = materialPrefixMatch[1]?.trim()
+    if (!rawMaterialName) {
+      NAIVE_UI_MESSAGE.error(t('workflow.notebook_search.error_invalid_format'))
+      return null
+    }
+    const itemId = resolveMaterialItemId(rawMaterialName)
+    if (!itemId) {
+      return () => false
+    }
+    if (itemId < 100) {
+      NAIVE_UI_MESSAGE.error(t('workflow.notebook_search.error_material_id_too_small'))
+      return null
+    }
+    return (item: ItemInfo) => {
+      const matchMaterial = item.craftRequires?.some(req => req.id === itemId)
+      const matchCrystal = item.craftRequireCrystals?.some(req => req.id === itemId)
+      return Boolean(matchMaterial || matchCrystal)
+    }
+  }
+
+  // 5. 普通搜索
   return (item: ItemInfo) => matchItem(item, trimmed)
 }
 
+/**
+ * 将高级搜索面板中已启用且有效的条件转换为指令片段数组
+ */
+const buildAdvancedConditionTokens = (): string[] => {
+  const tokens: string[] = []
+  const { patch, ilv, id } = advSearch.value
+
+  if (patch.enabled) {
+    const s = patch.start.trim()
+    const e = patch.end.trim()
+    const patchPrefix = t('workflow.notebook_search.patch_prefix')
+    if (patch.mode === 'exact') {
+      if (s) tokens.push(`@${patchPrefix}:${s}`)
+    } else if (s || e) {
+      const finalStart = s || '1.0'
+      const finalEnd = e || maxPatchVer.value
+      tokens.push(`@${patchPrefix}:${finalStart}~${finalEnd}`)
+    }
+  }
+
+  if (id.enabled) {
+    const s = id.start
+    const e = id.end
+    if (id.mode === 'exact') {
+      if (s !== null) tokens.push(`@ID:${s}`)
+    } else if (s !== null || e !== null) {
+      const finalStart = s ?? 1
+      const finalEnd = e ?? 99999
+      tokens.push(`@ID:${finalStart}~${finalEnd}`)
+    }
+  }
+
+  if (ilv.enabled) {
+    const s = ilv.start
+    const e = ilv.end
+    if (ilv.mode === 'exact') {
+      if (s !== null) tokens.push(`@IL:${s}`)
+    } else if (s !== null || e !== null) {
+      const finalStart = s ?? 1
+      const finalEnd = e ?? 999
+      tokens.push(`@IL:${finalStart}~${finalEnd}`)
+    }
+  }
+
+  return tokens
+}
+
+/**
+ * 点击历史记录时，将历史表达式拆解还原至搜索框与高级搜索面板
+ */
+const applyHistoryToSearchState = (historyExpr: string) => {
+  const rawParts = historyExpr.split('&&').map(s => s.trim()).filter(Boolean)
+  clearAdvancedSearchValues()
+  const remainingKeywords: string[] = []
+  let hasAdv = false
+
+  for (const part of rawParts) {
+    const patchMatch = part.match(/^@(?:版本|Patch|パッチ)[:：]\s*(.+)$/i)
+    if (patchMatch && !advSearch.value.patch.enabled) {
+      const rangeParts = patchMatch[1].trim().split(/[~～]/)
+      advSearch.value.patch.enabled = true
+      advSearch.value.patch.mode = rangeParts.length >= 2 ? 'range' : 'exact'
+      advSearch.value.patch.start = rangeParts[0]?.trim() || ''
+      advSearch.value.patch.end = rangeParts[1]?.trim() || ''
+      hasAdv = true
+      continue
+    }
+
+    const idMatch = part.match(/^@ID[:：]\s*(.+)$/i)
+    if (idMatch && !advSearch.value.id.enabled) {
+      const rangeParts = idMatch[1].trim().split(/[~～]/)
+      const s = parseInt(rangeParts[0]?.trim(), 10)
+      const e = rangeParts[1] !== undefined ? parseInt(rangeParts[1].trim(), 10) : NaN
+      if (!isNaN(s)) {
+        advSearch.value.id.enabled = true
+        advSearch.value.id.mode = !isNaN(e) ? 'range' : 'exact'
+        advSearch.value.id.start = s
+        advSearch.value.id.end = !isNaN(e) ? e : null
+        hasAdv = true
+        continue
+      }
+    }
+
+    const ilMatch = part.match(/^@(?:IL|ILv|品级)[:：]\s*(.+)$/i)
+    if (ilMatch && !advSearch.value.ilv.enabled) {
+      const rangeParts = ilMatch[1].trim().split(/[~～]/)
+      const s = parseInt(rangeParts[0]?.trim(), 10)
+      const e = rangeParts[1] !== undefined ? parseInt(rangeParts[1].trim(), 10) : NaN
+      if (!isNaN(s)) {
+        advSearch.value.ilv.enabled = true
+        advSearch.value.ilv.mode = !isNaN(e) ? 'range' : 'exact'
+        advSearch.value.ilv.start = s
+        advSearch.value.ilv.end = !isNaN(e) ? e : null
+        hasAdv = true
+        continue
+      }
+    }
+
+    remainingKeywords.push(part)
+  }
+
+  searchKeyword.value = remainingKeywords.join(' && ')
+  if (hasAdv) {
+    showAdvancedSearch.value = true
+  }
+}
+
+/**
+ * 将搜索历史记录按 && 拆分为标签数组供 UI 渲染
+ */
+const parseHistoryTags = (historyItem: string) => {
+  return historyItem
+    .split('&&')
+    .map(part => part.trim())
+    .filter(Boolean)
+    .map(part => ({
+      text: part,
+      isCommand: part.startsWith('@'),
+    }))
+}
+
 const handleSearch = (keyword?: string) => {
-  const targetKeyword = typeof keyword === 'string' ? keyword : searchKeyword.value
-  searchKeyword.value = targetKeyword
-  if (!targetKeyword || !targetKeyword.trim()) {
+  let allTokens: string[] = []
+  if (typeof keyword === 'string') {
+    applyHistoryToSearchState(keyword)
+    allTokens = keyword.split('&&').map(s => s.trim()).filter(Boolean)
+  } else {
+    const inputTokens = searchKeyword.value
+      .split('&&')
+      .map(s => s.trim())
+      .filter(Boolean)
+    const advTokens = buildAdvancedConditionTokens()
+    allTokens = [...new Set([...inputTokens, ...advTokens])]
+  }
+
+  if (allTokens.length === 0) {
     NAIVE_UI_MESSAGE.error(t('workflow.notebook_search.error_empty'))
     return
   }
-  const trimmed = targetKeyword.trim()
 
-  // 检查是否为素材反查前缀
-  const materialPrefixMatch = trimmed.match(/^@(?:素材|Material)[:：]\s*(.+)$/i)
-  if (materialPrefixMatch) {
-    const rawMaterialName = materialPrefixMatch[1].trim()
-    const revertMap = getItemNameRevertMap()
-    let itemId = revertMap.get(rawMaterialName)
-    if (!itemId && !isNaN(Number(rawMaterialName))) {
-      itemId = Number(rawMaterialName)
-    }
-    if (!itemId) {
-      for (const item of Object.values(XivUnpackedItems)) {
-        if (
-          item.name[0] === rawMaterialName ||
-          item.name[1] === rawMaterialName ||
-          item.name[2] === rawMaterialName ||
-          item.name[0].toLowerCase() === rawMaterialName.toLowerCase() ||
-          item.name[1].toLowerCase() === rawMaterialName.toLowerCase() ||
-          item.name[2].toLowerCase() === rawMaterialName.toLowerCase()
-        ) {
-          itemId = item.id
-          break
-        }
-      }
-    }
-    if (itemId) {
-      searchByMaterial(itemId)
+  const fullExpression = allTokens.join(' && ')
+
+  const matchers: ((item: ItemInfo) => boolean)[] = []
+  for (const token of allTokens) {
+    const m = getItemMatcher(token)
+    if (!m) {
       return
     }
+    matchers.push(m)
   }
-
-  const matcher = getItemMatcher(trimmed)
-  if (!matcher) {
-    return
-  }
+  const combinedMatcher = (item: ItemInfo) => matchers.every(m => m(item))
 
   const results: SearchGroupResult[] = []
   const menuTypes: ('common' | 'special' | 'master')[] = ['common', 'special', 'master']
@@ -744,7 +1008,7 @@ const handleSearch = (keyword?: string) => {
       const menus = group.menus[menuType]
       Object.values(menus).forEach(menu => {
         Object.values(menu.contentGroups).forEach(cg => {
-          const matched = cg.items.filter(item => matcher(item))
+          const matched = cg.items.filter(item => combinedMatcher(item))
           if (matched.length > 0) {
             const groupLabel = cg.name && cg.name !== menu.name
               ? `${jobName} / ${menu.name} / ${cg.name}`
@@ -782,7 +1046,7 @@ const handleSearch = (keyword?: string) => {
 
   // 记录搜索历史 (最多10条，去重且最新排在最前)
   const currentHistory = props.notebookSearchHistory ?? []
-  const newHistory = [trimmed, ...currentHistory.filter(h => h !== trimmed)].slice(0, 10)
+  const newHistory = [fullExpression, ...currentHistory.filter(h => h !== fullExpression)].slice(0, 10)
   emit('update:notebookSearchHistory', newHistory)
 }
 
@@ -845,6 +1109,7 @@ const searchByMaterial = (itemOrId: ItemInfo | number) => {
     return
   }
 
+  clearAdvancedSearchValues()
   searchKeyword.value = historyLabel
   searchResults.value = results
   isSearchMode.value = true
@@ -878,13 +1143,6 @@ const handleDeleteHistoryItem = (targetIndex: number) => {
 
 const handleClearAllHistory = () => {
   emit('update:notebookSearchHistory', [])
-}
-
-const handleShowSearchHelp = () => {
-  alertInfo({
-    title: t('workflow.notebook_search.help_dialog_title'),
-    content: t('workflow.notebook_search.help_dialog_content'),
-  })
 }
 
 // #region custom lists
@@ -1413,108 +1671,296 @@ defineExpose({
           {{ t('workflow.notebook_starred.title') }}
         </n-tooltip>
       </div>
-      <n-input-group class="search-input-group">
-        <n-input-group-label>
-          <div class="px-1 flex items-center gap-1">
-            <div>{{ t('common.search') }}</div>
-          </div>
-        </n-input-group-label>
-        <n-input
-          v-model:value="searchKeyword"
-          :placeholder="t('workflow.notebook_search.placeholder')"
-          :maxlength="100"
-          clearable
-          @keydown.enter="handleSearch()"
-        />
-        <!-- 搜索说明信息按钮 -->
-        <n-button
-          class="n-square-button"
-          :title="t('workflow.notebook_search.help_button_title')"
-          @click="handleShowSearchHelp"
-        >
-          <template #icon>
-            <n-icon :size="16"><InfoOutlined /></n-icon>
-          </template>
-        </n-button>
-        <!-- 桌面端搜索历史 -->
-        <n-popover v-if="!isMobile" trigger="hover" placement="bottom-end">
-          <template #trigger>
-            <n-button class="n-square-button">
-              <template #icon>
-                <n-icon :size="16"><HistoryRound /></n-icon>
-              </template>
-            </n-button>
-          </template>
-          <div class="py-1 min-w-44 max-w-64">
-            <div class="text-app-xs font-bold mb-1.5 px-1 select-none text-sub">
-              {{ t('workflow.notebook_search.history') }}
+      <div class="search-input-wrapper relative">
+        <n-input-group class="w-full">
+          <n-input-group-label>
+            <div class="px-1 flex items-center gap-1">
+              <div>{{ t('common.search') }}</div>
             </div>
-            <n-divider class="my-1!" />
-            <template v-if="notebookSearchHistory?.length">
-              <n-scrollbar style="max-height: 192px;" trigger="none">
-                <div class="flex flex-col gap-0.5 pr-1.5">
-                  <div
-                    v-for="(item, idx) in notebookSearchHistory"
-                    :key="idx"
-                    class="flex items-center justify-between gap-1 rounded hover:bg-bg-hover px-1 group transition-colors"
-                  >
-                    <span
-                      class="flex-1 text-app-xs py-1 truncate cursor-pointer select-none text-text hover:text-primary transition-colors"
+          </n-input-group-label>
+          <n-input
+            v-model:value="searchKeyword"
+            :placeholder="t('workflow.notebook_search.placeholder')"
+            :maxlength="100"
+            clearable
+            @keydown.enter="handleSearch()"
+          />
+          <!-- 高级搜索按钮 -->
+          <n-button
+            class="n-square-button"
+            :type="showAdvancedSearch || hasActiveAdvancedConditions ? 'primary' : 'default'"
+            :secondary="showAdvancedSearch"
+            :ghost="!showAdvancedSearch && hasActiveAdvancedConditions"
+            :title="t('workflow.notebook_search.advanced_search')"
+            @click="showAdvancedSearch = !showAdvancedSearch"
+          >
+            <template #icon>
+              <n-icon :size="16"><TuneRound /></n-icon>
+            </template>
+          </n-button>
+          <!-- 桌面端搜索历史 -->
+          <n-popover v-if="!isMobile" trigger="hover" placement="bottom-end">
+            <template #trigger>
+              <n-button class="n-square-button">
+                <template #icon>
+                  <n-icon :size="16"><HistoryRound /></n-icon>
+                </template>
+              </n-button>
+            </template>
+            <div class="py-1 min-w-52 max-w-88">
+              <div class="text-app-xs font-bold mb-1.5 px-1 select-none text-sub">
+                {{ t('workflow.notebook_search.history') }}
+              </div>
+              <n-divider class="my-1!" />
+              <template v-if="notebookSearchHistory?.length">
+                <n-scrollbar style="max-height: 240px;" trigger="none">
+                  <div class="flex flex-col gap-1 pr-1.5">
+                    <div
+                      v-for="(item, idx) in notebookSearchHistory"
+                      :key="idx"
+                      :title="item"
+                      class="flex items-center justify-between gap-1.5 rounded hover:bg-bg-hover px-1.5 py-1 group transition-colors cursor-pointer"
                       @click="handleSearch(item)"
                     >
-                      {{ item }}
-                    </span>
-                    <n-button
-                      quaternary
-                      circle
-                      size="tiny"
-                      class="opacity-60 hover:opacity-100 shrink-0"
-                      @click.stop="handleDeleteHistoryItem(idx)"
-                    >
-                      <template #icon>
-                        <n-icon :size="12"><CloseRound /></n-icon>
-                      </template>
-                    </n-button>
+                      <div class="flex-1 flex flex-wrap items-center gap-1 min-w-0 select-none">
+                        <n-tag
+                          v-for="(tag, tIdx) in parseHistoryTags(item)"
+                          :key="tIdx"
+                          size="small"
+                          :type="tag.isCommand ? 'info' : 'default'"
+                          :bordered="false"
+                          class="max-w-full cursor-pointer"
+                        >
+                          <span class="truncate block max-w-68 text-app-xs">{{ tag.text }}</span>
+                        </n-tag>
+                      </div>
+                      <n-button
+                        quaternary
+                        circle
+                        size="tiny"
+                        class="opacity-60 hover:opacity-100 shrink-0"
+                        @click.stop="handleDeleteHistoryItem(idx)"
+                      >
+                        <template #icon>
+                          <n-icon :size="12"><CloseRound /></n-icon>
+                        </template>
+                      </n-button>
+                    </div>
                   </div>
+                </n-scrollbar>
+                <n-divider class="my-1.5!" />
+                <div class="flex justify-end">
+                  <n-button
+                    quaternary
+                    size="tiny"
+                    type="error"
+                    @click="handleClearAllHistory"
+                  >
+                    <template #icon>
+                      <n-icon :size="14"><DeleteSweepRound /></n-icon>
+                    </template>
+                    {{ t('workflow.notebook_search.clear_history') }}
+                  </n-button>
                 </div>
-              </n-scrollbar>
-              <n-divider class="my-1.5!" />
-              <div class="flex justify-end">
-                <n-button
-                  quaternary
-                  size="tiny"
-                  type="error"
-                  @click="handleClearAllHistory"
-                >
-                  <template #icon>
-                    <n-icon :size="14"><DeleteSweepRound /></n-icon>
-                  </template>
-                  {{ t('workflow.notebook_search.clear_history') }}
-                </n-button>
-              </div>
+              </template>
+              <template v-else>
+                <n-empty size="small" :description="t('workflow.notebook_search.empty_history')" class="my-2" />
+              </template>
+            </div>
+          </n-popover>
+          <!-- 移动端搜索历史 -->
+          <n-button
+            v-if="isMobile"
+            class="n-square-button"
+            @click="showHistoryDrawer = true"
+          >
+            <template #icon>
+              <n-icon :size="16"><HistoryRound /></n-icon>
             </template>
-            <template v-else>
-              <n-empty size="small" :description="t('workflow.notebook_search.empty_history')" class="my-2" />
+          </n-button>
+          <!-- 搜索按钮 -->
+          <n-button type="primary" class="n-square-button" @click="handleSearch()">
+            <template #icon>
+              <n-icon :size="16"><SearchRound /></n-icon>
             </template>
-          </div>
-        </n-popover>
-        <!-- 移动端搜索历史 -->
-        <n-button
-          v-if="isMobile"
-          class="n-square-button"
-          @click="showHistoryDrawer = true"
+          </n-button>
+        </n-input-group>
+
+        <!-- 浮动展开的高级搜索条件面板（与搜索框等宽，不影响下方布局） -->
+        <div
+          v-if="showAdvancedSearch"
+          class="adv-search-panel absolute top-full left-0 right-0 mt-1 z-30 px-3 py-2 rounded border border-border bg-bg-popover shadow-md flex flex-col gap-1.5"
         >
-          <template #icon>
-            <n-icon :size="16"><HistoryRound /></n-icon>
-          </template>
-        </n-button>
-        <!-- 搜索按钮 -->
-        <n-button type="primary" class="n-square-button" @click="handleSearch()">
-          <template #icon>
-            <n-icon :size="16"><SearchRound /></n-icon>
-          </template>
-        </n-button>
-      </n-input-group>
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-app-xs font-bold text-sub select-none">
+              {{ t('workflow.notebook_search.advanced_panel_title') }}
+            </span>
+            <n-button
+              quaternary
+              size="tiny"
+              class="shrink-0"
+              :disabled="!hasActiveAdvancedConditions"
+              @click="resetAdvancedSearch"
+            >
+              <template #icon>
+                <n-icon :size="14"><RestartAltRound /></n-icon>
+              </template>
+              {{ t('workflow.notebook_search.reset_conditions') }}
+            </n-button>
+          </div>
+          <n-divider class="my-0.5!" />
+          <div class="flex flex-col gap-1.5">
+            <!-- 条件1：按版本 -->
+            <div class="flex items-center gap-1.5 min-w-0">
+              <n-checkbox
+                v-model:checked="advSearch.patch.enabled"
+                size="small"
+                class="w-23 shrink-0 select-none"
+              >
+                {{ t('workflow.notebook_search.cond_patch') }}
+              </n-checkbox>
+              <n-button
+                size="small"
+                class="n-square-button shrink-0"
+                :title="advSearch.patch.mode === 'exact' ? t('workflow.notebook_search.mode_exact') : t('workflow.notebook_search.mode_range')"
+                @click="toggleAdvSearchMode('patch')"
+              >
+                <template #icon>
+                  <n-icon :size="16">
+                    <DragHandleRound v-if="advSearch.patch.mode === 'exact'" />
+                    <SwapHorizRound v-else />
+                  </n-icon>
+                </template>
+              </n-button>
+              <n-input-group class="flex-1 min-w-0">
+                <n-input
+                  v-model:value="advSearch.patch.start"
+                  size="small"
+                  :placeholder="advSearch.patch.mode === 'range' ? '1.0' : ''"
+                  class="flex-1 min-w-0"
+                  @update:value="handlePatchInputUpdate"
+                  @keydown.enter="handleSearch()"
+                />
+                <template v-if="advSearch.patch.mode === 'range'">
+                  <n-input-group-label size="small" class="select-none">～</n-input-group-label>
+                  <n-input
+                    v-model:value="advSearch.patch.end"
+                    size="small"
+                    :placeholder="maxPatchVer"
+                    class="flex-1 min-w-0"
+                    @update:value="handlePatchInputUpdate"
+                    @keydown.enter="handleSearch()"
+                  />
+                </template>
+              </n-input-group>
+            </div>
+            <!-- 条件2：按品级 -->
+            <div class="flex items-center gap-1.5 min-w-0">
+              <n-checkbox
+                v-model:checked="advSearch.ilv.enabled"
+                size="small"
+                class="w-23 shrink-0 select-none"
+              >
+                {{ t('workflow.notebook_search.cond_ilv') }}
+              </n-checkbox>
+              <n-button
+                size="small"
+                class="n-square-button shrink-0"
+                :title="advSearch.ilv.mode === 'exact' ? t('workflow.notebook_search.mode_exact') : t('workflow.notebook_search.mode_range')"
+                @click="toggleAdvSearchMode('ilv')"
+              >
+                <template #icon>
+                  <n-icon :size="16">
+                    <DragHandleRound v-if="advSearch.ilv.mode === 'exact'" />
+                    <SwapHorizRound v-else />
+                  </n-icon>
+                </template>
+              </n-button>
+              <n-input-group class="flex-1 min-w-0">
+                <n-input-number
+                  v-model:value="advSearch.ilv.start"
+                  size="small"
+                  :show-button="false"
+                  :min="1"
+                  :max="999"
+                  :precision="0"
+                  :placeholder="advSearch.ilv.mode === 'range' ? '1' : ''"
+                  class="flex-1 min-w-0"
+                  @update:value="handleIlvInputUpdate"
+                  @keydown.enter="handleSearch()"
+                />
+                <template v-if="advSearch.ilv.mode === 'range'">
+                  <n-input-group-label size="small" class="select-none">～</n-input-group-label>
+                  <n-input-number
+                    v-model:value="advSearch.ilv.end"
+                    size="small"
+                    :show-button="false"
+                    :min="1"
+                    :max="999"
+                    :precision="0"
+                    placeholder="999"
+                    class="flex-1 min-w-0"
+                    @update:value="handleIlvInputUpdate"
+                    @keydown.enter="handleSearch()"
+                  />
+                </template>
+              </n-input-group>
+            </div>
+            <!-- 条件3：按物品ID -->
+            <div class="flex items-center gap-1.5 min-w-0">
+              <n-checkbox
+                v-model:checked="advSearch.id.enabled"
+                size="small"
+                class="w-23 shrink-0 select-none"
+              >
+                {{ t('workflow.notebook_search.cond_id') }}
+              </n-checkbox>
+              <n-button
+                size="small"
+                class="n-square-button shrink-0"
+                :title="advSearch.id.mode === 'exact' ? t('workflow.notebook_search.mode_exact') : t('workflow.notebook_search.mode_range')"
+                @click="toggleAdvSearchMode('id')"
+              >
+                <template #icon>
+                  <n-icon :size="16">
+                    <DragHandleRound v-if="advSearch.id.mode === 'exact'" />
+                    <SwapHorizRound v-else />
+                  </n-icon>
+                </template>
+              </n-button>
+              <n-input-group class="flex-1 min-w-0">
+                <n-input-number
+                  v-model:value="advSearch.id.start"
+                  size="small"
+                  :show-button="false"
+                  :min="1"
+                  :max="99999"
+                  :precision="0"
+                  :placeholder="advSearch.id.mode === 'range' ? '1' : ''"
+                  class="flex-1 min-w-0"
+                  @update:value="handleIdInputUpdate"
+                  @keydown.enter="handleSearch()"
+                />
+                <template v-if="advSearch.id.mode === 'range'">
+                  <n-input-group-label size="small" class="select-none">～</n-input-group-label>
+                  <n-input-number
+                    v-model:value="advSearch.id.end"
+                    size="small"
+                    :show-button="false"
+                    :min="1"
+                    :max="99999"
+                    :precision="0"
+                    placeholder="99999"
+                    class="flex-1 min-w-0"
+                    @update:value="handleIdInputUpdate"
+                    @keydown.enter="handleSearch()"
+                  />
+                </template>
+              </n-input-group>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <n-divider class="my-2!" />
     <div class="w-full flex">
@@ -1954,36 +2400,45 @@ defineExpose({
     <n-drawer
       v-model:show="showHistoryDrawer"
       placement="bottom"
-      height="340"
+      height="380"
       :auto-focus="false"
     >
       <n-drawer-content :title="t('workflow.notebook_search.history')" closable>
         <template v-if="notebookSearchHistory?.length">
-          <div class="flex flex-col gap-1 py-1">
-            <div
-              v-for="(item, idx) in notebookSearchHistory"
-              :key="idx"
-              class="flex items-center justify-between gap-2 p-1.5 rounded hover:bg-bg-hover border border-border"
-            >
-              <span
-                class="flex-1 text-app-sm truncate cursor-pointer select-none"
+          <n-scrollbar style="max-height: 240px;" trigger="none">
+            <div class="flex flex-col gap-1.5 py-1 pr-1">
+              <div
+                v-for="(item, idx) in notebookSearchHistory"
+                :key="idx"
+                class="flex items-center justify-between gap-2 p-1.5 rounded hover:bg-bg-hover border border-border cursor-pointer"
                 @click="handleSelectHistoryItem(item)"
               >
-                {{ item }}
-              </span>
-              <n-button
-                quaternary
-                circle
-                size="small"
-                class="shrink-0"
-                @click.stop="handleDeleteHistoryItem(idx)"
-              >
-                <template #icon>
-                  <n-icon :size="16"><CloseRound /></n-icon>
-                </template>
-              </n-button>
+                <div class="flex-1 flex flex-wrap items-center gap-1 min-w-0 select-none">
+                  <n-tag
+                    v-for="(tag, tIdx) in parseHistoryTags(item)"
+                    :key="tIdx"
+                    size="small"
+                    :type="tag.isCommand ? 'info' : 'default'"
+                    :bordered="false"
+                    class="max-w-full"
+                  >
+                    <span class="truncate block max-w-60 text-app-xs">{{ tag.text }}</span>
+                  </n-tag>
+                </div>
+                <n-button
+                  quaternary
+                  circle
+                  size="small"
+                  class="shrink-0"
+                  @click.stop="handleDeleteHistoryItem(idx)"
+                >
+                  <template #icon>
+                    <n-icon :size="16"><CloseRound /></n-icon>
+                  </template>
+                </n-button>
+              </div>
             </div>
-          </div>
+          </n-scrollbar>
           <n-divider class="my-2!" />
           <div class="flex justify-end">
             <n-button
@@ -2017,11 +2472,16 @@ defineExpose({
   max-width: 100%;
   overflow: hidden;
 }
-.search-input-group {
+.search-input-wrapper {
+  width: 100%;
   max-width: 458px;
 }
+.adv-search-panel :deep(.n-input__input-el),
+.adv-search-panel :deep(.n-input__placeholder) {
+  text-align: center;
+}
 @media screen and (max-width: 767px) {
-  .search-input-group {
+  .search-input-wrapper {
     width: 100%;
     max-width: 100%;
   }

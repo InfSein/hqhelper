@@ -2761,9 +2761,14 @@
       "max_len": "You can only add up to {num} workflows"
     },
     "notebook_search": {
+      "advanced_panel_title": "Extra Conditions",
+      "advanced_search": "Advanced Search",
       "clear_history": "Clear history",
+      "cond_id": "Item ID",
+      "cond_ilv": "Item Level",
+      "cond_patch": "Patch",
       "empty_history": "No search history",
-      "error_empty": "Please enter a search keyword",
+      "error_empty": "Please enter a search keyword or enable at least one search condition",
       "error_invalid_format": "Invalid search command format",
       "error_material_id_too_small": "Reverse recipe lookup is not supported for this item (crystals, etc.)",
       "error_no_result": "No matching items found",
@@ -2773,7 +2778,11 @@
       "help_dialog_content": "Search directly by item name (ZH/EN/JA), Item ID, iLv, or patch.\n\nAdvanced search commands (supports ~ and full-width ～):\n• Patch Search:\n  {'@'}Patch:7.0 or {'@'}Patch:7.0~7.1\n  (Prefixes: {'@'}版本: / {'@'}Patch: / {'@'}パッチ:)\n• Item ID Search:\n  {'@'}ID:36012 or {'@'}ID:36012~36015\n  (Prefix is case-insensitive, e.g. {'@'}id:)\n• Item Level Search:\n  {'@'}IL:670 or {'@'}IL:670~700\n  (Prefixes: {'@'}IL: / {'@'}ILv: / {'@'}品级:, case-insensitive)\n• Material Reverse Lookup:\n  {'@'}Material:ItemNameOrID\n  (Prefixes: {'@'}素材: / {'@'}Material:)\n\nNote: If search results exceed 1,000 items, the search will be rejected. Please narrow your query.",
       "history": "Search History",
       "material_history_prefix": "Material",
+      "mode_exact": "Exact",
+      "mode_range": "Range",
+      "patch_prefix": "Patch",
       "placeholder": "Search items...",
+      "reset_conditions": "Reset",
       "success_count": "Found {count} recipes"
     },
     "recomm_process": "Workflow Process",

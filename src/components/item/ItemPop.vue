@@ -663,7 +663,7 @@ const handleOnScroll = (e: Event) => {
             <n-divider class="item-divider" />
             <div class="content">
               <div>{{ t('item.text.can_buy_from_shop') }}</div>
-              <div class="item">
+              <div class="item gap-0">
                 {{ t('item.text.shop_price', { price: shopInfo?.costCount ?? '???' }) }}
                 <i class="xiv gil"></i>
                 ,
