@@ -160,6 +160,7 @@ export const getItemInfo = (item: `${number}` | number, amount = 0) => {
   }
   itemInfo.sortOrder = _item.so
   itemInfo.itemLevel = _item.ilv
+  itemInfo.equipLevel = _item.elv ?? 1
   itemInfo.name_ja = _item.name[0]
   itemInfo.name_en = _item.name[1]
   itemInfo.name_zh = _item.name[2]

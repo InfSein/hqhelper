@@ -2766,6 +2766,7 @@
       "clear_history": "履歴を削除",
       "cond_id": "アイテムID",
       "cond_ilv": "アイテムレベル",
+      "cond_elv": "装備レベル",
       "cond_patch": "パッチ",
       "empty_history": "検索履歴はありません",
       "error_empty": "検索キーワードを入力するか、検索条件を1つ以上有効にしてください",

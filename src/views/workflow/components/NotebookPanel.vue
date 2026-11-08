@@ -543,6 +543,12 @@ const advSearch = ref({
     start: null as number | null,
     end: null as number | null,
   },
+  elv: {
+    enabled: false,
+    mode: 'range' as AdvSearchMode,
+    start: null as number | null,
+    end: null as number | null,
+  },
   id: {
     enabled: false,
     mode: 'range' as AdvSearchMode,
@@ -553,29 +559,41 @@ const advSearch = ref({
 
 /** 是否有任何已启用且填写了有效值的高级搜索条件 */
 const hasActiveAdvancedConditions = computed(() => {
-  const { patch, ilv, id } = advSearch.value
+  const { patch, ilv, elv, id } = advSearch.value
   const patchValid = patch.mode === 'exact'
     ? Boolean(patch.start.trim())
     : Boolean(patch.start.trim() || patch.end.trim())
   const ilvValid = ilv.mode === 'exact'
     ? ilv.start !== null
     : (ilv.start !== null || ilv.end !== null)
+  const elvValid = elv.mode === 'exact'
+    ? elv.start !== null
+    : (elv.start !== null || elv.end !== null)
   const idValid = id.mode === 'exact'
     ? id.start !== null
     : (id.start !== null || id.end !== null)
   return Boolean(
     (patch.enabled && patchValid) ||
     (ilv.enabled && ilvValid) ||
+    (elv.enabled && elvValid) ||
     (id.enabled && idValid)
   )
 })
 
+/** 面板中是否存在任何勾选或已填写的内容（用于控制重置按钮可用状态） */
+const hasAdvancedPanelState = computed(() => {
+  const { patch, ilv, elv, id } = advSearch.value
+  return Boolean(
+    patch.enabled || patch.start || patch.end ||
+    ilv.enabled || ilv.start !== null || ilv.end !== null ||
+    elv.enabled || elv.start !== null || elv.end !== null ||
+    id.enabled || id.start !== null || id.end !== null
+  )
+})
+
+/** 重置高级搜索：取消所有勾选并清空输入值，但保留各项的精确/范围模式 */
 const resetAdvancedSearch = () => {
-  advSearch.value = {
-    patch: { enabled: false, mode: 'range', start: '', end: '' },
-    ilv: { enabled: false, mode: 'range', start: null, end: null },
-    id: { enabled: false, mode: 'range', start: null, end: null },
-  }
+  clearAdvancedSearchValues()
 }
 
 const clearAdvancedSearchValues = () => {
@@ -585,6 +603,9 @@ const clearAdvancedSearchValues = () => {
   advSearch.value.ilv.enabled = false
   advSearch.value.ilv.start = null
   advSearch.value.ilv.end = null
+  advSearch.value.elv.enabled = false
+  advSearch.value.elv.start = null
+  advSearch.value.elv.end = null
   advSearch.value.id.enabled = false
   advSearch.value.id.start = null
   advSearch.value.id.end = null
@@ -606,6 +627,14 @@ const handleIlvInputUpdate = () => {
       : (start !== null || end !== null)
   })
 }
+const handleElvInputUpdate = () => {
+  nextTick(() => {
+    const { mode, start, end } = advSearch.value.elv
+    advSearch.value.elv.enabled = mode === 'exact'
+      ? start !== null
+      : (start !== null || end !== null)
+  })
+}
 const handleIdInputUpdate = () => {
   nextTick(() => {
     const { mode, start, end } = advSearch.value.id
@@ -615,7 +644,7 @@ const handleIdInputUpdate = () => {
   })
 }
 
-const toggleAdvSearchMode = (key: 'patch' | 'ilv' | 'id') => {
+const toggleAdvSearchMode = (key: 'patch' | 'ilv' | 'elv' | 'id') => {
   const target = advSearch.value[key]
   target.mode = target.mode === 'exact' ? 'range' : 'exact'
 }
@@ -818,6 +847,38 @@ const getItemMatcher = (trimmed: string): ((item: ItemInfo) => boolean) | null =
     }
   }
 
+  // 3.5 装备等级匹配指令：@EL: / @ELv: / @装等:
+  const elPrefixMatch = trimmed.match(/^@(?:EL|ELv|装等)(?:[:：]\s*(.*))?$/i)
+  if (elPrefixMatch) {
+    const rawVal = elPrefixMatch[1]?.trim()
+    if (!rawVal) {
+      NAIVE_UI_MESSAGE.error(t('workflow.notebook_search.error_invalid_format'))
+      return null
+    }
+    const rangeParts = rawVal.split(/[~～]/)
+    if (rangeParts.length === 2) {
+      const s = parseInt(rangeParts[0].trim(), 10)
+      const e = parseInt(rangeParts[1].trim(), 10)
+      if (isNaN(s) || isNaN(e)) {
+        NAIVE_UI_MESSAGE.error(t('workflow.notebook_search.error_invalid_format'))
+        return null
+      }
+      const min = Math.min(s, e)
+      const max = Math.max(s, e)
+      return (item: ItemInfo) => item.equipLevel >= min && item.equipLevel <= max
+    } else if (rangeParts.length === 1) {
+      const targetEL = parseInt(rawVal, 10)
+      if (isNaN(targetEL)) {
+        NAIVE_UI_MESSAGE.error(t('workflow.notebook_search.error_invalid_format'))
+        return null
+      }
+      return (item: ItemInfo) => item.equipLevel === targetEL
+    } else {
+      NAIVE_UI_MESSAGE.error(t('workflow.notebook_search.error_invalid_format'))
+      return null
+    }
+  }
+
   // 4. 素材反查指令：@素材: / @Material:
   const materialPrefixMatch = trimmed.match(/^@(?:素材|Material)(?:[:：]\s*(.*))?$/i)
   if (materialPrefixMatch) {
@@ -850,7 +911,7 @@ const getItemMatcher = (trimmed: string): ((item: ItemInfo) => boolean) | null =
  */
 const buildAdvancedConditionTokens = (): string[] => {
   const tokens: string[] = []
-  const { patch, ilv, id } = advSearch.value
+  const { patch, ilv, elv, id } = advSearch.value
 
   if (patch.enabled) {
     const s = patch.start.trim()
@@ -886,6 +947,18 @@ const buildAdvancedConditionTokens = (): string[] => {
       const finalStart = s ?? 1
       const finalEnd = e ?? 999
       tokens.push(`@IL:${finalStart}~${finalEnd}`)
+    }
+  }
+
+  if (elv.enabled) {
+    const s = elv.start
+    const e = elv.end
+    if (elv.mode === 'exact') {
+      if (s !== null) tokens.push(`@EL:${s}`)
+    } else if (s !== null || e !== null) {
+      const finalStart = s ?? 1
+      const finalEnd = e ?? 110
+      tokens.push(`@EL:${finalStart}~${finalEnd}`)
     }
   }
 
@@ -943,6 +1016,21 @@ const applyHistoryToSearchState = (historyExpr: string) => {
       }
     }
 
+    const elMatch = part.match(/^@(?:EL|ELv|装等)[:：]\s*(.+)$/i)
+    if (elMatch && !advSearch.value.elv.enabled) {
+      const rangeParts = elMatch[1].trim().split(/[~～]/)
+      const s = parseInt(rangeParts[0]?.trim(), 10)
+      const e = rangeParts[1] !== undefined ? parseInt(rangeParts[1].trim(), 10) : NaN
+      if (!isNaN(s)) {
+        advSearch.value.elv.enabled = true
+        advSearch.value.elv.mode = !isNaN(e) ? 'range' : 'exact'
+        advSearch.value.elv.start = s
+        advSearch.value.elv.end = !isNaN(e) ? e : null
+        hasAdv = true
+        continue
+      }
+    }
+
     remainingKeywords.push(part)
   }
 
@@ -976,7 +1064,8 @@ const handleSearch = (keyword?: string) => {
       .split('&&')
       .map(s => s.trim())
       .filter(Boolean)
-    const advTokens = buildAdvancedConditionTokens()
+    // 高级搜索面板关闭时，视为未启用高级条件，仅按搜索框内容普通搜索
+    const advTokens = showAdvancedSearch.value ? buildAdvancedConditionTokens() : []
     allTokens = [...new Set([...inputTokens, ...advTokens])]
   }
 
@@ -1707,11 +1796,11 @@ defineExpose({
                 </template>
               </n-button>
             </template>
-            <div class="py-1 min-w-52 max-w-88">
-              <div class="text-app-xs font-bold mb-1.5 px-1 select-none text-sub">
+            <div class="min-w-52 max-w-88">
+              <div class="select-none text-sub">
                 {{ t('workflow.notebook_search.history') }}
               </div>
-              <n-divider class="my-1!" />
+              <n-divider class="mt-px! mb-1!" />
               <template v-if="notebookSearchHistory?.length">
                 <n-scrollbar style="max-height: 240px;" trigger="none">
                   <div class="flex flex-col gap-1 pr-1.5">
@@ -1789,33 +1878,33 @@ defineExpose({
         <!-- 浮动展开的高级搜索条件面板（与搜索框等宽，不影响下方布局） -->
         <div
           v-if="showAdvancedSearch"
-          class="adv-search-panel absolute top-full left-0 right-0 mt-1 z-30 px-3 py-2 rounded border border-border bg-bg-popover shadow-md flex flex-col gap-1.5"
+          class="adv-search-panel absolute top-full left-0 right-0 mt-1 z-30 px-3 py-2 rounded border border-border bg-bg-popover shadow-md flex flex-col"
         >
           <div class="flex items-center justify-between gap-2">
-            <span class="text-app-xs font-bold text-sub select-none">
+            <span class="text-sub select-none">
               {{ t('workflow.notebook_search.advanced_panel_title') }}
             </span>
             <n-button
               quaternary
               size="tiny"
-              class="shrink-0"
-              :disabled="!hasActiveAdvancedConditions"
+              class="n-square-button shrink-0"
+              :disabled="!hasAdvancedPanelState"
+              :title="t('workflow.notebook_search.reset_conditions')"
               @click="resetAdvancedSearch"
             >
               <template #icon>
                 <n-icon :size="14"><RestartAltRound /></n-icon>
               </template>
-              {{ t('workflow.notebook_search.reset_conditions') }}
             </n-button>
           </div>
-          <n-divider class="my-0.5!" />
-          <div class="flex flex-col gap-1.5">
+          <n-divider class="mt-px! mb-1!" />
+          <div class="flex flex-col gap-1">
             <!-- 条件1：按版本 -->
             <div class="flex items-center gap-1.5 min-w-0">
               <n-checkbox
                 v-model:checked="advSearch.patch.enabled"
                 size="small"
-                class="w-23 shrink-0 select-none"
+                class="w-24 shrink-0 select-none"
               >
                 {{ t('workflow.notebook_search.cond_patch') }}
               </n-checkbox>
@@ -1854,12 +1943,12 @@ defineExpose({
                 </template>
               </n-input-group>
             </div>
-            <!-- 条件2：按品级 -->
+            <!-- 条件2：按物品品级 -->
             <div class="flex items-center gap-1.5 min-w-0">
               <n-checkbox
                 v-model:checked="advSearch.ilv.enabled"
                 size="small"
-                class="w-23 shrink-0 select-none"
+                class="w-24 shrink-0 select-none"
               >
                 {{ t('workflow.notebook_search.cond_ilv') }}
               </n-checkbox>
@@ -1906,12 +1995,64 @@ defineExpose({
                 </template>
               </n-input-group>
             </div>
-            <!-- 条件3：按物品ID -->
+            <!-- 条件3：按装备等级 -->
+            <div class="flex items-center gap-1.5 min-w-0">
+              <n-checkbox
+                v-model:checked="advSearch.elv.enabled"
+                size="small"
+                class="w-24 shrink-0 select-none"
+              >
+                {{ t('workflow.notebook_search.cond_elv') }}
+              </n-checkbox>
+              <n-button
+                size="small"
+                class="n-square-button shrink-0"
+                :title="advSearch.elv.mode === 'exact' ? t('workflow.notebook_search.mode_exact') : t('workflow.notebook_search.mode_range')"
+                @click="toggleAdvSearchMode('elv')"
+              >
+                <template #icon>
+                  <n-icon :size="16">
+                    <DragHandleRound v-if="advSearch.elv.mode === 'exact'" />
+                    <SwapHorizRound v-else />
+                  </n-icon>
+                </template>
+              </n-button>
+              <n-input-group class="flex-1 min-w-0">
+                <n-input-number
+                  v-model:value="advSearch.elv.start"
+                  size="small"
+                  :show-button="false"
+                  :min="1"
+                  :max="110"
+                  :precision="0"
+                  :placeholder="advSearch.elv.mode === 'range' ? '1' : ''"
+                  class="flex-1 min-w-0"
+                  @update:value="handleElvInputUpdate"
+                  @keydown.enter="handleSearch()"
+                />
+                <template v-if="advSearch.elv.mode === 'range'">
+                  <n-input-group-label size="small" class="select-none">～</n-input-group-label>
+                  <n-input-number
+                    v-model:value="advSearch.elv.end"
+                    size="small"
+                    :show-button="false"
+                    :min="1"
+                    :max="110"
+                    :precision="0"
+                    placeholder="110"
+                    class="flex-1 min-w-0"
+                    @update:value="handleElvInputUpdate"
+                    @keydown.enter="handleSearch()"
+                  />
+                </template>
+              </n-input-group>
+            </div>
+            <!-- 条件4：按物品ID -->
             <div class="flex items-center gap-1.5 min-w-0">
               <n-checkbox
                 v-model:checked="advSearch.id.enabled"
                 size="small"
-                class="w-23 shrink-0 select-none"
+                class="w-24 shrink-0 select-none"
               >
                 {{ t('workflow.notebook_search.cond_id') }}
               </n-checkbox>

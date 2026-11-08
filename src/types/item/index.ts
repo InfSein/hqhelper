@@ -15,6 +15,8 @@ export interface ItemInfo {
   patch: string
   /** 物品品级 */
   itemLevel: number
+  /** 装备等级 (elv) */
+  equipLevel: number
   name_zh: string
   name_en: string
   name_ja: string
