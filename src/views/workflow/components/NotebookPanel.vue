@@ -1904,7 +1904,8 @@ defineExpose({
               <n-checkbox
                 v-model:checked="advSearch.patch.enabled"
                 size="small"
-                class="w-24 shrink-0 select-none"
+                :title="t('workflow.notebook_search.cond_patch')"
+                class="w-28 shrink-0 select-none truncate"
               >
                 {{ t('workflow.notebook_search.cond_patch') }}
               </n-checkbox>
@@ -1948,7 +1949,8 @@ defineExpose({
               <n-checkbox
                 v-model:checked="advSearch.ilv.enabled"
                 size="small"
-                class="w-24 shrink-0 select-none"
+                :title="t('workflow.notebook_search.cond_ilv')"
+                class="w-28 shrink-0 select-none truncate"
               >
                 {{ t('workflow.notebook_search.cond_ilv') }}
               </n-checkbox>
@@ -2000,7 +2002,8 @@ defineExpose({
               <n-checkbox
                 v-model:checked="advSearch.elv.enabled"
                 size="small"
-                class="w-24 shrink-0 select-none"
+                :title="t('workflow.notebook_search.cond_elv')"
+                class="w-28 shrink-0 select-none truncate"
               >
                 {{ t('workflow.notebook_search.cond_elv') }}
               </n-checkbox>
@@ -2052,7 +2055,8 @@ defineExpose({
               <n-checkbox
                 v-model:checked="advSearch.id.enabled"
                 size="small"
-                class="w-24 shrink-0 select-none"
+                :title="t('workflow.notebook_search.cond_id')"
+                class="w-28 shrink-0 select-none truncate"
               >
                 {{ t('workflow.notebook_search.cond_id') }}
               </n-checkbox>
