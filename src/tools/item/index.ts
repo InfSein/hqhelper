@@ -101,6 +101,7 @@ export const sortItems = (items: ItemInfo[], by: "recipeOrder" | "recipeOrderSea
       (a.craftInfo.craftLevel - b.craftInfo.craftLevel) ||
       (a.craftInfo.starCount - b.craftInfo.starCount) ||
       (a.craftInfo.rLv - b.craftInfo.rLv) ||
+      (a.craftInfo.durability - b.craftInfo.durability) ||
       (a.uiTypeOrder - b.uiTypeOrder) ||
       (a.sortOrder - b.sortOrder) ||
       (a.id - b.id)
