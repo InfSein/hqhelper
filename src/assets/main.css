@@ -14,21 +14,40 @@
   --glasscard-blur: 4px;
 }
 
+:root {
+  --app-color-text: rgb(51, 54, 57);
+  --app-color-text-sub: rgb(118, 124, 130);
+  --app-color-primary: #18a058;
+  --app-color-success: #18a058;
+  --app-color-info: #2080f0;
+  --app-color-warning: #f0a020;
+  --app-color-error: #d03050;
+  --app-color-border: rgb(239, 239, 245);
+  --app-color-background: #fff;
+  --app-color-base: #fff;
+  --app-color-background-embedded: rgb(250, 250, 252);
+  --app-color-background-modal: #fff;
+  --app-color-background-action: rgb(250, 250, 252);
+  --app-color-background-popover: #fff;
+  --app-color-background-hover: #F4F5F5;
+}
+
 .theme-light {
-  --color-text: rgb(51, 54, 57);
-  --color-text-sub: rgb(118, 124, 130);
-  --color-primary: #18a058;
-  --color-info: #2080f0;
-  --color-warning: #f0a020;
-  --color-error: #d03050;
-  --color-border: rgb(239, 239, 245);
-  --color-background: #fff;
-  --color-base: #fff;
-  --color-background-embedded: rgb(250, 250, 252);
-  --color-background-modal: #fff;
-  --color-background-action: rgb(250, 250, 252);
-  --color-background-popover: #fff;
-  --color-background-hover: #F4F5F5;
+  --app-color-text: rgb(51, 54, 57);
+  --app-color-text-sub: rgb(118, 124, 130);
+  --app-color-primary: #18a058;
+  --app-color-success: #18a058;
+  --app-color-info: #2080f0;
+  --app-color-warning: #f0a020;
+  --app-color-error: #d03050;
+  --app-color-border: rgb(239, 239, 245);
+  --app-color-background: #fff;
+  --app-color-base: #fff;
+  --app-color-background-embedded: rgb(250, 250, 252);
+  --app-color-background-modal: #fff;
+  --app-color-background-action: rgb(250, 250, 252);
+  --app-color-background-popover: #fff;
+  --app-color-background-hover: #F4F5F5;
   --glasscard-saturate: 120%;
   --glasscard-bg: rgba(255,255,255, 0.4);
   --glasscard-bg-small: rgba(255,255,255, 0.36);
@@ -36,24 +55,50 @@
   --glasscard-bordercolor-small: #d4d4d4;
 }
 .theme-dark {
-  --color-text: rgba(255, 255, 255, 0.82);
-  --color-text-sub: rgba(255, 255, 255, 0.52);
-  --color-primary: #63e2b7;
-  --color-info: #70c0e8;
-  --color-warning: #f2c97d;
-  --color-error: #e88080;
-  --color-border: rgba(255, 255, 255, 0.09);
-  --color-background: rgb(16, 16, 20);
-  --color-base: #000;
-  --color-background-embedded: rgb(24, 24, 28);
-  --color-background-modal: rgb(44, 44, 50);
-  --color-background-action: rgb(56, 56, 62);
-  --color-background-popover: rgb(72, 72, 78);
-  --color-background-hover: #2A2A2E;
+  --app-color-text: rgba(255, 255, 255, 0.82);
+  --app-color-text-sub: rgba(255, 255, 255, 0.52);
+  --app-color-primary: #63e2b7;
+  --app-color-success: #63e2b7;
+  --app-color-info: #70c0e8;
+  --app-color-warning: #f2c97d;
+  --app-color-error: #e88080;
+  --app-color-border: rgba(255, 255, 255, 0.09);
+  --app-color-background: rgb(16, 16, 20);
+  --app-color-base: #000;
+  --app-color-background-embedded: rgb(24, 24, 28);
+  --app-color-background-modal: rgb(44, 44, 50);
+  --app-color-background-action: rgb(56, 56, 62);
+  --app-color-background-popover: rgb(72, 72, 78);
+  --app-color-background-hover: #2A2A2E;
   --glasscard-saturate: 150%;
   --glasscard-bg: rgba(16,16,20, 0.6);
   --glasscard-bg-small: transparent;
   --glasscard-shadow: 0 4px 8px rgba(0,0,0,0.6);
+}
+
+:root, .theme-dark, .theme-light {
+  --color-text: var(--app-color-text);
+  --color-text-sub: var(--app-color-text-sub);
+  --color-primary: var(--app-color-primary);
+  --color-success: var(--app-color-success);
+  --color-info: var(--app-color-info);
+  --color-warning: var(--app-color-warning);
+  --color-error: var(--app-color-error);
+  --color-border: var(--app-color-border);
+  --color-background: var(--app-color-background);
+  --color-base: var(--app-color-base);
+  --color-background-embedded: var(--app-color-background-embedded);
+  --color-background-modal: var(--app-color-background-modal);
+  --color-background-action: var(--app-color-background-action);
+  --color-background-popover: var(--app-color-background-popover);
+  --color-background-hover: var(--app-color-background-hover);
+  --color-sub: var(--app-color-text-sub);
+  --color-bg: var(--app-color-background);
+  --color-bg-embedded: var(--app-color-background-embedded);
+  --color-bg-modal: var(--app-color-background-modal);
+  --color-bg-action: var(--app-color-background-action);
+  --color-bg-popover: var(--app-color-background-popover);
+  --color-bg-hover: var(--app-color-background-hover);
 }
 
 a {

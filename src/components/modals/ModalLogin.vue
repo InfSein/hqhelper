@@ -1,32 +1,42 @@
 <script setup lang="ts">
 import {
-  LogInOutlined, PersonAddAlt1Filled, LockResetOutlined,
-  AccountCircleOutlined, KeyOutlined,
-  EmailOutlined, VerifiedUserFilled,
-  PersonOutlineOutlined, BadgeFilled,
-  EditNoteOutlined, LabelImportantFilled, FaceRetouchingNaturalFilled,
+  AccountCircleOutlined,
+  BadgeFilled,
   DoneOutlined,
+  EditNoteOutlined,
+  EmailOutlined,
+  FaceRetouchingNaturalFilled,
+  KeyOutlined,
+  LabelImportantFilled,
+  LockResetOutlined,
+  LogInOutlined,
+  PersonAddAlt1Filled,
+  PersonOutlineOutlined,
+  VerifiedUserFilled,
 } from '@vicons/material'
 import ModalNbbAvatarSelector from './ModalNbbAvatarSelector.vue'
+import ModalUploadAvatar from './ModalUploadAvatar.vue'
 import { useStore } from '@/store'
-import { type CloudConfigModel } from '@/models/config-cloud'
-import type { NbbResponse, ResdataRegisterAndLogin } from '@/models/nbb-cloud'
+import { useLocale } from '@/composables/useLocale'
+import useCloud from '@/composables/useCloud'
+import { useNbbCloud } from '@/composables/useNbbCloud'
 import { deepCopy } from '@/tools'
-import { getImgCdnUrl } from '@/tools/item'
-import { useNbbCloud } from '@/tools/nbb-cloud'
+import { getImgCdnUrl } from '@/tools/game'
+import type { NbbResponse, ResdataRegisterAndLogin } from '@/types/api/nbb-cloud'
 
-const t = inject<(message: string, args?: any) => string>('t')!
-const cloudConfig = inject<Ref<CloudConfigModel>>('cloudConfig')!
 const appForceUpdate = inject<() => {}>('appForceUpdate') ?? (() => {})
 
 const store = useStore()
+const { t } = useLocale()
+const { isVipOrDev } = useCloud()
 const NAIVE_UI_MESSAGE = useMessage()
 const {
   sendVerify, sendVerifyForResetPassword,
   register, login, resetPassword,
   resolveUserInfo,
   resetNickNameAndTitle, resetAvatar,
-} = useNbbCloud(cloudConfig)
+  updateUserInfoExt,
+} = useNbbCloud()
 
 const showModal = defineModel<boolean>('show', { required: true })
 
@@ -41,6 +51,7 @@ const isVerifyCooldown = ref(false)
 const isSendingVerify = ref(false)
 const isSubmitting = ref(false)
 const showNbbAvatarSelector = ref(false)
+const showUploadAvatarModal = ref(false)
 const loginFormData = reactive({
   account: '',
   password: '',
@@ -63,11 +74,14 @@ const edituserFormData = reactive({
   avatar: 0,
 })
 
-const onLoad = () => {
+const onLoad = async () => {
   loginAction.value = props.defaultTab
-  edituserFormData.nickname = cloudConfig.value.nbb_account_nickname
-  edituserFormData.title = cloudConfig.value.nbb_account_title
-  edituserFormData.avatar = cloudConfig.value.nbb_account_avatar
+  edituserFormData.nickname = store.cloudConfig.nbb_account_nickname
+  edituserFormData.title = store.cloudConfig.nbb_account_title
+  edituserFormData.avatar = store.cloudConfig.nbb_account_avatar
+  if (loginAction.value === 'edituser') {
+    await updateUserInfoExt()
+  }
 }
 
 const modalIcon = computed(() => {
@@ -93,6 +107,9 @@ const verifyButtonText = computed(() =>
   isVerifyCooldown.value ? t('cloud.message.verify_cooldown', verifyCooldown.value) : t('cloud.text.send_verify')
 )
 const avatarUrl = computed(() => {
+  if (store.cloudConfig.nbb_account_avatar_vip && edituserFormData.avatar === store.cloudConfig.nbb_account_avatar) {
+    return store.cloudConfig.nbb_account_avatar_vip
+  }
   const avatarId = edituserFormData.avatar || 64384
   return getImgCdnUrl(avatarId)
 })
@@ -137,7 +154,7 @@ const handleResponse = (
   }
 }
 const handleSaveLoginInfo = (data: ResdataRegisterAndLogin) => {
-  const newCloudConfig = resolveUserInfo(data, cloudConfig.value)
+  const newCloudConfig = resolveUserInfo(data, store.cloudConfig)
   store.setCloudConfig(newCloudConfig)
   appForceUpdate()
 }
@@ -166,6 +183,9 @@ const handleSendVerify = async (email: string) => {
 const handleShowNbbAvatarSelector = () => {
   showNbbAvatarSelector.value = true
 }
+const handleShowUploadAvatarModal = () => {
+  showUploadAvatarModal.value = true
+}
 
 const handleSubmit = async () => {
   try {
@@ -182,6 +202,7 @@ const handleSubmit = async () => {
       handleResponse(response, t('cloud.message.login_succeed'))
       if (!response.errno) {
         handleSaveLoginInfo(response.data)
+        await updateUserInfoExt()
         showModal.value = false
       }
     } else if (loginAction.value === 'register') {
@@ -210,6 +231,7 @@ const handleSubmit = async () => {
       handleResponse(response, t('cloud.message.register_succeed'))
       if (!response.errno) {
         handleSaveLoginInfo(response.data)
+        await updateUserInfoExt()
         showModal.value = false
       }
     } else if (loginAction.value === 'resetpass') {
@@ -240,10 +262,10 @@ const handleSubmit = async () => {
         NAIVE_UI_MESSAGE.error(inputLenTooLong); return
       }
 
-      const newCloudConfig = deepCopy(cloudConfig.value)
+      const newCloudConfig = deepCopy(store.cloudConfig)
       if (
-        edituserFormData.nickname !== cloudConfig.value.nbb_account_nickname
-        || edituserFormData.title !== cloudConfig.value.nbb_account_title
+        edituserFormData.nickname !== store.cloudConfig.nbb_account_nickname
+        || edituserFormData.title !== store.cloudConfig.nbb_account_title
       ) {
         const response = await resetNickNameAndTitle(edituserFormData.nickname, edituserFormData.title)
         if (response.errno) {
@@ -254,7 +276,7 @@ const handleSubmit = async () => {
           store.setCloudConfig(newCloudConfig)
         }
       }
-      if (edituserFormData.avatar !== cloudConfig.value.nbb_account_avatar) {
+      if (edituserFormData.avatar !== store.cloudConfig.nbb_account_avatar) {
         const response = await resetAvatar(edituserFormData.avatar)
         if (response.errno) {
           NAIVE_UI_MESSAGE.error(t('cloud.message.reset_avatar_failed', response.errmsg)); return
@@ -463,10 +485,18 @@ const handleSubmit = async () => {
               class="button-avatar"
             />
             <n-button
+              v-if="!store.cloudConfig.nbb_account_avatar_vip"
               size="small"
               @click="handleShowNbbAvatarSelector"
             >
               {{ t('common.edit') }}
+            </n-button>
+            <n-button
+              v-if="isVipOrDev"
+              size="small"
+              @click="handleShowUploadAvatarModal"
+            >
+              {{ t('common.upload') }}
             </n-button>
           </div>
         </div>
@@ -474,7 +504,7 @@ const handleSubmit = async () => {
     </div>
 
     <template #action>
-      <div class="modal-submit-container">
+      <div class="app-modal-footer">
         <n-button
           type="primary"
           size="large"
@@ -493,6 +523,9 @@ const handleSubmit = async () => {
     <ModalNbbAvatarSelector
       v-model:show="showNbbAvatarSelector"
       v-model:avatar-id="edituserFormData.avatar"
+    />
+    <ModalUploadAvatar
+      v-model:show="showUploadAvatarModal"
     />
   </MyModal>
 </template>
