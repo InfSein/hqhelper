@@ -101,7 +101,7 @@ export const sortItems = (items: ItemInfo[], by: "recipeOrder" | "recipeOrderSea
       (a.craftInfo.craftLevel - b.craftInfo.craftLevel) ||
       (a.craftInfo.starCount - b.craftInfo.starCount) ||
       (a.craftInfo.rLv - b.craftInfo.rLv) ||
-      (a.craftInfo.durability - b.craftInfo.durability) ||
+      (a.craftInfo.recipeOrder - b.craftInfo.recipeOrder) ||
       (a.uiTypeOrder - b.uiTypeOrder) ||
       (a.sortOrder - b.sortOrder) ||
       (a.id - b.id)
@@ -333,6 +333,7 @@ export const getItemInfo = (item: `${number}` | number, amount = 0) => {
       itemInfo.craftInfo = {
         jobId: recipe.job + 8, // 解包配方的jobId是从0开始
         recipeId: recipeID,
+        recipeOrder: recipe.num,
         craftLevel: recipe.clv,
         yields: recipe.yields,
         starCount: recipe.star,

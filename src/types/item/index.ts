@@ -81,6 +81,8 @@ export interface ItemInfo {
     jobId: number
     /** 配方ID */
     recipeId: number
+    /** 配方顺序号 */
+    recipeOrder: number
     /** 制作等级 */
     craftLevel: number
     /** 产量 (一次制作可以获得几个成品) */

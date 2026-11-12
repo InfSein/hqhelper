@@ -169,6 +169,7 @@ export const XivUnpackedPlaceNames = JsonXivUnpackedPlaceNames as Record<number,
 
 import JsonXivUnpackedRecipes from './unpacks/recipes.json'
 export interface XivUnpackedRecipe {
+  num: number
   id: number
   clv: number
   star: number
