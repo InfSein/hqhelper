@@ -2849,6 +2849,18 @@
       "previous": "Previous category",
       "next": "Next category",
       "join_menu_recipes": "Add recipes in this entry to workflow"
+    },
+    "custom_queue": {
+      "title": "Custom Queues",
+      "save_to_queue": "Save to Custom Queue",
+      "new_queue": "New",
+      "default_name": "Queue {num}",
+      "rename_queue": "Rename Queue",
+      "delete_queue": "Delete Queue",
+      "confirm_delete": "Are you sure you want to delete queue \"{name}\"?",
+      "empty": "No custom queues yet",
+      "how_to_set": "How to set?",
+      "guide_content": "After selecting the items you want to craft in the \"Select Items\" panel on the right, click the \"[Share]\" button in its header. At the bottom of the pop-up menu, under \"Save to Custom Queue\", you can save the current item list as a new queue or overwrite an existing one."
     }
   },
   "eorzea_time_modal": {

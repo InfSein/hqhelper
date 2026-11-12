@@ -2799,6 +2799,19 @@
       "previous": "查看上一类",
       "next": "查看下一类",
       "join_menu_recipes": "将此项目中的配方加入到工作流"
+    },
+    "custom_queue": {
+      "title": "自定队列",
+      "save_to_queue": "保存到自定队列",
+      "new_queue": "新建",
+      "default_name": "队列{num}",
+      "rename_queue": "重命名队列",
+      "delete_queue": "删除队列",
+      "confirm_delete": "确认要删除这一队列吗？",
+      "empty": "暂无自定队列",
+      "how_to_set": "如何设置？",
+      "guide_content": "选择好要制作的物品后，在右侧“挑选物品”栏中点击标题右侧的“[分享]”按钮，在弹出菜单底部的“保存到自定队列”中即可将当前物品队列保存为新队列或覆盖已有队列。",
+      "queue_will_be_overwritten": "选定队列的内容将被覆盖。"
     }
   },
   "recipe": {
@@ -2814,7 +2827,7 @@
       "common": "分级配方",
       "special": "特殊配方",
       "master": "秘籍配方",
-      "custom_lists": "推荐列表",
+      "custom_lists": "推荐队列",
       "skybuilder": "伊修加德重建",
       "skysteel": "天钢工具",
       "splendorous": "支线任务：莫雯卓越工具",

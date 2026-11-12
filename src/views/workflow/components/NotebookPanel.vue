@@ -2,8 +2,11 @@
 import { computed, ref, watch, h, nextTick } from 'vue'
 import {
   CloseRound,
+  DeleteFilled,
   DeleteSweepRound,
+  DoneOutlined,
   DragHandleRound,
+  EditNoteOutlined,
   HistoryRound,
   JoinLeftOutlined,
   PlaylistAddOutlined,
@@ -25,6 +28,7 @@ import useConfig from '@/composables/useConfig'
 import { useLocale } from '@/composables/useLocale'
 import { useResponsive } from '@/composables/useResponsive'
 import { useAppModals } from '@/composables/useAppModals'
+import { useDialog } from '@/composables/useDialog'
 import { useItemContextMenu } from '@/composables/useItemContextMenu'
 import { useStore } from '@/store'
 import CommonGroupIcon from '@/assets/icons/game-ui/recipe-notebook/group-common.svg'
@@ -41,6 +45,7 @@ const store = useStore()
 const { t } = useLocale()
 const { isMobile } = useResponsive()
 const { itemLanguage } = useConfig()
+const { confirmWarning, alertInfo } = useDialog()
 const NAIVE_UI_MESSAGE = useMessage()
 
 const props = defineProps<{
@@ -1129,6 +1134,7 @@ const handleSearch = (keyword?: string) => {
   isSearchMode.value = true
   isCustomListMode.value = false
   isStarredMode.value = false
+  isUserCustomQueueMode.value = false
 
   NAIVE_UI_MESSAGE.success(t('workflow.notebook_search.success_count', { count: totalCount }))
   scrollToTop()
@@ -1204,6 +1210,7 @@ const searchByMaterial = (itemOrId: ItemInfo | number) => {
   isSearchMode.value = true
   isCustomListMode.value = false
   isStarredMode.value = false
+  isUserCustomQueueMode.value = false
   showMobileRecipeDrawer.value = false
 
   NAIVE_UI_MESSAGE.success(t('workflow.notebook_search.success_count', { count: totalCount }))
@@ -1277,6 +1284,7 @@ const currCustomList = computed<CustomListEntry | undefined>(() => {
 const handleEnterCustomListMode = () => {
   isSearchMode.value = false
   isStarredMode.value = false
+  isUserCustomQueueMode.value = false
   isCustomListMode.value = true
   if (currCustomList.value?.items?.length) {
     emit('update:selectedItem', currCustomList.value.items[0].id)
@@ -1351,6 +1359,7 @@ const toggleStarRecipe = (id: number) => {
 const handleEnterStarredMode = () => {
   isSearchMode.value = false
   isCustomListMode.value = false
+  isUserCustomQueueMode.value = false
   isStarredMode.value = true
   if (starredItems.value.length > 0) {
     emit('update:selectedItem', starredItems.value[0].id)
@@ -1359,16 +1368,118 @@ const handleEnterStarredMode = () => {
 }
 // #endregion
 
+// #region user custom queues
+const isUserCustomQueueMode = ref(false)
+const selectedUserCustomQueueIndex = ref(0)
+const showRenameQueuePopover = ref(false)
+const renameQueueInputValue = ref('')
+
+const userCustomQueues = computed<CustomListEntry[]>(() => {
+  const queues = store.userConfig.notebook_custom_queues || []
+  return queues.map((q, index) => {
+    const name = q.name || t('workflow.custom_queue.default_name', { num: index + 1 })
+    const itemsMap = decodeShareCode(q.code) || {}
+    const items: ItemInfo[] = []
+    for (const [idStr, amount] of Object.entries(itemsMap)) {
+      const itemInfo = getItemInfo(Number(idStr))
+      if (itemInfo && itemInfo.id) {
+        itemInfo.amount = amount
+        items.push(itemInfo)
+      }
+    }
+    const sortBy = store.userConfig.notebook_item_sortby || 'recipeOrder'
+    sortItems(items, sortBy)
+    return {
+      index,
+      name,
+      code: q.code,
+      items,
+      itemsMap,
+    }
+  })
+})
+
+watch(userCustomQueues, (queues) => {
+  if (selectedUserCustomQueueIndex.value >= queues.length) {
+    selectedUserCustomQueueIndex.value = Math.max(0, queues.length - 1)
+  }
+})
+
+const currUserCustomQueue = computed<CustomListEntry | undefined>(() => {
+  return userCustomQueues.value[selectedUserCustomQueueIndex.value] || userCustomQueues.value[0]
+})
+
+const handleEnterUserCustomQueueMode = () => {
+  isSearchMode.value = false
+  isCustomListMode.value = false
+  isStarredMode.value = false
+  isUserCustomQueueMode.value = true
+  if (currUserCustomQueue.value?.items?.length) {
+    emit('update:selectedItem', currUserCustomQueue.value.items[0].id)
+  }
+  scrollToTop()
+}
+
+const handleUserCustomQueueSelect = (index: number) => {
+  selectedUserCustomQueueIndex.value = index
+  const cq = userCustomQueues.value[index]
+  if (cq?.items?.length) {
+    emit('update:selectedItem', cq.items[0].id)
+  }
+  scrollToTop()
+}
+
+const handleOpenRenameQueuePopover = () => {
+  if (!currUserCustomQueue.value) return
+  renameQueueInputValue.value = currUserCustomQueue.value.name
+  showRenameQueuePopover.value = true
+}
+
+const handleConfirmRenameQueue = () => {
+  if (!currUserCustomQueue.value) return
+  const targetIdx = currUserCustomQueue.value.index
+  const queues = store.userConfig.notebook_custom_queues
+  if (!queues?.[targetIdx]) return
+  const newName = renameQueueInputValue.value.trim() || t('workflow.custom_queue.default_name', { num: targetIdx + 1 })
+  queues[targetIdx].name = newName
+  store.updateUserConfig()
+  showRenameQueuePopover.value = false
+  NAIVE_UI_MESSAGE.success(t('common.save_succeed'))
+}
+
+const handleDeleteCurrentQueue = async () => {
+  if (!currUserCustomQueue.value) return
+  const targetIdx = currUserCustomQueue.value.index
+  const confirmed = await confirmWarning(t('workflow.custom_queue.confirm_delete'))
+  if (!confirmed) return
+  const queues = store.userConfig.notebook_custom_queues
+  if (!queues?.[targetIdx]) return
+  queues.splice(targetIdx, 1)
+  if (selectedUserCustomQueueIndex.value >= queues.length) {
+    selectedUserCustomQueueIndex.value = Math.max(0, queues.length - 1)
+  }
+  store.updateUserConfig()
+  if (currUserCustomQueue.value?.items?.length) {
+    emit('update:selectedItem', currUserCustomQueue.value.items[0].id)
+  }
+}
+
+const handleShowCustomQueueGuide = () => {
+  alertInfo(t('workflow.custom_queue.guide_content'))
+}
+// #endregion
+
 const handleJobSelect = (job: number) => {
   isSearchMode.value = false
   isCustomListMode.value = false
   isStarredMode.value = false
+  isUserCustomQueueMode.value = false
   emit('update:selectedJob', job)
   scrollToTop()
 }
 
 const handleMenuTabUpdate = (val: 'common' | 'special' | 'master') => {
-  if (isCustomListMode.value || isStarredMode.value) return
+  if (isCustomListMode.value || isStarredMode.value || isUserCustomQueueMode.value) return
   isSearchMode.value = false
   searchKeyword.value = ''
   emit('update:selectedMenu', val)
@@ -1379,6 +1490,7 @@ const handleContentGroupSelect = (menuId: `i_${number}`) => {
   isSearchMode.value = false
   isCustomListMode.value = false
   isStarredMode.value = false
+  isUserCustomQueueMode.value = false
   searchKeyword.value = ''
   emit('update:selectedContentGroup', menuId)
   scrollToTop()
@@ -1414,6 +1526,14 @@ const displayedNotebookGroups = computed<DisplayedNotebookGroup[]>(() => {
       key: currCustomList.value.index,
       label: currCustomList.value.name,
       items: currCustomList.value.items.map(item => ({ item, amount: item.amount })),
+    }]
+  }
+  if (isUserCustomQueueMode.value) {
+    if (!currUserCustomQueue.value) return []
+    return [{
+      key: currUserCustomQueue.value.index,
+      label: currUserCustomQueue.value.name,
+      items: currUserCustomQueue.value.items.map(item => ({ item, amount: item.amount })),
     }]
   }
   return Object.values(currContentGroups.value).map(cg => ({
@@ -1516,6 +1636,8 @@ watch(
     isCustomListMode,
     selectedCustomListIndex,
     isStarredMode,
+    isUserCustomQueueMode,
+    selectedUserCustomQueueIndex,
     selectedUiType,
   ],
   () => {
@@ -1655,6 +1777,7 @@ const focusRecipe = (itemOrId: ItemInfo | number) => {
   isSearchMode.value = false
   isCustomListMode.value = false
   isStarredMode.value = false
+  isUserCustomQueueMode.value = false
   searchKeyword.value = ''
 
   // 若分类筛选导致该物品不可见，重置分类筛选为全部
@@ -1718,7 +1841,7 @@ defineExpose({
           <template #trigger>
             <n-button
               class="p-px w-8.5! h-8.5! md:w-9! md:h-9!"
-              :type="!isSearchMode && !isCustomListMode && !isStarredMode && selectedJob === Number(job) ? 'primary' : 'default'"
+              :type="!isSearchMode && !isCustomListMode && !isStarredMode && !isUserCustomQueueMode && selectedJob === Number(job) ? 'primary' : 'default'"
               @click="handleJobSelect(Number(job))"
             >
               <XivFARImage
@@ -1728,6 +1851,21 @@ defineExpose({
             </n-button>
           </template>
           {{ XivJobs[Number(job)]?.[`job_name_${itemLanguage}`] || XivJobs[Number(job)]?.job_name_zh }}
+        </n-tooltip>
+        <n-tooltip placement="top" :trigger="isMobile ? 'manual' : 'hover'">
+          <template #trigger>
+            <n-button
+              class="p-px w-8.5! h-8.5! md:w-9! md:h-9!"
+              :type="!isSearchMode && isStarredMode ? 'primary' : 'default'"
+              @click="handleEnterStarredMode"
+            >
+              <XivFARImage
+                src="./ui/star.png"
+                :size="isMobile ? 30 : 32"
+              />
+            </n-button>
+          </template>
+          {{ t('workflow.notebook_starred.title') }}
         </n-tooltip>
         <n-tooltip placement="top" :trigger="isMobile ? 'manual' : 'hover'">
           <template #trigger>
@@ -1748,16 +1886,16 @@ defineExpose({
           <template #trigger>
             <n-button
               class="p-px w-8.5! h-8.5! md:w-9! md:h-9!"
-              :type="!isSearchMode && isStarredMode ? 'primary' : 'default'"
-              @click="handleEnterStarredMode"
+              :type="!isSearchMode && isUserCustomQueueMode ? 'primary' : 'default'"
+              @click="handleEnterUserCustomQueueMode"
             >
               <XivFARImage
-                src="./ui/star.png"
+                src="./ui/love.webp"
                 :size="isMobile ? 30 : 32"
               />
             </n-button>
           </template>
-          {{ t('workflow.notebook_starred.title') }}
+          {{ t('workflow.custom_queue.title') }}
         </n-tooltip>
       </div>
       <div class="search-input-wrapper relative">
@@ -2112,10 +2250,10 @@ defineExpose({
       <div class="w-27 md:w-48 flex flex-col pr-1.5 md:pr-2 shrink-0" :style="{ height: menuHeight, borderRight: '1px solid var(--color-border)' }">
         <n-tabs
           :value="selectedMenu"
-          :disabled="isCustomListMode || isStarredMode"
+          :disabled="isCustomListMode || isStarredMode || isUserCustomQueueMode"
           type="segment" animated
           class="notebook-menu-tabs mb-2 transition-opacity"
-          :class="isCustomListMode || isStarredMode ? 'opacity-40' : ''"
+          :class="isCustomListMode || isStarredMode || isUserCustomQueueMode ? 'opacity-40' : ''"
           @update:value="handleMenuTabUpdate"
         >
           <n-tab name="common">
@@ -2123,7 +2261,7 @@ defineExpose({
               <template #trigger>
                 <n-icon
                   :size="18"
-                  :color="(isCustomListMode || isStarredMode) ? 'var(--app-color-text-sub)' : (!isSearchMode && selectedMenu === 'common' ? 'var(--color-primary)' : undefined)"
+                  :color="(isCustomListMode || isStarredMode || isUserCustomQueueMode) ? 'var(--app-color-text-sub)' : (!isSearchMode && selectedMenu === 'common' ? 'var(--color-primary)' : undefined)"
                 >
                   <component :is="CommonGroupIcon" />
                 </n-icon>
@@ -2136,7 +2274,7 @@ defineExpose({
               <template #trigger>
                 <n-icon
                   :size="18"
-                  :color="(isCustomListMode || isStarredMode) ? 'var(--app-color-text-sub)' : (!isSearchMode && selectedMenu === 'special' ? 'var(--color-primary)' : undefined)"
+                  :color="(isCustomListMode || isStarredMode || isUserCustomQueueMode) ? 'var(--app-color-text-sub)' : (!isSearchMode && selectedMenu === 'special' ? 'var(--color-primary)' : undefined)"
                 >
                   <component :is="SpecialGroupIcon" />
                 </n-icon>
@@ -2149,7 +2287,7 @@ defineExpose({
               <template #trigger>
                 <n-icon
                   :size="18"
-                  :color="(isCustomListMode || isStarredMode) ? 'var(--app-color-text-sub)' : (!isSearchMode && selectedMenu === 'master' ? 'var(--color-primary)' : undefined)"
+                  :color="(isCustomListMode || isStarredMode || isUserCustomQueueMode) ? 'var(--app-color-text-sub)' : (!isSearchMode && selectedMenu === 'master' ? 'var(--color-primary)' : undefined)"
                 >
                   <component :is="MasterGroupIcon" />
                 </n-icon>
@@ -2192,6 +2330,36 @@ defineExpose({
                   class="shrink-0 n-square-button"
                   :title="t('workflow.custom_list.join_list')"
                   @click.stop="handleJoinCustomList(cl)"
+                >
+                  <template #icon>
+                    <n-icon :size="16"><JoinLeftOutlined /></n-icon>
+                  </template>
+                </n-button>
+              </div>
+            </template>
+            <template v-else-if="isUserCustomQueueMode">
+              <div
+                v-for="cq in userCustomQueues"
+                :key="cq.index"
+                class="flex items-center gap-1 group"
+              >
+                <n-button
+                  size="small"
+                  :tertiary="selectedUserCustomQueueIndex === cq.index"
+                  :quaternary="selectedUserCustomQueueIndex !== cq.index"
+                  class="flex-1 justify-start truncate"
+                  @click="handleUserCustomQueueSelect(cq.index)"
+                >
+                  <span class="truncate">{{ cq.name }}</span>
+                </n-button>
+                <n-button
+                  size="small"
+                  :type="selectedUserCustomQueueIndex === cq.index ? 'primary' : 'default'"
+                  :tertiary="selectedUserCustomQueueIndex === cq.index"
+                  :quaternary="selectedUserCustomQueueIndex !== cq.index"
+                  class="shrink-0 n-square-button"
+                  :title="t('workflow.custom_list.join_list')"
+                  @click.stop="handleJoinCustomList(cq)"
                 >
                   <template #icon>
                     <n-icon :size="16"><JoinLeftOutlined /></n-icon>
@@ -2420,16 +2588,76 @@ defineExpose({
               </n-popover>
             </div>
           </div>
-          <n-scrollbar ref="itemListScrollbarRef" trigger="none" class="flex-1">
-            <div ref="itemListContainerRef">
+          <n-scrollbar ref="itemListScrollbarRef" trigger="none" class="flex-1" content-class="min-h-full flex flex-col">
+            <div ref="itemListContainerRef" class="flex-1 flex flex-col">
               <div
                 v-for="group in filteredNotebookGroups"
                 :key="group.key"
                 class="flex flex-col gap-1 pr-0 md:pr-3 mb-2"
               >
-                <div v-if="group.label" class="sticky top-0 z-10 w-full rounded px-1 bg-border truncate">
-                  <i class="xiv e032"></i>
-                  {{ group.label }}
+                <div v-if="group.label" class="sticky top-0 z-10 w-full rounded px-1 bg-border flex items-center justify-between gap-1">
+                  <div class="truncate">
+                    <i class="xiv e032"></i>
+                    {{ group.label }}
+                  </div>
+                  <div v-if="isUserCustomQueueMode && currUserCustomQueue" class="flex items-center gap-0.5 shrink-0">
+                    <n-popover
+                      v-model:show="showRenameQueuePopover"
+                      trigger="click"
+                      placement="bottom-end"
+                      style="width: 220px;"
+                    >
+                      <template #trigger>
+                        <n-button
+                          quaternary
+                          size="tiny"
+                          class="n-square-button h-5! w-5!"
+                          :title="t('workflow.custom_queue.rename_queue')"
+                          @click="handleOpenRenameQueuePopover"
+                        >
+                          <template #icon>
+                            <n-icon :size="14"><EditNoteOutlined /></n-icon>
+                          </template>
+                        </n-button>
+                      </template>
+                      <div class="flex flex-col gap-1.5 p-0.5">
+                        <div class="font-bold text-app-sm">{{ t('workflow.custom_queue.rename_queue') }}</div>
+                        <n-input-group>
+                          <n-input
+                            v-model:value="renameQueueInputValue"
+                            size="small"
+                            :placeholder="t('workflow.custom_queue.default_name', { num: currUserCustomQueue.index + 1 })"
+                            maxlength="30"
+                            clearable
+                            @keydown.enter="handleConfirmRenameQueue"
+                          />
+                          <n-button
+                            type="primary"
+                            size="small"
+                            class="n-square-button"
+                            :title="t('common.confirm')"
+                            @click="handleConfirmRenameQueue"
+                          >
+                            <template #icon>
+                              <n-icon :size="14"><DoneOutlined /></n-icon>
+                            </template>
+                          </n-button>
+                        </n-input-group>
+                      </div>
+                    </n-popover>
+                    <n-button
+                      quaternary
+                      size="tiny"
+                      type="error"
+                      class="n-square-button h-5! w-5!"
+                      :title="t('workflow.custom_queue.delete_queue')"
+                      @click="handleDeleteCurrentQueue"
+                    >
+                      <template #icon>
+                        <n-icon :size="14"><DeleteFilled /></n-icon>
+                      </template>
+                    </n-button>
+                  </div>
                 </div>
                 <div
                   v-for="entry in group.items"
@@ -2488,9 +2716,15 @@ defineExpose({
               </div>
               <div
                 v-if="filteredNotebookGroups.length === 0"
-                class="h-full flex items-center justify-center py-8"
+                class="flex-1 flex items-center justify-center py-8"
               >
-                <n-empty :description="isStarredMode ? t('workflow.notebook_starred.empty') : t('common.no_data')" />
+                <n-empty :description="isStarredMode ? t('workflow.notebook_starred.empty') : (isUserCustomQueueMode ? t('workflow.custom_queue.empty') : t('common.no_data'))">
+                  <template v-if="isUserCustomQueueMode" #extra>
+                    <n-button size="small" @click="handleShowCustomQueueGuide">
+                      {{ t('workflow.custom_queue.how_to_set') }}
+                    </n-button>
+                  </template>
+                </n-empty>
               </div>
             </div>
           </n-scrollbar>

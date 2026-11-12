@@ -9,6 +9,11 @@ import { fixWorkState as fixCsHelperWorkState, type WorkState as CsHelperWorkSta
 
 export type UserConfigKey = "general" | "appearance" | "enhancements" | "performance" | "special" | "update"
 
+export interface UserCustomQueue {
+  name: string
+  code: string
+}
+
 export interface UserConfigModel {
   // #region 在偏好设置弹窗中设置的配置项
   // * general
@@ -107,6 +112,8 @@ export interface UserConfigModel {
   cshelper_cache_work_state: CsHelperWorkState
   /** 收藏的配方物品ID列表（最多100个） */
   notebook_starred_recipes: number[]
+  /** 自定队列列表 */
+  notebook_custom_queues: UserCustomQueue[]
   // #endregion
 }
 
@@ -168,6 +175,7 @@ const defaultUserConfig: UserConfigModel = {
   fashioncloth_cache_work_state: fixFashionclothWorkState(),
   cshelper_cache_work_state: fixCsHelperWorkState(),
   notebook_starred_recipes: [],
+  notebook_custom_queues: [],
 }
 
 // 对密钥做基础编码，避免在缓存中直接裸存。

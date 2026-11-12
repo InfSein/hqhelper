@@ -2849,6 +2849,18 @@
       "previous": "前のカテゴリ",
       "next": "次のカテゴリ",
       "join_menu_recipes": "この項目のレシピをワークフローに追加"
+    },
+    "custom_queue": {
+      "title": "カスタムリスト",
+      "save_to_queue": "カスタムリストに保存",
+      "new_queue": "新規",
+      "default_name": "リスト{num}",
+      "rename_queue": "リスト名を変更",
+      "delete_queue": "リストを削除",
+      "confirm_delete": "リスト「{name}」を削除してもよろしいですか？",
+      "empty": "カスタムリストはありません",
+      "how_to_set": "設定方法",
+      "guide_content": "右側の「アイテム選択」パネルで製作したいアイテムを選択した後、パネル上部の「[共有]」ボタンをクリックし、ポップアップメニュー下部の「カスタムリストに保存」から現在のアイテムリストを新規保存または既存のリストに上書き保存できます。"
     }
   },
   "eorzea_time_modal": {
