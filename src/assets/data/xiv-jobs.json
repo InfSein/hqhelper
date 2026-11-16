@@ -261,7 +261,7 @@
     "job_name_en": "Bastion",
     "job_name_zh": "坚城卫",
     "job_name_ja": "バスティオン",
-    "job_icon_url": "./image/game-job/companion/none.png"
+    "job_icon_url": "./image/game-job/companion/bastion.png"
   },
   "45": {
     "job_id": 45,
@@ -269,6 +269,6 @@
     "job_name_en": "Zephyr",
     "job_name_zh": "迅风猎手",
     "job_name_ja": "ゼファー",
-    "job_icon_url": "./image/game-job/companion/none.png"
+    "job_icon_url": "./image/game-job/companion/zephyr.png"
   }
 }
