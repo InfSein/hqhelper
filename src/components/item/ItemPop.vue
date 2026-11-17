@@ -8,6 +8,7 @@ import ItemSpan from './ItemSpan.vue'
 import ItemRemark from './ItemRemark.vue'
 import ItemInfoHeader from './ItemInfoHeader.vue'
 import ItemSubmissionReward from './ItemSubmissionReward.vue'
+import TradeNpcButton from './TradeNpcButton.vue'
 import HelpButton from '@/components/ui/HelpButton.vue'
 import XivFARImage from '@/components/ui/XivFARImage.vue'
 import LocationSpan from '@/components/map/LocationSpan.vue'
@@ -21,7 +22,6 @@ import { useItemLocale } from '@/composables/useItemLocale'
 import { XivItemRemarks, XivJobs, XivUnpackedNpcs } from '@/assets/data'
 import { getItemInfo } from '@/tools/item'
 import { calculateGatherThresholds } from '@/tools/item/gather'
-import { getPlaceNames } from '@/tools/game/map'
 import type { ItemInfo } from '@/types/item'
 import { handleGetPriceError } from '@/tools/error'
 import { getItemPriceInfo } from '@/tools/item/price'
@@ -40,6 +40,8 @@ const {
   getJobName,
   getAttrName,
   getPlaceName,
+  getPlaceNameById,
+  getNpcName,
   getPriceTypeName,
 } = useItemLocale()
 
@@ -194,6 +196,7 @@ interface RenderedTradeCost {
   cost2Count?: number
   cost3Id?: number
   cost3Count?: number
+  npc?: number
   level: number // 嵌套层级，方便渲染缩进或分隔
 }
 const tradeCostList = computed(() => {
@@ -212,7 +215,8 @@ const tradeCostList = computed(() => {
       cost2Count: current.cost2Count,
       cost3Id: current.cost3Id,
       cost3Count: current.cost3Count,
-      level
+      npc: current.npc && XivUnpackedNpcs[current.npc] ? current.npc : undefined,
+      level,
     })
     current = current.tradeAlter
     level++
@@ -220,6 +224,18 @@ const tradeCostList = computed(() => {
 
   return result
 })
+const getTradeItemMaxWidth = (index: number, hasNpcButton: boolean) => {
+  if (hasNpcButton) {
+    if (index > 0) {
+      return uiLanguage.value === 'ja' ? '168px' : '192px'
+    }
+    return '210px'
+  }
+  if (index > 0) {
+    return uiLanguage.value === 'ja' ? '185px' : '210px'
+  }
+  return '230px'
+}
 const shopInfo = computed(() => {
   return props.itemInfo.gilShopInfo
 })
@@ -229,28 +245,13 @@ const shopNpc = computed(() => {
 })
 const shopNpcName = computed(() => {
   if (!shopNpc.value) return undefined
-  switch (itemLanguage.value) {
-    case 'ja': return shopNpc.value.name[0]
-    case 'en': return shopNpc.value.name[1]
-    case 'zh':
-    default: return shopNpc.value.name[2] || shopNpc.value.name[0]
-  }
+  return getNpcName(shopNpc.value)
 })
 const shopNpcLocation = computed(() => {
   if (!shopNpc.value?.coords || !shopNpc.value?.place) return undefined
-  const placeNames = getPlaceNames(shopNpc.value.place)
-  let placeName = placeNames.name_zh
-  switch (itemLanguage.value) {
-    case 'ja':
-      placeName = placeNames.name_ja
-      break
-    case 'en':
-      placeName = placeNames.name_en
-      break
-  }
   return {
     placeId: shopNpc.value.place,
-    placeName,
+    placeName: getPlaceNameById(shopNpc.value.place),
     coordinateX: shopNpc.value.coords.x,
     coordinateY: shopNpc.value.coords.y,
   }
@@ -690,11 +691,16 @@ const handleOnScroll = (e: Event) => {
                 <div class="item trade-item">
                   {{ index > 0 ? t('common.or') : '' }}
                   <ItemSpan
-                    span-max-width="230px"
+                    :span-max-width="getTradeItemMaxWidth(index, !!cost.npc)"
                     :item-info="getItemInfo(cost.costId)"
                     :amount="cost.costCount"
                     show-amount
                     :container-id="containerId"
+                  />
+                  <TradeNpcButton
+                    v-if="cost.npc"
+                    :npc-id="cost.npc"
+                    :pop-trigger="innerPopTrigger"
                   />
                 </div>
                 <div class="item trade-item trade-item-l2" v-if="cost.cost2Id && cost.cost2Count">

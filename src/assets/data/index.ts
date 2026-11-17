@@ -200,6 +200,7 @@ export interface ItemTradeInfo {
   cost2Count?: number
   cost3Id?: number
   cost3Count?: number
+  npc?: number
   tradeAlter?: ItemTradeInfo
 }
 import JsonXivUnpackedTradeMap from './unpacks/trade-map.json'

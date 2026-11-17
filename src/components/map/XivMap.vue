@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import XivFARImage from '@/components/ui/XivFARImage.vue'
+import { useLocale } from '@/composables/useLocale'
 import useConfig from '@/composables/useConfig'
 import { useResponsive } from '@/composables/useResponsive'
 import { type XivMapAetheryteInfo, type XivMapInfo } from '@/tools/game/map'
 
+const { t } = useLocale()
 const { isMobile } = useResponsive()
 const { itemLanguage } = useConfig()
 
@@ -46,11 +48,24 @@ const getAetheryteName = (aetheryte: XivMapAetheryteInfo) => {
       />
       <div class="absolute top-0 left-0 w-full h-full pointer-events-none">
         <!-- 目的地旗帜 -->
-        <img 
-          class="marker"
-          src="/ui/flag.png"
-          :style="getPositionStyle(flagX, flagY)"
-        />
+        <n-tooltip
+          :trigger="isMobile ? 'click' : 'hover'"
+          :show-arrow="false"
+          :keep-alive-on-hover="false"
+          style="padding: 4px 8px;"
+          content-style="padding: 0;"
+        >
+          <template #trigger>
+            <img
+              class="marker"
+              src="/ui/flag.png"
+              :style="getPositionStyle(flagX, flagY)"
+            />
+          </template>
+          <div class="text-center text-app-xs">
+            <p>{{ t('item.text.quoted_position', { x: flagX.toFixed(1), y: flagY.toFixed(1) }) }}</p>
+          </div>
+        </n-tooltip>
         <!-- 以太之光 -->
         <template v-for="aetheryte in mapData.aetherytes" :key="aetheryte.x + '-' + aetheryte.y">
           <n-tooltip

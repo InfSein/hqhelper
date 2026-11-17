@@ -1,6 +1,7 @@
 import { useLocale } from '@/composables/useLocale'
 import useConfig from '@/composables/useConfig'
-import { XivAttributes, type XivJob } from '@/assets/data'
+import { XivAttributes, type XivJob, type XivUnpackedNpc } from '@/assets/data'
+import { getPlaceNames } from '@/tools/game/map'
 import type { ItemInfo } from '@/types/item'
 import type { ItemPriceType } from '@/types/config/func'
 
@@ -75,6 +76,37 @@ export const useItemLocale = () => {
     }
   }
 
+  /** 根据地点 ID 获取当前语言地名 */
+  const getPlaceNameById = (placeId: number): string => {
+    const placeNames = getPlaceNames(placeId)
+    switch (itemLanguage.value) {
+      case 'ja': return placeNames.name_ja
+      case 'en': return placeNames.name_en
+      case 'zh':
+      default: return placeNames.name_zh
+    }
+  }
+
+  /** 获取 NPC 的当前语言名称 */
+  const getNpcName = (npc: XivUnpackedNpc): string => {
+    switch (itemLanguage.value) {
+      case 'ja': return npc.name[0]
+      case 'en': return npc.name[1]
+      case 'zh':
+      default: return npc.name[2] || npc.name[0]
+    }
+  }
+
+  /** 获取 NPC 副名称（其他语言） */
+  const getNpcSubName = (npc: XivUnpackedNpc): string => {
+    switch (itemLanguage.value) {
+      case 'ja': return npc.name[1]
+      case 'en': return npc.name[0]
+      case 'zh':
+      default: return npc.name[0] + ' / ' + npc.name[1]
+    }
+  }
+
   /** 获取价格类型的显示名称 */
   const getPriceTypeName = (ptype: ItemPriceType): string => {
     switch (ptype) {
@@ -97,6 +129,9 @@ export const useItemLocale = () => {
     getJobShortName,
     getAttrName,
     getPlaceName,
+    getPlaceNameById,
+    getNpcName,
+    getNpcSubName,
     getPriceTypeName,
   }
 }
