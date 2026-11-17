@@ -667,8 +667,10 @@ const handleOnScroll = (e: Event) => {
               <div class="item gap-0">
                 {{ t('item.text.shop_price', { price: shopInfo?.costCount ?? '???' }) }}
                 <i class="xiv gil"></i>
-                ,
-                {{ t('item.text.shop_npc', { npc: shopNpcName }) }}
+                <template v-if="shopNpcName">
+                  ,
+                  {{ t('item.text.shop_npc', { npc: shopNpcName }) }}
+                </template>
               </div>
               <div v-if="shopNpcLocation" class="item text-app-sm">
                 <LocationSpan
