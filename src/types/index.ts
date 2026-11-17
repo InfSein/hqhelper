@@ -1,4 +1,4 @@
-import type { Component, StyleValue } from "vue"
+import type { Component, CSSProperties, StyleValue } from "vue"
 import type { CascaderOption } from "naive-ui"
 import type { UserConfigKey } from "./config/user"
 import type { FuncConfigKey } from "./config/func"
@@ -80,10 +80,13 @@ interface PreferenceItemCommon extends PreferenceItemBase {
   min?: number
   max?: number
 }
+export interface PreferenceSelectOption extends CascaderOption {
+  style?: string | CSSProperties
+}
 interface PreferenceItemSelect extends PreferenceItemBase {
   type: "radio-group" | "select" | "cascader"
   multiple?: boolean
-  options: CascaderOption[]
+  options: PreferenceSelectOption[]
 }
 interface PreferenceItemButton extends PreferenceItemBase {
   type: "button"

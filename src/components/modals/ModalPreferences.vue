@@ -27,6 +27,7 @@ import useUiTools from '@/composables/useUiTools'
 import { useResponsive } from '@/composables/useResponsive'
 import { useInventoryPlugin } from '@/composables/useInventoryPlugin'
 import { deepCopy } from '@/tools'
+import { buildAppFontFamily } from '@/tools/preferences'
 import type { PreferenceGroup, SettingGroupKey } from '@/types/index'
 import { fixFuncConfig, type FuncConfigModel } from '@/types/config/func'
 import { fixUserConfig, type UserConfigModel } from '@/types/config/user'
@@ -226,6 +227,32 @@ const preferenceGroups = computed(() : PreferenceGroup[] => {
                 { value: '14px', label: t('preference.custom_font_size.option.medium') },
                 { value: '15px', label: t('preference.custom_font_size.option.big') },
                 { value: '16px', label: t('preference.custom_font_size.option.large') },
+              ],
+            },
+            {
+              key: 'custom_en_font',
+              label: t('preference.custom_en_font.title'),
+              descriptions: [
+                t('preference.custom_en_font.desc.desc_1'),
+                t('preference.custom_en_font.desc.desc_2'),
+              ],
+              type: 'radio-group',
+              options: [
+                {
+                  value: 'google_sans',
+                  label: 'Google Sans',
+                  style: { fontFamily: buildAppFontFamily('google_sans', formUserConfigData.value.custom_font) },
+                },
+                {
+                  value: 'lato',
+                  label: 'Lato',
+                  style: { fontFamily: buildAppFontFamily('lato', formUserConfigData.value.custom_font) },
+                },
+                {
+                  value: 'custom',
+                  label: t('preference.custom_en_font.option.custom'),
+                  style: { fontFamily: buildAppFontFamily('custom', formUserConfigData.value.custom_font) },
+                },
               ],
             },
             {
@@ -1088,6 +1115,7 @@ const handleSave = async () => {
   // * 处理偏好设置
   const oldUserConfig = deepCopy(fixUserConfig(store.userConfig))
   formUserConfigData.value.theme ??= 'system'
+  formUserConfigData.value.custom_en_font ??= 'google_sans'
   formUserConfigData.value.language_ui ??= 'zh'
   formUserConfigData.value.language_item ??= 'auto'
   formUserConfigData.value.disable_workstate_cache ??= false

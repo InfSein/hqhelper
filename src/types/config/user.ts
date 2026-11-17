@@ -31,6 +31,8 @@ export interface UserConfigModel {
   theme: "light" | "dark" | "system"
   /** 自定义背景 */
   custom_background: string
+  /** 英文字体 */
+  custom_en_font: "google_sans" | "lato" | "custom"
   /** 自定义字体 */
   custom_font: string
   /** 字体大小 */
@@ -126,6 +128,7 @@ const defaultUserConfig: UserConfigModel = {
   // appearance
   theme: 'light',
   custom_background: '',
+  custom_en_font: 'google_sans',
   custom_font: '',
   custom_font_size: '14px',
   hide_collector_icons: false,

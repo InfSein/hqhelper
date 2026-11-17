@@ -2139,6 +2139,16 @@
       },
       "title": "Custom Background"
     },
+    "custom_en_font": {
+      "desc": {
+        "desc_1": "Globally change the English font used by the program/website.",
+        "desc_2": "If 'Custom' is not selected, the English font will be fixed to the font specified here and will not be affected by the 'Custom font' setting below."
+      },
+      "option": {
+        "custom": "Custom"
+      },
+      "title": "English font"
+    },
     "custom_font": {
       "desc": {
         "desc_1": "Change the font of text in program/website globally.",

@@ -16,6 +16,7 @@ import { useResponsive } from '@/composables/useResponsive'
 import { useElectronSync } from '@/composables/electron-sync'
 import AppStatus from './constants/app'
 import { checkAppUpdates, checkElectronUpdates, deepCopy, getAppBackground, sleep } from './tools'
+import { buildAppFontFamily } from './tools/preferences'
 import { fixFuncConfig, type FuncConfigModel } from './types/config/func'
 import { fixUserConfig, type UserConfigModel } from './types/config/user'
 import { fixCloudConfig, type CloudConfigModel } from './types/config/cloud'
@@ -274,11 +275,7 @@ const updateDraggableArea = () => {
 }
 
 const naiveUIThemeOverrides = computed(() : GlobalThemeOverrides => {
-  let fontFamily = 'Lato, -apple-system, Helvetica Neue, Segoe UI, Microsoft Yahei, 微软雅黑, Arial, Helvetica, sans-serif'
-  if (store.userConfig.custom_font) {
-    fontFamily = store.userConfig.custom_font + ', ' + fontFamily
-  }
-  fontFamily = 'FFXIV, ' + fontFamily
+  const fontFamily = buildAppFontFamily(store.userConfig.custom_en_font, store.userConfig.custom_font)
   const fontSize = store.userConfig.custom_font_size || '14px'
 
   return {

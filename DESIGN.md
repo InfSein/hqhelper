@@ -98,14 +98,15 @@ CSS 变量已通过 `src/assets/styles/tailwind.css` 的 `@theme` 映射到 Tail
 ### 3.1 字体栈
 
 ```css
-font-family: FFXIV, Lato, -apple-system, Helvetica Neue, Segoe UI,
+font-family: FFXIV, 'Google Sans', -apple-system, Helvetica Neue, Segoe UI,
              Microsoft Yahei, 微软雅黑, Arial, Helvetica, sans-serif;
 ```
 
 | 字体 | 用途 |
 |------|------|
 | `FFXIV` | FFXIV 游戏特殊符号字体 (U+E020–U+E0DB) |
-| `Lato` | 主要拉丁字体 (本地加载，非 Google Fonts CDN) |
+| `Google Sans` / `Lato` | 预设英文字体（本地 CSS `@font-face` 声明，按需加载）；用户可在「偏好设置 - 外观」通过 `custom_en_font` 选择 `google_sans`（默认）、`lato` 或 `custom` |
+| `custom_font` | 用户自定义字体（紧随预设英文字体之后；当 `custom_en_font` 为 `custom` 时完全由其与系统字体栈决定） |
 | 系统字体栈 | 回退字体 |
 
 ### 3.2 字号

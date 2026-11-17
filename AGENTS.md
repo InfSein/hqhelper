@@ -66,7 +66,7 @@ hqhelper/
 │   │   │   ├── font.css      # 字体声明
 │   │   │   └── scrollbar.css # 滚动条样式
 │   │   ├── data/             # 游戏数据 JSON (装备/职业/配方等)
-│   │   ├── font/             # 字体文件 (Lato, FFXIV)
+│   │   ├── font/             # 字体文件 (Google Sans, Lato, FFXIV)
 │   │   └── icons/            # SVG 图标
 │   ├── components/
 │   │   ├── templates/        # 模板级可复用组件 (自动注册)

@@ -93,8 +93,9 @@ const warnings = computed(() => {
           v-for="(option, index) in settingItem.options"
           :key="settingItem.key + '-option-' + index"
           :value="option.value"
-          :label="option.label"
-        />
+        >
+          <span :style="option.style">{{ option.label }}</span>
+        </n-radio-button>
       </n-radio-group>
       <n-select
         v-if="settingItem.type === 'select'"
