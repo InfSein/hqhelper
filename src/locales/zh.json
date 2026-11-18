@@ -2360,7 +2360,8 @@
       },
       "title": "合并采集物品"
     },
-    "processes_show_item_details": "显示物品详情",
+    "processes_show_item_details": "显示物品采集信息",
+    "processes_show_purchase_info": "显示物品购买信息",
     "prostate_concise_mode": {
       "desc": {
         "desc_1": "仅在专业版制作报表生效。"
@@ -2530,6 +2531,8 @@
       "showed_unchs_items": "已显示国服未实装物品"
     },
     "text": {
+      "buy_from_npc_with_val": "可在{loc}的NPC‘{npc}’处以{price}{gil}购买",
+      "buy_from_shop_with_val": "可在NPC商店以{price}{gil}购买",
       "gather_at_with_val": "在{pos}采集",
       "hide_items_not_installed_in_chs": "隐藏国服未实装物品",
       "show_gather_detail": "显示采集详情",

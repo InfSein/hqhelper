@@ -661,6 +661,11 @@ const preferenceGroups = computed(() : PreferenceGroup[] => {
               type: 'switch'
             },
             {
+              key: 'processes_show_purchase_info',
+              label: t('preference.processes_show_purchase_info'),
+              type: 'switch'
+            },
+            {
               key: 'processes_merge_gatherings',
               label: t('preference.processes_merge_gatherings.title'),
               type: 'switch',

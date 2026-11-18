@@ -49,8 +49,10 @@ export interface FuncConfigModel {
   prostate_concise_mode: boolean
 
   // * 推荐流程
-  /** 推荐流程：显示物品详情 */
+  /** 推荐流程：显示物品采集信息 */
   processes_show_item_details: boolean
+  /** 推荐流程：显示物品购买信息 */
+  processes_show_purchase_info: boolean
   /** 推荐流程：合并采集物品 */
   processes_merge_gatherings: boolean
   /** 推荐流程：制作物品排序规则 */
@@ -127,6 +129,7 @@ const defaultFuncConfig: FuncConfigModel = {
   prostate_concise_mode: false,
   // * 推荐流程
   processes_show_item_details: true,
+  processes_show_purchase_info: true,
   processes_merge_gatherings: true,
   processes_craftable_item_sortby: 'recipeOrder',
   // * 物品价格

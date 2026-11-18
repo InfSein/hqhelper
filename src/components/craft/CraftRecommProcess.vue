@@ -10,14 +10,16 @@ import GatheringPathButton from '@/components/map/GatheringPathButton.vue'
 import { useStore } from '@/store'
 import useConfig from '@/composables/useConfig'
 import { useLocale } from '@/composables/useLocale'
+import { useItemLocale } from '@/composables/useItemLocale'
 import { useEorzeaTime } from '@/composables/useEorzeaTime'
-import { XivJobs, type XivJob } from '@/assets/data'
+import { XivJobs, XivUnpackedNpcs } from '@/assets/data'
 import { getItemInfo } from '@/tools/item'
 import type { ItemInfo, RecommItemGroup } from '@/types/item'
 
 const store = useStore()
 const { t } = useLocale()
 const { itemLanguage } = useConfig()
+const { getJobName, getPlaceName, getPlaceNameById, getNpcName } = useItemLocale()
 const { currentET } = useEorzeaTime()
 
 const expandedBlocks = defineModel<Record<number, string[]>>('expandedBlocks', { required: true })
@@ -36,35 +38,68 @@ const props = defineProps<CraftRecommProcessesProps>()
 const showItemGatherDetails = computed(() => {
   return store.funcConfig.processes_show_item_details
 })
+const showItemBuyDetails = computed(() => {
+  return store.funcConfig.processes_show_purchase_info
+})
 const itemGroups = computed(() => {
   return props.itemGroups
 })
 
-const getJobName = (jobInfo: XivJob) => {
-  switch (store.userConfig.language_ui) {
-    case 'ja':
-      return jobInfo?.job_name_ja || t('common.unknown')
-    case 'en':
-      return jobInfo?.job_name_en || t('common.unknown')
-    default:
-      return jobInfo?.job_name_zh || t('common.unknown')
-  }
-}
-const getPlaceName = (itemInfo : ItemInfo) => {
-  switch (itemLanguage.value) {
-    case 'ja':
-      return itemInfo.gatherInfo?.placeNameJA
-    case 'en':
-      return itemInfo.gatherInfo?.placeNameEN
-    case 'zh':
-    default:
-      return itemInfo.gatherInfo?.placeNameZH
-  }
-}
 const textsGatherAt = computed(() => {
   const [p1, p2] = t('recomm_process.text.gather_at_with_val', '{}').split('{}')
   return { p1, p2 }
 })
+
+type ShopDetailPart =
+  | { type: "text"; value: string }
+  | { type: "loc"; placeId: number; placeName: string; x: number; y: number }
+  | { type: "gil" }
+
+/**
+ * 构造物品的 NPC 商店购买详情渲染片段
+ */
+const getShopDetailParts = (item: ItemInfo): ShopDetailPart[] => {
+  const shopInfo = item.gilShopInfo
+  if (!shopInfo) return []
+
+  const price = shopInfo.costCount.toLocaleString()
+  const npc = shopInfo.npc ? XivUnpackedNpcs[shopInfo.npc] : undefined
+  const hasNpcLocation = !!(npc?.place && npc?.coords)
+
+  const LOC_TOKEN = '__SHOP_LOC__'
+  const GIL_TOKEN = '__SHOP_GIL__'
+
+  const rawText = hasNpcLocation && npc
+    ? t('recomm_process.text.buy_from_npc_with_val', {
+        loc: LOC_TOKEN,
+        npc: getNpcName(npc),
+        price,
+        gil: GIL_TOKEN,
+      })
+    : t('recomm_process.text.buy_from_shop_with_val', {
+        price,
+        gil: GIL_TOKEN,
+      })
+
+  return rawText
+    .split(/(__SHOP_LOC__|__SHOP_GIL__)/)
+    .filter(Boolean)
+    .map((segment): ShopDetailPart => {
+      if (segment === LOC_TOKEN && npc) {
+        return {
+          type: 'loc',
+          placeId: npc.place,
+          placeName: getPlaceNameById(npc.place),
+          x: npc.coords.x,
+          y: npc.coords.y,
+        }
+      }
+      if (segment === GIL_TOKEN) {
+        return { type: 'gil' }
+      }
+      return { type: 'text', value: segment }
+    })
+}
 
 const tomeScripts = computed(() : ItemInfo[] => {
   const group = itemGroups.value.find(group => group.type === 'trade-tomescript')
@@ -104,14 +139,83 @@ const getGatheringPathTargets = (group: RecommItemGroup, groupIndex: number) => 
   return targets
 }
 
-const handleItemCompletionChange = (groupIndex: number) => {
-  let needToCollapseGroup = true
-  Object.values(completedItems.value[groupIndex]).forEach(completed => {
-    needToCollapseGroup = needToCollapseGroup && completed
-  })
-  if (needToCollapseGroup) {
+/** 判断指定素材是否仍被任意一个未勾选的列表物品作为配方素材使用 */
+const isMaterialUsedByAnyUncheckedItem = (matId: number): boolean => {
+  for (let gIdx = 0; gIdx < itemGroups.value.length; gIdx++) {
+    const group = itemGroups.value[gIdx]
+    for (const otherItem of group.items) {
+      // 已勾选的物品不再需要继续筹集其配方素材
+      if (completedItems.value[gIdx]?.[otherItem.id]) continue
+      if (otherItem.craftRequires?.some(req => req.id === matId)) {
+        return true
+      }
+    }
+  }
+  return false
+}
+
+/**
+ * 勾选上级物品后，自动勾选未被其他未完成物品使用的配方素材（支持多级级联）
+ * @returns 状态发生变更的分组索引集合
+ */
+const autoCompleteUnusedMaterials = (rootItem: ItemInfo): Set<number> => {
+  const affectedGroups = new Set<number>()
+  const queue: ItemInfo[] = [rootItem]
+  const processedItemIds = new Set<number>()
+
+  while (queue.length > 0) {
+    const currentItem = queue.shift()!
+    if (processedItemIds.has(currentItem.id)) continue
+    processedItemIds.add(currentItem.id)
+
+    for (const req of currentItem.craftRequires ?? []) {
+      const matId = req.id
+      if (isMaterialUsedByAnyUncheckedItem(matId)) continue
+
+      // 跳过顶层目标分组，避免将独立制造目标误当做下级素材自动勾选
+      for (let gIdx = 0; gIdx < itemGroups.value.length; gIdx++) {
+        const group = itemGroups.value[gIdx]
+        if (group.type === 'craft-target') continue
+
+        for (const targetItem of group.items) {
+          if (targetItem.id !== matId) continue
+          completedItems.value[gIdx] ??= {}
+          if (!completedItems.value[gIdx][matId]) {
+            completedItems.value[gIdx][matId] = true
+            affectedGroups.add(gIdx)
+            // 若该素材自身也有配方，继续向下检查其下级素材
+            if (targetItem.craftRequires?.length) {
+              queue.push(targetItem)
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return affectedGroups
+}
+
+/** 若分组内所有物品均已勾选完成，则自动折叠该分组 */
+const collapseGroupIfAllCompleted = (groupIndex: number) => {
+  const group = itemGroups.value[groupIndex]
+  if (!group?.items.length) return
+  const allCompleted = group.items.every(item => !!completedItems.value[groupIndex]?.[item.id])
+  if (allCompleted) {
     expandedBlocks.value[groupIndex] = []
   }
+}
+
+const handleItemCompletionChange = (groupIndex: number, item: ItemInfo, checked: boolean) => {
+  completedItems.value[groupIndex] ??= {}
+  completedItems.value[groupIndex][item.id] = checked
+
+  const affectedGroups = new Set<number>([groupIndex])
+  if (checked) {
+    autoCompleteUnusedMaterials(item).forEach(gIdx => affectedGroups.add(gIdx))
+  }
+
+  affectedGroups.forEach(gIdx => collapseGroupIfAllCompleted(gIdx))
 }
 
 const isItemGatherableNow = (item: ItemInfo) => {
@@ -190,7 +294,7 @@ const isItemGatherableNow = (item: ItemInfo) => {
                 <n-checkbox
                   size="small"
                   v-model:checked="completedItems[groupIndex][item.id]"
-                  @update:checked="handleItemCompletionChange(groupIndex)"
+                  @update:checked="(checked: boolean) => handleItemCompletionChange(groupIndex, item, checked)"
                 />
                 <ItemSpan
                   :item-info="item"
@@ -243,6 +347,26 @@ const isItemGatherableNow = (item: ItemInfo) => {
                 <span v-if="store.funcConfig.processes_merge_gatherings" style="margin: 0 3px 0 1px;">)</span>
                 <span style="margin-right: 1px;">(</span>
                 <span>{{ t('map.text.recomm_aetheryte') }} - {{ item.gatherInfo.recommAetheryte?.[`name_${itemLanguage}`] }}</span>
+                <span style="margin-left: 1px;">)</span>
+              </div>
+              <div
+                class="buy-detail"
+                v-if="showItemBuyDetails && item.gilShopInfo && !completedItems[groupIndex][item.id]"
+              >
+                <span style="margin-right: 1px;">(</span>
+                <template v-for="(part, partIndex) in getShopDetailParts(item)" :key="partIndex">
+                  <LocationSpan
+                    v-if="part.type === 'loc'"
+                    :place-id="part.placeId"
+                    :place-name="part.placeName"
+                    :coordinate-x="part.x"
+                    :coordinate-y="part.y"
+                    :size="12"
+                    style="margin: 0 2px 0 1px;"
+                  />
+                  <i v-else-if="part.type === 'gil'" class="xiv gil" />
+                  <span v-else class="whitespace-pre-wrap">{{ part.value }}</span>
+                </template>
                 <span style="margin-left: 1px;">)</span>
               </div>
             </div>
@@ -298,9 +422,11 @@ const isItemGatherableNow = (item: ItemInfo) => {
       }
       .gather-detail-time,
       .gather-detail-recomm,
-      .gather-detail-position {
+      .gather-detail-position,
+      .buy-detail {
         display: flex;
         flex-wrap: wrap;
+        align-items: center;
         margin-left: 1em;
         font-size: var(--app-font-size-xs);
       }

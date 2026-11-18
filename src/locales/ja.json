@@ -2367,7 +2367,8 @@
       },
       "title": "採集アイテムを統合する"
     },
-    "processes_show_item_details": "アイテム詳細を表示",
+    "processes_show_item_details": "アイテムの採集情報を表示",
+    "processes_show_purchase_info": "アイテムの購入情報を表示",
     "prostate_concise_mode": {
       "desc": {
         "desc_1": "プロ版でレポート作成時にのみ有効"
@@ -2577,6 +2578,8 @@
       "showed_unchs_items": "中国サーバー未実装アイテムを表示中"
     },
     "text": {
+      "buy_from_npc_with_val": "{loc}のNPC「{npc}」から{price}{gil}で購入可能",
+      "buy_from_shop_with_val": "NPCショップで{price}{gil}で購入可能",
       "gather_at_with_val": "{pos}で採集",
       "hide_items_not_installed_in_chs": "中国サーバー未実装アイテムを非表示",
       "show_gather_detail": "採集の詳細を表示",

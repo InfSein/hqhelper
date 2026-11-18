@@ -2367,7 +2367,8 @@
       },
       "title": "Merge gatherable items"
     },
-    "processes_show_item_details": "Show item details",
+    "processes_show_item_details": "Show item gathering details",
+    "processes_show_purchase_info": "Show item purchase details",
     "prostate_concise_mode": {
       "desc": {
         "desc_1": "Only works in Pro statement."
@@ -2577,6 +2578,8 @@
       "showed_unchs_items": "Items not installed in CHS have already been shown"
     },
     "text": {
+      "buy_from_npc_with_val": "Purchasable from NPC '{npc}' at {loc} for {price}{gil}",
+      "buy_from_shop_with_val": "Purchasable at NPC shop for {price}{gil}",
       "gather_at_with_val": "Gather at {pos}",
       "hide_items_not_installed_in_chs": "Hide Items Not Installed in CHS",
       "show_gather_detail": "Show gather details",
