@@ -108,29 +108,64 @@ const getItemDescriptions = () => {
 const itemHasHQ = computed(() => {
   if (props.itemInfo.tempAttrsProvided?.length) {
     return props.itemInfo.tempAttrsProvided.every(subArr => subArr[1])
-  } else {
+  }
+  if (props.itemInfo.attrsProvided?.length) {
     return props.itemInfo.attrsProvided.every(subArr => subArr[2] > 0)
   }
+  if (props.itemInfo.autoAttack?.length) {
+    return props.itemInfo.autoAttack[1] > 0
+  }
+  return false
 })
 const showHqSwitcherInHeader = computed(() => {
-  return (props.itemInfo.attrsProvided?.length > 0) || (itemTempAttrTexts.value.length > 0)
+  return Boolean(
+    props.itemInfo.attrsProvided?.length
+    || props.itemInfo.autoAttack?.length
+    || itemTempAttrTexts.value.length
+  )
 })
 /** 需在装备属性模块右上角单独显示的特殊词条ID：物理/魔法基本性能(12/13)、攻击间隔(14)、格挡发动力/性能(17/18)、物理/魔法防御力(21/24) */
 const SPECIAL_ARMOR_ATTR_IDS = new Set([12, 13, 14, 17, 18, 21, 24])
 const specialArmorAttrs = computed(() => {
-  if (!props.itemInfo.attrsProvided?.length) return []
-  return props.itemInfo.attrsProvided
-    .filter(attr => SPECIAL_ARMOR_ATTR_IDS.has(attr[0]))
-    .map(attr => {
-      const attrId = attr[0]
-      const rawVal = showItemHqAttr.value ? (attr[2] || attr[1]) : attr[1]
-      const value = attrId === 14 ? Number(rawVal).toFixed(2) : String(rawVal)
-      return {
-        id: attrId,
-        name: getAttrName(attrId),
-        value,
-      }
+  const attrs: { key: string; name: string; value: string }[] = []
+  if (props.itemInfo.attrsProvided?.length) {
+    props.itemInfo.attrsProvided
+      .filter(attr => SPECIAL_ARMOR_ATTR_IDS.has(attr[0]))
+      .forEach(attr => {
+        const attrId = attr[0]
+        const rawVal = showItemHqAttr.value ? (attr[2] || attr[1]) : attr[1]
+        const value = attrId === 14 ? Number(rawVal).toFixed(2) : String(rawVal)
+        // 在基本性能(12/13)之后、攻击间隔(14)之前插入物理自动攻击
+        if (attrId === 14 && props.itemInfo.autoAttack?.length) {
+          const [aaNq, aaHq] = props.itemInfo.autoAttack
+          const aaVal = showItemHqAttr.value ? (aaHq || aaNq) : aaNq
+          attrs.push({
+            key: 'attr-special-aa',
+            name: t('item.text.physical_auto_attack'),
+            value: Number(aaVal).toFixed(2),
+          })
+        }
+        attrs.push({
+          key: `attr-special-${attrId}`,
+          name: getAttrName(attrId),
+          value,
+        })
+      })
+  }
+  // 兜底：若存在物理自动攻击但不存在攻击间隔(14)，仍补充展示
+  if (
+    props.itemInfo.autoAttack?.length
+    && !attrs.some(a => a.key === 'attr-special-aa')
+  ) {
+    const [aaNq, aaHq] = props.itemInfo.autoAttack
+    const aaVal = showItemHqAttr.value ? (aaHq || aaNq) : aaNq
+    attrs.push({
+      key: 'attr-special-aa',
+      name: t('item.text.physical_auto_attack'),
+      value: Number(aaVal).toFixed(2),
     })
+  }
+  return attrs
 })
 const normalArmorAttrs = computed(() => {
   if (!props.itemInfo.attrsProvided?.length) return []
@@ -416,7 +451,7 @@ const handleOnScroll = (e: Event) => {
       >
         <div
           v-for="attr in specialArmorAttrs"
-          :key="'attr-special-' + attr.id"
+          :key="attr.key"
           class="relative flex flex-col items-end text-right"
         >
           <div class="text-app-xs">{{ attr.name }}</div>

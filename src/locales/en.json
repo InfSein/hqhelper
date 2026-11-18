@@ -1709,6 +1709,7 @@
       "need_learn": "Need to learn",
       "not_installed_in_chs": "Item not implemented in CHS.",
       "perception_with_val": "Perception needs to reach {val}",
+      "physical_auto_attack": "Auto-attack",
       "quoted_position": "(X:{x}, Y:{y})",
       "recipe_detail": "Durability: {dur} / Progress: {pro} / Quality: {qua}",
       "matched_craft_macros": "Matched {count} crafting macro(s)",

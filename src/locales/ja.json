@@ -1709,6 +1709,7 @@
       "need_learn": "修得必要：",
       "not_installed_in_chs": "このアイテムは中国サーバーでまだ実装されていません。",
       "perception_with_val": "最低技術力：{val}",
+      "physical_auto_attack": "物理オートアタック",
       "quoted_position": "(X:{x}, Y:{y})",
       "recipe_detail": "耐久{dur} / 難易度{pro} / 品質{qua}",
       "matched_craft_macros": "製作マクロが{count}件一致",

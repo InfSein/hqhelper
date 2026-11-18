@@ -134,7 +134,7 @@ export const getItemInfo = (item: `${number}` | number, amount = 0) => {
     mkc: -1,
     rids: [], ilv: -1, sc: 0, so: 0, hqable: false, rarity: 0,
     dye: 0, act: 0, tradable: false, collectable: false, reduce: false,
-    elv: 0, ms: 0, bpm: [], spm: [], 
+    elv: 0, ms: 0, bpm: [], spm: [], aa: undefined,
     jobs: 0, jd: false, p: '', apm: []
   }
 
@@ -201,6 +201,13 @@ export const getItemInfo = (item: `${number}` | number, amount = 0) => {
       attr.push(hqAttr)
       itemInfo.attrsProvided.push(attr)
     })
+  }
+  if (_item.aa?.length) {
+    const nqVal = _item.aa[0]
+    const hqVal = (_item.aa.length > 1 && _item.hqable)
+      ? Number((nqVal + _item.aa[1]).toFixed(2))
+      : 0
+    itemInfo.autoAttack = [nqVal, hqVal]
   }
   itemInfo.tempAttrsProvided = _item.apm
 

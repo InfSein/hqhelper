@@ -1728,6 +1728,7 @@
       "need_learn": "需要习得",
       "not_installed_in_chs": "该物品国服尚未实装。",
       "perception_with_val": "鉴别力需要达到{val}",
+      "physical_auto_attack": "物理自动攻击",
       "quoted_position": "(X:{x}, Y:{y})",
       "recipe_detail": "耐久{dur} / 难度{pro} / 品质{qua}",
       "matched_craft_macros": "匹配到{count}个生产宏",

@@ -136,6 +136,8 @@ export interface XivUnpackedItem {
   p: string
   bpm: number[][]
   apm: any[][]
+  /** 物理自动攻击 [NQ数值, HQ加成] */
+  aa?: number[]
   // 允许扩展
   [key: string]: any
 

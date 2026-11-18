@@ -53,6 +53,14 @@ export interface ItemInfo {
    */
   attrsProvided: number[][]
   /**
+   * 武器物理自动攻击，常见于武器和主工具。
+   *
+   * 内部数组长度一般为2，分别代表：
+   * * (index)`0`: NQ道具的物理自动攻击
+   * * (index)`1`: HQ道具的物理自动攻击，如果道具没有HQ这里会是0
+   */
+  autoAttack?: number[]
+  /**
    * 物品使用后会提供的临时属性，常见于食物爆发药。
    * 
    * 内部数组长度一般为6，分别代表：
