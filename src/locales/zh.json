@@ -2938,7 +2938,8 @@
       "history": "反馈记录",
       "submit_cooldown": "请等待 {sec}秒",
       "view_detail": "查看反馈",
-      "back_to_list": "返回列表"
+      "back_to_list": "返回列表",
+      "append_submit": "发送"
     },
     "field": {
       "type": "反馈类型",
@@ -2948,11 +2949,17 @@
       "images": "上传图片",
       "status": "状态",
       "created_at": "提交时间",
-      "contact_sub": "推荐QQ或者电子邮箱"
+      "updated_at": "最后更新",
+      "contact_sub": "推荐QQ或者电子邮箱",
+      "append_content": "追加反馈"
     },
     "type": {
       "bug": "错误报告",
       "feat": "功能申请"
+    },
+    "role": {
+      "admin": "开发人员",
+      "me": "我"
     },
     "status": {
       "pending": "待处理",
@@ -2963,11 +2970,17 @@
     "placeholder": {
       "title": "请简要概括您的问题或建议",
       "content": "请详细描述问题的触发步骤、表现，或您期望的新功能细节",
-      "contact": "如果你愿意让我们在处理问题期间联系你"
+      "contact": "如果你愿意让我们在处理问题期间联系你",
+      "append_content": "请输入补充说明"
     },
     "text": {
       "admin_replies": "开发人员回复",
-      "no_replies": "暂未收到回复"
+      "no_replies": "暂未收到回复",
+      "conversation": "沟通记录",
+      "no_conversation": "暂无内容",
+      "append_shortcut_tip": "仅支持纯文本，按 Ctrl+Enter 快速发送",
+      "append_plain_text_tip": "仅支持纯文本补充说明",
+      "append_disabled_by_status": "反馈{status}。"
     },
     "message": {
       "login_required": "此功能必须登录后才可使用",
@@ -2978,7 +2991,11 @@
       "banned_title": "无法发送反馈",
       "banned_permanent": "您的账号已被限制提交反馈。",
       "banned_until": "您的账号已被限制提交反馈，解封时间：{time}",
-      "no_records": "暂无反馈记录"
+      "no_records": "暂无反馈记录",
+      "append_succeed": "追加回复成功！",
+      "append_failed": "追加回复失败",
+      "append_rate_limited": "回复过于频繁，请{sec}秒后再试",
+      "append_closed": "该反馈已解决或已关闭，无法继续追加回复"
     }
   }
 }

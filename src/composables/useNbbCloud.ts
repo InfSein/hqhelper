@@ -9,6 +9,7 @@ import type {
   ResdataGetList, ResdataSetList,
   ResdataUserInfoExt, ResdataUploadAvatar,
   SubmitFeedbackPayload, ResdataSubmitFeedback, ResdataFeedbackList,
+  AppendFeedbackPayload, ResdataAppendFeedback,
 } from '@/types/api/nbb-cloud'
 import { deepCopy } from "@/tools"
 import { md5 } from "../utils/md5"
@@ -328,6 +329,15 @@ export const useNbbCloud = () => {
   }
 
   /**
+   * 追加反馈回复
+   */
+  const appendFeedback = async (
+    payload: AppendFeedbackPayload
+  ) : Promise<NbbResponse<ResdataAppendFeedback>> => {
+    return doHqApiPost<ResdataAppendFeedback>('/feedback/append', payload)
+  }
+
+  /**
    * 同步更新用户扩展信息到 store 中
    * @returns 是否发生配置更新
    */
@@ -374,6 +384,8 @@ export const useNbbCloud = () => {
     submitFeedback,
     /** 获取个人反馈记录列表 */
     getFeedbackList,
+    /** 追加反馈回复 */
+    appendFeedback,
     /** 刷新用户扩展信息 */
     updateUserInfoExt,
     /** 将登录、注册、刷新用户信息获取到的data转译为cloudConfig */

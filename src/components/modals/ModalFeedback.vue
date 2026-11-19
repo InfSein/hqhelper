@@ -9,8 +9,9 @@ import { useLocale } from '@/composables/useLocale'
 import { useNbbCloud } from '@/composables/useNbbCloud'
 import { useServerNotice } from '@/composables/useServerNotice'
 import { useAppModals } from '@/composables/useAppModals'
+import { useCooldown } from '@/composables/useCooldown'
 import { useDialog } from '@/composables/useDialog'
-import { formatTimestamp } from '@/tools'
+import { formatFeedbackBanText } from '@/tools/feedback'
 import type { FeedbackType } from '@/types/api/nbb-cloud'
 
 const { t } = useLocale()
@@ -19,12 +20,11 @@ const { alertError } = useDialog()
 const { submitFeedback, updateUserInfoExt } = useNbbCloud()
 const { feedbackBanned, feedbackBanExpiresAt } = useServerNotice()
 const { displayFeedbackHistoryModal } = useAppModals()
+const { cooldownSeconds, startCooldown } = useCooldown()
 
 const showModal = defineModel<boolean>('show', { required: true })
 
 const isSubmitting = ref(false)
-const cooldownSeconds = ref(0)
-let cooldownTimer: ReturnType<typeof setInterval> | null = null
 
 const formData = reactive<{
   type: FeedbackType
@@ -50,39 +50,7 @@ const extraHeaderButtons = computed(() => [
 ])
 
 const banExpireText = computed(() => {
-  if (!feedbackBanExpiresAt.value) {
-    return t('feedback.message.banned_permanent')
-  }
-  const ts = Date.parse(feedbackBanExpiresAt.value)
-  if (Number.isNaN(ts)) {
-    return feedbackBanExpiresAt.value
-  }
-  return t('feedback.message.banned_until', { time: formatTimestamp(ts) })
-})
-
-const startCooldown = (seconds: number) => {
-  if (seconds <= 0) return
-  if (cooldownTimer) {
-    clearInterval(cooldownTimer)
-  }
-  cooldownSeconds.value = Math.ceil(seconds)
-  cooldownTimer = setInterval(() => {
-    cooldownSeconds.value--
-    if (cooldownSeconds.value <= 0) {
-      cooldownSeconds.value = 0
-      if (cooldownTimer) {
-        clearInterval(cooldownTimer)
-        cooldownTimer = null
-      }
-    }
-  }, 1000)
-}
-
-onUnmounted(() => {
-  if (cooldownTimer) {
-    clearInterval(cooldownTimer)
-    cooldownTimer = null
-  }
+  return formatFeedbackBanText(feedbackBanExpiresAt.value, t)
 })
 
 const handleBeforeUpload = ({ file }: { file: UploadFileInfo }) => {

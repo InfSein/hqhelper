@@ -99,6 +99,12 @@ export interface FeedbackReply {
   createdAt: string,
 }
 
+export interface FeedbackFollowup {
+  id: number,
+  content: string,
+  createdAt: string,
+}
+
 export interface FeedbackRecord {
   id: number,
   source: string,
@@ -111,6 +117,7 @@ export interface FeedbackRecord {
   createdAt: string,
   updatedAt: string,
   replies: FeedbackReply[],
+  followups?: FeedbackFollowup[],
 }
 
 export interface ResdataFeedbackList {
@@ -118,4 +125,18 @@ export interface ResdataFeedbackList {
   total: number,
   page: number,
   pageSize: number,
+}
+
+export interface AppendFeedbackPayload {
+  feedbackId: number,
+  content: string,
+}
+
+export interface ResdataAppendFeedback {
+  id: number,
+  feedbackId: number,
+  content: string,
+  createdAt: string,
+  cooldownSeconds?: number,
+  retryAfter?: number,
 }

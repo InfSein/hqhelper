@@ -2903,7 +2903,9 @@
       "history": "History",
       "submit_cooldown": "Please wait ({sec}s)",
       "view_detail": "View Feedback",
-      "back_to_list": "Back to List"
+      "back_to_list": "Back to List",
+      "append": "Add Follow-up",
+      "append_submit": "Send Follow-up"
     },
     "field": {
       "type": "Type",
@@ -2912,11 +2914,17 @@
       "contact": "Contact",
       "images": "Images",
       "status": "Status",
-      "created_at": "Submitted At"
+      "created_at": "Submitted At",
+      "updated_at": "Updated At",
+      "append_content": "Additional Details"
     },
     "type": {
       "bug": "Bug Report",
       "feat": "Feature Request"
+    },
+    "role": {
+      "admin": "Developer",
+      "me": "My Follow-up"
     },
     "status": {
       "pending": "Pending",
@@ -2927,12 +2935,18 @@
     "placeholder": {
       "title": "Briefly summarize your issue or suggestion (1-100 chars)",
       "content": "Describe the steps to reproduce the issue or details of your feature request (1-5000 chars)",
-      "contact": "Email / Discord / Other contact info for follow-up"
+      "contact": "Email / Discord / Other contact info for follow-up",
+      "append_content": "Enter additional details or reproduction steps (plain text only, 1-5000 chars)"
     },
     "text": {
       "images_tip": "Up to 6 images, max 10MB each",
       "admin_replies": "Admin Replies",
-      "no_replies": "No replies yet"
+      "no_replies": "No replies yet",
+      "conversation": "Conversation",
+      "no_conversation": "No replies or follow-ups yet",
+      "append_shortcut_tip": "Plain text only. Press Ctrl+Enter to send",
+      "append_plain_text_tip": "Plain text only",
+      "append_disabled_by_status": "This feedback is marked as {status} and cannot receive further follow-ups"
     },
     "message": {
       "login_required": "You must log in to use this feature",
@@ -2943,7 +2957,11 @@
       "banned_title": "Feedback Permission Restricted",
       "banned_permanent": "Your account has been restricted from submitting feedback.",
       "banned_until": "Your account is restricted from submitting feedback until {time}",
-      "no_records": "No feedback records"
+      "no_records": "No feedback records",
+      "append_succeed": "Follow-up added successfully!",
+      "append_failed": "Failed to send follow-up",
+      "append_rate_limited": "Sending follow-ups too frequently, please wait {sec}s before retrying",
+      "append_closed": "This feedback is already resolved or closed"
     }
   }
 }
