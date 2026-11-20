@@ -1,3 +1,9 @@
+<p align="center">
+  <a href="https://github.com/InfSein/hqhelper/releases/latest"><picture><source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/github/release/InfSein/hqhelper.svg?variant=ghost&font=geist-mono&mode=dark&label=RELEASE&logo=lu:Tag&valueColor=60A5FA" /><img alt="Latest release" src="https://shieldcn.dev/github/release/InfSein/hqhelper.svg?variant=ghost&font=geist-mono&mode=light&label=RELEASE&logo=lu:Tag&valueColor=2563EB" /></picture></a>
+  <a href="https://github.com/InfSein/hqhelper/releases"><picture><source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/github/downloads/InfSein/hqhelper.svg?variant=ghost&font=geist-mono&mode=dark&label=DOWNLOADS&logo=lu:CloudDownload&valueColor=A78BFA" /><img alt="Total downloads" src="https://shieldcn.dev/github/downloads/InfSein/hqhelper.svg?variant=ghost&font=geist-mono&mode=light&label=DOWNLOADS&logo=lu:CloudDownload&valueColor=7C3AED" /></picture></a>
+  <a href="LICENSE"><picture><source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/badge/LICENSE-MIT.svg?variant=ghost&font=geist-mono&mode=dark&logo=lu:Scale" /><img alt="License: MIT" src="https://shieldcn.dev/badge/LICENSE-MIT.svg?variant=ghost&font=geist-mono&mode=light&logo=lu:Scale" /></picture></a>
+</p>
+
 # PLAN
 
 **重构**
