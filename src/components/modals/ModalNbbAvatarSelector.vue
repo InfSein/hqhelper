@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { 
-  FaceRetouchingNaturalFilled, DoneOutlined,
+import {
+  DoneOutlined,
+  FaceRetouchingNaturalFilled,
 } from '@vicons/material'
-import XivFARImage from '../custom/general/XivFARImage.vue'
-import { getImgCdnUrl } from '@/tools/item'
+import XivFARImage from '@/components/ui/XivFARImage.vue'
+import { useLocale } from '@/composables/useLocale'
+import { getImgCdnUrl } from '@/tools/game'
 
-const t = inject<(message: string, args?: any) => string>('t')!
+const { t } = useLocale()
 
 const showModal = defineModel<boolean>('show', { required: true })
 const avatarId = defineModel<number>('avatarId', { required: true })
@@ -73,7 +75,7 @@ const handleSubmit = () => {
     </div>
 
     <template #action>
-      <div class="modal-submit-container">
+      <div class="app-modal-footer">
         <n-button type="primary" size="large" @click="handleSubmit">
           <template #icon>
             <n-icon><DoneOutlined /></n-icon>

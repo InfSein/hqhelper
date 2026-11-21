@@ -1,21 +1,19 @@
 <script setup lang="ts">
-import { 
-  CodeSharp, ContentCopyRound
+import {
+  CodeSharp,
+  ContentCopyRound,
 } from '@vicons/material'
-import MacroViewer from '../custom/macro/MacroViewer.vue'
-import TooltipButton from '@/components/custom/general/TooltipButton.vue'
-// import ModalPreferences from './ModalPreferences.vue'
-import { CopyToClipboard } from '@/tools'
+import TooltipButton from '@/components/ui/TooltipButton.vue'
+import MacroViewer from '@/components/craft/MacroViewer.vue'
 import { useStore } from '@/store'
-import { fixFuncConfig, type FuncConfigModel, type MacroGenerateMode } from '@/models/config-func'
+import { useLocale } from '@/composables/useLocale'
+import { CopyToClipboard } from '@/tools'
+import type { MacroGenerateMode } from '@/types/config/func'
 
 const store = useStore()
+const { t } = useLocale()
 const NAIVE_UI_MESSAGE = useMessage()
 
-const t = inject<(message: string, args?: any) => string>('t')!
-// const isMobile = inject<Ref<boolean>>('isMobile') ?? ref(false)
-const funcConfig = inject<Ref<FuncConfigModel>>('funcConfig')!
-  
 const showModal = defineModel<boolean>('show', { required: true })
 
 interface ModalCopyAsMacroProps {
@@ -45,8 +43,8 @@ const modeOptions = computed(() => {
 })
 
 const onLoad = () => {
-  macroPrefix.value = funcConfig.value.macro_copy_prefix
-  macroMode.value = funcConfig.value.macro_generate_mode
+  macroPrefix.value = store.funcConfig.macro_copy_prefix
+  macroMode.value = store.funcConfig.macro_generate_mode
 }
 
 const macroContent = computed(() => {
@@ -99,11 +97,10 @@ const handleCopy = async () => {
     return
   }
   if (noMoreInquiries.value) {
-    const newConfig = fixFuncConfig(store.funcConfig, store.userConfig)
-    newConfig.macro_direct_copy = true
-    newConfig.macro_copy_prefix = macroPrefix.value
-    newConfig.macro_generate_mode = macroMode.value
-    store.setFuncConfig(newConfig)
+    store.funcConfig.macro_direct_copy = true
+    store.funcConfig.macro_copy_prefix = macroPrefix.value
+    store.funcConfig.macro_generate_mode = macroMode.value
+    store.updateFuncConfig()
   }
   handleClose()
   NAIVE_UI_MESSAGE.success(t('common.message.copy_succeed'))
@@ -163,7 +160,7 @@ const handleClose = () => {
     </div>
 
     <template #action>
-      <div class="modal-submit-container">
+      <div class="app-modal-footer">
         <TooltipButton
           type="primary"
           :icon="ContentCopyRound"

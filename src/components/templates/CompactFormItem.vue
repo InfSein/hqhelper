@@ -44,38 +44,20 @@ const renderInputSlot = () => {
 <template>
   <n-input-group :size="size" class="compact-form-item-wrapper">
     <n-input-group-label
-      class="cf-label"
+      class="cf-label flex items-center min-w-0 overflow-hidden"
       :title="!slots.label ? label : undefined"
       :style="labelStyle"
     >
-      <div class="cf-label-inner">
+      <div class="overflow-hidden whitespace-nowrap text-ellipsis leading-normal">
         <slot name="label">{{ label }}</slot>
       </div>
     </n-input-group-label>
-    <div class="cf-input"><component :is="renderInputSlot" /></div>
+    <div class="flex items-center gap-0"><component :is="renderInputSlot" /></div>
   </n-input-group>
 </template>
 
 <style scoped>
 .compact-form-item-wrapper {
   display: contents;
-
-  .cf-label {
-    display: flex;
-    align-items: center;
-    min-width: 0; 
-    overflow: hidden;
-    .cf-label-inner {
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      line-height: 1.5;
-    }
-  }
-  .cf-input {
-    display: flex;
-    align-items: center;
-    gap: 0;
-  }
 }
 </style>

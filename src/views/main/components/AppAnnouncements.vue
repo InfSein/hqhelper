@@ -1,0 +1,128 @@
+<script setup lang="ts">
+import ModalDonate from '@/components/modals/ModalDonate.vue'
+import { useStore } from '@/store'
+import { useDialog } from '@/composables/useDialog'
+import { useLocale } from '@/composables/useLocale'
+import { qGroupInfo, githubInfo, otherSocialInfo } from '@/constants'
+import { visitUrl } from '@/tools'
+
+const store = useStore()
+const { t } = useLocale()
+const { confirm } = useDialog()
+const NAIVE_UI_MESSAGE = useMessage()
+
+const showDonateModal = ref(false)
+const hiddenAnnouncements = ref<AnnouncementId[]>([])
+
+interface Announcement {
+  id: AnnouncementId,
+  hidden?: boolean
+  type?: 'info' | 'success' | 'warning' | 'error'
+  title: string
+  content: string[]
+  actions?: {
+    label: string
+    onClick: () => void
+  }[]
+}
+enum AnnouncementId {
+  dawntrailEnd = 1,
+}
+
+const announcements = computed(() : Announcement[] => {
+  return [
+    {
+      id: AnnouncementId.dawntrailEnd,
+      type: 'success',
+      title: t('announcement.title.title_1'),
+      content: [
+        t('announcement.content.content_1_1'),
+        t('announcement.content.content_1_2'),
+        t('announcement.content.content_1_3'),
+        t('announcement.content.content_1_4'),
+      ],
+      actions: [
+        { label: t('announcement.action.follow_us'), onClick: () => visitUrl('https://weibo.com/u/7870808507') },
+        { label: t('announcement.action.join_q_group'), onClick: () => visitUrl(qGroupInfo.groupUrl) },
+        { label: t('announcement.action.feedback_github'), onClick: () => visitUrl(githubInfo.newIssueUrl) },
+        { label: t('announcement.action.feedback_qquery'), onClick: () => visitUrl(otherSocialInfo.qqQueryUrl) },
+        { label: t('common.appfunc.donate_us'), onClick: () => showDonateModal.value = true },
+      ]
+    }
+  ]
+})
+
+const announcementsToShow = computed(() : Announcement[] => {
+  return announcements.value
+    .filter(announcement => {
+      return !announcement.hidden
+        && !store.mainCache.ignore_announcements.includes(announcement.id)
+        && !hiddenAnnouncements.value.includes(announcement.id)
+    })
+    .map(announcement => {
+      return {
+        ...announcement,
+        type: announcement.type ?? 'info',
+      }
+    })
+})
+
+const handleCloseAnnouncement = (aid: AnnouncementId) => {
+  hiddenAnnouncements.value.push(aid)
+  return true
+}
+const handleIgnoreAnnouncement = async (aid: AnnouncementId) => {
+  if (!await confirm(
+    t('announcement.message.ignore_confirm')
+    + '\n' + t('common.message.operation_irreversible')
+  )) {
+    return
+  }
+  store.mainCache.ignore_announcements.push(aid)
+  store.updateMainCache()
+  NAIVE_UI_MESSAGE.success(t('announcement.message.ignored'))
+}
+</script>
+
+<template>
+  <div v-if="announcementsToShow.length" class="announcements-container" :class="store.userConfig.custom_background ? 'glasscard' : ''">
+    <n-alert
+      v-for="announcement in announcementsToShow"
+      :key="'anno-' + announcement.id"
+      :type="announcement.type"
+      :title="announcement.title"
+      closable
+      @close="handleCloseAnnouncement(announcement.id)"
+    >
+      <div>
+        <div v-html="announcement.content.join('<br>')" />
+        <div class="mt-1.25 flex gap-x-1 justify-end flex-wrap">
+          <n-button quaternary
+            v-for="(action, actionIndex) in announcement.actions"
+            :key="`anno-${announcement.id}-action-${actionIndex}`"
+            type="info" size="small"
+            @click="action.onClick"
+          >
+            {{ action.label }}
+          </n-button>
+          <n-button quaternary type="error" size="small" @click="handleIgnoreAnnouncement(announcement.id)">
+            {{ t('announcement.action.ignore') }}
+          </n-button>
+        </div>
+      </div>
+    </n-alert>
+    
+    <ModalDonate v-model:show="showDonateModal" />
+  </div>
+</template>
+
+<style scoped>
+.announcements-container {
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  background-color: var(--glasscard-bg);
+  border-radius: 4px;
+}
+</style>

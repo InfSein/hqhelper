@@ -1,7 +1,7 @@
 import clipBoard from "vue-clipboard3"
 import * as LzString from 'lz-string'
-import type { AppVersionJson, CallResult, DownloadVersionJson } from "@/models"
-import useIdb from "./idb"
+import type { AppVersionJson, CallResult, DownloadVersionJson } from "@/types"
+import useIdb from "@/utils/app.idb"
 
 const Clip = clipBoard
 const { toClipboard } = Clip()
@@ -32,6 +32,12 @@ export const assignDefaults = (defaultVal: any, currentVal: any) => {
 }
 export const objectEqual = <T>(obj1: T, obj2: T): boolean => {
   return JSON.stringify(obj1) === JSON.stringify(obj2)
+}
+
+export const sortRecord = <T>(record: Record<`i_${number}`, T>, desc = false) => {
+  return Object.fromEntries(
+    Object.entries(record).sort(([a], [b]) => desc ? Number(b.slice(2)) - Number(a.slice(2)) : Number(a.slice(2)) - Number(b.slice(2)))
+  ) as Record<`i_${number}`, T>
 }
 
 export const formatDate = (ts: number) => {
@@ -194,3 +200,5 @@ export const playAudio = (source: string) => {
       console.error("Play audio failed:\n"+ error)
     })
 }
+
+export * from './shareCode'
